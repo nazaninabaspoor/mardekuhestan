@@ -678,13 +678,13 @@ img {
 }
 
 .for-home {
-  padding: 16px 0 80px;
+  padding: 8px 0 72px;
   background: var(--cream);
   color: var(--green);
 }
 
 .for-home-head {
-  margin: 0 0 36px;
+  margin: 0 0 28px;
   text-align: center;
 }
 
@@ -692,84 +692,64 @@ img {
   display: block;
   width: 22px;
   height: 14px;
-  margin: 0 auto 16px;
+  margin: 0 auto 14px;
   color: var(--green);
 }
 
 .for-home-head h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 26px;
   font-weight: 700;
   line-height: 1.5;
 }
 
 .for-home-lead {
-  margin: 0 auto 18px;
+  margin: 0 auto;
   max-width: 22em;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.9;
 }
 
-.for-home-trust {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px 6px;
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.for-home-dot {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin-inline: 10px 4px;
-  border-radius: 50%;
-  background: var(--green);
-  vertical-align: middle;
-}
-
-.for-home-grid {
+.for-home-doors {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
 }
 
-.for-home-card {
+.for-home-door {
   position: relative;
   isolation: isolate;
   display: block;
-  min-height: 300px;
+  min-height: 320px;
   overflow: hidden;
   border-radius: var(--radius);
   background: var(--green);
   color: var(--white);
 }
 
-.for-home-card img {
-  object-fit: contain;
+.for-home-door img {
+  object-fit: cover;
   transition: transform 420ms ease;
 }
 
-.for-home-card:hover img,
-.for-home-card:focus-visible img {
+.for-home-door:hover img,
+.for-home-door:focus-visible img {
   transform: scale(1.03);
 }
 
-.for-home-card:focus-visible {
+.for-home-door:focus-visible,
+.for-home-path:focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 3px;
 }
 
-.for-home-card::after {
+.for-home-door::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
   z-index: 1;
-  height: 48%;
+  height: 42%;
   background: linear-gradient(
     180deg,
     transparent,
@@ -804,6 +784,43 @@ img {
   line-height: 1.6;
 }
 
+.for-home-paths {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.for-home-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 112px;
+  padding: 24px 20px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--green) 7%, var(--cream));
+  text-align: center;
+}
+
+.for-home-path:hover,
+.for-home-path:focus-visible {
+  background: color-mix(in srgb, var(--green) 12%, var(--cream));
+}
+
+.for-home-path-label {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.for-home-path-line {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
 .for-home-more {
   margin: 28px 0 0;
   text-align: center;
@@ -817,13 +834,14 @@ img {
   text-underline-offset: 3px;
 }
 
-@media (min-width: 700px) {
-  .for-home-grid {
+@media (min-width: 900px) {
+  .for-home-doors,
+  .for-home-paths {
     grid-template-columns: 1fr 1fr;
   }
 
-  .for-home-card {
-    min-height: 380px;
+  .for-home-door {
+    min-height: 480px;
   }
 }
 
@@ -973,8 +991,8 @@ img {
   }
 
   .landing-shot:hover img,
-  .for-home-card:hover img,
-  .for-home-card:focus-visible img {
+  .for-home-door:hover img,
+  .for-home-door:focus-visible img {
     transform: none;
   }
 }

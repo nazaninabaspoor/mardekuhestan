@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { PeakMark } from "@/components/brand-marks";
-import { productShortcuts, trustSignals } from "@/lib/brand";
+import { homeDoors, homePaths } from "@/lib/brand";
 
 export function ForHomeSection() {
   return (
@@ -10,31 +10,33 @@ export function ForHomeSection() {
       <div className="shell">
         <header className="for-home-head">
           <PeakMark className="for-home-peak" />
-          <h2 id="for-home-title">برای خانه</h2>
+          <h2 id="for-home-title">چه به خانه می‌رسد</h2>
           <p className="for-home-lead">غذایی که می‌شود فهمید از کجا آمده.</p>
-          <p className="for-home-trust">
-            {trustSignals.map((item, index) => (
-              <span key={item}>
-                {index > 0 ? <span className="for-home-dot" aria-hidden="true" /> : null}
-                {item}
-              </span>
-            ))}
-          </p>
         </header>
 
-        <nav className="for-home-grid" aria-label="برای خانه">
-          {productShortcuts.map((item) => (
-            <Link key={item.href} href={item.href} className="for-home-card">
+        <nav className="for-home-doors" aria-label="برای خانه">
+          {homeDoors.map((item) => (
+            <Link key={item.href} href={item.href} className="for-home-door">
               <Image
                 src={item.image}
                 alt={item.alt}
                 fill
-                sizes="(max-width: 700px) 100vw, 50vw"
+                sizes="(max-width: 900px) 100vw, 50vw"
+                style={{ objectPosition: item.position }}
               />
               <span className="for-home-copy">
                 <h3>{item.label}</h3>
                 <p>{item.line}</p>
               </span>
+            </Link>
+          ))}
+        </nav>
+
+        <nav className="for-home-paths" aria-label="دسته‌های دیگر">
+          {homePaths.map((item) => (
+            <Link key={item.href} href={item.href} className="for-home-path">
+              <span className="for-home-path-label">{item.label}</span>
+              <span className="for-home-path-line">{item.line}</span>
             </Link>
           ))}
         </nav>
