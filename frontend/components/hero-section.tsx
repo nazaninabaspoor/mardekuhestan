@@ -30,11 +30,11 @@ export function HeroSection() {
                 priority
                 sizes="(max-width: 900px) 100vw, 24vw"
               />
-              <PeakMark className="copy-peak" />
-              <h1 id="hero-title">این راه سبز است</h1>
               <Link href="/chain" className="btn-primary hero-cta">
                 شروع راه سبز
               </Link>
+              <h1 id="hero-title">این راه سبز است</h1>
+              <PeakMark className="copy-peak" />
             </div>
 
             <figure className="landing-shot">
