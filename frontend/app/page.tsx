@@ -1,5 +1,5 @@
+import { ForHomeSection } from "@/components/for-home-section";
 import { HeroSection } from "@/components/hero-section";
-import { ProofBar } from "@/components/proof-bar";
 
 export default function HomePage() {
   return (
@@ -8,7 +8,7 @@ export default function HomePage() {
         رفتن به محتوای اصلی
       </a>
       <HeroSection />
-      <ProofBar />
+      <ForHomeSection />
     </main>
   );
 }

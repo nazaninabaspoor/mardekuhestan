@@ -35,8 +35,32 @@ export const valueChain = [
 ] as const;
 
 export const productShortcuts = [
-  { href: "/products?cat=fresh-meat", label: "گوشت تازه" },
-  { href: "/products?cat=dairy", label: "لبنیات" },
-  { href: "/products?cat=seafood", label: "ماهی و میگو" },
-  { href: "/products?cat=ready", label: "غذای آماده" },
+  {
+    href: "/products?cat=fresh-meat",
+    label: "گوشت تازه",
+    line: "برای سفرهٔ جمعه",
+    image: "/brand/home-meat.png",
+    alt: "گوشت تازه مرد کوهستان",
+  },
+  {
+    href: "/products?cat=dairy",
+    label: "لبنیات",
+    line: "برای هر روز خانه",
+    image: "/brand/home-dairy.png",
+    alt: "لبنیات مرد کوهستان",
+  },
+  {
+    href: "/products?cat=seafood",
+    label: "ماهی و میگو",
+    line: "از آب، تازه",
+    image: "/brand/home-seafood.png",
+    alt: "ماهی و میگوی مرد کوهستان",
+  },
+  {
+    href: "/products?cat=ready",
+    label: "غذای آماده",
+    line: "وقتی وقت کم است، طعم خانه بماند",
+    image: "/brand/home-ready.png",
+    alt: "غذای آماده مرد کوهستان",
+  },
 ] as const;
