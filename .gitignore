@@ -1,0 +1,65 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+local_settings.py
+
+# Node / frontend
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+.npm/
+*.tsbuildinfo
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Docker / local data
+docker-data/
+postgres-data/
+redis-data/
+
+# Misc
+*.pem
+*.key
+.coverage.*
+.cache/
+tmp/
+temp/

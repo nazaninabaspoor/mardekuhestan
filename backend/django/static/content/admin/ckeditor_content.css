@@ -1,0 +1,55 @@
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/MardeKoohestan-Regular.woff2") format("woff2"),
+       url("../fonts/MardeKoohestan-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/MardeKoohestan-Bold.woff2") format("woff2"),
+       url("../fonts/MardeKoohestan-Bold.woff") format("woff");
+}
+
+.ck-content {
+  font-family: "MardeKuhestan", Tahoma, sans-serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.9;
+  font-size: 1rem;
+}
+
+.ck-content h1,
+.ck-content h2,
+.ck-content h3,
+.ck-content h4 {
+  font-family: "MardeKuhestan", Tahoma, sans-serif;
+  line-height: 1.5;
+  margin: 1.1em 0 0.55em;
+}
+
+.ck-content h1 { font-size: 1.85rem; }
+.ck-content h2 { font-size: 1.55rem; }
+.ck-content h3 { font-size: 1.3rem; }
+.ck-content h4 { font-size: 1.12rem; }
+
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.ck-content figure.image {
+  margin: 1rem auto;
+}
+
+.ck-content figcaption {
+  font-size: 0.9rem;
+  color: #5b6b5e;
+  text-align: center;
+}

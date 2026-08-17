@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+python-dotenv
+httpx
+redis==6.4.0
+celery==5.5.3
+kombu==5.5.4
+python-jose[cryptography]
+passlib[bcrypt]
+opensearch-py==3.0.0
+confluent-kafka==2.11.1
+qdrant-client==1.15.1
+boto3==1.40.16

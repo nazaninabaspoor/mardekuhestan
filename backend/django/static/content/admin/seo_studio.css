@@ -1,0 +1,354 @@
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/MardeKoohestan-Regular.woff2") format("woff2"),
+       url("../fonts/MardeKoohestan-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/MardeKoohestan-Bold.woff2") format("woff2"),
+       url("../fonts/MardeKoohestan-Bold.woff") format("woff");
+}
+
+:root {
+  --seo-font: "MardeKuhestan", Tahoma, "Segoe UI", sans-serif;
+  --studio-surface: #f7faf7;
+  --studio-border: #d7e6d9;
+  --studio-ok: #2f7f3c;
+  --studio-warn: #b45309;
+  --studio-muted: #5b6b5e;
+}
+
+/* فونت برند فقط روی متن؛ آیکون‌های Unfold دست‌نخورده بمانند */
+html {
+  direction: rtl;
+}
+
+body {
+  font-family: var(--seo-font);
+  text-align: right;
+}
+
+body,
+button:not(.material-symbols-outlined),
+input,
+select,
+textarea,
+label,
+th,
+td,
+h1, h2, h3, h4, h5, h6,
+p,
+li,
+.help,
+.helptext,
+.breadcrumbs,
+.module caption,
+.selector-available h2,
+.selector-chosen h2,
+.submit-row,
+.object-tools a,
+.paginator,
+.messagelist,
+.errorlist,
+fieldset .description,
+.aligned label,
+.vTextField,
+.vLargeTextField,
+.vURLField,
+.django-ckeditor-5,
+.ck-editor,
+.ck-content,
+.ck-editor__editable {
+  font-family: var(--seo-font) !important;
+  letter-spacing: 0 !important;
+}
+
+.material-symbols-outlined,
+.material-symbols-outlined *,
+[class*="material-symbols"] {
+  font-family: "Material Symbols Outlined" !important;
+  letter-spacing: normal !important;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* جلوگیری از بیرون‌زدگی افقی */
+#main,
+#content,
+.main,
+main,
+.change-form,
+.change-list {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.form-row,
+.fieldBox,
+.aligned,
+fieldset.module {
+  max-width: 100%;
+}
+
+/* ادیتور متن مرتب و RTL */
+.django-ckeditor-5,
+.ck.ck-editor {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.ck-editor__editable_inline,
+.ck-content {
+  direction: rtl;
+  text-align: right;
+  min-height: 280px;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.ck.ck-toolbar {
+  direction: rtl;
+}
+
+/* JSON و متن‌های بلند */
+textarea.vLargeTextField,
+.field-schema_json textarea,
+.field-geo_faq textarea,
+.field-geo_key_facts textarea,
+.field-geo_entities textarea,
+.field-secondary_keywords textarea,
+.field-internal_links textarea,
+.field-geo_summary textarea,
+.field-excerpt textarea,
+.field-editor_notes textarea,
+.field-description textarea {
+  font-family: var(--seo-font) !important;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  min-height: 110px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.field-schema_json textarea {
+  min-height: 180px;
+  font-size: 0.85rem;
+  direction: ltr;
+  text-align: left;
+}
+
+/* چک‌لیست آمادگی */
+.mk-checklist {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mk-checklist__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--studio-border);
+  border-radius: 0.65rem;
+  background: var(--studio-surface);
+}
+
+.mk-checklist__label {
+  color: #1d4325;
+  font-weight: 700;
+}
+
+.mk-checklist__value {
+  flex: 0 0 auto;
+  min-width: 3.2rem;
+  text-align: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.mk-checklist__value--yes {
+  color: #fff;
+  background: var(--studio-ok);
+}
+
+.mk-checklist__value--no {
+  color: #fff;
+  background: var(--studio-warn);
+}
+
+.mk-checklist__summary {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--studio-border);
+  color: var(--studio-muted);
+  background: #fff;
+  line-height: 1.8;
+}
+
+.mk-checklist__summary.is-ready {
+  color: var(--studio-ok);
+  border-color: #9dd7a4;
+  background: #f3faf3;
+}
+
+.mk-checklist__summary.is-pending {
+  color: var(--studio-warn);
+  border-color: #f5d0a9;
+  background: #fff8f1;
+}
+
+.mk-empty-hint {
+  color: var(--studio-muted);
+  line-height: 1.8;
+  padding: 0.5rem 0;
+}
+
+/* راهنمای تب‌ها مرتب */
+fieldset .description {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.65rem;
+  background: var(--studio-surface);
+  border: 1px solid var(--studio-border);
+  color: var(--studio-muted);
+  line-height: 1.8;
+}
+
+/* انتخاب‌گرهای چندتایی از عرض نزنند بیرون */
+.selector,
+.related-widget-wrapper {
+  max-width: 100%;
+  overflow: auto;
+}
+
+.selector .selector-available,
+.selector .selector-chosen {
+  width: auto;
+  max-width: 100%;
+}
+
+/* لیست مقالات تمیزتر */
+#changelist .results {
+  overflow-x: auto;
+}
+
+#changelist table {
+  width: 100%;
+}
+
+/* موبایل */
+@media (max-width: 900px) {
+  .mk-checklist__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ck-editor__editable_inline,
+  .ck-content {
+    min-height: 220px;
+  }
+}
+
+/* زمان انتشار: لیبل بیرون + فضای آیکون راست */
+.field-published_at .mk-datetime {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.field-published_at .mk-datetime__label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #5b6b5e;
+  line-height: 1.4;
+}
+
+.field-published_at .mk-datetime__control,
+.field-published_at .mk-datetime__control > div {
+  position: relative;
+  width: 100%;
+}
+
+/*
+  آیکون‌های Unfold با right:1px می‌آیند.
+  پس padding-right بزرگ می‌گذاریم تا متن/placeholder زیر آیکون نرود.
+*/
+.field-published_at input#id_published_at_0,
+.field-published_at input#id_published_at_1,
+.field-published_at .mk-datetime input.vDateField,
+.field-published_at .mk-datetime input.vTimeField {
+  width: 100% !important;
+  min-height: 2.65rem !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+  padding-left: 0.85rem !important;
+  padding-right: 2.85rem !important;
+  box-sizing: border-box !important;
+  text-align: right !important;
+}
+
+.field-published_at .mk-datetime .datetimeshortcuts,
+.field-published_at .datetimeshortcuts {
+  position: absolute !important;
+  top: 1px !important;
+  right: 1px !important;
+  left: auto !important;
+  transform: none !important;
+  z-index: 5 !important;
+  margin: 0 !important;
+  height: calc(100% - 2px) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0 !important;
+  background: transparent !important;
+}
+
+.field-published_at .datetimeshortcuts a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2.1rem !important;
+  height: 2.1rem !important;
+  color: #5b6b5e !important;
+}
+
+.field-published_at .datetimeshortcuts .date-icon,
+.field-published_at .datetimeshortcuts .clock-icon {
+  font-size: 1.15rem !important;
+  line-height: 1 !important;
+}
+
+.field-published_at .timezonewarning {
+  position: static !important;
+  display: block !important;
+  font-size: 0.75rem !important;
+  margin-top: 0.35rem !important;
+  right: auto !important;
+  top: auto !important;
+}
+
+/* نوار ابزار ادیتور از عرض نزند بیرون */
+.ck.ck-toolbar {
+  flex-wrap: wrap !important;
+}
+
+.ck.ck-toolbar .ck-toolbar__items {
+  flex-wrap: wrap !important;
+}
+
