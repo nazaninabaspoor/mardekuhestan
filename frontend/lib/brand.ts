@@ -87,3 +87,39 @@ export const homeDoors = [
     position: "center 58%",
   },
 ] as const;
+
+export const latestArticles = [
+  {
+    id: "pasture-to-table",
+    slug: "from-pasture-to-table",
+    category: "مسیر غذا",
+    title: "از مرتع تا سفره: گوشتی که می‌شود فهمید از کجا آمده",
+    excerpt: "مسیر کوتاه نیست، اما روشن است — از چراگاه تا آماده‌سازی و بعد به خانه.",
+    image: "/brand/landing-pasture.png",
+    alt: "دام در مرتع کوهستان",
+    position: "center 50%",
+    date: "۱۴۰۴/۰۵/۲۱",
+  },
+  {
+    id: "morning-root",
+    slug: "morning-at-home",
+    category: "زندگی خانگی",
+    title: "صبحانه‌ای که ریشه دارد",
+    excerpt: "لبنیات برای هر روز خانه — نه فقط طعم، بلکه مسیری که می‌توان دید.",
+    image: "/brand/home-dairy.png",
+    alt: "صبحانه با لبنیات مرد کوهستان",
+    position: "center 52%",
+    date: "۱۴۰۴/۰۵/۱۴",
+  },
+  {
+    id: "green-way",
+    slug: "this-way-is-green",
+    category: "راه ما",
+    title: "این راه سبز است؛ یعنی چه؟",
+    excerpt: "آرامش، ارتفاع، وضوح — و غذایی که اعتماد را روی سفره می‌گذارد.",
+    image: "/brand/landing-way.png",
+    alt: "مسیر سبز مرد کوهستان",
+    position: "center 45%",
+    date: "۱۴۰۴/۰۵/۰۷",
+  },
+] as const;

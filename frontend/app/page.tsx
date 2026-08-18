@@ -1,5 +1,6 @@
 import { ForHomeSection } from "@/components/for-home-section";
 import { HeroSection } from "@/components/hero-section";
+import { LatestArticlesSection } from "@/components/latest-articles-section";
 
 export default function HomePage() {
   return (
@@ -9,6 +10,7 @@ export default function HomePage() {
       </a>
       <HeroSection />
       <ForHomeSection />
+      <LatestArticlesSection />
     </main>
   );
 }
