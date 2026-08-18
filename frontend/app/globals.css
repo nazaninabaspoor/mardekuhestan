@@ -699,198 +699,216 @@ img {
 }
 
 .for-home {
-  padding: 4px 0 40px;
+  padding: 20px 0 14px;
   background: var(--cream);
   color: var(--green);
 }
 
-.for-home-head {
-  margin: 0 0 14px;
+.for-home-block {
+  width: 100%;
 }
 
-.for-home-head h2 {
-  margin: 0 0 4px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.for-home-lead {
-  margin: 0;
-  max-width: 28em;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.7;
-  color: color-mix(in srgb, var(--green) 78%, transparent);
-}
-
-.for-home-rail {
-  overflow: hidden;
-  width: 100vw;
-  max-width: 100vw;
-  margin-inline: calc(50% - 50vw);
-  padding-block: 4px;
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 6%,
-    #000 94%,
-    transparent
-  );
-}
-
-.for-home-track {
-  display: flex;
-  gap: 10px;
-  width: max-content;
-  padding-inline: max(1.25rem, calc((100vw - min(var(--shell), calc(100% - 2.5rem))) / 2));
-  animation: for-home-marquee 42s linear infinite;
-}
-
-.for-home-rail:hover .for-home-track,
-.for-home-rail:focus-within .for-home-track {
-  animation-play-state: paused;
-}
-
-.for-home-slide {
-  display: flex;
-  flex: 0 0 188px;
-  flex-direction: column;
-  width: 188px;
-  padding: 0;
-  border: 0;
-  border-radius: 10px;
-  background: var(--white);
-  color: var(--green);
-  font: inherit;
-  text-align: inherit;
-  cursor: pointer;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 22%, transparent);
-  transition: box-shadow 200ms ease;
-}
-
-.for-home-slide:hover,
-.for-home-slide:focus-visible {
-  box-shadow: inset 0 0 0 1px var(--green);
-}
-
-.for-home-slide.is-active {
-  box-shadow: inset 0 0 0 1.5px var(--green);
-}
-
-.for-home-slide:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 2px;
-}
-
-.for-home-slide-frame {
+.for-home-block-title {
   position: relative;
-  display: block;
-  overflow: hidden;
-  height: 112px;
-  border-radius: 10px 10px 0 0;
-  background: color-mix(in srgb, var(--green) 5%, var(--cream));
-}
-
-.for-home-slide-frame img {
-  object-fit: cover;
-}
-
-.for-home-slide-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px 12px;
-}
-
-.for-home-slide-label {
-  font-size: 13px;
+  width: 100%;
+  margin: 0 0 14px;
+  font-size: 14px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 38px;
+  color: var(--green);
 }
 
-.for-home-slide-line {
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--green) 72%, transparent);
+.for-home-block-title::before {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 4px;
+  margin-top: -2px;
+  border-bottom: 2px dotted color-mix(in srgb, var(--green) 60%, transparent);
+  border-radius: 2px;
+  opacity: 0.27;
+  content: "";
 }
 
-.for-home-story {
-  margin-top: 0;
-  padding: 0 16px;
-  border-radius: 10px;
+.for-home-block-title-text {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding-left: 20px;
+  background-color: var(--cream);
+}
+
+.for-home-block-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 15px;
+  vertical-align: middle;
+  fill: var(--green);
+}
+
+.for-home-view-more {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  float: left;
+  align-items: center;
+  height: 24px;
+  margin-top: 7px;
+  margin-right: 15px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 24px;
+  color: color-mix(in srgb, var(--green) 82%, #444);
+}
+
+.for-home-view-more-icon {
+  width: 15px;
+  height: 15px;
+  margin-left: 7px;
+  padding: 1px;
+  border-radius: 50%;
+  background-color: var(--green);
+  stroke: var(--white);
+  direction: ltr;
+}
+
+.for-home-view-more:hover,
+.for-home-view-more:focus-visible {
+  color: var(--green);
+}
+
+.for-home-block-content::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.for-home-products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.for-home-product-area {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 15px;
+}
+
+.for-home-product-image {
+  position: relative;
   background: var(--white);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition:
-    opacity 280ms ease,
-    transform 280ms ease,
-    margin-top 280ms ease,
-    padding 280ms ease,
-    visibility 280ms ease;
 }
 
-.for-home-story.is-open {
-  margin-top: 14px;
-  padding: 14px 16px;
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 20%, transparent);
+.for-home-product-image a {
+  display: block;
 }
 
-.for-home-story-text {
+.for-home-product-image img {
+  display: block;
+  width: 100%;
+  height: 230px;
+  margin: 33px 0 15px;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.51, 0.56, 0.04, 0.9);
+}
+
+.for-home-product-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 0 7px;
+  border-radius: 7px;
+  background-color: var(--green);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.for-home-product-name {
+  display: -webkit-box;
+  overflow: hidden;
+  height: 42px;
   margin: 0 0 10px;
   font-size: 13px;
-  font-weight: 400;
-  line-height: 1.85;
-}
-
-.for-home-story-link {
-  font-size: 13px;
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  line-height: 22px;
+  text-align: center;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: color-mix(in srgb, var(--green) 72%, #626060);
+  transition: transform 0.45s cubic-bezier(0.51, 0.56, 0.04, 0.9);
 }
 
-.for-home-more {
-  margin: 16px 0 0;
+.for-home-product-name a:hover,
+.for-home-product-name a:focus-visible {
+  color: var(--green);
+}
+
+.for-home-product-actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.51, 0.56, 0.04, 0.9);
+}
+
+.for-home-product-cta {
+  display: block;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 7px;
+  background: var(--green);
+  color: var(--white);
   font-size: 12px;
   font-weight: 700;
+  line-height: 36px;
+  text-align: center;
 }
 
-.for-home-more a:hover,
-.for-home-more a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.for-home-product-cta:hover,
+.for-home-product-cta:focus-visible {
+  background: color-mix(in srgb, var(--green) 88%, #000);
+  color: var(--white);
 }
 
-@keyframes for-home-marquee {
-  from {
-    transform: translateX(-50%);
-  }
-
-  to {
-    transform: translateX(0);
-  }
+.for-home-product-area:hover .for-home-product-image img,
+.for-home-product-area:hover .for-home-product-name,
+.for-home-product-area:focus-within .for-home-product-image img,
+.for-home-product-area:focus-within .for-home-product-name {
+  transform: translateY(-45px);
 }
 
-@media (min-width: 900px) {
-  .for-home-slide {
-    flex-basis: 208px;
-    width: 208px;
-  }
+.for-home-product-area:hover .for-home-product-actions,
+.for-home-product-area:focus-within .for-home-product-actions {
+  transform: translateY(0);
+}
 
-  .for-home-slide-frame {
-    height: 124px;
+@media (max-width: 1023px) {
+  .for-home-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 767px) {
-  .for-home-head h2 {
-    font-size: 16px;
+@media (max-width: 574px) {
+  .for-home-products {
+    grid-template-columns: 1fr;
+  }
+
+  .for-home-product-image img {
+    height: 220px;
+    margin-top: 24px;
   }
 }
 
@@ -1029,13 +1047,17 @@ img {
     scroll-behavior: auto;
   }
 
-  .copy-peak,
-  .for-home-track {
+  .copy-peak {
     animation: none !important;
   }
 
-  .for-home-story {
-    transition: none !important;
+  .for-home-product-area:hover .for-home-product-image img,
+  .for-home-product-area:hover .for-home-product-name,
+  .for-home-product-area:focus-within .for-home-product-image img,
+  .for-home-product-area:focus-within .for-home-product-name,
+  .for-home-product-area:hover .for-home-product-actions,
+  .for-home-product-area:focus-within .for-home-product-actions {
+    transform: none;
   }
 
   .landing-shot:hover img {
