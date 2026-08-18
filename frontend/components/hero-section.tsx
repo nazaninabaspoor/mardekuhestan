@@ -9,7 +9,7 @@ export function HeroSection() {
       <div className="shell">
         <div className="landing-stage">
           <div className="landing-grid">
-            <figure className="landing-shot">
+            <Link href="#for-home-title" className="landing-shot">
               <Image
                 src="/brand/landing-home.png"
                 alt="سفره خانه با غذای مرد کوهستان"
@@ -17,10 +17,8 @@ export function HeroSection() {
                 priority
                 sizes="(max-width: 900px) 100vw, 38vw"
               />
-              <figcaption className="shot-caption">
-                <h2>برای خانه</h2>
-              </figcaption>
-            </figure>
+              <span className="shot-caption">برای خانه</span>
+            </Link>
 
             <div className="landing-copy">
               <Image
@@ -37,17 +35,15 @@ export function HeroSection() {
               <PeakMark className="copy-peak" />
             </div>
 
-            <figure className="landing-shot">
+            <Link href="/chain" className="landing-shot">
               <Image
                 src="/brand/landing-pasture.png"
                 alt="دام در مرتع مرد کوهستان"
                 fill
                 sizes="(max-width: 900px) 100vw, 38vw"
               />
-              <figcaption className="shot-caption">
-                <h2>از مرتع</h2>
-              </figcaption>
-            </figure>
+              <span className="shot-caption">از مرتع</span>
+            </Link>
           </div>
         </div>
       </div>

@@ -43,33 +43,45 @@ export const productShortcuts = [
 
 export const homeDoors = [
   {
+    id: "fresh-meat",
     href: "/products?cat=fresh-meat",
     label: "گوشت تازه",
     line: "برای سفرهٔ جمعه",
+    story:
+      "از مرتع می‌آید و با همان دقتی که سفرهٔ جمعه می‌خواهد آماده می‌شود. مسیرش روشن است و برای خانه انتخاب می‌شود.",
     image: "/brand/goosht.png",
     alt: "سفرهٔ جمعه با گوشت تازه مرد کوهستان",
     position: "center 62%",
   },
   {
+    id: "dairy",
     href: "/products?cat=dairy",
     label: "لبنیات",
     line: "برای هر روز خانه",
+    story:
+      "برای صبحانه و هر روز خانه. شیر و پنیر و ماست از مسیری می‌آید که می‌شود فهمید از کجا آمده.",
     image: "/brand/panir.png",
     alt: "صبحانه خانه با لبنیات مرد کوهستان",
     position: "center 52%",
   },
   {
+    id: "seafood",
     href: "/products?cat=seafood",
     label: "ماهی و میگو",
     line: "از آب، تازه",
+    story:
+      "از آب تا آشپزخانه، با همان تازگی که روی سفره دیده می‌شود. برای وقتی که طعم دریا را می‌خواهید، نه بستهٔ ناشناس.",
     image: "/brand/mahi.png",
     alt: "ماهی و میگوی تازه برای خانه",
     position: "center 50%",
   },
   {
+    id: "ready",
     href: "/products?cat=ready",
     label: "غذای آماده",
-    line: "وقتی وقت کم است، طعم خانه بماند",
+    line: "طعم خانه می‌ماند",
+    story:
+      "وقتی وقت کم است، همان طعم خانه بماند. غذایی که با حوصله درست شده و فقط گرم کردن می‌خواهد.",
     image: "/brand/akhary.png",
     alt: "غذای آماده خانگی مرد کوهستان",
     position: "center 58%",
