@@ -594,9 +594,9 @@ img {
 
 .landing-backdrop-photo {
   object-fit: cover;
-  object-position: center 38%;
-  filter: saturate(1.1) brightness(1.08) sepia(0.14);
-  transform: scale(1.04);
+  object-position: center 42%;
+  filter: saturate(1.04) brightness(1.02);
+  transform: scale(1.02);
 }
 
 .landing-backdrop-veil {
@@ -605,23 +605,16 @@ img {
   background:
     linear-gradient(
       180deg,
-      rgb(251 248 242 / 88%) 0%,
-      rgb(244 240 232 / 52%) 18%,
-      rgb(244 240 232 / 44%) 52%,
-      rgb(244 240 232 / 58%) 82%,
-      rgb(244 240 232 / 96%) 100%
+      rgb(251 248 242 / 72%) 0%,
+      rgb(244 240 232 / 28%) 20%,
+      rgb(244 240 232 / 22%) 52%,
+      rgb(244 240 232 / 38%) 84%,
+      rgb(244 240 232 / 78%) 100%
     ),
     radial-gradient(
-      ellipse 88% 72% at 50% 44%,
-      rgb(255 252 247 / 32%) 0%,
-      transparent 72%
-    ),
-    linear-gradient(
-      90deg,
-      rgb(244 240 232 / 64%) 0%,
-      transparent 16%,
-      transparent 84%,
-      rgb(244 240 232 / 64%) 100%
+      ellipse 92% 78% at 50% 46%,
+      rgb(255 252 247 / 18%) 0%,
+      transparent 74%
     );
   pointer-events: none;
 }
