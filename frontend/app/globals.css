@@ -1,7 +1,10 @@
 :root {
   --green: #005b48;
+  --meadow: #50af47;
+  --earth: #903828;
   --white: #ffffff;
   --cream: #f4f0e8;
+  --warm-cream: #faf7f1;
   --shell: 1280px;
   --radius: 12px;
   --control: 36px;
@@ -11,6 +14,9 @@
   --type-card: 15px;
   --type-meta: 13px;
   --hero-h: 520px;
+  --hero-panel-h: 488px;
+  --hero-ring: color-mix(in srgb, var(--green) 46%, var(--meadow) 24%);
+  --hero-halo: color-mix(in srgb, var(--meadow) 10%, transparent);
 }
 
 *,
@@ -43,6 +49,49 @@ body {
 main,
 .inner {
   flex: 1;
+}
+
+.home-main {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 90% 58% at 50% -6%, rgb(255 249 240 / 96%) 0%, transparent 72%),
+    radial-gradient(ellipse 52% 42% at 10% 44%, color-mix(in srgb, var(--meadow) 7%, transparent) 0%, transparent 74%),
+    radial-gradient(ellipse 48% 38% at 92% 36%, color-mix(in srgb, var(--earth) 6%, transparent) 0%, transparent 72%),
+    radial-gradient(ellipse 70% 50% at 50% 88%, color-mix(in srgb, var(--earth) 4%, var(--cream)) 0%, transparent 68%),
+    linear-gradient(180deg, #fbf8f2 0%, var(--warm-cream) 14%, #f3ede3 46%, var(--cream) 100%);
+}
+
+.home-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background:
+    radial-gradient(circle at 20% 18%, rgb(255 252 247 / 70%) 0%, transparent 42%),
+    radial-gradient(circle at 78% 24%, rgb(250 244 234 / 55%) 0%, transparent 38%);
+}
+
+.site-contour,
+.landing-contour {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.site-contour {
+  opacity: 0.58;
+}
+
+.home-main > .skip-link,
+.home-main > section {
+  position: relative;
+  z-index: 1;
 }
 
 ::selection {
@@ -192,7 +241,7 @@ img {
 .header-plate {
   position: relative;
   z-index: 3;
-  padding: 28px 0 32px;
+  padding: 22px 0 6px;
 }
 
 .menubar {
@@ -500,7 +549,7 @@ img {
   }
 
   .header-plate {
-    padding: 16px 0 20px;
+    padding: 14px 0 4px;
   }
 
   .menubar {
@@ -528,86 +577,221 @@ img {
 }
 
 .landing {
-  padding: 8px 0 40px;
-  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  margin-top: -2px;
+  padding: 6px 0 0;
+  background: transparent;
+}
+
+.landing-backdrop {
+  position: absolute;
+  inset: 0;
+  top: -72px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.landing-backdrop-photo {
+  object-fit: cover;
+  object-position: center 38%;
+  filter: saturate(1.1) brightness(1.08) sepia(0.14);
+  transform: scale(1.04);
+}
+
+.landing-backdrop-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(251 248 242 / 88%) 0%,
+      rgb(244 240 232 / 52%) 18%,
+      rgb(244 240 232 / 44%) 52%,
+      rgb(244 240 232 / 58%) 82%,
+      rgb(244 240 232 / 96%) 100%
+    ),
+    radial-gradient(
+      ellipse 88% 72% at 50% 44%,
+      rgb(255 252 247 / 32%) 0%,
+      transparent 72%
+    ),
+    linear-gradient(
+      90deg,
+      rgb(244 240 232 / 64%) 0%,
+      transparent 16%,
+      transparent 84%,
+      rgb(244 240 232 / 64%) 100%
+    );
+  pointer-events: none;
+}
+
+.landing::before {
+  content: none;
+}
+
+.landing-contour {
+  z-index: 1;
+  opacity: 0.34;
+}
+
+.landing > .shell {
+  position: relative;
+  z-index: 2;
 }
 
 .landing-stage {
+  position: relative;
+  z-index: 1;
   overflow: visible;
-  background: transparent;
+  padding: 14px 14px 16px;
+  border-radius: 18px;
+  background: rgb(255 252 247 / 22%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 46%),
+    0 18px 42px rgb(0 91 72 / 6%);
+  backdrop-filter: blur(3px);
 }
 
 .landing-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-}
-
-.landing-shot,
-.landing-copy {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  border-radius: var(--radius);
+  align-items: start;
 }
 
 .landing-shot {
-  min-height: 280px;
-  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: var(--green);
+  transition: transform 320ms ease;
 }
 
-.landing-shot img {
+.landing-shot:hover {
+  transform: translateY(-2px);
+}
+
+.landing-center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.landing-center-foot {
+  margin: 9px 0 0;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: center;
+  visibility: hidden;
+}
+
+.landing-shot-image {
+  position: relative;
+  overflow: hidden;
+  height: var(--hero-panel-h);
+  min-height: var(--hero-panel-h);
+  max-height: var(--hero-panel-h);
+  border-radius: 10px;
+  background: var(--green);
+  box-shadow:
+    0 0 0 1px var(--hero-ring),
+    0 0 0 4px var(--hero-halo),
+    0 16px 34px rgb(0 45 36 / 14%);
+}
+
+.landing-shot-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  padding: 0 8px;
+  border-radius: 7px;
+  background-color: rgb(244 240 232 / 94%);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  pointer-events: none;
+}
+
+.landing-shot-frame {
+  position: absolute;
+  inset: 5px;
+  overflow: hidden;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 44%);
+}
+
+.landing-shot-photo {
   object-fit: cover;
-  transition: transform 420ms ease;
+  object-position: center center;
+  filter: saturate(1.05) brightness(1.04) sepia(0.07);
+  transition: transform 520ms ease;
 }
 
-.landing-shot:hover img {
-  transform: scale(1.03);
+.landing-shot-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgb(250 247 241 / 8%) 0%,
+    transparent 36%,
+    color-mix(in srgb, var(--earth) 8%, transparent) 100%
+  );
+  pointer-events: none;
+}
+
+.landing-shot:hover .landing-shot-photo {
+  transform: scale(1.02);
+}
+
+.landing-shot-name {
+  margin: 9px 0 0;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: center;
+  color: color-mix(in srgb, var(--green) 68%, #626060);
 }
 
 .landing-shot:focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 3px;
-}
-
-.shot-caption {
-  position: absolute;
-  right: 16px;
-  left: 16px;
-  bottom: 22px;
-  z-index: 2;
-  color: var(--white);
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.landing-shot::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 1;
-  height: 28%;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--green) 88%, transparent));
-  pointer-events: none;
+  border-radius: 10px;
 }
 
 .landing-copy {
+  position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 320px;
-  padding: 40px 28px;
+  height: var(--hero-panel-h);
+  min-height: var(--hero-panel-h);
+  max-height: var(--hero-panel-h);
+  padding: 12px;
+  overflow: hidden;
+  border-radius: 10px;
   background: var(--green);
-  color: var(--white);
+  color: var(--green);
   text-align: center;
+  box-shadow:
+    0 0 0 1px var(--hero-ring),
+    0 0 0 4px var(--hero-halo),
+    0 16px 34px rgb(0 45 36 / 14%);
 }
 
-.landing-copy img {
+.landing-copy-photo {
   object-fit: cover;
-  object-position: center 42%;
+  object-position: center 40%;
+  filter: saturate(1.04) brightness(1.02) sepia(0.05);
 }
 
 .landing-copy::before {
@@ -615,12 +799,33 @@ img {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: color-mix(in srgb, var(--green) 58%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--green) 18%, transparent) 0%,
+    color-mix(in srgb, var(--green) 36%, rgb(0 45 36 / 52%)) 100%
+  );
   pointer-events: none;
+}
+
+.landing-copy-plaque {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 16.25rem);
+  padding: 22px 20px 20px;
+  border-radius: 12px;
+  background: rgb(244 240 232 / 97%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 82%),
+    0 12px 28px rgb(0 0 0 / 12%);
+  text-align: center;
 }
 
 .copy-peak,
 .landing-copy h1,
+.landing-lead,
 .hero-cta {
   position: relative;
   z-index: 2;
@@ -629,8 +834,8 @@ img {
 .copy-peak {
   width: 22px;
   height: 14px;
-  margin-top: 16px;
-  color: var(--white);
+  margin-top: 10px;
+  color: color-mix(in srgb, var(--green) 72%, var(--meadow));
   transform: rotate(180deg);
   animation: peak-nudge 2.6s ease-in-out infinite;
 }
@@ -648,61 +853,114 @@ img {
 
 .landing-copy h1 {
   margin: 0;
-  max-width: 12em;
+  max-width: 11em;
   font-size: var(--type-title);
   font-weight: 700;
   line-height: 1.75;
-  color: var(--white);
+  color: var(--green);
+}
+
+.landing-lead {
+  margin: 8px 0 0;
+  max-width: 14em;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.9;
+  color: color-mix(in srgb, var(--green) 58%, #626060);
 }
 
 .hero-cta {
-  margin-bottom: 28px;
-  background: var(--white);
-  color: var(--green);
+  margin-top: 16px;
+  margin-bottom: 0;
+  background: var(--green);
+  color: var(--white);
+  box-shadow: 0 8px 18px rgb(0 91 72 / 14%);
 }
 
 .hero-cta:hover,
 .hero-cta:focus-visible {
-  background: var(--green);
+  background: color-mix(in srgb, var(--green) 88%, #003528);
   color: var(--white);
-  box-shadow: inset 0 0 0 1.5px var(--white);
+  box-shadow: inset 0 0 0 1.5px rgb(244 240 232 / 36%);
 }
 
 @media (min-width: 900px) {
   .landing-grid {
     grid-template-columns: 1.15fr 0.7fr 1.15fr;
-  }
-
-  .landing-shot,
-  .landing-copy {
-    min-height: var(--hero-h);
+    gap: 10px;
   }
 
   .hero-cta {
-    margin-bottom: 32px;
+    margin-top: 20px;
   }
 }
 
+@media (max-width: 899px) {
+  :root {
+    --hero-panel-h: 272px;
+  }
+}
+
+.hero-peaks {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: clamp(48px, 6vw, 72px);
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+
+.for-home {
+  position: relative;
+  z-index: 2;
+  padding: 10px 0 32px;
+  background: transparent;
+  color: var(--green);
+  border-bottom: 1px solid color-mix(in srgb, var(--green) 10%, transparent);
+}
+
 @media (max-width: 767px) {
+  .landing {
+    padding-top: 4px;
+  }
+
+  .landing-backdrop {
+    top: -56px;
+  }
+
+  .landing-stage {
+    padding: 12px 10px 14px;
+    border-radius: 14px;
+  }
+
+  .landing-backdrop-photo {
+    object-position: center 32%;
+  }
+
+  .landing-copy-plaque {
+    width: min(100%, 16.5rem);
+    padding: 22px 18px 18px;
+  }
+
   .landing-copy h1 {
     font-size: 19px;
     line-height: 1.6;
   }
 
+  .landing-lead {
+    font-size: 11px;
+    line-height: 1.75;
+  }
+
   .hero-cta {
     font-size: 12px;
+    margin-top: 16px;
   }
 
-  .shot-caption {
-    font-size: 16px;
+  .landing-shot-name {
+    font-size: 11px;
   }
-}
-
-.for-home {
-  padding: 20px 0 32px;
-  background: var(--cream);
-  color: var(--green);
-  border-bottom: 1px solid color-mix(in srgb, var(--green) 10%, transparent);
 }
 
 .for-home-block-content {
@@ -1135,7 +1393,7 @@ img {
 
 .latest-articles {
   padding: 24px 0 36px;
-  background: var(--cream);
+  background: transparent;
   color: var(--green);
 }
 
@@ -1639,7 +1897,7 @@ img {
     transform: none;
   }
 
-  .landing-shot:hover img {
+  .landing-shot:hover .landing-shot-photo {
     transform: none;
   }
 }
