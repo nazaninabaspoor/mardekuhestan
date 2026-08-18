@@ -34,7 +34,7 @@ export default async function MagazineArticlePage({ params }: Props) {
             width={960}
             height={540}
             sizes="(min-width: 900px) 960px, 100vw"
-            style={{ objectPosition: article.position }}
+            style={{ objectFit: "contain" }}
           />
         </div>
         <p className="magazine-article-note">
