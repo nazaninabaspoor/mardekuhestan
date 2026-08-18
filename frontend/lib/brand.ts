@@ -214,3 +214,169 @@ export function getArticlesByIds(ids: readonly string[]) {
     .map((id) => latestArticles.find((article) => article.id === id))
     .filter((article): article is (typeof latestArticles)[number] => Boolean(article));
 }
+
+export const catalogItems = [
+  {
+    id: "cat-meat",
+    href: "/products?cat=fresh-meat",
+    category: "کاتالوگ",
+    title: "گوشت تازه",
+    meta: "PDF · ۱۴۰۴",
+    image: "/brand/goosht.png",
+    alt: "کاتالوگ گوشت تازه",
+  },
+  {
+    id: "cat-dairy",
+    href: "/products?cat=dairy",
+    category: "کاتالوگ",
+    title: "لبنیات",
+    meta: "PDF · ۱۴۰۴",
+    image: "/brand/panir.png",
+    alt: "کاتالوگ لبنیات",
+  },
+  {
+    id: "cat-seafood",
+    href: "/products?cat=seafood",
+    category: "کاتالوگ",
+    title: "ماهی و میگو",
+    meta: "PDF · ۱۴۰۴",
+    image: "/brand/mahi.png",
+    alt: "کاتالوگ ماهی و میگو",
+  },
+  {
+    id: "cat-ready",
+    href: "/products?cat=ready",
+    category: "کاتالوگ",
+    title: "غذای آماده",
+    meta: "PDF · ۱۴۰۴",
+    image: "/brand/akhary.png",
+    alt: "کاتالوگ غذای آماده",
+  },
+  {
+    id: "gal-home",
+    href: "/way",
+    category: "گالری",
+    title: "خانه و سفره",
+    meta: "عکس · ۱۴۰۴",
+    image: "/brand/landing-home.png",
+    alt: "گالری خانه و سفره",
+  },
+  {
+    id: "gal-pasture",
+    href: "/chain",
+    category: "گالری",
+    title: "مرتع و مزرعه",
+    meta: "عکس · ۱۴۰۴",
+    image: "/brand/landing-pasture.png",
+    alt: "گالری مرتع",
+  },
+  {
+    id: "gal-way",
+    href: "/way",
+    category: "گالری",
+    title: "مسیر سبز",
+    meta: "عکس · ۱۴۰۴",
+    image: "/brand/landing-way.png",
+    alt: "گالری مسیر سبز",
+  },
+  {
+    id: "gal-table",
+    href: "/products",
+    category: "گالری",
+    title: "سفرهٔ خانگی",
+    meta: "عکس · ۱۴۰۴",
+    image: "/brand/home-dairy.png",
+    alt: "گالری سفرهٔ خانگی",
+  },
+  {
+    id: "pack-meat",
+    href: "/products?cat=fresh-meat",
+    category: "بسته‌بندی",
+    title: "بسته گوشت",
+    meta: "نمای نزدیک",
+    image: "/brand/home-meat.png",
+    alt: "بسته‌بندی گوشت",
+  },
+  {
+    id: "pack-seafood",
+    href: "/products?cat=seafood",
+    category: "بسته‌بندی",
+    title: "بسته دریایی",
+    meta: "نمای نزدیک",
+    image: "/brand/home-seafood.png",
+    alt: "بسته‌بندی ماهی",
+  },
+  {
+    id: "pack-ready",
+    href: "/products?cat=ready",
+    category: "بسته‌بندی",
+    title: "غذای آماده",
+    meta: "نمای نزدیک",
+    image: "/brand/home-ready.png",
+    alt: "بسته‌بندی غذای آماده",
+  },
+  {
+    id: "brand-mark",
+    href: "/way",
+    category: "هویت برند",
+    title: "مُهر دایره‌ای",
+    meta: "Brandmark",
+    image: "/brand/orginal-clear.png",
+    alt: "مُهر برند مرد کوهستان",
+  },
+  {
+    id: "brand-type",
+    href: "/way",
+    category: "هویت برند",
+    title: "لوگوتایپ",
+    meta: "Logotype",
+    image: "/brand/mardekoohestan.png",
+    alt: "لوگوتایپ مرد کوهستان",
+  },
+  {
+    id: "brand-green",
+    href: "/way",
+    category: "هویت برند",
+    title: "این راه سبز است",
+    meta: "پیام برند",
+    image: "/brand/orginal.png",
+    alt: "هویت بصری مرد کوهستان",
+  },
+] as const;
+
+export const catalogGroups = [
+  {
+    id: "catalog",
+    label: "کاتالوگ",
+    line: "برگه‌های محصول برای خانه و فروشگاه",
+    icon: "catalog",
+    itemIds: ["cat-meat", "cat-dairy", "cat-seafood", "cat-ready"],
+  },
+  {
+    id: "gallery",
+    label: "گالری",
+    line: "عکس‌های واقعی برند و محصول",
+    icon: "gallery",
+    itemIds: ["gal-home", "gal-pasture", "gal-way", "gal-table"],
+  },
+  {
+    id: "packaging",
+    label: "بسته‌بندی",
+    line: "بسته، برچسب، و جزئیات محصول",
+    icon: "packaging",
+    itemIds: ["pack-meat", "pack-seafood", "pack-ready", "cat-dairy"],
+  },
+  {
+    id: "brand",
+    label: "هویت برند",
+    line: "لوگو، مُهر، و زبان بصری",
+    icon: "brand",
+    itemIds: ["brand-mark", "brand-type", "brand-green", "gal-way"],
+  },
+] as const;
+
+export function getCatalogByIds(ids: readonly string[]) {
+  return ids
+    .map((id) => catalogItems.find((item) => item.id === id))
+    .filter((item): item is (typeof catalogItems)[number] => Boolean(item));
+}

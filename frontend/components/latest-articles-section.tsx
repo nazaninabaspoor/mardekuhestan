@@ -2,34 +2,35 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import { articleGroups, brand, getArticlesByIds } from "@/lib/brand";
+import {
+  articleGroups,
+  brand,
+  catalogGroups,
+  getArticlesByIds,
+  getCatalogByIds,
+} from "@/lib/brand";
 
-function useMaxArticleCards() {
-  const [maxCards, setMaxCards] = useState(8);
+type FilterIcon =
+  | (typeof articleGroups)[number]["icon"]
+  | (typeof catalogGroups)[number]["icon"];
+
+function useMaxPaneCards() {
+  const [maxCards, setMaxCards] = useState(4);
 
   useEffect(() => {
-    const narrow = window.matchMedia("(max-width: 574px)");
-    const medium = window.matchMedia("(max-width: 899px)");
+    const narrow = window.matchMedia("(max-width: 899px)");
 
     const update = () => {
-      if (narrow.matches) {
-        setMaxCards(4);
-      } else if (medium.matches) {
-        setMaxCards(6);
-      } else {
-        setMaxCards(8);
-      }
+      setMaxCards(narrow.matches ? 4 : 4);
     };
 
     update();
     narrow.addEventListener("change", update);
-    medium.addEventListener("change", update);
 
     return () => {
       narrow.removeEventListener("change", update);
-      medium.removeEventListener("change", update);
     };
   }, []);
 
@@ -49,7 +50,50 @@ function ViewMoreIcon() {
   );
 }
 
-function GroupIcon({ type }: { type: (typeof articleGroups)[number]["icon"] }) {
+function MagazineTitleIcon() {
+  return (
+    <svg
+      className="latest-articles-pane-icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M6 4h10a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M8 8h8M8 12h6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function CatalogTitleIcon() {
+  return (
+    <svg
+      className="latest-articles-pane-icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect
+        x="4"
+        y="5"
+        width="16"
+        height="14"
+        rx="2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path d="M8 9h8M8 13h5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function FilterIconGlyph({ type }: { type: FilterIcon }) {
   const className = "latest-articles-filter-icon";
 
   switch (type) {
@@ -117,116 +161,244 @@ function GroupIcon({ type }: { type: (typeof articleGroups)[number]["icon"] }) {
           />
         </svg>
       );
+    case "catalog":
+      return (
+        <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M7 4h10v16H7zM9 8h6M9 12h4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "gallery":
+      return (
+        <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <rect
+            x="4"
+            y="6"
+            width="16"
+            height="12"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          <circle cx="9" cy="11" r="1.5" fill="currentColor" />
+          <path
+            d="M4 15l4-3 3 2 4-4 5 5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "packaging":
+      return (
+        <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M12 3 4 7v10l8 4 8-4V7l-8-4z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path d="M12 11v10M4 7l8 4 8-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
+    case "brand":
+      return (
+        <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          <path
+            d="M12 7.5 9 16h6L12 7.5z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
   }
 }
 
-export function LatestArticlesSection() {
-  const maxCards = useMaxArticleCards();
-  const [activeGroupId, setActiveGroupId] = useState(articleGroups[0].id);
-  const activeGroup =
-    articleGroups.find((group) => group.id === activeGroupId) ?? articleGroups[0];
-  const articles = getArticlesByIds(activeGroup.articleIds).slice(0, maxCards);
+type MiniCard = {
+  id: string;
+  href: string;
+  category: string;
+  title: string;
+  meta: string;
+  image: string;
+  alt: string;
+};
+
+function ContentPane({
+  paneId,
+  title,
+  titleIcon,
+  viewAllHref,
+  viewAllLabel,
+  groups,
+  items,
+  activeGroupId,
+  onGroupChange,
+  tablistLabel,
+}: {
+  paneId: string;
+  title: string;
+  titleIcon: ReactNode;
+  viewAllHref: string;
+  viewAllLabel: string;
+  groups: readonly { id: string; label: string; line: string; icon: FilterIcon }[];
+  items: MiniCard[];
+  activeGroupId: string;
+  onGroupChange: (id: string) => void;
+  tablistLabel: string;
+}) {
+  const activeGroup = groups.find((group) => group.id === activeGroupId) ?? groups[0];
 
   return (
-    <section className="latest-articles" aria-labelledby="latest-articles-title">
-      <div className="latest-articles-watermark" aria-hidden="true">
-        <Image src="/brand/orginal-clear.png" alt="" width={180} height={180} />
+    <div className={`latest-articles-pane latest-articles-pane--${paneId}`}>
+      <div className="latest-articles-pane-head">
+        <h2 className="latest-articles-pane-title">
+          {titleIcon}
+          {title}
+        </h2>
+        <Link href={viewAllHref} className="latest-articles-pane-more" title={viewAllLabel}>
+          <ViewMoreIcon />
+          {viewAllLabel}
+        </Link>
       </div>
 
-      <div className="shell">
-        <div className="for-home-block">
-          <div className="for-home-block-title latest-articles-head">
-            <div className="for-home-block-title-text" id="latest-articles-title">
-              <Image
-                className="latest-articles-head-mark"
-                src="/brand/orginal-clear.png"
-                alt=""
-                width={28}
-                height={28}
-                aria-hidden="true"
-              />
-              مجله {brand.name}
-            </div>
-            <Link href="/magazine" className="for-home-view-more" title="همه مقالات">
-              <ViewMoreIcon />
-              مشاهده همه
+      <div className="latest-articles-filters" role="tablist" aria-label={tablistLabel}>
+        {groups.map((group) => {
+          const isActive = group.id === activeGroupId;
+
+          return (
+            <button
+              key={group.id}
+              type="button"
+              role="tab"
+              id={`${paneId}-tab-${group.id}`}
+              aria-selected={isActive}
+              aria-controls={`${paneId}-panel`}
+              className={`latest-articles-filter${isActive ? " is-active" : ""}`}
+              onClick={() => onGroupChange(group.id)}
+            >
+              <span className="latest-articles-filter-icon-shell">
+                <FilterIconGlyph type={group.icon} />
+              </span>
+              {group.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="latest-articles-active-line" id={`${paneId}-panel`} role="tabpanel">
+        {activeGroup.line}
+      </p>
+
+      <ul className="latest-articles-cards" aria-labelledby={`${paneId}-tab-${activeGroupId}`}>
+        {items.map((item) => (
+          <li key={item.id}>
+            <Link href={item.href} className="latest-articles-card">
+              <div className="latest-articles-card-image">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  sizes="132px"
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+              <div className="latest-articles-card-copy">
+                <span className="latest-articles-card-kicker">{item.category}</span>
+                <strong>{item.title}</strong>
+                <span className="latest-articles-card-date">{item.meta}</span>
+              </div>
             </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function LatestArticlesSection() {
+  const maxCards = useMaxPaneCards();
+  const [activeArticleGroupId, setActiveArticleGroupId] = useState(articleGroups[0].id);
+  const [activeCatalogGroupId, setActiveCatalogGroupId] = useState(catalogGroups[0].id);
+
+  const activeArticleGroup =
+    articleGroups.find((group) => group.id === activeArticleGroupId) ?? articleGroups[0];
+  const activeCatalogGroup =
+    catalogGroups.find((group) => group.id === activeCatalogGroupId) ?? catalogGroups[0];
+
+  const articleCards: MiniCard[] = getArticlesByIds(activeArticleGroup.articleIds)
+    .slice(0, maxCards)
+    .map((article) => ({
+      id: article.id,
+      href: `/magazine/${article.slug}`,
+      category: article.category,
+      title: article.title,
+      meta: article.date,
+      image: article.image,
+      alt: article.alt,
+    }));
+
+  const catalogCards: MiniCard[] = getCatalogByIds(activeCatalogGroup.itemIds)
+    .slice(0, maxCards)
+    .map((item) => ({
+      id: item.id,
+      href: item.href,
+      category: item.category,
+      title: item.title,
+      meta: item.meta,
+      image: item.image,
+      alt: item.alt,
+    }));
+
+  return (
+    <section className="latest-articles" aria-label="مجله و کاتالوگ مرد کوهستان">
+      <div className="shell">
+        <div className="latest-articles-split">
+          <ContentPane
+            paneId="magazine"
+            title={`مجله ${brand.name}`}
+            titleIcon={<MagazineTitleIcon />}
+            viewAllHref="/magazine"
+            viewAllLabel="مشاهده همه"
+            groups={articleGroups}
+            items={articleCards}
+            activeGroupId={activeArticleGroupId}
+            onGroupChange={setActiveArticleGroupId}
+            tablistLabel="دسته‌بندی مقالات"
+          />
+
+          <div className="latest-articles-divider" aria-hidden="true">
+            <span />
           </div>
 
-          <div
-            className="latest-articles-filters"
-            role="tablist"
-            aria-label="دسته‌بندی مقالات"
-          >
-            {articleGroups.map((group) => {
-              const isActive = group.id === activeGroupId;
-
-              return (
-                <button
-                  key={group.id}
-                  type="button"
-                  role="tab"
-                  id={`articles-tab-${group.id}`}
-                  aria-selected={isActive}
-                  aria-controls="articles-panel"
-                  className={`latest-articles-filter${isActive ? " is-active" : ""}`}
-                  onClick={() => setActiveGroupId(group.id)}
-                >
-                  <span className="latest-articles-filter-icon-shell">
-                    <GroupIcon type={group.icon} />
-                  </span>
-                  {group.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="latest-articles-active-line" id="articles-panel" role="tabpanel">
-            {activeGroup.line}
-          </p>
-
-          <ul className="latest-articles-cards" aria-labelledby={`articles-tab-${activeGroupId}`}>
-            {articles.map((article) => (
-              <li key={article.id}>
-                <Link href={`/magazine/${article.slug}`} className="latest-articles-card">
-                  <div className="latest-articles-card-image">
-                    <Image
-                      src={article.image}
-                      alt={article.alt}
-                      fill
-                      sizes="132px"
-                      style={{ objectFit: "contain" }}
-                    />
-                    <Image
-                      className="latest-articles-card-stamp"
-                      src="/brand/orginal-clear.png"
-                      alt=""
-                      width={16}
-                      height={16}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div className="latest-articles-card-copy">
-                    <span className="latest-articles-card-kicker">{article.category}</span>
-                    <strong>{article.title}</strong>
-                    <span className="latest-articles-card-date">{article.date}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="latest-articles-foot">
-            <Image
-              src="/brand/mardekoohestan.png"
-              alt={brand.name}
-              width={120}
-              height={32}
-              className="latest-articles-foot-logo"
-            />
-            <p>این راه سبز است — داستان‌هایی که می‌شود فهمید از کجا آمده.</p>
-          </div>
+          <ContentPane
+            paneId="catalog"
+            title="کاتالوگ و گالری"
+            titleIcon={<CatalogTitleIcon />}
+            viewAllHref="/products"
+            viewAllLabel="مشاهده همه"
+            groups={catalogGroups}
+            items={catalogCards}
+            activeGroupId={activeCatalogGroupId}
+            onGroupChange={setActiveCatalogGroupId}
+            tablistLabel="دسته‌بندی کاتالوگ و گالری"
+          />
         </div>
+
+        <p className="latest-articles-foot-note">
+          این راه سبز است — داستان و هویت برند، در دو نگاه: مجله و کاتالوگ.
+        </p>
       </div>
     </section>
   );
