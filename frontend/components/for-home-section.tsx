@@ -119,9 +119,9 @@ export function ForHomeSection() {
                               <Image
                                 src={item.image}
                                 alt={item.alt}
-                                width={208}
-                                height={208}
-                                sizes="(min-width: 1024px) 208px, (min-width: 768px) 44vw, 78vw"
+                                width={280}
+                                height={280}
+                                sizes="(min-width: 1024px) 280px, (min-width: 768px) 46vw, 88vw"
                                 className="for-home-product-photo-img"
                               />
                             </span>
@@ -142,9 +142,9 @@ export function ForHomeSection() {
                                           <Image
                                             src={product.image}
                                             alt={product.alt}
-                                            width={96}
-                                            height={96}
-                                            sizes="96px"
+                                            width={120}
+                                            height={120}
+                                            sizes="120px"
                                             className="for-home-popup-card-img"
                                           />
                                         </div>
