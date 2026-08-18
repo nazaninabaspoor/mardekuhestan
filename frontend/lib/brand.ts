@@ -88,6 +88,115 @@ export const homeDoors = [
   },
 ] as const;
 
+export const homeCategoryProducts = {
+  "fresh-meat": [
+    {
+      id: "meat-loin",
+      name: "ران گوسفند",
+      note: "برش تازه",
+      href: "/products?cat=fresh-meat",
+      image: "/brand/goosht.png",
+      alt: "ران گوسفند تازه",
+    },
+    {
+      id: "meat-shoulder",
+      name: "گردن بره",
+      note: "مناسب خانه",
+      href: "/products?cat=fresh-meat",
+      image: "/brand/home-meat.png",
+      alt: "گردن بره",
+    },
+    {
+      id: "meat-kebab",
+      name: "کباب‌پز",
+      note: "آماده پخت",
+      href: "/products?cat=fresh-meat",
+      image: "/brand/goosht.png",
+      alt: "گوشت کباب‌پز",
+    },
+  ],
+  dairy: [
+    {
+      id: "dairy-cheese",
+      name: "پنیر سنتی",
+      note: "صبحانه",
+      href: "/products?cat=dairy",
+      image: "/brand/panir.png",
+      alt: "پنیر سنتی",
+    },
+    {
+      id: "dairy-yogurt",
+      name: "ماست چکیده",
+      note: "هر روز",
+      href: "/products?cat=dairy",
+      image: "/brand/home-dairy.png",
+      alt: "ماست چکیده",
+    },
+    {
+      id: "dairy-milk",
+      name: "شیر تازه",
+      note: "خانواده",
+      href: "/products?cat=dairy",
+      image: "/brand/panir.png",
+      alt: "شیر تازه",
+    },
+  ],
+  seafood: [
+    {
+      id: "sea-fish",
+      name: "ماهی تازه",
+      note: "از دریا",
+      href: "/products?cat=seafood",
+      image: "/brand/mahi.png",
+      alt: "ماهی تازه",
+    },
+    {
+      id: "sea-shrimp",
+      name: "میگو",
+      note: "انتخاب روز",
+      href: "/products?cat=seafood",
+      image: "/brand/home-seafood.png",
+      alt: "میگوی تازه",
+    },
+    {
+      id: "sea-mix",
+      name: "ماهی جنوب",
+      note: "تازه",
+      href: "/products?cat=seafood",
+      image: "/brand/mahi.png",
+      alt: "ماهی جنوب",
+    },
+  ],
+  ready: [
+    {
+      id: "ready-stew",
+      name: "خورشت آماده",
+      note: "فقط گرم کن",
+      href: "/products?cat=ready",
+      image: "/brand/akhary.png",
+      alt: "خورشت آماده",
+    },
+    {
+      id: "ready-rice",
+      name: "غذای کامل",
+      note: "طعم خانه",
+      href: "/products?cat=ready",
+      image: "/brand/home-ready.png",
+      alt: "غذای کامل آماده",
+    },
+    {
+      id: "ready-soup",
+      name: "آش آماده",
+      note: "سریع",
+      href: "/products?cat=ready",
+      image: "/brand/akhary.png",
+      alt: "آش آماده",
+    },
+  ],
+} as const;
+
+export type HomeDoorId = keyof typeof homeCategoryProducts;
+
 export const latestArticles = [
   {
     id: "pasture-to-table",
