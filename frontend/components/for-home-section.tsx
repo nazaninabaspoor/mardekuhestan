@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { PeakMark } from "@/components/brand-marks";
-import { homeDoors, homePaths } from "@/lib/brand";
+import { homeDoors } from "@/lib/brand";
 
 export function ForHomeSection() {
   return (
@@ -28,15 +28,6 @@ export function ForHomeSection() {
                 <h3>{item.label}</h3>
                 <p>{item.line}</p>
               </span>
-            </Link>
-          ))}
-        </nav>
-
-        <nav className="for-home-paths" aria-label="دسته‌های دیگر">
-          {homePaths.map((item) => (
-            <Link key={item.href} href={item.href} className="for-home-path">
-              <span className="for-home-path-label">{item.label}</span>
-              <span className="for-home-path-line">{item.line}</span>
             </Link>
           ))}
         </nav>

@@ -58,17 +58,20 @@ export const homeDoors = [
     alt: "صبحانه خانه با لبنیات مرد کوهستان",
     position: "center 52%",
   },
-] as const;
-
-export const homePaths = [
   {
     href: "/products?cat=seafood",
     label: "ماهی و میگو",
     line: "از آب، تازه",
+    image: "/brand/mahi.png",
+    alt: "ماهی و میگوی تازه برای خانه",
+    position: "center 50%",
   },
   {
     href: "/products?cat=ready",
     label: "غذای آماده",
-    line: "طعم خانه، وقتی وقت کم است",
+    line: "وقتی وقت کم است، طعم خانه بماند",
+    image: "/brand/akhary.png",
+    alt: "غذای آماده خانگی مرد کوهستان",
+    position: "center 58%",
   },
 ] as const;
