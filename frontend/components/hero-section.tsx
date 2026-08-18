@@ -1,23 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ContourField, MountainPattern, PeakMark } from "@/components/brand-marks";
+import { PeakMark } from "@/components/brand-marks";
 
 export function HeroSection() {
   return (
     <section className="landing" aria-labelledby="hero-title">
-      <div className="landing-backdrop" aria-hidden="true">
-        <Image
-          src="/brand/hero-atmosphere2.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="landing-backdrop-photo"
-        />
-        <div className="landing-backdrop-veil" />
-      </div>
-      <ContourField className="landing-contour" />
       <div className="shell">
         <div className="landing-stage">
           <div className="landing-grid">
@@ -80,7 +68,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-      <MountainPattern />
     </section>
   );
 }
