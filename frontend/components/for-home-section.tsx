@@ -2,15 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { homeCategoryProducts, homeDoors, type HomeDoorId } from "@/lib/brand";
 
@@ -40,39 +32,11 @@ function ViewMoreIcon() {
   );
 }
 
-const LEAVE_DELAY_MS = 360;
-
-type PopupPosition = {
-  top: number;
-  left: number;
-  width: number;
-};
-
-function getPopupPosition(anchor: HTMLElement): PopupPosition {
-  const rect = anchor.getBoundingClientRect();
-  const width = Math.min(Math.max(rect.width + 48, 300), 380);
-  const left = Math.min(
-    Math.max(rect.left + rect.width / 2, width / 2 + 12),
-    window.innerWidth - width / 2 - 12,
-  );
-
-  return {
-    top: rect.bottom + 10,
-    left,
-    width,
-  };
-}
+const LEAVE_DELAY_MS = 380;
 
 export function ForHomeSection() {
   const [activeDoorId, setActiveDoorId] = useState<HomeDoorId | null>(null);
-  const [popupStyle, setPopupStyle] = useState<CSSProperties | null>(null);
-  const [mounted, setMounted] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const anchorRefs = useRef<Map<HomeDoorId, HTMLElement>>(new Map());
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const clearLeaveTimer = useCallback(() => {
     if (leaveTimer.current) {
@@ -97,41 +61,6 @@ export function ForHomeSection() {
     }, LEAVE_DELAY_MS);
   }, [clearLeaveTimer]);
 
-  const activeDoor = activeDoorId
-    ? homeDoors.find((door) => door.id === activeDoorId)
-    : null;
-  const previewProducts = activeDoorId ? homeCategoryProducts[activeDoorId] : [];
-
-  useLayoutEffect(() => {
-    if (!activeDoorId) {
-      setPopupStyle(null);
-      return;
-    }
-
-    const updatePosition = () => {
-      const anchor = anchorRefs.current.get(activeDoorId);
-      if (!anchor) {
-        return;
-      }
-
-      const position = getPopupPosition(anchor);
-      setPopupStyle({
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-        width: `${position.width}px`,
-      });
-    };
-
-    updatePosition();
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
-
-    return () => {
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
-    };
-  }, [activeDoorId]);
-
   useEffect(() => {
     if (!activeDoorId) {
       return;
@@ -146,58 +75,6 @@ export function ForHomeSection() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeDoorId]);
-
-  const popup =
-    mounted && activeDoor && popupStyle
-      ? createPortal(
-          <>
-            <div className="for-home-popup-backdrop" aria-hidden="true" />
-            <div
-              className="for-home-popup"
-              style={popupStyle}
-              role="dialog"
-              aria-label={`محصولات ${activeDoor.label}`}
-              onMouseEnter={clearLeaveTimer}
-              onMouseLeave={scheduleClear}
-            >
-              <div key={activeDoor.id} className="for-home-popup-panel">
-                <div className="for-home-popup-head">
-                  <p className="for-home-popup-kicker">{activeDoor.line}</p>
-                  <h3>{activeDoor.label}</h3>
-                </div>
-
-                <ul className="for-home-popup-grid">
-                  {previewProducts.map((product) => (
-                    <li key={product.id}>
-                      <Link href={product.href} className="for-home-popup-card">
-                        <div className="for-home-popup-card-image">
-                          <Image
-                            src={product.image}
-                            alt={product.alt}
-                            fill
-                            sizes="72px"
-                            style={{ objectFit: "contain" }}
-                          />
-                        </div>
-                        <div className="for-home-popup-card-copy">
-                          <strong>{product.name}</strong>
-                          <span>{product.note}</span>
-                        </div>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link href={activeDoor.href} className="for-home-popup-more">
-                  مشاهده همه {activeDoor.label}
-                  <ViewMoreIcon />
-                </Link>
-              </div>
-            </div>
-          </>,
-          document.body,
-        )
-      : null;
 
   return (
     <section className="for-home" aria-labelledby="for-home-title">
@@ -218,43 +95,80 @@ export function ForHomeSection() {
             <ul className="for-home-products">
               {homeDoors.map((item) => {
                 const isActive = activeDoorId === item.id;
+                const previewProducts = homeCategoryProducts[item.id];
 
                 return (
-                  <li key={item.id} className="for-home-product">
+                  <li
+                    key={item.id}
+                    className={`for-home-product${isActive ? " is-popup-open" : ""}`}
+                  >
                     <article
-                      ref={(node) => {
-                        if (node) {
-                          anchorRefs.current.set(item.id, node);
-                        } else {
-                          anchorRefs.current.delete(item.id);
-                        }
-                      }}
                       className={`for-home-product-area${isActive ? " is-active" : ""}`}
                       onMouseEnter={() => activateDoor(item.id)}
                       onMouseLeave={scheduleClear}
                       onFocus={() => activateDoor(item.id)}
                     >
-                      <div className="for-home-product-image">
-                        <Link href={item.href} title={item.label}>
+                      <div className="for-home-product-visual">
+                        <div className="for-home-product-image">
                           <span className="for-home-product-badge">{item.line}</span>
-                          <Image
-                            src={item.image}
-                            alt={item.alt}
-                            width={230}
-                            height={230}
-                            sizes="(min-width: 1024px) 230px, (min-width: 768px) 45vw, 88vw"
-                            style={{ objectPosition: item.position }}
-                          />
-                        </Link>
+                          <Link href={item.href} className="for-home-product-photo" title={item.label}>
+                            <span
+                              className="for-home-product-photo-stage"
+                              style={{ ["--product-focus" as string]: item.position }}
+                            >
+                              <Image
+                                src={item.image}
+                                alt={item.alt}
+                                width={208}
+                                height={208}
+                                sizes="(min-width: 1024px) 208px, (min-width: 768px) 44vw, 78vw"
+                                className="for-home-product-photo-img"
+                              />
+                            </span>
+                          </Link>
+
+                          {isActive ? (
+                            <div
+                              className="for-home-popup"
+                              role="dialog"
+                              aria-label={`محصولات ${item.label}`}
+                            >
+                              <div className="for-home-popup-panel">
+                                <ul className="for-home-popup-grid">
+                                  {previewProducts.map((product) => (
+                                    <li key={product.id}>
+                                      <Link href={product.href} className="for-home-popup-card">
+                                        <div className="for-home-popup-card-frame">
+                                          <Image
+                                            src={product.image}
+                                            alt={product.alt}
+                                            width={96}
+                                            height={96}
+                                            sizes="96px"
+                                            className="for-home-popup-card-img"
+                                          />
+                                        </div>
+                                        <p className="for-home-popup-card-label">
+                                          {product.name}
+                                          <span>{product.note}</span>
+                                        </p>
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                                <Link href={item.href} className="for-home-popup-more">
+                                  مشاهده بیشتر
+                                  <ViewMoreIcon />
+                                </Link>
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
+
                       <h3 className="for-home-product-name">
                         <Link href={item.href}>{item.label}</Link>
                       </h3>
-                      <div className="for-home-product-actions">
-                        <Link href={item.href} className="for-home-product-cta">
-                          مشاهده {item.label}
-                        </Link>
-                      </div>
                     </article>
                   </li>
                 );
@@ -263,7 +177,6 @@ export function ForHomeSection() {
           </div>
         </div>
       </div>
-      {popup}
     </section>
   );
 }
