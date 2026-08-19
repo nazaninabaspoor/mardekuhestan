@@ -9,61 +9,96 @@ export function HeroSection() {
       <div className="shell">
         <div className="landing-stage">
           <div className="landing-grid">
-            <Link href="#for-home-title" className="landing-shot">
-              <div className="landing-shot-image">
-                <span className="landing-shot-badge">برای خانه</span>
-                <div className="landing-shot-frame">
-                  <Image
-                    src="/brand/landing-home.png"
-                    alt="سفره خانه با غذای مرد کوهستان"
-                    fill
-                    priority
-                    sizes="(max-width: 900px) 100vw, 38vw"
-                    className="landing-shot-photo"
-                  />
+            <Link
+              href="#for-home-title"
+              className="landing-shot landing-shot--home"
+              aria-label="برای خانه — سفرهٔ گرم و آماده"
+            >
+              <div className="landing-panel landing-media-panel">
+                <div className="landing-panel-frame landing-media-frame">
+                  <div className="landing-media-slot">
+                    <Image
+                      src="/brand/landing-home.png"
+                      alt=""
+                      fill
+                      priority
+                      sizes="(max-width: 900px) 100vw, 38vw"
+                      className="landing-media-cover"
+                    />
+                  </div>
                 </div>
               </div>
-              <p className="landing-shot-name">سفرهٔ گرم و آماده</p>
+              <div className="landing-panel-caption">
+                <p className="landing-panel-kicker">برای خانه</p>
+                <p className="landing-panel-title">سفرهٔ گرم و آماده</p>
+              </div>
             </Link>
 
             <div className="landing-center">
-              <div className="landing-copy">
-                <Image
-                  src="/brand/landing-way.png"
-                  alt=""
-                  fill
-                  priority
-                  sizes="(max-width: 900px) 100vw, 24vw"
-                  className="landing-copy-photo"
-                />
-                <div className="landing-copy-plaque">
-                  <h1 id="hero-title">این راه سبز است</h1>
-                  <PeakMark className="copy-peak" />
-                  <p className="landing-lead">از مرتع تا سفرهٔ خانه — مسیری که می‌شود به آن اعتماد کرد</p>
-                  <Link href="/chain" className="btn-primary hero-cta">
-                    شروع راه سبز
-                  </Link>
+              <div className="landing-panel landing-copy landing-media-panel">
+                <div className="landing-panel-frame landing-media-frame landing-copy-frame">
+                  <div className="landing-media-slot">
+                    <Image
+                      src="/brand/landing-way.png"
+                      alt=""
+                      fill
+                      priority
+                      sizes="(max-width: 900px) 100vw, 24vw"
+                      className="landing-media-cover landing-copy-photo"
+                    />
+                  </div>
+                  <div className="landing-copy-vignette" aria-hidden="true" />
+                </div>
+                <div className="landing-copy-body">
+                  <div className="landing-copy-statement">
+                    <h1 id="hero-title">این راه سبز است</h1>
+                    <PeakMark className="copy-peak" aria-hidden="true" />
+                    <p className="landing-lead">
+                      <span className="landing-lead-line">از مرتع تا سفرهٔ خانه</span>
+                      <span className="landing-lead-line landing-lead-line--trust">
+                        مسیری که می‌شود به آن اعتماد کرد
+                      </span>
+                    </p>
+                  </div>
+                  <div className="landing-copy-foot">
+                    <Link href="/chain" className="hero-cta">
+                      <span className="hero-cta-glow" aria-hidden="true" />
+                      <span className="hero-cta-inner">
+                        <PeakMark className="hero-cta-mark" aria-hidden="true" />
+                        <span className="hero-cta-text">شروع راه سبز</span>
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <p className="landing-center-foot" aria-hidden="true">
-                &nbsp;
-              </p>
+              <div className="landing-panel-caption landing-panel-caption--center">
+                <p className="landing-panel-kicker">مرد کوهستان</p>
+                <p className="landing-panel-title">مسیر قابل اعتماد</p>
+              </div>
             </div>
 
-            <Link href="/chain" className="landing-shot">
-              <div className="landing-shot-image">
-                <span className="landing-shot-badge">از مرتع</span>
-                <div className="landing-shot-frame">
-                  <Image
-                    src="/brand/landing-pasture.png"
-                    alt="دام در مرتع مرد کوهستان"
-                    fill
-                    sizes="(max-width: 900px) 100vw, 38vw"
-                    className="landing-shot-photo"
-                  />
+            <Link
+              href="/chain"
+              className="landing-shot landing-shot--pasture"
+              aria-label="از مرتع — آرام و روشن"
+            >
+              <div className="landing-panel landing-media-panel">
+                <div className="landing-panel-frame landing-media-frame">
+                  <div className="landing-media-slot">
+                    <Image
+                      src="/brand/landing-pasture.png"
+                      alt=""
+                      fill
+                      sizes="(max-width: 900px) 100vw, 38vw"
+                      className="landing-media-cover"
+                    />
+                  </div>
                 </div>
               </div>
-              <p className="landing-shot-name">آرام و روشن</p>
+              <div className="landing-panel-caption">
+                <p className="landing-panel-kicker">از مرتع</p>
+                <p className="landing-panel-title">آرام و روشن</p>
+              </div>
             </Link>
           </div>
         </div>

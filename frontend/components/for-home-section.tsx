@@ -81,10 +81,11 @@ export function ForHomeSection() {
       <div className="shell">
         <div className="for-home-block">
           <div className="for-home-block-title">
-            <div className="for-home-block-title-text" id="for-home-title">
+            <h2 className="for-home-block-title-text" id="for-home-title">
               <BlockTitleIcon />
               چه به خانه می‌رسد
-            </div>
+            </h2>
+            <span className="for-home-block-title-rule" aria-hidden="true" />
             <Link href="/products" className="for-home-view-more" title="همه محصولات">
               <ViewMoreIcon />
               مشاهده همه

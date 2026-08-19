@@ -12,8 +12,8 @@ export const topLinks = [
 ] as const;
 
 export const navItems = [
-  { href: "/", label: "خانه" },
-  { href: "/products", label: "محصولات", flag: "جدید" },
+  { href: "/rahyaar", label: "راهیار", flag: "بزودی" },
+  { href: "/products", label: "محصولات" },
   { href: "/chain", label: "مسیر غذا", flag: "از مرتع" },
   { href: "/way", label: "راه ما" },
   { href: "/contact", label: "تماس" },
