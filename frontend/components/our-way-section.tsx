@@ -26,7 +26,7 @@ function JourneyPath() {
            S 560 1080, 640 1140"
         fill="none"
         stroke="currentColor"
-        strokeWidth="18"
+        strokeWidth="12"
         strokeLinecap="round"
       />
       <path
@@ -42,10 +42,10 @@ function JourneyPath() {
            C 500 1080, 600 1100, 655 1155"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2.4"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeDasharray="2.5 11"
+        strokeDasharray="2 10"
       />
     </svg>
   );
@@ -98,7 +98,7 @@ export function OurWaySection() {
                       src={step.scene}
                       alt={step.sceneAlt}
                       fill
-                      sizes="(max-width: 900px) 88vw, 360px"
+                      sizes="(max-width: 900px) 88vw, 260px"
                       className="our-way-stop-photo"
                     />
                     {overlay ? (

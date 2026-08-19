@@ -1558,7 +1558,7 @@ body {
 
 .our-way {
   position: relative;
-  padding: 8px 0 48px;
+  padding: 4px 0 28px;
   background: transparent;
   color: var(--green);
   border-bottom: 1px solid color-mix(in srgb, var(--green) 10%, transparent);
@@ -1568,7 +1568,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
 }
 
 .our-way-title {
@@ -1633,28 +1633,28 @@ body {
 }
 
 .our-way-lead-line {
-  max-width: 40rem;
-  margin: 0 0 22px;
-  font-size: 13px;
+  max-width: 34rem;
+  margin: 0 0 14px;
+  font-size: 12px;
   font-weight: 700;
-  line-height: 2;
-  color: color-mix(in srgb, var(--green) 88%, #222);
+  line-height: 1.85;
+  color: color-mix(in srgb, var(--green) 84%, #222);
 }
 
 .our-way-kicker {
   display: block;
-  margin-bottom: 4px;
-  font-size: 11px;
+  margin-bottom: 2px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: color-mix(in srgb, var(--green) 55%, transparent);
+  color: color-mix(in srgb, var(--green) 52%, transparent);
 }
 
 .our-way-journey {
   position: relative;
-  min-height: 1120px;
+  min-height: 720px;
   margin: 0 auto;
-  padding: 8px 0 20px;
+  padding: 4px 0 8px;
 }
 
 .our-way-path {
@@ -1668,11 +1668,11 @@ body {
 }
 
 .our-way-path-glow {
-  opacity: 0.08;
+  opacity: 0.06;
 }
 
 .our-way-path-line {
-  opacity: 0.72;
+  opacity: 0.62;
   animation: our-way-path-draw 1.8s ease both;
 }
 
@@ -1682,7 +1682,7 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 1120px;
+  min-height: 720px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1691,53 +1691,53 @@ body {
 .our-way-stop {
   position: absolute;
   display: grid;
-  gap: 10px;
-  width: min(360px, 42vw);
+  gap: 6px;
+  width: min(248px, 28vw);
   animation: our-way-stop-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .our-way-stop--east {
-  right: 2%;
+  right: 4%;
   justify-items: end;
   text-align: right;
 }
 
 .our-way-stop--west {
-  left: 2%;
+  left: 4%;
   justify-items: start;
   text-align: right;
 }
 
 .our-way-stop--climb {
-  top: 1%;
+  top: 0%;
   animation-delay: 40ms;
 }
 
 .our-way-stop--pasture {
-  top: 19%;
-  animation-delay: 120ms;
+  top: 18%;
+  animation-delay: 100ms;
 }
 
 .our-way-stop--craft {
-  top: 39%;
-  animation-delay: 200ms;
+  top: 36%;
+  animation-delay: 160ms;
 }
 
 .our-way-stop--tend {
-  top: 58%;
-  animation-delay: 280ms;
+  top: 54%;
+  animation-delay: 220ms;
 }
 
 .our-way-stop--descend {
-  top: 78%;
-  width: min(380px, 46vw);
-  animation-delay: 360ms;
+  top: 72%;
+  width: min(256px, 30vw);
+  animation-delay: 280ms;
 }
 
 .our-way-stop-pin {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--green);
 }
 
@@ -1746,58 +1746,58 @@ body {
 }
 
 .our-way-stop-peak {
-  width: 16px;
-  height: 11px;
+  width: 12px;
+  height: 8px;
   transform: rotate(180deg);
-  filter: drop-shadow(0 0 0 5px color-mix(in srgb, var(--cream) 70%, transparent));
+  filter: drop-shadow(0 0 0 4px color-mix(in srgb, var(--cream) 70%, transparent));
 }
 
 .our-way-stop-num {
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: color-mix(in srgb, var(--green) 55%, transparent);
+  color: color-mix(in srgb, var(--green) 50%, transparent);
 }
 
 .our-way-stop-scene {
   position: relative;
   overflow: hidden;
   width: 100%;
-  aspect-ratio: 5 / 3.4;
+  aspect-ratio: 16 / 10;
   margin: 0;
-  border-radius: 18px 18px 42% 18px / 18px 18px 28% 18px;
+  border-radius: 12px 12px 34% 12px / 12px 12px 22% 12px;
   box-shadow:
-    0 18px 36px rgb(0 45 36 / 14%),
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 18%, transparent);
-  background: color-mix(in srgb, var(--green) 12%, var(--cream));
-  transition: transform 280ms ease, box-shadow 280ms ease;
+    0 8px 18px rgb(0 45 36 / 10%),
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 14%, transparent);
+  background: color-mix(in srgb, var(--green) 10%, var(--cream));
+  transition: transform 240ms ease, box-shadow 240ms ease;
 }
 
 .our-way-stop:hover .our-way-stop-scene {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow:
-    0 22px 40px rgb(0 45 36 / 18%),
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 26%, transparent);
+    0 12px 22px rgb(0 45 36 / 12%),
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 22%, transparent);
 }
 
 .our-way-stop--west .our-way-stop-scene {
-  border-radius: 18px 18px 18px 42% / 18px 18px 18px 28%;
+  border-radius: 12px 12px 12px 34% / 12px 12px 12px 22%;
 }
 
 .our-way-stop--descend .our-way-stop-scene {
-  border-radius: 18px 42% 18px 18px / 18px 30% 18px 18px;
-  aspect-ratio: 5 / 3.8;
+  border-radius: 12px 34% 12px 12px / 12px 24% 12px 12px;
+  aspect-ratio: 16 / 10.5;
 }
 
 .our-way-stop-photo {
   object-fit: cover;
   object-position: center 45%;
   transform: scale(1.02);
-  transition: transform 480ms ease;
+  transition: transform 420ms ease;
 }
 
 .our-way-stop:hover .our-way-stop-photo {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .our-way-stop--climb .our-way-stop-photo {
@@ -1819,7 +1819,7 @@ body {
 
 .our-way-stop--descend .our-way-stop-photo {
   object-position: center 18%;
-  filter: saturate(0.92) brightness(1.02) blur(0.2px);
+  filter: saturate(0.92) brightness(1.02);
 }
 
 .our-way-stop-overlay {
@@ -1827,11 +1827,11 @@ body {
   right: 2%;
   bottom: 0;
   z-index: 2;
-  width: 62%;
+  width: 54%;
   height: auto;
   object-fit: contain;
   mix-blend-mode: lighten;
-  filter: drop-shadow(0 10px 16px rgb(0 0 0 / 22%));
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 18%));
   pointer-events: none;
 }
 
@@ -1839,23 +1839,23 @@ body {
   position: absolute;
   z-index: 3;
   width: auto;
-  height: 78%;
+  height: 70%;
   object-fit: contain;
-  filter: drop-shadow(0 12px 18px rgb(0 20 16 / 35%));
+  filter: drop-shadow(0 8px 12px rgb(0 20 16 / 28%));
   pointer-events: none;
 }
 
 .our-way-stop--tend .our-way-stop-walker {
-  left: 6%;
-  bottom: -2%;
-  height: 72%;
+  left: 5%;
+  bottom: -1%;
+  height: 64%;
 }
 
 .our-way-stop--descend .our-way-stop-walker {
-  right: 8%;
-  bottom: -6%;
-  height: 88%;
-  transform: rotate(4deg) translateY(4px);
+  right: 7%;
+  bottom: -4%;
+  height: 76%;
+  transform: rotate(3deg) translateY(2px);
   animation: our-way-walker-step 2.8s ease-in-out infinite;
 }
 
@@ -1863,50 +1863,54 @@ body {
   position: absolute;
   inset: auto 0 0;
   z-index: 1;
-  height: 42%;
+  height: 36%;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    color-mix(in srgb, var(--green) 28%, transparent) 100%
+    color-mix(in srgb, var(--green) 22%, transparent) 100%
   );
   pointer-events: none;
 }
 
 .our-way-stop--tend .our-way-stop-veil,
 .our-way-stop--descend .our-way-stop-veil {
-  height: 28%;
-  opacity: 0.55;
+  height: 24%;
+  opacity: 0.5;
 }
 
 .our-way-stop-copy {
-  max-width: 22rem;
-  padding: 2px 2px 0;
+  max-width: 16.5rem;
+  padding: 0;
 }
 
 .our-way-stop-title {
-  margin: 0 0 4px;
-  font-size: 14px;
+  margin: 0 0 2px;
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1.7;
+  line-height: 1.65;
   color: var(--green);
 }
 
 .our-way-stop-text {
   margin: 0;
-  font-size: 12px;
+  font-size: 10.5px;
   font-weight: 400;
-  line-height: 1.95;
-  color: color-mix(in srgb, var(--green) 62%, #4a4a4a);
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--green) 60%, #4a4a4a);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .our-way-note {
-  max-width: 44rem;
-  margin: 18px auto 0;
-  font-size: 12px;
+  max-width: 38rem;
+  margin: 12px auto 0;
+  font-size: 11px;
   font-weight: 400;
-  line-height: 2;
+  line-height: 1.9;
   text-align: center;
-  color: color-mix(in srgb, var(--green) 58%, transparent);
+  color: color-mix(in srgb, var(--green) 55%, transparent);
 }
 
 @keyframes our-way-path-draw {
@@ -1917,14 +1921,14 @@ body {
 
   to {
     stroke-dashoffset: 0;
-    opacity: 0.72;
+    opacity: 0.62;
   }
 }
 
 @keyframes our-way-stop-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(12px);
   }
 
   to {
@@ -1936,11 +1940,11 @@ body {
 @keyframes our-way-walker-step {
   0%,
   100% {
-    transform: rotate(4deg) translateY(4px);
+    transform: rotate(3deg) translateY(2px);
   }
 
   50% {
-    transform: rotate(2deg) translateY(0);
+    transform: rotate(1.5deg) translateY(0);
   }
 }
 
@@ -1954,11 +1958,11 @@ body {
 
 @media (max-width: 1040px) {
   .our-way-stop {
-    width: min(320px, 46vw);
+    width: min(230px, 32vw);
   }
 
   .our-way-stop--descend {
-    width: min(340px, 50vw);
+    width: min(236px, 34vw);
   }
 }
 
@@ -1975,7 +1979,7 @@ body {
   .our-way-stops {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 18px;
     min-height: 0;
   }
 
@@ -1985,10 +1989,11 @@ body {
     right: auto !important;
     left: auto !important;
     width: 100%;
-    max-width: 520px;
+    max-width: 420px;
     margin-inline: auto;
     justify-items: stretch;
     text-align: right;
+    gap: 8px;
   }
 
   .our-way-stop-pin {
@@ -1998,8 +2003,16 @@ body {
   .our-way-stop-scene,
   .our-way-stop--west .our-way-stop-scene,
   .our-way-stop--descend .our-way-stop-scene {
-    border-radius: 16px;
-    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .our-way-stop-copy {
+    max-width: none;
+  }
+
+  .our-way-stop-text {
+    -webkit-line-clamp: 4;
   }
 
   .our-way-stop--descend .our-way-stop-walker {
@@ -2009,35 +2022,40 @@ body {
 
 @media (max-width: 640px) {
   .our-way {
-    padding: 4px 0 32px;
+    padding: 2px 0 22px;
   }
 
   .our-way-lead-line {
-    font-size: 12.5px;
+    font-size: 11.5px;
+    margin-bottom: 12px;
   }
 
   .our-way-stops {
-    gap: 22px;
+    gap: 16px;
   }
 
   .our-way-stop-title {
-    font-size: 13px;
-  }
-
-  .our-way-stop-text {
     font-size: 11.5px;
   }
 
+  .our-way-stop-text {
+    font-size: 10.5px;
+  }
+
   .our-way-stop-overlay {
-    width: 52%;
+    width: 48%;
   }
 
   .our-way-stop--tend .our-way-stop-walker {
-    height: 64%;
+    height: 58%;
   }
 
   .our-way-stop--descend .our-way-stop-walker {
-    height: 78%;
+    height: 68%;
+  }
+
+  .our-way-note {
+    font-size: 10.5px;
   }
 }
 
