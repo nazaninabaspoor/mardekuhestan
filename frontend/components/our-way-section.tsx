@@ -13,30 +13,55 @@ import {
 import { PeakMark } from "@/components/brand-marks";
 import { ourWay } from "@/lib/brand";
 
+/**
+ * Peak–valley–peak–valley–peak.
+ * Endpoints ARE the first/last stop seats (no dangling tips).
+ * viewBox 1000×220
+ */
 const ROAD_PATH =
-  "M 36 120 C 150 52, 240 172, 340 96 S 530 46, 630 124 S 790 182, 964 112";
+  "M 0 72 C 80 68, 140 168, 250 168 S 390 52, 500 50 S 620 168, 750 168 S 900 70, 1000 72";
 
-const BEAD_COUNT = 56;
-/** RTL: step 01 on path end (right), step 05 on path start (left) */
-const STOP_T = [1, 0.72, 0.5, 0.28, 0] as const;
+/** Spacing along path in viewBox units — denser trail */
+const BEAD_SPACING = 7;
+/** Keep clear of pin centers (viewBox length units) */
+const STOP_CLEARANCE = 16;
+
+/** RTL: 01 = path end (right peak), 05 = path start (left peak) */
+const STOP_T = [1, 0.75, 0.5, 0.25, 0] as const;
 
 type Point = { xPct: number; yPct: number };
 
-function pointOnPath(path: SVGPathElement, t: number): Point {
-  const length = path.getTotalLength();
-  const p = path.getPointAtLength(Math.max(0, Math.min(1, t)) * length);
-  return {
-    xPct: (p.x / 1000) * 100,
-    yPct: (p.y / 220) * 100,
-  };
-}
+function stagePoint(
+  path: SVGPathElement,
+  stage: HTMLElement,
+  distance: number,
+): Point | null {
+  const svg = path.ownerSVGElement;
+  if (!svg) return null;
 
-function nearStop(t: number) {
-  return STOP_T.some((stop) => Math.abs(stop - t) < 0.04);
+  const length = path.getTotalLength();
+  const p = path.getPointAtLength(
+    Math.max(0, Math.min(length, distance)),
+  );
+  const ctm = path.getScreenCTM();
+  if (!ctm) return null;
+
+  const pt = svg.createSVGPoint();
+  pt.x = p.x;
+  pt.y = p.y;
+  const screen = pt.matrixTransform(ctm);
+  const rect = stage.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return null;
+
+  return {
+    xPct: ((screen.x - rect.left) / rect.width) * 100,
+    yPct: ((screen.y - rect.top) / rect.height) * 100,
+  };
 }
 
 export function OurWaySection() {
   const mapRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const [beads, setBeads] = useState<
     { id: string; x: number; y: number; emoji: string }[]
@@ -47,32 +72,58 @@ export function OurWaySection() {
 
   useLayoutEffect(() => {
     const path = pathRef.current;
-    if (!path) return;
+    const stage = stageRef.current;
+    if (!path || !stage) return;
 
-    const nextBeads = [];
-    for (let i = 0; i < BEAD_COUNT; i += 1) {
-      const t = i / (BEAD_COUNT - 1);
-      if (nearStop(t)) continue;
-      const point = pointOnPath(path, t);
-      nextBeads.push({
-        id: `bead-${i}`,
-        x: point.xPct,
-        y: point.yPct,
-        emoji: i % 2 === 0 ? "⛰️" : "🍃",
-      });
-    }
-    setBeads(nextBeads);
+    const measure = () => {
+      const length = path.getTotalLength();
+      if (length <= 0) return;
 
-    setAnchors(
-      STOP_T.map((t, index) => {
-        const point = pointOnPath(path, t);
-        return {
+      const stopDist = STOP_T.map((t) => t * length);
+
+      const nextBeads: {
+        id: string;
+        x: number;
+        y: number;
+        emoji: string;
+      }[] = [];
+      const count = Math.max(1, Math.floor(length / BEAD_SPACING));
+      for (let i = 0; i <= count; i += 1) {
+        const dist = (i / count) * length;
+        if (stopDist.some((sd) => Math.abs(sd - dist) < STOP_CLEARANCE)) {
+          continue;
+        }
+        const point = stagePoint(path, stage, dist);
+        if (!point) continue;
+        nextBeads.push({
+          id: `bead-${i}`,
           x: point.xPct,
           y: point.yPct,
-          band: (index % 2 === 0 ? "high" : "low") as "high" | "low",
-        };
-      }),
-    );
+          emoji: i % 2 === 0 ? "⛰️" : "🍃",
+        });
+      }
+      setBeads(nextBeads);
+
+      setAnchors(
+        STOP_T.map((t, index) => {
+          const point = stagePoint(path, stage, t * length);
+          return {
+            x: point?.xPct ?? 0,
+            y: point?.yPct ?? 0,
+            band: (index % 2 === 0 ? "high" : "low") as "high" | "low",
+          };
+        }),
+      );
+    };
+
+    measure();
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(stage);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -108,10 +159,16 @@ export function OurWaySection() {
           </Link>
         </div>
 
-        <header className="our-way-intro">
-          <p className="our-way-kicker">{ourWay.kicker}</p>
-          <p className="our-way-lead">{ourWay.lead}</p>
-        </header>
+        <div className="our-way-story">
+          <header className="our-way-intro">
+            <p className="our-way-kicker">{ourWay.kicker}</p>
+            <p className="our-way-lead">{ourWay.lead}</p>
+          </header>
+          <aside className="our-way-note" aria-label="یادداشت راه">
+            <PeakMark className="our-way-note-peak" />
+            <p>{ourWay.note}</p>
+          </aside>
+        </div>
 
         <div
           className="our-way-map"
@@ -121,7 +178,7 @@ export function OurWaySection() {
           style={mapStyle}
         >
           <div className="our-way-map-inner">
-            <div className="our-way-map-stage">
+            <div className="our-way-map-stage" ref={stageRef}>
               <svg
                 className="our-way-map-wave"
                 viewBox="0 0 1000 220"
@@ -134,8 +191,8 @@ export function OurWaySection() {
                   d={ROAD_PATH}
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="34"
-                  strokeLinecap="round"
+                  strokeWidth="11"
+                  strokeLinecap="butt"
                 />
                 <path
                   ref={pathRef}
@@ -143,17 +200,23 @@ export function OurWaySection() {
                   d={ROAD_PATH}
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="6.5"
-                  strokeLinecap="round"
+                  strokeWidth="3.35"
+                  strokeLinecap="butt"
                 />
               </svg>
 
               <div className="our-way-map-trail" aria-hidden="true">
-                {beads.map((bead) => (
+                {beads.map((bead, index) => (
                   <span
                     key={bead.id}
                     className="our-way-map-bead"
-                    style={{ left: `${bead.x}%`, top: `${bead.y}%` }}
+                    style={
+                      {
+                        left: `${bead.x}%`,
+                        top: `${bead.y}%`,
+                        "--bead-i": index,
+                      } as CSSProperties
+                    }
                   >
                     {bead.emoji}
                   </span>
@@ -183,8 +246,8 @@ export function OurWaySection() {
                             src={step.scene}
                             alt={step.sceneAlt}
                             width={1024}
-                            height={640}
-                            sizes="200px"
+                            height={1024}
+                            sizes="180px"
                             className="our-way-map-art"
                           />
                         </figure>
@@ -201,8 +264,6 @@ export function OurWaySection() {
             </div>
           </div>
         </div>
-
-        <p className="our-way-note">{ourWay.note}</p>
       </div>
     </section>
   );
