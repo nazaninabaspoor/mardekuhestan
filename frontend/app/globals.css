@@ -1558,7 +1558,7 @@ body {
 
 .our-way {
   position: relative;
-  padding: 4px 0 28px;
+  padding: 4px 0 26px;
   background: transparent;
   color: var(--green);
   border-bottom: 1px solid color-mix(in srgb, var(--green) 10%, transparent);
@@ -1568,7 +1568,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
 }
 
 .our-way-title {
@@ -1633,11 +1633,11 @@ body {
 }
 
 .our-way-lead-line {
-  max-width: 34rem;
-  margin: 0 0 14px;
+  max-width: 36rem;
+  margin: 0 0 12px;
   font-size: 12px;
   font-weight: 700;
-  line-height: 1.85;
+  line-height: 1.8;
   color: color-mix(in srgb, var(--green) 84%, #222);
 }
 
@@ -1650,408 +1650,341 @@ body {
   color: color-mix(in srgb, var(--green) 52%, transparent);
 }
 
-.our-way-journey {
+.our-way-map {
+  --mx: 50;
+  --my: 50;
+
   position: relative;
-  min-height: 720px;
-  margin: 0 auto;
-  padding: 4px 0 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0 -4px;
+  padding: 4px 4px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--green) 35%, transparent) transparent;
 }
 
-.our-way-path {
+.our-way-map-inner {
+  position: relative;
+  min-width: 980px;
+  height: 360px;
+  margin: 0 auto;
+}
+
+.our-way-map-wave {
+  position: absolute;
+  inset: 18% 2% 22%;
+  z-index: 0;
+  width: auto;
+  height: auto;
+  color: var(--green);
+  pointer-events: none;
+  opacity: 0.9;
+  transform: translate3d(
+    calc((var(--mx) - 50) * 0.08px),
+    calc((var(--my) - 50) * 0.06px),
+    0
+  );
+  transition: transform 180ms ease-out;
+}
+
+.our-way-map-wave-glow {
+  opacity: 0.07;
+}
+
+.our-way-map-wave-line {
+  opacity: 0.22;
+}
+
+.our-way-map:hover .our-way-map-wave-glow {
+  opacity: 0.12;
+}
+
+.our-way-map:hover .our-way-map-wave-line {
+  opacity: 0.34;
+}
+
+.our-way-map-trail {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  color: var(--green);
+  z-index: 1;
   pointer-events: none;
 }
 
-.our-way-path-glow {
-  opacity: 0.06;
+.our-way-map-bead {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: -0.55rem 0 0 -0.55rem;
+  font-size: 0.78rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgb(0 45 36 / 12%));
+  transform: translate3d(
+      calc((var(--mx) - 50) * 0.04px),
+      calc((var(--my) - 50) * 0.03px),
+      0
+    )
+    scale(1);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 220ms ease;
+  animation: our-way-bead-idle 3.6s ease-in-out infinite;
+  pointer-events: auto;
+  cursor: default;
 }
 
-.our-way-path-line {
-  opacity: 0.62;
-  animation: our-way-path-draw 1.8s ease both;
+.our-way-map-bead:hover {
+  transform: translate3d(
+      calc((var(--mx) - 50) * 0.04px),
+      calc((var(--my) - 50) * 0.03px),
+      0
+    )
+    scale(1.55) rotate(-8deg);
+  filter: drop-shadow(0 6px 10px rgb(0 91 72 / 28%));
+  animation: none;
+  z-index: 5;
 }
 
-.our-way-stops {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 720px;
+.our-way-map:hover .our-way-map-bead {
+  animation-duration: 1.8s;
+}
+
+.our-way-map-stops {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.our-way-stop {
+.our-way-map-stop {
   position: absolute;
+  top: 50%;
   display: grid;
-  gap: 6px;
-  width: min(248px, 28vw);
-  animation: our-way-stop-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  justify-items: center;
+  gap: 4px;
+  width: min(168px, 17vw);
+  margin-left: -84px;
+  text-align: center;
+  transform: translateY(-50%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.our-way-stop--east {
-  right: 4%;
-  justify-items: end;
-  text-align: right;
+.our-way-map-stop--high {
+  transform: translateY(calc(-50% - 78px));
 }
 
-.our-way-stop--west {
-  left: 4%;
-  justify-items: start;
-  text-align: right;
+.our-way-map-stop--low {
+  transform: translateY(calc(-50% + 78px));
 }
 
-.our-way-stop--climb {
-  top: 0%;
-  animation-delay: 40ms;
+.our-way-map-stop:hover,
+.our-way-map-stop:focus-within {
+  z-index: 6;
 }
 
-.our-way-stop--pasture {
-  top: 18%;
-  animation-delay: 100ms;
+.our-way-map-stop--high:hover,
+.our-way-map-stop--high:focus-within {
+  transform: translateY(calc(-50% - 86px));
 }
 
-.our-way-stop--craft {
-  top: 36%;
-  animation-delay: 160ms;
+.our-way-map-stop--low:hover,
+.our-way-map-stop--low:focus-within {
+  transform: translateY(calc(-50% + 70px));
 }
 
-.our-way-stop--tend {
-  top: 54%;
-  animation-delay: 220ms;
-}
-
-.our-way-stop--descend {
-  top: 72%;
-  width: min(256px, 30vw);
-  animation-delay: 280ms;
-}
-
-.our-way-stop-pin {
+.our-way-map-pin {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--green);
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cream) 55%, var(--milk));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 18%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--cream) 72%, transparent),
+    0 6px 14px rgb(0 45 36 / 10%);
+  font-size: 12px;
+  line-height: 1;
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
 }
 
-.our-way-stop--west .our-way-stop-pin {
-  flex-direction: row-reverse;
+.our-way-map-stop:hover .our-way-map-pin,
+.our-way-map-stop:focus-within .our-way-map-pin {
+  transform: scale(1.12);
+  background: color-mix(in srgb, var(--milk) 70%, var(--cream));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 28%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--green) 12%, transparent),
+    0 10px 18px rgb(0 45 36 / 16%);
 }
 
-.our-way-stop-peak {
-  width: 12px;
-  height: 8px;
-  transform: rotate(180deg);
-  filter: drop-shadow(0 0 0 4px color-mix(in srgb, var(--cream) 70%, transparent));
-}
-
-.our-way-stop-num {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: color-mix(in srgb, var(--green) 50%, transparent);
-}
-
-.our-way-stop-scene {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  aspect-ratio: 16 / 10;
+.our-way-map-figure {
   margin: 0;
-  border-radius: 12px 12px 34% 12px / 12px 12px 22% 12px;
-  box-shadow:
-    0 8px 18px rgb(0 45 36 / 10%),
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 14%, transparent);
-  background: color-mix(in srgb, var(--green) 10%, var(--cream));
-  transition: transform 240ms ease, box-shadow 240ms ease;
+  line-height: 0;
 }
 
-.our-way-stop:hover .our-way-stop-scene {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 22px rgb(0 45 36 / 12%),
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 22%, transparent);
-}
-
-.our-way-stop--west .our-way-stop-scene {
-  border-radius: 12px 12px 12px 34% / 12px 12px 12px 22%;
-}
-
-.our-way-stop--descend .our-way-stop-scene {
-  border-radius: 12px 34% 12px 12px / 12px 24% 12px 12px;
-  aspect-ratio: 16 / 10.5;
-}
-
-.our-way-stop-photo {
-  object-fit: cover;
-  object-position: center 45%;
-  transform: scale(1.02);
-  transition: transform 420ms ease;
-}
-
-.our-way-stop:hover .our-way-stop-photo {
-  transform: scale(1.05);
-}
-
-.our-way-stop--climb .our-way-stop-photo {
-  object-position: center 35%;
-}
-
-.our-way-stop--pasture .our-way-stop-photo {
-  object-position: 40% 55%;
-}
-
-.our-way-stop--craft .our-way-stop-photo {
-  object-position: center 58%;
-}
-
-.our-way-stop--tend .our-way-stop-photo {
-  object-position: 70% 35%;
-  filter: saturate(1.02) brightness(0.92);
-}
-
-.our-way-stop--descend .our-way-stop-photo {
-  object-position: center 18%;
-  filter: saturate(0.92) brightness(1.02);
-}
-
-.our-way-stop-overlay {
-  position: absolute;
-  right: 2%;
-  bottom: 0;
-  z-index: 2;
-  width: 54%;
+.our-way-map-art {
+  display: block;
+  width: 100%;
+  max-height: 92px;
   height: auto;
   object-fit: contain;
-  mix-blend-mode: lighten;
-  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 18%));
-  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgb(0 40 32 / 14%));
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 300ms ease;
 }
 
-.our-way-stop-walker {
-  position: absolute;
-  z-index: 3;
-  width: auto;
-  height: 70%;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 12px rgb(0 20 16 / 28%));
-  pointer-events: none;
+.our-way-map-stop:hover .our-way-map-art,
+.our-way-map-stop:focus-within .our-way-map-art {
+  transform: translateY(-4px) scale(1.05);
+  filter: drop-shadow(0 14px 22px rgb(0 45 36 / 22%));
 }
 
-.our-way-stop--tend .our-way-stop-walker {
-  left: 5%;
-  bottom: -1%;
-  height: 64%;
+.our-way-map-copy {
+  max-width: 11.5rem;
+  padding: 0 2px;
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 
-.our-way-stop--descend .our-way-stop-walker {
-  right: 7%;
-  bottom: -4%;
-  height: 76%;
-  transform: rotate(3deg) translateY(2px);
-  animation: our-way-walker-step 2.8s ease-in-out infinite;
+.our-way-map-stop:hover .our-way-map-copy,
+.our-way-map-stop:focus-within .our-way-map-copy {
+  transform: translateY(-2px);
 }
 
-.our-way-stop-veil {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 1;
-  height: 36%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, var(--green) 22%, transparent) 100%
-  );
-  pointer-events: none;
-}
-
-.our-way-stop--tend .our-way-stop-veil,
-.our-way-stop--descend .our-way-stop-veil {
-  height: 24%;
-  opacity: 0.5;
-}
-
-.our-way-stop-copy {
-  max-width: 16.5rem;
-  padding: 0;
-}
-
-.our-way-stop-title {
-  margin: 0 0 2px;
-  font-size: 12px;
+.our-way-map-num {
+  display: inline-block;
+  margin: 0 0 1px;
+  font-size: 8.5px;
   font-weight: 700;
-  line-height: 1.65;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--green) 42%, transparent);
+  transition: color 220ms ease;
+}
+
+.our-way-map-title {
+  margin: 0 0 2px;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--green);
+  transition: color 220ms ease;
+}
+
+.our-way-map-text {
+  margin: 0;
+  font-size: 9.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--green) 55%, #4a4a4a);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 220ms ease;
+}
+
+.our-way-map-stop:hover .our-way-map-num,
+.our-way-map-stop:focus-within .our-way-map-num {
   color: var(--green);
 }
 
-.our-way-stop-text {
-  margin: 0;
-  font-size: 10.5px;
-  font-weight: 400;
-  line-height: 1.8;
-  color: color-mix(in srgb, var(--green) 60%, #4a4a4a);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.our-way-map-stop:hover .our-way-map-text,
+.our-way-map-stop:focus-within .our-way-map-text {
+  color: color-mix(in srgb, var(--green) 72%, #333);
 }
 
 .our-way-note {
-  max-width: 38rem;
-  margin: 12px auto 0;
+  max-width: 36rem;
+  margin: 10px auto 0;
   font-size: 11px;
   font-weight: 400;
-  line-height: 1.9;
+  line-height: 1.85;
   text-align: center;
-  color: color-mix(in srgb, var(--green) 55%, transparent);
+  color: color-mix(in srgb, var(--green) 52%, transparent);
 }
 
-@keyframes our-way-path-draw {
-  from {
-    stroke-dashoffset: 80;
-    opacity: 0;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-    opacity: 0.62;
-  }
-}
-
-@keyframes our-way-stop-rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes our-way-walker-step {
+@keyframes our-way-bead-idle {
   0%,
   100% {
-    transform: rotate(3deg) translateY(2px);
+    transform: translate3d(
+        calc((var(--mx) - 50) * 0.04px),
+        calc((var(--my) - 50) * 0.03px),
+        0
+      )
+      translateY(0);
   }
 
   50% {
-    transform: rotate(1.5deg) translateY(0);
+    transform: translate3d(
+        calc((var(--mx) - 50) * 0.04px),
+        calc((var(--my) - 50) * 0.03px),
+        0
+      )
+      translateY(-2px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .our-way-path-line,
-  .our-way-stop,
-  .our-way-stop--descend .our-way-stop-walker {
-    animation: none;
+  .our-way-map-bead,
+  .our-way-map-wave,
+  .our-way-map-art,
+  .our-way-map-stop,
+  .our-way-map-pin,
+  .our-way-map-copy {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
-@media (max-width: 1040px) {
-  .our-way-stop {
-    width: min(230px, 32vw);
+@media (max-width: 980px) {
+  .our-way-map-inner {
+    min-width: 860px;
+    height: 340px;
   }
 
-  .our-way-stop--descend {
-    width: min(236px, 34vw);
-  }
-}
-
-@media (max-width: 899px) {
-  .our-way-journey {
-    min-height: 0;
-    padding: 0;
+  .our-way-map-art {
+    max-height: 84px;
   }
 
-  .our-way-path {
-    display: none;
+  .our-way-map-stop {
+    width: 148px;
+    margin-left: -74px;
   }
 
-  .our-way-stops {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    min-height: 0;
+  .our-way-map-stop--high {
+    transform: translateY(calc(-50% - 70px));
   }
 
-  .our-way-stop {
-    position: relative;
-    top: auto !important;
-    right: auto !important;
-    left: auto !important;
-    width: 100%;
-    max-width: 420px;
-    margin-inline: auto;
-    justify-items: stretch;
-    text-align: right;
-    gap: 8px;
-  }
-
-  .our-way-stop-pin {
-    flex-direction: row;
-  }
-
-  .our-way-stop-scene,
-  .our-way-stop--west .our-way-stop-scene,
-  .our-way-stop--descend .our-way-stop-scene {
-    border-radius: 12px;
-    aspect-ratio: 16 / 9;
-  }
-
-  .our-way-stop-copy {
-    max-width: none;
-  }
-
-  .our-way-stop-text {
-    -webkit-line-clamp: 4;
-  }
-
-  .our-way-stop--descend .our-way-stop-walker {
-    animation: none;
+  .our-way-map-stop--low {
+    transform: translateY(calc(-50% + 70px));
   }
 }
 
 @media (max-width: 640px) {
   .our-way {
-    padding: 2px 0 22px;
+    padding: 2px 0 20px;
   }
 
   .our-way-lead-line {
     font-size: 11.5px;
-    margin-bottom: 12px;
   }
 
-  .our-way-stops {
-    gap: 16px;
+  .our-way-map-inner {
+    min-width: 760px;
+    height: 320px;
   }
 
-  .our-way-stop-title {
-    font-size: 11.5px;
-  }
-
-  .our-way-stop-text {
-    font-size: 10.5px;
-  }
-
-  .our-way-stop-overlay {
-    width: 48%;
-  }
-
-  .our-way-stop--tend .our-way-stop-walker {
-    height: 58%;
-  }
-
-  .our-way-stop--descend .our-way-stop-walker {
-    height: 68%;
+  .our-way-map-title {
+    font-size: 11px;
   }
 
   .our-way-note {
