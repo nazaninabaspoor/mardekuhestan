@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
-import { navItems } from "@/lib/brand";
+import { headerTools, navItems } from "@/lib/brand";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -20,10 +20,13 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={"flag" in item ? "nav-spotlight" : undefined}
+                className={"flag" in item ? "nav-spotlight nav-link" : "nav-link"}
               >
                 {"flag" in item ? <span className="nav-badge">{item.flag}</span> : null}
-                {item.label}
+                <span className="nav-emoji" aria-hidden="true">
+                  {item.emoji}
+                </span>
+                <span className="nav-label">{item.label}</span>
               </Link>
             ))}
           </nav>
@@ -33,11 +36,18 @@ export function SiteHeader() {
           </Link>
 
           <div className="menubar-actions">
-            <Link href="/wishlist" className="tool-quiet">
-              علاقه‌مندی
-            </Link>
-            <Link href="/account">ورود</Link>
-            <Link href="/cart">سفره من</Link>
+            {headerTools.map((tool) => (
+              <Link
+                key={tool.href}
+                href={tool.href}
+                className={tool.quiet ? "tool-quiet nav-link" : "nav-link"}
+              >
+                <span className="nav-emoji" aria-hidden="true">
+                  {tool.emoji}
+                </span>
+                <span className="nav-label">{tool.label}</span>
+              </Link>
+            ))}
             <form className="header-search tool-quiet" action="/products" role="search">
               <input
                 type="search"
@@ -90,11 +100,14 @@ export function SiteHeader() {
           <Link
             key={item.href}
             href={item.href}
-            className={"flag" in item ? "nav-spotlight" : undefined}
+            className={"flag" in item ? "nav-spotlight nav-link" : "nav-link"}
             onClick={() => setOpen(false)}
           >
             {"flag" in item ? <span className="nav-badge">{item.flag}</span> : null}
-            {item.label}
+            <span className="nav-emoji is-static" aria-hidden="true">
+              {item.emoji}
+            </span>
+            <span className="nav-label">{item.label}</span>
           </Link>
         ))}
       </nav>
