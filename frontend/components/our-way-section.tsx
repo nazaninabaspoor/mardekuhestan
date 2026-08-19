@@ -2,53 +2,93 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, type CSSProperties, type PointerEvent } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent,
+} from "react";
 
 import { PeakMark } from "@/components/brand-marks";
 import { ourWay } from "@/lib/brand";
 
-const BEAD_COUNT = 42;
+/** Shared roadmap curve (viewBox 1000×220) */
+const ROAD_PATH =
+  "M 40 118 C 140 48, 230 178, 330 92 S 520 42, 620 128 S 800 188, 960 108";
 
-function buildBeads() {
-  return Array.from({ length: BEAD_COUNT }, (_, index) => {
-    const t = index / (BEAD_COUNT - 1);
-    const x = 2 + t * 96;
-    const y =
-      50 +
-      Math.sin(t * Math.PI * 3.2) * 22 +
-      Math.sin(t * Math.PI * 7.1) * 6 +
-      Math.cos(t * Math.PI * 1.4) * 4;
-    return {
-      id: `bead-${index}`,
-      x,
-      y,
-      emoji: index % 2 === 0 ? "⛰️" : "🍃",
-      delay: `${(index % 8) * 40}ms`,
-    };
-  });
+const BEAD_COUNT = 48;
+const STOP_T = [0.94, 0.72, 0.5, 0.28, 0.06] as const;
+
+type Point = { x: number; y: number; angle: number };
+
+function samplePath(path: SVGPathElement, t: number): Point {
+  const length = path.getTotalLength();
+  const dist = Math.max(0, Math.min(1, t)) * length;
+  const p = path.getPointAtLength(dist);
+  const p2 = path.getPointAtLength(Math.min(length, dist + 1.5));
+  const angle = (Math.atan2(p2.y - p.y, p2.x - p.x) * 180) / Math.PI;
+  return { x: p.x, y: p.y, angle };
 }
 
-const BEADS = buildBeads();
-
-const STOP_LAYOUT = [
-  { x: 92, band: "high" },
-  { x: 72, band: "low" },
-  { x: 50, band: "high" },
-  { x: 28, band: "low" },
-  { x: 8, band: "high" },
-] as const;
+function nearStop(t: number) {
+  return STOP_T.some((stop) => Math.abs(stop - t) < 0.035);
+}
 
 export function OurWaySection() {
   const mapRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const [beads, setBeads] = useState<
+    { id: string; x: number; y: number; emoji: string; delay: string }[]
+  >([]);
+  const [stops, setStops] = useState<
+    { x: number; y: number; angle: number; band: "high" | "low" }[]
+  >([]);
+
+  useLayoutEffect(() => {
+    const path = pathRef.current;
+    if (!path) return;
+
+    const nextBeads = [];
+    for (let i = 0; i < BEAD_COUNT; i += 1) {
+      const t = i / (BEAD_COUNT - 1);
+      if (nearStop(t)) continue;
+      const point = samplePath(path, t);
+      nextBeads.push({
+        id: `bead-${i}`,
+        x: (point.x / 1000) * 100,
+        y: (point.y / 220) * 100,
+        emoji: i % 2 === 0 ? "⛰️" : "🍃",
+        delay: `${(i % 10) * 55}ms`,
+      });
+    }
+    setBeads(nextBeads);
+
+    setStops(
+      STOP_T.map((t, index) => {
+        const point = samplePath(path, t);
+        return {
+          x: (point.x / 1000) * 100,
+          y: (point.y / 220) * 100,
+          angle: point.angle,
+          band: index % 2 === 0 ? "high" : "low",
+        };
+      }),
+    );
+  }, []);
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const el = mapRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const mx = ((event.clientX - rect.left) / rect.width) * 100;
-    const my = ((event.clientY - rect.top) / rect.height) * 100;
-    el.style.setProperty("--mx", String(mx));
-    el.style.setProperty("--my", String(my));
+    el.style.setProperty(
+      "--mx",
+      String(((event.clientX - rect.left) / rect.width) * 100),
+    );
+    el.style.setProperty(
+      "--my",
+      String(((event.clientY - rect.top) / rect.height) * 100),
+    );
   };
 
   const onPointerLeave = () => {
@@ -58,10 +98,7 @@ export function OurWaySection() {
     el.style.setProperty("--my", "50");
   };
 
-  const mapStyle = {
-    "--mx": 50,
-    "--my": 50,
-  } as CSSProperties;
+  const mapStyle = { "--mx": 50, "--my": 50 } as CSSProperties;
 
   return (
     <section className="our-way" aria-labelledby="our-way-title">
@@ -80,10 +117,10 @@ export function OurWaySection() {
           </Link>
         </div>
 
-        <p className="our-way-lead-line">
-          <span className="our-way-kicker">{ourWay.kicker}</span>
-          {ourWay.lead}
-        </p>
+        <header className="our-way-intro">
+          <p className="our-way-kicker">{ourWay.kicker}</p>
+          <p className="our-way-lead">{ourWay.lead}</p>
+        </header>
 
         <div
           className="our-way-map"
@@ -102,25 +139,26 @@ export function OurWaySection() {
             >
               <path
                 className="our-way-map-wave-glow"
-                d="M20 110 C 120 40, 220 180, 320 95 S 520 40, 620 125 S 820 190, 980 100"
+                d={ROAD_PATH}
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="18"
+                strokeWidth="22"
                 strokeLinecap="round"
               />
               <path
+                ref={pathRef}
                 className="our-way-map-wave-line"
-                d="M20 110 C 120 40, 220 180, 320 95 S 520 40, 620 125 S 820 190, 980 100"
+                d={ROAD_PATH}
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.5"
+                strokeWidth="1.25"
                 strokeLinecap="round"
-                strokeDasharray="2 7"
+                strokeDasharray="1.5 8"
               />
             </svg>
 
             <div className="our-way-map-trail" aria-hidden="true">
-              {BEADS.map((bead) => (
+              {beads.map((bead) => (
                 <span
                   key={bead.id}
                   className="our-way-map-bead"
@@ -137,35 +175,37 @@ export function OurWaySection() {
 
             <ol className="our-way-map-stops">
               {ourWay.steps.map((step, index) => {
-                const layout = STOP_LAYOUT[index] ?? STOP_LAYOUT[0];
+                const layout = stops[index];
+                if (!layout) return null;
                 const num = String(index + 1).padStart(2, "0");
 
                 return (
                   <li
                     key={step.id}
                     className={`our-way-map-stop our-way-map-stop--${layout.band}`}
-                    style={{ left: `${layout.x}%` }}
+                    style={{ left: `${layout.x}%`, top: `${layout.y}%` }}
                   >
                     <span className="our-way-map-pin" aria-hidden="true">
                       {index % 2 === 0 ? "⛰️" : "🍃"}
                     </span>
 
-                    <figure className="our-way-map-figure">
-                      <Image
-                        src={step.scene}
-                        alt={step.sceneAlt}
-                        width={1024}
-                        height={640}
-                        sizes="(max-width: 900px) 180px, 150px"
-                        className="our-way-map-art"
-                      />
-                    </figure>
-
-                    <article className="our-way-map-copy">
-                      <span className="our-way-map-num">{num}</span>
-                      <h3 className="our-way-map-title">{step.title}</h3>
-                      <p className="our-way-map-text">{step.body}</p>
-                    </article>
+                    <div className="our-way-map-card">
+                      <figure className="our-way-map-figure">
+                        <Image
+                          src={step.scene}
+                          alt={step.sceneAlt}
+                          width={1024}
+                          height={640}
+                          sizes="(max-width: 900px) 180px, 148px"
+                          className="our-way-map-art"
+                        />
+                      </figure>
+                      <article className="our-way-map-copy">
+                        <span className="our-way-map-num">{num}</span>
+                        <h3 className="our-way-map-title">{step.title}</h3>
+                        <p className="our-way-map-text">{step.body}</p>
+                      </article>
+                    </div>
                   </li>
                 );
               })}
