@@ -17,8 +17,8 @@ const ROAD_PATH =
   "M 36 120 C 150 52, 240 172, 340 96 S 530 46, 630 124 S 790 182, 964 112";
 
 const BEAD_COUNT = 56;
-/** RTL: first step on the right */
-const STOP_T = [0.92, 0.71, 0.5, 0.29, 0.08] as const;
+/** RTL: step 01 on path end (right), step 05 on path start (left) */
+const STOP_T = [1, 0.72, 0.5, 0.28, 0] as const;
 
 type Point = { xPct: number; yPct: number };
 
@@ -121,82 +121,84 @@ export function OurWaySection() {
           style={mapStyle}
         >
           <div className="our-way-map-inner">
-            <svg
-              className="our-way-map-wave"
-              viewBox="0 0 1000 220"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                className="our-way-map-wave-glow"
-                d={ROAD_PATH}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="20"
-                strokeLinecap="round"
-              />
-              <path
-                ref={pathRef}
-                className="our-way-map-wave-line"
-                d={ROAD_PATH}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.1"
-                strokeLinecap="round"
-              />
-            </svg>
+            <div className="our-way-map-stage">
+              <svg
+                className="our-way-map-wave"
+                viewBox="0 0 1000 220"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  className="our-way-map-wave-glow"
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="34"
+                  strokeLinecap="round"
+                />
+                <path
+                  ref={pathRef}
+                  className="our-way-map-wave-line"
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="6.5"
+                  strokeLinecap="round"
+                />
+              </svg>
 
-            <div className="our-way-map-trail" aria-hidden="true">
-              {beads.map((bead) => (
-                <span
-                  key={bead.id}
-                  className="our-way-map-bead"
-                  style={{ left: `${bead.x}%`, top: `${bead.y}%` }}
-                >
-                  {bead.emoji}
-                </span>
-              ))}
-            </div>
-
-            <ol className="our-way-map-stops">
-              {ourWay.steps.map((step, index) => {
-                const anchor = anchors[index];
-                if (!anchor) return null;
-                const num = String(index + 1).padStart(2, "0");
-
-                return (
-                  <li
-                    key={step.id}
-                    className={`our-way-map-stop our-way-map-stop--${anchor.band}`}
-                    style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }}
+              <div className="our-way-map-trail" aria-hidden="true">
+                {beads.map((bead) => (
+                  <span
+                    key={bead.id}
+                    className="our-way-map-bead"
+                    style={{ left: `${bead.x}%`, top: `${bead.y}%` }}
                   >
-                    <span className="our-way-map-pin" aria-hidden="true">
-                      {index % 2 === 0 ? "⛰️" : "🍃"}
-                    </span>
-                    <span className="our-way-map-stem" aria-hidden="true" />
+                    {bead.emoji}
+                  </span>
+                ))}
+              </div>
 
-                    <div className="our-way-map-card">
-                      <figure className="our-way-map-figure">
-                        <Image
-                          src={step.scene}
-                          alt={step.sceneAlt}
-                          width={1024}
-                          height={640}
-                          sizes="148px"
-                          className="our-way-map-art"
-                        />
-                      </figure>
-                      <article className="our-way-map-copy">
-                        <span className="our-way-map-num">{num}</span>
-                        <h3 className="our-way-map-title">{step.title}</h3>
-                        <p className="our-way-map-text">{step.body}</p>
-                      </article>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+              <ol className="our-way-map-stops">
+                {ourWay.steps.map((step, index) => {
+                  const anchor = anchors[index];
+                  if (!anchor) return null;
+                  const num = String(index + 1).padStart(2, "0");
+
+                  return (
+                    <li
+                      key={step.id}
+                      className={`our-way-map-stop our-way-map-stop--${anchor.band}`}
+                      style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }}
+                    >
+                      <span className="our-way-map-pin" aria-hidden="true">
+                        {index % 2 === 0 ? "⛰️" : "🍃"}
+                      </span>
+                      <span className="our-way-map-stem" aria-hidden="true" />
+
+                      <div className="our-way-map-card">
+                        <figure className="our-way-map-figure">
+                          <Image
+                            src={step.scene}
+                            alt={step.sceneAlt}
+                            width={1024}
+                            height={640}
+                            sizes="200px"
+                            className="our-way-map-art"
+                          />
+                        </figure>
+                        <article className="our-way-map-copy">
+                          <span className="our-way-map-num">{num}</span>
+                          <h3 className="our-way-map-title">{step.title}</h3>
+                          <p className="our-way-map-text">{step.body}</p>
+                        </article>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
           </div>
         </div>
 
