@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type PointerEvent,
 } from "react";
 
 import { ourWay } from "@/lib/brand";
@@ -20,73 +19,78 @@ import { ourWay } from "@/lib/brand";
 const ROAD_PATH =
   "M 0 110 C 90 106, 150 134, 255 134 S 400 102, 500 100 S 610 134, 745 134 S 900 108, 1000 110";
 
-const BEAD_SPACING = 8;
-const STOP_CLEARANCE = 14;
+/** فاصله بیشتر = مهره‌های کمتر = بدون لگ */
+const BEAD_SPACING = 16;
+const STOP_CLEARANCE = 16;
 /** RTL: 01 = path end (right peak), 05 = path start (left peak) */
 const STOP_T = [1, 0.75, 0.5, 0.25, 0] as const;
-const SEGMENT_MS = 2600;
+const SEGMENT_MS = 2000;
 
 type Point = { xPct: number; yPct: number };
-
-function stagePoint(
-  path: SVGPathElement,
-  stage: HTMLElement,
-  distance: number,
-): Point | null {
-  const svg = path.ownerSVGElement;
-  if (!svg) return null;
-
-  const length = path.getTotalLength();
-  const p = path.getPointAtLength(Math.max(0, Math.min(length, distance)));
-  const ctm = path.getScreenCTM();
-  if (!ctm) return null;
-
-  const pt = svg.createSVGPoint();
-  pt.x = p.x;
-  pt.y = p.y;
-  const screen = pt.matrixTransform(ctm);
-  const rect = stage.getBoundingClientRect();
-  if (rect.width <= 0 || rect.height <= 0) return null;
-
-  return {
-    xPct: ((screen.x - rect.left) / rect.width) * 100,
-    yPct: ((screen.y - rect.top) / rect.height) * 100,
-  };
-}
 
 function easeInOutCubic(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
 export function OurWaySection() {
-  const mapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const walkerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+  const measureTimer = useRef<number | null>(null);
+
   const [beads, setBeads] = useState<
     { id: string; x: number; y: number; emoji: string }[]
   >([]);
   const [anchors, setAnchors] = useState<
     { x: number; y: number; band: "high" | "low" }[]
   >([]);
-  /** یک قدم در مسیر — هرگز به‌صورت زنجیره‌ای ادامه نمی‌دهد */
   const [journey, setJourney] = useState<{
     from: number;
     to: number;
     walkerIndex: number;
   } | null>(null);
-  const [walkerPos, setWalkerPos] = useState<Point | null>(null);
+  const [walkerActive, setWalkerActive] = useState(false);
   const [walkerIndex, setWalkerIndex] = useState<number | null>(null);
   const [popupIndex, setPopupIndex] = useState<number | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
+  const placeWalker = useCallback((point: Point | null) => {
+    const el = walkerRef.current;
+    if (!el || !point) return;
+    el.style.left = `${point.xPct}%`;
+    el.style.top = `${point.yPct}%`;
+    el.style.opacity = "1";
+  }, []);
+
   const measurePath = useCallback(() => {
     const path = pathRef.current;
     const stage = stageRef.current;
-    if (!path || !stage) return;
+    const svg = path?.ownerSVGElement;
+    if (!path || !stage || !svg) return;
 
     const length = path.getTotalLength();
     if (length <= 0) return;
+
+    const ctm = path.getScreenCTM();
+    if (!ctm) return;
+
+    const stageRect = stage.getBoundingClientRect();
+    if (stageRect.width <= 0 || stageRect.height <= 0) return;
+
+    const pt = svg.createSVGPoint();
+    const toPct = (distance: number): Point | null => {
+      const p = path.getPointAtLength(
+        Math.max(0, Math.min(length, distance)),
+      );
+      pt.x = p.x;
+      pt.y = p.y;
+      const screen = pt.matrixTransform(ctm);
+      return {
+        xPct: ((screen.x - stageRect.left) / stageRect.width) * 100,
+        yPct: ((screen.y - stageRect.top) / stageRect.height) * 100,
+      };
+    };
 
     const stopDist = STOP_T.map((t) => t * length);
     const nextBeads: {
@@ -102,7 +106,7 @@ export function OurWaySection() {
       if (stopDist.some((sd) => Math.abs(sd - dist) < STOP_CLEARANCE)) {
         continue;
       }
-      const point = stagePoint(path, stage, dist);
+      const point = toPct(dist);
       if (!point) continue;
       nextBeads.push({
         id: `bead-${i}`,
@@ -115,7 +119,7 @@ export function OurWaySection() {
 
     setAnchors(
       STOP_T.map((t, index) => {
-        const point = stagePoint(path, stage, t * length);
+        const point = toPct(t * length);
         return {
           x: point?.xPct ?? 0,
           y: point?.yPct ?? 0,
@@ -130,12 +134,26 @@ export function OurWaySection() {
     if (!stage) return;
 
     measurePath();
-    const ro = new ResizeObserver(() => measurePath());
+
+    const schedule = () => {
+      if (measureTimer.current != null) {
+        window.clearTimeout(measureTimer.current);
+      }
+      measureTimer.current = window.setTimeout(() => {
+        measurePath();
+        measureTimer.current = null;
+      }, 80);
+    };
+
+    const ro = new ResizeObserver(schedule);
     ro.observe(stage);
-    window.addEventListener("resize", measurePath);
+    window.addEventListener("resize", schedule);
     return () => {
       ro.disconnect();
-      window.removeEventListener("resize", measurePath);
+      window.removeEventListener("resize", schedule);
+      if (measureTimer.current != null) {
+        window.clearTimeout(measureTimer.current);
+      }
     };
   }, [measurePath]);
 
@@ -144,33 +162,48 @@ export function OurWaySection() {
 
     const path = pathRef.current;
     const stage = stageRef.current;
-    if (!path || !stage) return;
+    const svg = path?.ownerSVGElement;
+    if (!path || !stage || !svg) return;
 
     const length = path.getTotalLength();
+    const ctm = path.getScreenCTM();
+    if (!ctm) return;
+
+    const stageRect = stage.getBoundingClientRect();
+    const pt = svg.createSVGPoint();
     const fromT = STOP_T[journey.from];
     const toT = STOP_T[journey.to];
     const start = performance.now();
-    const arrivedAt = journey.to;
     const movingCharacter = journey.walkerIndex;
 
-    setPopupIndex(arrivedAt);
+    const toPct = (t: number): Point => {
+      const p = path.getPointAtLength(
+        Math.max(0, Math.min(length, t * length)),
+      );
+      pt.x = p.x;
+      pt.y = p.y;
+      const screen = pt.matrixTransform(ctm);
+      return {
+        xPct: ((screen.x - stageRect.left) / stageRect.width) * 100,
+        yPct: ((screen.y - stageRect.top) / stageRect.height) * 100,
+      };
+    };
+
+    setPopupIndex(journey.to);
     setPopupVisible(true);
+    setWalkerActive(true);
+    placeWalker(toPct(fromT));
 
     const tick = (now: number) => {
       const raw = Math.min(1, (now - start) / SEGMENT_MS);
-      const eased = easeInOutCubic(raw);
-      const t = fromT + (toT - fromT) * eased;
-      const point = stagePoint(path, stage, t * length);
-      if (point) setWalkerPos(point);
+      placeWalker(toPct(fromT + (toT - fromT) * easeInOutCubic(raw)));
 
       if (raw < 1) {
         rafRef.current = requestAnimationFrame(tick);
         return;
       }
 
-      // توقف قطعی روی مقصد — بدون رفتن خودکار به ایستگاه بعدی
-      const endPoint = stagePoint(path, stage, toT * length);
-      if (endPoint) setWalkerPos(endPoint);
+      placeWalker(toPct(toT));
       setWalkerIndex(movingCharacter);
       setJourney(null);
     };
@@ -179,29 +212,41 @@ export function OurWaySection() {
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [journey]);
+  }, [journey, placeWalker]);
 
   const startJourney = (index: number) => {
     if (journey) return;
 
-    // آخرین ایستگاه: فقط داستان همان قدم، بدون حرکت
     if (index >= ourWay.steps.length - 1) {
       setPopupIndex(index);
       setPopupVisible(true);
-      setWalkerPos(null);
+      setWalkerActive(false);
       setWalkerIndex(null);
       return;
     }
 
     const path = pathRef.current;
     const stage = stageRef.current;
-    if (path && stage) {
-      const point = stagePoint(
-        path,
-        stage,
-        STOP_T[index] * path.getTotalLength(),
-      );
-      if (point) setWalkerPos(point);
+    const svg = path?.ownerSVGElement;
+    if (path && stage && svg) {
+      const ctm = path.getScreenCTM();
+      if (ctm) {
+        const length = path.getTotalLength();
+        const stageRect = stage.getBoundingClientRect();
+        const pt = svg.createSVGPoint();
+        const p = path.getPointAtLength(STOP_T[index] * length);
+        pt.x = p.x;
+        pt.y = p.y;
+        const screen = pt.matrixTransform(ctm);
+        setWalkerActive(true);
+        // بعد از mount، placeWalker در effect اجرا می‌شود؛ اینجا هم همان فریم
+        requestAnimationFrame(() => {
+          placeWalker({
+            xPct: ((screen.x - stageRect.left) / stageRect.width) * 100,
+            yPct: ((screen.y - stageRect.top) / stageRect.height) * 100,
+          });
+        });
+      }
     }
 
     setWalkerIndex(index);
@@ -218,23 +263,9 @@ export function OurWaySection() {
       rafRef.current = null;
     }
     setJourney(null);
-    setWalkerPos(null);
+    setWalkerActive(false);
     setWalkerIndex(null);
     setPopupVisible(false);
-  };
-
-  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    const el = mapRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty(
-      "--mx",
-      String(((event.clientX - rect.left) / rect.width) * 100),
-    );
-  };
-
-  const onPointerLeave = () => {
-    mapRef.current?.style.setProperty("--mx", "50");
   };
 
   useEffect(() => {
@@ -246,7 +277,7 @@ export function OurWaySection() {
         rafRef.current = null;
       }
       setJourney(null);
-      setWalkerPos(null);
+      setWalkerActive(false);
       setWalkerIndex(null);
       setPopupVisible(false);
     };
@@ -254,7 +285,6 @@ export function OurWaySection() {
     return () => window.removeEventListener("keydown", onKey);
   }, [popupVisible]);
 
-  const mapStyle = { "--mx": 50 } as CSSProperties;
   const activeStep =
     popupIndex != null ? ourWay.steps[popupIndex] : null;
   const activeWalkerIndex =
@@ -273,13 +303,7 @@ export function OurWaySection() {
       </h2>
 
       <div className="shell">
-        <div
-          className="our-way-map"
-          ref={mapRef}
-          onPointerMove={onPointerMove}
-          onPointerLeave={onPointerLeave}
-          style={mapStyle}
-        >
+        <div className="our-way-map">
           <div className="our-way-map-inner">
             <div className="our-way-map-stage" ref={stageRef}>
               <svg
@@ -309,7 +333,7 @@ export function OurWaySection() {
               </svg>
 
               <div className="our-way-map-trail" aria-hidden="true">
-                {beads.map((bead, index) => (
+                {beads.map((bead) => (
                   <span
                     key={bead.id}
                     className="our-way-map-bead"
@@ -317,7 +341,6 @@ export function OurWaySection() {
                       {
                         left: `${bead.x}%`,
                         top: `${bead.y}%`,
-                        "--bead-i": index,
                       } as CSSProperties
                     }
                   >
@@ -326,10 +349,10 @@ export function OurWaySection() {
                 ))}
               </div>
 
-              {walkerStep && walkerPos ? (
+              {walkerStep && walkerActive ? (
                 <div
+                  ref={walkerRef}
                   className="our-way-walker"
-                  style={{ left: `${walkerPos.xPct}%`, top: `${walkerPos.yPct}%` }}
                   aria-hidden="true"
                 >
                   <Image
@@ -339,6 +362,7 @@ export function OurWaySection() {
                     height={1024}
                     sizes="140px"
                     className="our-way-walker-art"
+                    priority={false}
                   />
                 </div>
               ) : null}
@@ -351,10 +375,9 @@ export function OurWaySection() {
                   const isAway =
                     activeWalkerIndex != null &&
                     index === activeWalkerIndex &&
-                    walkerPos != null;
+                    walkerActive;
                   const isPassed =
                     journey != null && index < journey.from;
-
                   const isTerminus =
                     index === 0 || index === ourWay.steps.length - 1;
 

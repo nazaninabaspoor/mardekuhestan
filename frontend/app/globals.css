@@ -1070,7 +1070,7 @@ body {
 
 .for-home {
   position: relative;
-  padding: 0 0 32px;
+  padding: 0 0 8px;
   margin-top: 0;
   background: transparent;
   color: var(--green);
@@ -1558,7 +1558,8 @@ body {
 
 .our-way {
   position: relative;
-  padding: 28px 0 32px;
+  padding: 0 0 32px;
+  margin-top: 0;
   background: transparent;
   color: var(--green);
   border-top: none;
@@ -1578,13 +1579,11 @@ body {
 }
 
 .our-way-map {
-  --mx: 50;
-
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
   margin: 0 -4px;
-  padding: 24px 4px 22px;
+  padding: 2px 4px 22px;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--green) 35%, transparent) transparent;
 }
@@ -1601,7 +1600,8 @@ body {
 .our-way-map-stage {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% + 40px);
+  margin-top: -40px;
   overflow: visible;
 }
 
@@ -1613,28 +1613,16 @@ body {
   height: 100%;
   color: var(--green);
   pointer-events: none;
-  filter: drop-shadow(0 0 3px rgb(0 91 72 / 55%))
-    drop-shadow(0 0 8px rgb(0 91 72 / 40%))
-    drop-shadow(0 1px 0 rgb(0 45 36 / 18%));
   overflow: visible;
+  filter: drop-shadow(0 0 4px rgb(0 91 72 / 50%));
 }
 
 .our-way-map-wave-glow {
-  opacity: 0.2;
-  transition: opacity 220ms ease;
+  opacity: 0.22;
 }
 
 .our-way-map-wave-line {
   opacity: 0.95;
-  transition: opacity 220ms ease;
-}
-
-.our-way-map:hover .our-way-map-wave-glow {
-  opacity: 0.3;
-}
-
-.our-way-map:hover .our-way-map-wave-line {
-  opacity: 1;
 }
 
 .our-way-map-trail {
@@ -1642,13 +1630,12 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  contain: layout style;
+  filter: drop-shadow(0 0 2px var(--green))
+    drop-shadow(0 0 6px rgb(0 91 72 / 55%));
 }
 
 .our-way-map-bead {
-  --bead-i: 0;
-  /* neon = همان سبز هدر #005B48 — بدون روشن‌شدن با سفید/چمنی */
-  --bead-neon: var(--green);
-
   position: absolute;
   z-index: 1;
   display: inline-flex;
@@ -1659,53 +1646,11 @@ body {
   margin: 0;
   font-size: 10px;
   line-height: 1;
-  opacity: 1;
-  filter:
-    drop-shadow(0 0 2px var(--bead-neon))
-    drop-shadow(0 0 5px var(--bead-neon))
-    drop-shadow(0 0 10px rgb(0 91 72 / 72%))
-    drop-shadow(0 0 14px rgb(0 91 72 / 42%));
+  opacity: 0.95;
   transform: translate(-50%, -50%);
   transform-origin: center center;
-  animation: our-way-bead-glow 2.8s ease-in-out infinite;
-  animation-delay: calc(var(--bead-i) * 22ms);
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 180ms ease,
-    filter 180ms ease;
-  pointer-events: auto;
+  pointer-events: none;
   user-select: none;
-}
-
-.our-way-map-bead:hover {
-  z-index: 4;
-  opacity: 1;
-  animation: none;
-  transform: translate(-50%, -50%) scale(1.45);
-  filter:
-    drop-shadow(0 0 3px var(--bead-neon))
-    drop-shadow(0 0 8px var(--bead-neon))
-    drop-shadow(0 0 14px rgb(0 91 72 / 82%))
-    drop-shadow(0 0 18px rgb(0 91 72 / 52%));
-}
-
-@keyframes our-way-bead-glow {
-  0%,
-  100% {
-    filter:
-      drop-shadow(0 0 2px var(--bead-neon))
-      drop-shadow(0 0 5px var(--bead-neon))
-      drop-shadow(0 0 9px rgb(0 91 72 / 62%))
-      drop-shadow(0 0 12px rgb(0 91 72 / 38%));
-  }
-
-  50% {
-    filter:
-      drop-shadow(0 0 3px var(--bead-neon))
-      drop-shadow(0 0 8px var(--bead-neon))
-      drop-shadow(0 0 14px rgb(0 91 72 / 82%))
-      drop-shadow(0 0 18px rgb(0 91 72 / 52%));
-  }
 }
 
 .our-way-map-stops {
@@ -1752,41 +1697,17 @@ body {
     box-shadow 280ms ease;
 }
 
-/* ابتدا و انتهای مسیر ≈ ضخامت جاده (stroke ~11 در viewBox) */
+/* حلقه بزرگ، اموجی کوچک‌تر و متعادل داخلش */
 .our-way-map-stop--terminus .our-way-map-pin {
   width: 34px;
   height: 34px;
-  font-size: 22px;
+  font-size: 13px;
   background: color-mix(in srgb, var(--cream) 78%, var(--milk));
   box-shadow:
     inset 0 0 0 2px var(--green),
     0 0 0 3px color-mix(in srgb, var(--green) 16%, transparent),
-    0 0 12px rgb(0 91 72 / 48%),
-    0 4px 12px rgb(0 45 36 / 16%);
-  filter:
-    drop-shadow(0 0 3px var(--green))
-    drop-shadow(0 0 8px var(--green))
-    drop-shadow(0 0 14px rgb(0 91 72 / 70%));
-  animation: our-way-terminus-pin 2.5s ease-in-out infinite;
-}
-
-@keyframes our-way-terminus-pin {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    filter:
-      drop-shadow(0 0 3px var(--green))
-      drop-shadow(0 0 8px var(--green))
-      drop-shadow(0 0 12px rgb(0 91 72 / 62%));
-  }
-
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-    filter:
-      drop-shadow(0 0 4px var(--green))
-      drop-shadow(0 0 11px var(--green))
-      drop-shadow(0 0 18px rgb(0 91 72 / 82%));
-  }
+    0 0 10px rgb(0 91 72 / 42%),
+    0 3px 10px rgb(0 45 36 / 14%);
 }
 
 .our-way-map-stem {
@@ -1874,11 +1795,14 @@ body {
 .our-way-walker {
   position: absolute;
   z-index: 7;
+  left: 0;
+  top: 0;
   width: 128px;
+  opacity: 0;
   pointer-events: none;
   transform: translate(-50%, calc(-100% + 10px));
-  animation: our-way-walker-bob 0.9s ease-in-out infinite;
-  filter: drop-shadow(0 8px 14px rgb(0 45 36 / 22%));
+  will-change: left, top;
+  filter: drop-shadow(0 6px 10px rgb(0 45 36 / 18%));
 }
 
 .our-way-walker-art {
@@ -1888,17 +1812,6 @@ body {
   max-height: 108px;
   object-fit: contain;
   object-position: center bottom;
-}
-
-@keyframes our-way-walker-bob {
-  0%,
-  100% {
-    transform: translate(-50%, calc(-100% + 10px)) translateY(0);
-  }
-
-  50% {
-    transform: translate(-50%, calc(-100% + 10px)) translateY(-5px);
-  }
 }
 
 .our-way-modal {
@@ -1933,7 +1846,6 @@ body {
       rgb(0 30 24 / 62%) 55%,
       rgb(29 29 27 / 58%) 100%
     );
-  backdrop-filter: blur(3px);
   cursor: pointer;
 }
 
@@ -2192,7 +2104,6 @@ body {
   justify-items: center;
   gap: 0;
   margin-bottom: 0;
-  animation: our-way-thought-float 4.2s ease-in-out infinite;
 }
 
 .our-way-thought-dots {
@@ -2264,7 +2175,6 @@ body {
 .our-way-map-stop:hover .our-way-thought,
 .our-way-map-stop:focus-within .our-way-thought {
   z-index: 8;
-  animation-play-state: paused;
 }
 
 .our-way-map-stop:hover .our-way-thought-cloud,
@@ -2289,17 +2199,6 @@ body {
 .our-way-map-stop:hover .our-way-thought-dots i:nth-child(3),
 .our-way-map-stop:focus-within .our-way-thought-dots i:nth-child(3) {
   animation-delay: 120ms;
-}
-
-@keyframes our-way-thought-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-3px);
-  }
 }
 
 @keyframes our-way-dot-pop {
@@ -2356,17 +2255,12 @@ body {
 
 .our-way-map-stop--terminus:hover .our-way-map-pin,
 .our-way-map-stop--terminus:focus-within .our-way-map-pin {
-  animation: none;
-  transform: translate(-50%, -50%) scale(1.14);
+  transform: translate(-50%, -50%) scale(1.08);
   box-shadow:
     inset 0 0 0 2px var(--green),
-    0 0 0 4px color-mix(in srgb, var(--green) 20%, transparent),
-    0 0 16px rgb(0 91 72 / 55%),
-    0 5px 14px rgb(0 45 36 / 18%);
-  filter:
-    drop-shadow(0 0 4px var(--green))
-    drop-shadow(0 0 12px var(--green))
-    drop-shadow(0 0 20px rgb(0 91 72 / 78%));
+    0 0 0 4px color-mix(in srgb, var(--green) 18%, transparent),
+    0 0 12px rgb(0 91 72 / 42%),
+    0 4px 12px rgb(0 45 36 / 16%);
 }
 
 .our-way-map-stop:hover .our-way-map-stem,
@@ -2417,7 +2311,7 @@ body {
 
 @media (max-width: 640px) {
   .our-way {
-    padding: 16px 0 20px;
+    padding: 0 0 20px;
   }
 
   .our-way-map-inner {
