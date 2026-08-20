@@ -69,12 +69,14 @@ export function OurWaySection() {
   const [anchors, setAnchors] = useState<
     { x: number; y: number; band: "high" | "low" }[]
   >([]);
+  /** یک قدم در مسیر — هرگز به‌صورت زنجیره‌ای ادامه نمی‌دهد */
   const [journey, setJourney] = useState<{
     from: number;
     to: number;
     walkerIndex: number;
   } | null>(null);
   const [walkerPos, setWalkerPos] = useState<Point | null>(null);
+  const [walkerIndex, setWalkerIndex] = useState<number | null>(null);
   const [popupIndex, setPopupIndex] = useState<number | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -148,8 +150,10 @@ export function OurWaySection() {
     const fromT = STOP_T[journey.from];
     const toT = STOP_T[journey.to];
     const start = performance.now();
+    const arrivedAt = journey.to;
+    const movingCharacter = journey.walkerIndex;
 
-    setPopupIndex(journey.to);
+    setPopupIndex(arrivedAt);
     setPopupVisible(true);
 
     const tick = (now: number) => {
@@ -164,19 +168,11 @@ export function OurWaySection() {
         return;
       }
 
-      const nextFrom = journey.to;
-      const nextTo = nextFrom + 1;
-      if (nextTo < ourWay.steps.length) {
-        setJourney({
-          from: nextFrom,
-          to: nextTo,
-          walkerIndex: nextFrom,
-        });
-      } else {
-        setJourney(null);
-        setWalkerPos(null);
-        window.setTimeout(() => setPopupVisible(false), 1600);
-      }
+      // توقف قطعی روی مقصد — بدون رفتن خودکار به ایستگاه بعدی
+      const endPoint = stagePoint(path, stage, toT * length);
+      if (endPoint) setWalkerPos(endPoint);
+      setWalkerIndex(movingCharacter);
+      setJourney(null);
     };
 
     rafRef.current = requestAnimationFrame(tick);
@@ -187,10 +183,13 @@ export function OurWaySection() {
 
   const startJourney = (index: number) => {
     if (journey) return;
+
+    // آخرین ایستگاه: فقط داستان همان قدم، بدون حرکت
     if (index >= ourWay.steps.length - 1) {
       setPopupIndex(index);
       setPopupVisible(true);
-      window.setTimeout(() => setPopupVisible(false), 2800);
+      setWalkerPos(null);
+      setWalkerIndex(null);
       return;
     }
 
@@ -205,6 +204,7 @@ export function OurWaySection() {
       if (point) setWalkerPos(point);
     }
 
+    setWalkerIndex(index);
     setJourney({
       from: index,
       to: index + 1,
@@ -213,7 +213,13 @@ export function OurWaySection() {
   };
 
   const closePopup = () => {
-    if (journey) return;
+    if (rafRef.current != null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    setJourney(null);
+    setWalkerPos(null);
+    setWalkerIndex(null);
     setPopupVisible(false);
   };
 
@@ -231,11 +237,31 @@ export function OurWaySection() {
     mapRef.current?.style.setProperty("--mx", "50");
   };
 
+  useEffect(() => {
+    if (!popupVisible) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      setJourney(null);
+      setWalkerPos(null);
+      setWalkerIndex(null);
+      setPopupVisible(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [popupVisible]);
+
   const mapStyle = { "--mx": 50 } as CSSProperties;
   const activeStep =
     popupIndex != null ? ourWay.steps[popupIndex] : null;
+  const activeWalkerIndex =
+    journey != null ? journey.walkerIndex : walkerIndex;
   const walkerStep =
-    journey != null ? ourWay.steps[journey.walkerIndex] : null;
+    activeWalkerIndex != null ? ourWay.steps[activeWalkerIndex] : null;
+  const stepNum = String((popupIndex ?? 0) + 1).padStart(2, "0");
 
   return (
     <section
@@ -323,9 +349,9 @@ export function OurWaySection() {
                   if (!anchor) return null;
                   const num = String(index + 1).padStart(2, "0");
                   const isAway =
-                    journey != null &&
-                    index === journey.walkerIndex &&
-                    journey.from === index;
+                    activeWalkerIndex != null &&
+                    index === activeWalkerIndex &&
+                    walkerPos != null;
                   const isPassed =
                     journey != null && index < journey.from;
 
@@ -365,7 +391,7 @@ export function OurWaySection() {
                           className="our-way-map-figure"
                           onClick={() => startJourney(index)}
                           disabled={Boolean(journey)}
-                          aria-label={`شروع راه از ${step.title}`}
+                          aria-label={`یک قدم از ${step.title}`}
                         >
                           <Image
                             src={step.scene}
@@ -401,22 +427,55 @@ export function OurWaySection() {
         />
         {activeStep ? (
           <div className="our-way-modal-card">
-            <span className="our-way-modal-num">
-              {String((popupIndex ?? 0) + 1).padStart(2, "0")}
-            </span>
+            <button
+              type="button"
+              className="our-way-modal-x"
+              aria-label="بستن"
+              onClick={closePopup}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M6.2 6.2a1 1 0 0 1 1.4 0L12 10.6l4.4-4.4a1 1 0 1 1 1.4 1.4L13.4 12l4.4 4.4a1 1 0 0 1-1.4 1.4L12 13.4l-4.4 4.4a1 1 0 0 1-1.4-1.4L10.6 12 6.2 7.6a1 1 0 0 1 0-1.4Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+
+            <div className="our-way-modal-badge" aria-hidden="true">
+              <span className="our-way-modal-badge-kicker">راه ما</span>
+              <span className="our-way-modal-badge-num">{stepNum}</span>
+            </div>
+
+            <div className="our-way-modal-visual" aria-hidden="true">
+              <Image
+                src={activeStep.scene}
+                alt=""
+                width={512}
+                height={512}
+                sizes="140px"
+                className="our-way-modal-art"
+              />
+            </div>
+
             <h3 id="our-way-modal-title" className="our-way-modal-title">
               {activeStep.title}
             </h3>
+            <p className="our-way-modal-lead">{activeStep.body}</p>
             <p className="our-way-modal-body">{activeStep.story}</p>
-            {!journey ? (
-              <button
-                type="button"
-                className="our-way-modal-close"
-                onClick={closePopup}
-              >
-                بستن
-              </button>
-            ) : null}
+
+            <button
+              type="button"
+              className="our-way-modal-done"
+              onClick={closePopup}
+            >
+              بستن
+            </button>
           </div>
         ) : null}
       </div>
