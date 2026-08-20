@@ -1656,11 +1656,16 @@ body {
   margin: 0;
   font-size: 10px;
   line-height: 1;
-  opacity: 0.9;
-  filter: drop-shadow(0 1px 1px rgb(0 45 36 / 10%));
+  opacity: 1;
+  /* neon glow only — placement unchanged */
+  filter:
+    drop-shadow(0 0 2px #b8f59a)
+    drop-shadow(0 0 5px #50af47)
+    drop-shadow(0 0 10px rgb(134 194 235 / 85%))
+    drop-shadow(0 0 14px rgb(80 175 71 / 55%));
   transform: translate(-50%, -50%);
   transform-origin: center center;
-  animation: our-way-bead-glow 3.6s ease-in-out infinite;
+  animation: our-way-bead-glow 2.8s ease-in-out infinite;
   animation-delay: calc(var(--bead-i) * 22ms);
   transition:
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1674,20 +1679,30 @@ body {
   z-index: 4;
   opacity: 1;
   animation: none;
-  transform: translate(-50%, -50%) scale(1.4);
-  filter: drop-shadow(0 3px 6px rgb(0 91 72 / 22%));
+  transform: translate(-50%, -50%) scale(1.45);
+  filter:
+    drop-shadow(0 0 3px #e8ffd4)
+    drop-shadow(0 0 8px #50af47)
+    drop-shadow(0 0 14px #86c2eb)
+    drop-shadow(0 0 18px rgb(80 175 71 / 70%));
 }
 
 @keyframes our-way-bead-glow {
   0%,
   100% {
-    opacity: 0.78;
-    filter: drop-shadow(0 1px 1px rgb(0 45 36 / 8%));
+    filter:
+      drop-shadow(0 0 2px #b8f59a)
+      drop-shadow(0 0 5px #50af47)
+      drop-shadow(0 0 9px rgb(134 194 235 / 70%))
+      drop-shadow(0 0 12px rgb(80 175 71 / 45%));
   }
 
   50% {
-    opacity: 1;
-    filter: drop-shadow(0 2px 3px rgb(0 91 72 / 14%));
+    filter:
+      drop-shadow(0 0 3px #f0ffe6)
+      drop-shadow(0 0 8px #6bd45f)
+      drop-shadow(0 0 14px #86c2eb)
+      drop-shadow(0 0 18px rgb(80 175 71 / 75%));
   }
 }
 
@@ -1793,9 +1808,159 @@ body {
 .our-way-map-figure {
   position: relative;
   z-index: 1;
+  display: block;
   margin: 0;
+  padding: 0;
   overflow: visible;
+  border: 0;
+  background: transparent;
   line-height: 0;
+  cursor: pointer;
+}
+
+.our-way-map-figure:disabled {
+  cursor: default;
+}
+
+.our-way-map-stop.is-away .our-way-map-art,
+.our-way-map-stop.is-away .our-way-thought {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.our-way-map-stop.is-passed {
+  opacity: 0.55;
+}
+
+.our-way-walker {
+  position: absolute;
+  z-index: 7;
+  width: 128px;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% + 10px));
+  animation: our-way-walker-bob 0.9s ease-in-out infinite;
+  filter: drop-shadow(0 8px 14px rgb(0 45 36 / 22%));
+}
+
+.our-way-walker-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 108px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+@keyframes our-way-walker-bob {
+  0%,
+  100% {
+    transform: translate(-50%, calc(-100% + 10px)) translateY(0);
+  }
+
+  50% {
+    transform: translate(-50%, calc(-100% + 10px)) translateY(-5px);
+  }
+}
+
+.our-way-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 320ms ease,
+    visibility 320ms ease;
+}
+
+.our-way-modal.is-open {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.our-way-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgb(0 45 36 / 38%);
+  cursor: pointer;
+}
+
+.our-way-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(360px, 92vw);
+  padding: 22px 22px 20px;
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--cream) 45%, var(--milk)) 0%,
+      var(--cream) 55%,
+      color-mix(in srgb, var(--milk) 40%, var(--cream)) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--green) 28%, transparent),
+    0 22px 48px rgb(0 30 24 / 28%);
+  text-align: center;
+  transform: translateY(12px) scale(0.96);
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.our-way-modal.is-open .our-way-modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.our-way-modal-num {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 0 0 5px;
+  border-bottom: 1px solid color-mix(in srgb, var(--earth) 40%, transparent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--earth);
+}
+
+.our-way-modal-title {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--green);
+}
+
+.our-way-modal-body {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.9;
+  color: color-mix(in srgb, #1d1d1b 55%, var(--green));
+  text-wrap: pretty;
+}
+
+.our-way-modal-close {
+  margin-top: 16px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--green);
+  color: var(--milk);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 200ms ease, background 200ms ease;
+}
+
+.our-way-modal-close:hover,
+.our-way-modal-close:focus-visible {
+  background: color-mix(in srgb, var(--green) 88%, #000);
+  transform: translateY(-1px);
 }
 
 .our-way-map-art {
@@ -2004,7 +2169,10 @@ body {
   .our-way-map-card,
   .our-way-map-pin,
   .our-way-thought,
-  .our-way-thought-cloud {
+  .our-way-thought-cloud,
+  .our-way-walker,
+  .our-way-modal,
+  .our-way-modal-card {
     transition: none !important;
     animation: none !important;
   }

@@ -37,6 +37,8 @@ export const ourWay = {
       id: "origin",
       title: "از کوهستان",
       body: "آغاز راه، هوای پاک.",
+      story:
+        "راه از بلندی و هوای تازه شروع می‌شود؛ جایی که خاک و نور هنوز طعم واقعی را می‌سازند.",
       scene: "/brand/our-way-01-climb.png?v=2",
       sceneAlt: "صبح آرام مرتع کوهستانی مرد کوهستان",
       side: "east",
@@ -46,6 +48,8 @@ export const ourWay = {
       id: "nature",
       title: "کنار مرتع",
       body: "دام سالم، زمین سبز.",
+      story:
+        "در مرتع، دام و طبیعت کنار هم‌اند. مراقبت آرام یعنی عجله نیست و سلامت حفظ می‌شود.",
       scene: "/brand/our-way-02-nature.png?v=2",
       sceneAlt: "گله در مرتع سبز زیر نور ملایم",
       side: "west",
@@ -55,6 +59,8 @@ export const ourWay = {
       id: "quality",
       title: "با دقت",
       body: "انتخاب درست، دست حوصله‌دار.",
+      story:
+        "کیفیت در انتخاب و زمان درست است؛ کاری با حوصله تا طعم واقعی تا سفره بماند.",
       scene: "/brand/our-way-03-quality.png?v=2",
       sceneAlt: "آماده‌سازی با دقت در فضای گرم و طبیعی",
       side: "east",
@@ -64,6 +70,8 @@ export const ourWay = {
       id: "balance",
       title: "سفرهٔ خانه",
       body: "گرم، ساده، دور هم.",
+      story:
+        "پایان راه، سفرهٔ خانواده است؛ غذایی گرم و ساده که جمع می‌کند و اعتماد می‌سازد.",
       scene: "/brand/our-way-04-balance.png?v=2",
       sceneAlt: "سفرهٔ خانوادگی گرم با محصولات مرد کوهستان",
       side: "west",
@@ -73,6 +81,8 @@ export const ourWay = {
       id: "ahead",
       title: "یک قدم بعد",
       body: "راه سبز ادامه دارد.",
+      story:
+        "هر روز یک قدم جلوتر؛ مسیر را کمی مطمئن‌تر می‌کنیم تا رسیدن به خانه ساده‌تر بماند.",
       scene: "/brand/our-way-05-ahead.png?v=2",
       sceneAlt: "مسیر آرام به سوی خانه‌ای روشن در دره",
       side: "east",
