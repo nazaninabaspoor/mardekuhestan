@@ -3,28 +3,64 @@ import Link from "next/link";
 
 import { contactInfo } from "@/lib/brand";
 
+/** Geometric mountain ridge — solid brand green silhouette, no stretch distortion. */
 function FooterMountains() {
   return (
-    <svg
-      className="footer-mountains"
-      viewBox="0 0 1440 120"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        className="footer-mountains-back"
-        d="M0 120 V68 L70 42 L140 62 L210 28 L300 58 L380 18 L470 52 L560 24 L650 56 L740 12 L830 48 L920 22 L1010 54 L1100 16 L1190 50 L1280 30 L1360 58 L1440 36 V120 Z"
-      />
-      <path
-        className="footer-mountains-mid"
-        d="M0 120 V78 L90 54 L170 74 L260 44 L350 70 L450 38 L540 66 L640 42 L730 68 L820 34 L910 64 L1000 40 L1090 66 L1180 46 L1270 70 L1360 52 L1440 66 V120 Z"
-      />
-      <path
-        className="footer-mountains-front"
-        d="M0 120 V92 L110 72 L200 88 L290 66 L390 86 L490 64 L590 84 L690 60 L790 82 L890 58 L990 80 L1090 62 L1190 84 L1290 68 L1440 86 V120 Z"
-      />
-    </svg>
+    <div className="footer-mountains" aria-hidden="true">
+      <svg
+        className="footer-mountains-svg"
+        viewBox="0 0 1440 168"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="footerPeakShade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a6a52" />
+            <stop offset="100%" stopColor="#005040" />
+          </linearGradient>
+        </defs>
+
+        {/* Far ridge — softer depth */}
+        <path
+          className="footer-mountains-far"
+          d="M0 168 V98
+            L48 86 L96 102 L150 70 L198 94 L252 58 L310 88 L372 48 L430 82
+            L492 40 L556 76 L618 34 L686 72 L750 28 L812 68 L876 36 L938 74
+            L1002 30 L1068 66 L1134 42 L1196 78 L1260 50 L1324 84 L1384 62 L1440 90
+            V168 Z"
+        />
+
+        {/* Mid ridge */}
+        <path
+          className="footer-mountains-mid"
+          d="M0 168 V118
+            L56 104 L112 122 L176 92 L236 116 L300 78 L364 110 L432 70 L498 104
+            L566 62 L636 98 L704 54 L776 94 L844 66 L912 100 L980 58 L1050 96
+            L1120 72 L1190 104 L1260 80 L1330 108 L1390 88 L1440 112
+            V168 Z"
+        />
+
+        {/* Near ridge — main body color, crisp brand peaks */}
+        <path
+          fill="url(#footerPeakShade)"
+          d="M0 168 V132
+            L40 122 L84 136 L130 114 L178 132 L230 100 L286 128 L340 96 L398 124
+            L456 88 L518 120 L576 84 L640 118 L702 90 L766 122 L828 86 L894 118
+            L958 92 L1024 124 L1088 98 L1154 126 L1218 104 L1284 130 L1344 112 L1440 128
+            V168 Z"
+        />
+
+        {/* Snow highlights on key summits */}
+        <path
+          className="footer-mountains-snow"
+          d="M252 58 L268 74 L238 74 Z
+             M492 40 L512 58 L474 58 Z
+             L750 28 L772 48 L730 48 Z
+             M1002 30 L1024 50 L982 50 Z
+             M618 34 L638 52 L600 52 Z"
+        />
+      </svg>
+    </div>
   );
 }
 
@@ -39,9 +75,10 @@ export function SiteFooter() {
             <Image
               src="/brand/orginal-clear.png"
               alt="مرد کوهستان — این راه سبز است"
-              width={168}
-              height={168}
+              width={176}
+              height={176}
               className="footer-seal-img"
+              priority={false}
             />
           </Link>
         </div>
@@ -80,11 +117,13 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="shell footer-bottom">
-        <p>
-          کلیه حقوق این سایت متعلق به صنایع غذایی مرد کوهستان می‌باشد | All
-          Rights Reserved to Mard-e-Kuhestan
-        </p>
+      <div className="footer-bottom">
+        <div className="shell">
+          <p>
+            کلیه حقوق این سایت متعلق به صنایع غذایی مرد کوهستان می‌باشد | All
+            Rights Reserved to Mard-e-Kuhestan
+          </p>
+        </div>
       </div>
     </footer>
   );
