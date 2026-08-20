@@ -174,7 +174,7 @@ export function OurWaySection() {
     const fromT = STOP_T[journey.from];
     const toT = STOP_T[journey.to];
     const start = performance.now();
-    const movingCharacter = journey.walkerIndex;
+    const arrivedAt = journey.to;
 
     const toPct = (t: number): Point => {
       const p = path.getPointAtLength(
@@ -189,8 +189,8 @@ export function OurWaySection() {
       };
     };
 
-    setPopupIndex(journey.to);
-    setPopupVisible(true);
+    // مسیر آزاد می‌ماند؛ داستان فقط بعد از رسیدن باز می‌شود
+    setPopupVisible(false);
     setWalkerActive(true);
     placeWalker(toPct(fromT));
 
@@ -204,8 +204,12 @@ export function OurWaySection() {
       }
 
       placeWalker(toPct(toT));
-      setWalkerIndex(movingCharacter);
       setJourney(null);
+      setPopupIndex(arrivedAt);
+      setPopupVisible(true);
+      // مبدأ بلافاصله برمی‌گردد؛ لازم نیست روی مقصد کلیک شود
+      setWalkerActive(false);
+      setWalkerIndex(null);
     };
 
     rafRef.current = requestAnimationFrame(tick);
@@ -216,6 +220,8 @@ export function OurWaySection() {
 
   const startJourney = (index: number) => {
     if (journey) return;
+
+    setPopupVisible(false);
 
     if (index >= ourWay.steps.length - 1) {
       setPopupIndex(index);
@@ -287,6 +293,13 @@ export function OurWaySection() {
 
   const activeStep =
     popupIndex != null ? ourWay.steps[popupIndex] : null;
+  /** مبدأ حرکت — تا وقتی walker فعال است مخفی است؛ با بستن داستان برمی‌گردد */
+  const vacatedStop =
+    journey != null
+      ? journey.from
+      : walkerActive
+        ? walkerIndex
+        : null;
   const activeWalkerIndex =
     journey != null ? journey.walkerIndex : walkerIndex;
   const walkerStep =
@@ -372,10 +385,7 @@ export function OurWaySection() {
                   const anchor = anchors[index];
                   if (!anchor) return null;
                   const num = String(index + 1).padStart(2, "0");
-                  const isAway =
-                    activeWalkerIndex != null &&
-                    index === activeWalkerIndex &&
-                    walkerActive;
+                  const isAway = vacatedStop === index;
                   const isPassed =
                     journey != null && index < journey.from;
                   const isTerminus =
@@ -433,74 +443,72 @@ export function OurWaySection() {
             </div>
           </div>
         </div>
-      </div>
 
-      <div
-        className={`our-way-modal${popupVisible && activeStep ? " is-open" : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-hidden={!popupVisible}
-        aria-labelledby="our-way-modal-title"
-      >
-        <button
-          type="button"
-          className="our-way-modal-backdrop"
-          aria-label="بستن"
-          onClick={closePopup}
-        />
-        {activeStep ? (
-          <div className="our-way-modal-card">
-            <button
-              type="button"
-              className="our-way-modal-x"
-              aria-label="بستن"
-              onClick={closePopup}
+        <aside
+          className={`our-way-story${popupVisible && activeStep ? " is-open" : ""}${journey ? " is-traveling" : ""}`}
+          aria-live="polite"
+          aria-hidden={!popupVisible && !journey}
+        >
+          {journey ? (
+            <p className="our-way-story-cue">
+              <span className="our-way-story-cue-dot" aria-hidden="true" />
+              در راه… به‌سوی{" "}
+              <strong>{ourWay.steps[journey.to]?.title}</strong>
+            </p>
+          ) : null}
+
+          {popupVisible && activeStep ? (
+            <div
+              className="our-way-story-card"
+              role="dialog"
+              aria-modal="false"
+              aria-labelledby="our-way-story-title"
             >
-              <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                aria-hidden="true"
-                focusable="false"
+              <button
+                type="button"
+                className="our-way-story-x"
+                aria-label="بستن"
+                onClick={closePopup}
               >
-                <path
-                  d="M6.2 6.2a1 1 0 0 1 1.4 0L12 10.6l4.4-4.4a1 1 0 1 1 1.4 1.4L13.4 12l4.4 4.4a1 1 0 0 1-1.4 1.4L12 13.4l-4.4 4.4a1 1 0 0 1-1.4-1.4L10.6 12 6.2 7.6a1 1 0 0 1 0-1.4Z"
-                  fill="currentColor"
+                <svg
+                  viewBox="0 0 24 24"
+                  width="12"
+                  height="12"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M6.2 6.2a1 1 0 0 1 1.4 0L12 10.6l4.4-4.4a1 1 0 1 1 1.4 1.4L13.4 12l4.4 4.4a1 1 0 0 1-1.4 1.4L12 13.4l-4.4 4.4a1 1 0 0 1-1.4-1.4L10.6 12 6.2 7.6a1 1 0 0 1 0-1.4Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+
+              <div className="our-way-story-thumb" aria-hidden="true">
+                <Image
+                  src={activeStep.scene}
+                  alt=""
+                  width={256}
+                  height={256}
+                  sizes="72px"
+                  className="our-way-story-art"
                 />
-              </svg>
-            </button>
+              </div>
 
-            <div className="our-way-modal-badge" aria-hidden="true">
-              <span className="our-way-modal-badge-kicker">راه ما</span>
-              <span className="our-way-modal-badge-num">{stepNum}</span>
+              <div className="our-way-story-copy">
+                <div className="our-way-story-meta">
+                  <span className="our-way-story-kicker">راه ما</span>
+                  <span className="our-way-story-num">{stepNum}</span>
+                </div>
+                <h3 id="our-way-story-title" className="our-way-story-title">
+                  {activeStep.title}
+                </h3>
+                <p className="our-way-story-lead">{activeStep.body}</p>
+                <p className="our-way-story-body">{activeStep.story}</p>
+              </div>
             </div>
-
-            <div className="our-way-modal-visual" aria-hidden="true">
-              <Image
-                src={activeStep.scene}
-                alt=""
-                width={512}
-                height={512}
-                sizes="140px"
-                className="our-way-modal-art"
-              />
-            </div>
-
-            <h3 id="our-way-modal-title" className="our-way-modal-title">
-              {activeStep.title}
-            </h3>
-            <p className="our-way-modal-lead">{activeStep.body}</p>
-            <p className="our-way-modal-body">{activeStep.story}</p>
-
-            <button
-              type="button"
-              className="our-way-modal-done"
-              onClick={closePopup}
-            >
-              بستن
-            </button>
-          </div>
-        ) : null}
+          ) : null}
+        </aside>
       </div>
     </section>
   );

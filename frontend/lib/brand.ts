@@ -50,8 +50,8 @@ export const ourWay = {
       body: "دام سالم، زمین سبز.",
       story:
         "در مرتع، دام و طبیعت کنار هم‌اند. مراقبت آرام یعنی عجله نیست و سلامت حفظ می‌شود.",
-      scene: "/brand/our-way-02-nature.png?v=2",
-      sceneAlt: "گله در مرتع سبز زیر نور ملایم",
+      scene: "/brand/our-way-02-nature.png?v=3",
+      sceneAlt: "مرد کوهستان کنار مرتع سبز و دام سالم",
       side: "west",
       pose: "pasture",
     },
@@ -61,7 +61,7 @@ export const ourWay = {
       body: "انتخاب درست، دست حوصله‌دار.",
       story:
         "کیفیت در انتخاب و زمان درست است؛ کاری با حوصله تا طعم واقعی تا سفره بماند.",
-      scene: "/brand/our-way-03-quality.png?v=2",
+      scene: "/brand/our-way-03-quality.png?v=4",
       sceneAlt: "آماده‌سازی با دقت در فضای گرم و طبیعی",
       side: "east",
       pose: "craft",
