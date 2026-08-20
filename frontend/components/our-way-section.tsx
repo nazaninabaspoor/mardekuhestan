@@ -87,8 +87,12 @@ export function OurWaySection() {
     if (length <= 0) return;
 
     const stopDist = STOP_T.map((t) => t * length);
-    const nextBeads: { id: string; x: number; y: number; emoji: string }[] =
-      [];
+    const nextBeads: {
+      id: string;
+      x: number;
+      y: number;
+      emoji: string;
+    }[] = [];
     const count = Math.max(1, Math.floor(length / BEAD_SPACING));
 
     for (let i = 0; i <= count; i += 1) {
@@ -325,10 +329,13 @@ export function OurWaySection() {
                   const isPassed =
                     journey != null && index < journey.from;
 
+                  const isTerminus =
+                    index === 0 || index === ourWay.steps.length - 1;
+
                   return (
                     <li
                       key={step.id}
-                      className={`our-way-map-stop our-way-map-stop--${anchor.band}${isAway ? " is-away" : ""}${isPassed ? " is-passed" : ""}`}
+                      className={`our-way-map-stop our-way-map-stop--${anchor.band}${isTerminus ? " our-way-map-stop--terminus" : ""}${isAway ? " is-away" : ""}${isPassed ? " is-passed" : ""}`}
                       style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }}
                     >
                       <span className="our-way-map-pin" aria-hidden="true">
