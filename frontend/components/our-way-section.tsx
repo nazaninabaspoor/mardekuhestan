@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   useLayoutEffect,
   useRef,
@@ -10,22 +9,17 @@ import {
   type PointerEvent,
 } from "react";
 
-import { PeakMark } from "@/components/brand-marks";
 import { ourWay } from "@/lib/brand";
 
 /**
- * Peak–valley–peak–valley–peak.
- * Endpoints ARE the first/last stop seats (no dangling tips).
- * viewBox 1000×220
+ * Peak–valley–peak–valley–peak — mild amplitude for compact full view.
+ * Endpoints ARE the first/last stop seats.
  */
 const ROAD_PATH =
-  "M 0 72 C 80 68, 140 168, 250 168 S 390 52, 500 50 S 620 168, 750 168 S 900 70, 1000 72";
+  "M 0 100 C 90 96, 150 138, 255 138 S 400 92, 500 90 S 610 138, 745 138 S 900 98, 1000 100";
 
-/** Spacing along path in viewBox units — denser trail */
-const BEAD_SPACING = 7;
-/** Keep clear of pin centers (viewBox length units) */
-const STOP_CLEARANCE = 16;
-
+const BEAD_SPACING = 8;
+const STOP_CLEARANCE = 14;
 /** RTL: 01 = path end (right peak), 05 = path start (left peak) */
 const STOP_T = [1, 0.75, 0.5, 0.25, 0] as const;
 
@@ -40,9 +34,7 @@ function stagePoint(
   if (!svg) return null;
 
   const length = path.getTotalLength();
-  const p = path.getPointAtLength(
-    Math.max(0, Math.min(length, distance)),
-  );
+  const p = path.getPointAtLength(Math.max(0, Math.min(length, distance)));
   const ctm = path.getScreenCTM();
   if (!ctm) return null;
 
@@ -80,14 +72,10 @@ export function OurWaySection() {
       if (length <= 0) return;
 
       const stopDist = STOP_T.map((t) => t * length);
-
-      const nextBeads: {
-        id: string;
-        x: number;
-        y: number;
-        emoji: string;
-      }[] = [];
+      const nextBeads: { id: string; x: number; y: number; emoji: string }[] =
+        [];
       const count = Math.max(1, Math.floor(length / BEAD_SPACING));
+
       for (let i = 0; i <= count; i += 1) {
         const dist = (i / count) * length;
         if (stopDist.some((sd) => Math.abs(sd - dist) < STOP_CLEARANCE)) {
@@ -144,32 +132,11 @@ export function OurWaySection() {
 
   return (
     <section className="our-way" aria-labelledby="our-way-title">
+      <h2 id="our-way-title" className="sr-only">
+        {ourWay.title}
+      </h2>
+
       <div className="shell">
-        <div className="our-way-head">
-          <h2 className="our-way-title" id="our-way-title">
-            <PeakMark className="our-way-title-peak" />
-            {ourWay.title}
-          </h2>
-          <span className="our-way-title-rule" aria-hidden="true" />
-          <Link href={ourWay.moreHref} className="our-way-more" title={ourWay.moreLabel}>
-            {ourWay.moreLabel}
-            <span className="our-way-more-mark" aria-hidden="true">
-              <PeakMark />
-            </span>
-          </Link>
-        </div>
-
-        <div className="our-way-story">
-          <header className="our-way-intro">
-            <p className="our-way-kicker">{ourWay.kicker}</p>
-            <p className="our-way-lead">{ourWay.lead}</p>
-          </header>
-          <aside className="our-way-note" aria-label="یادداشت راه">
-            <PeakMark className="our-way-note-peak" />
-            <p>{ourWay.note}</p>
-          </aside>
-        </div>
-
         <div
           className="our-way-map"
           ref={mapRef}
@@ -241,21 +208,29 @@ export function OurWaySection() {
                       <span className="our-way-map-stem" aria-hidden="true" />
 
                       <div className="our-way-map-card">
+                        <article className="our-way-thought">
+                          <span className="our-way-thought-dots" aria-hidden="true">
+                            <i />
+                            <i />
+                            <i />
+                          </span>
+                          <div className="our-way-thought-cloud">
+                            <span className="our-way-map-num">{num}</span>
+                            <h3 className="our-way-map-title">{step.title}</h3>
+                            <p className="our-way-map-text">{step.body}</p>
+                          </div>
+                        </article>
+
                         <figure className="our-way-map-figure">
                           <Image
                             src={step.scene}
                             alt={step.sceneAlt}
                             width={1024}
                             height={1024}
-                            sizes="180px"
+                            sizes="150px"
                             className="our-way-map-art"
                           />
                         </figure>
-                        <article className="our-way-map-copy">
-                          <span className="our-way-map-num">{num}</span>
-                          <h3 className="our-way-map-title">{step.title}</h3>
-                          <p className="our-way-map-text">{step.body}</p>
-                        </article>
                       </div>
                     </li>
                   );
