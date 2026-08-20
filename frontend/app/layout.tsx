@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import { ContourField } from "@/components/brand-marks";
+import { BrandTeaser } from "@/components/brand-teaser";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -36,7 +37,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" className={mardeKuhestan.variable}>
+      <head>
+        <link rel="preload" as="image" href="/brand/logo-white.svg" type="image/svg+xml" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""){document.documentElement.classList.add("is-teaser-pending");}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className={mardeKuhestan.className}>
+        <BrandTeaser />
         <a className="skip-link btn-accent" href="#hero-title">
           رفتن به محتوای اصلی
         </a>
