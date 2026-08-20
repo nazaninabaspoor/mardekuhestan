@@ -219,6 +219,11 @@ export function OurWaySection() {
                             <h3 className="our-way-map-title">{step.title}</h3>
                             <p className="our-way-map-text">{step.body}</p>
                           </div>
+
+                          <div className="our-way-popup" role="tooltip">
+                            <span className="our-way-popup-kicker">داستان راه</span>
+                            <p className="our-way-popup-story">{step.story}</p>
+                          </div>
                         </article>
 
                         <figure className="our-way-map-figure">
