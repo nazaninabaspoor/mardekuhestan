@@ -78,12 +78,14 @@ type ShelfCard = {
 function ShelfPane({
   paneId,
   title,
+  lead,
   icon,
   viewAllHref,
   cards,
 }: {
-  paneId: string;
+  paneId: "magazine" | "catalog";
   title: string;
+  lead: string;
   icon: ReactNode;
   viewAllHref: string;
   cards: ShelfCard[];
@@ -101,6 +103,7 @@ function ShelfPane({
           مشاهده همه
         </Link>
       </div>
+      <p className="stories-shelf-lead">{lead}</p>
 
       <ul className="stories-shelf-grid">
         {cards.map((card, index) => (
@@ -109,16 +112,19 @@ function ShelfPane({
             className="stories-shelf-item"
             style={{ ["--shelf-i" as string]: index }}
           >
-            <Link href={card.href} className="stories-shelf-card">
-              <span className="stories-shelf-neon" aria-hidden="true" />
-              <span className="stories-shelf-neon stories-shelf-neon--spin" aria-hidden="true" />
+            <Link
+              href={card.href}
+              className={`stories-shelf-card stories-shelf-card--${paneId}`}
+            >
               <div className="stories-shelf-visual">
                 <Image
                   src={card.image}
                   alt={card.alt}
                   fill
-                  sizes="(max-width: 900px) 44vw, 240px"
-                  style={{ objectFit: "contain" }}
+                  sizes="(max-width: 900px) 44vw, 260px"
+                  style={{
+                    objectFit: paneId === "magazine" ? "cover" : "contain",
+                  }}
                 />
               </div>
               <div className="stories-shelf-copy">
@@ -149,7 +155,7 @@ export function LatestArticlesSection() {
           observer.disconnect();
         }
       },
-      { threshold: 0.18 },
+      { threshold: 0.16 },
     );
 
     observer.observe(node);
@@ -191,6 +197,7 @@ export function LatestArticlesSection() {
           <ShelfPane
             paneId="magazine"
             title={`مجله ${brand.name}`}
+            lead="داستان‌هایی برای خواندن؛ از مرتع تا سفره."
             icon={<MagazineIcon />}
             viewAllHref="/magazine"
             cards={magazineCards}
@@ -198,6 +205,7 @@ export function LatestArticlesSection() {
           <ShelfPane
             paneId="catalog"
             title="کاتالوگ و گالری"
+            lead="صفحه‌به‌صفحه ببینید چه چیزی برای خانه آماده است."
             icon={<CatalogIcon />}
             viewAllHref="/products"
             cards={catalogCards}

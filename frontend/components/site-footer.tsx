@@ -3,61 +3,34 @@ import Link from "next/link";
 
 import { contactInfo } from "@/lib/brand";
 
-/** Geometric mountain ridge — solid brand green silhouette, no stretch distortion. */
+/**
+ * Sharp geometric mountain silhouette — matches mardekuhestan.com footer crest.
+ * Peaks are solid footer green so they cut cleanly into the cream page above.
+ */
 function FooterMountains() {
   return (
     <div className="footer-mountains" aria-hidden="true">
       <svg
         className="footer-mountains-svg"
-        viewBox="0 0 1440 168"
+        viewBox="0 0 1440 120"
         preserveAspectRatio="none"
         focusable="false"
       >
-        <defs>
-          <linearGradient id="footerPeakShade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0a6a52" />
-            <stop offset="100%" stopColor="#005040" />
-          </linearGradient>
-        </defs>
-
-        {/* Far ridge — softer depth */}
+        {/* Soft distant ridge */}
         <path
           className="footer-mountains-far"
-          d="M0 168 V98
-            L48 86 L96 102 L150 70 L198 94 L252 58 L310 88 L372 48 L430 82
-            L492 40 L556 76 L618 34 L686 72 L750 28 L812 68 L876 36 L938 74
-            L1002 30 L1068 66 L1134 42 L1196 78 L1260 50 L1324 84 L1384 62 L1440 90
-            V168 Z"
+          d="M0 120 V72
+            L60 58 L120 78 L190 42 L260 70 L340 28 L420 64 L510 18 L600 58
+            L690 22 L780 62 L870 16 L960 54 L1050 24 L1140 60 L1230 30 L1320 66 L1440 40
+            V120 Z"
         />
-
-        {/* Mid ridge */}
+        {/* Main crest — same green as footer body */}
         <path
-          className="footer-mountains-mid"
-          d="M0 168 V118
-            L56 104 L112 122 L176 92 L236 116 L300 78 L364 110 L432 70 L498 104
-            L566 62 L636 98 L704 54 L776 94 L844 66 L912 100 L980 58 L1050 96
-            L1120 72 L1190 104 L1260 80 L1330 108 L1390 88 L1440 112
-            V168 Z"
-        />
-
-        {/* Near ridge — main body color, crisp brand peaks */}
-        <path
-          fill="url(#footerPeakShade)"
-          d="M0 168 V132
-            L40 122 L84 136 L130 114 L178 132 L230 100 L286 128 L340 96 L398 124
-            L456 88 L518 120 L576 84 L640 118 L702 90 L766 122 L828 86 L894 118
-            L958 92 L1024 124 L1088 98 L1154 126 L1218 104 L1284 130 L1344 112 L1440 128
-            V168 Z"
-        />
-
-        {/* Snow highlights on key summits */}
-        <path
-          className="footer-mountains-snow"
-          d="M252 58 L268 74 L238 74 Z
-             M492 40 L512 58 L474 58 Z
-             L750 28 L772 48 L730 48 Z
-             M1002 30 L1024 50 L982 50 Z
-             M618 34 L638 52 L600 52 Z"
+          className="footer-mountains-main"
+          d="M0 120 V88
+            L55 74 L115 92 L175 60 L245 86 L320 48 L400 82 L475 44 L560 78
+            L640 36 L725 74 L810 40 L900 76 L985 42 L1075 78 L1160 50 L1250 84 L1340 58 L1440 80
+            V120 Z"
         />
       </svg>
     </div>
@@ -75,10 +48,9 @@ export function SiteFooter() {
             <Image
               src="/brand/orginal-clear.png"
               alt="مرد کوهستان — این راه سبز است"
-              width={176}
-              height={176}
+              width={180}
+              height={180}
               className="footer-seal-img"
-              priority={false}
             />
           </Link>
         </div>
