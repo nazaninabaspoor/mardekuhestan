@@ -4,33 +4,31 @@ import Link from "next/link";
 import { contactInfo } from "@/lib/brand";
 
 /**
- * Sharp geometric mountain silhouette — matches mardekuhestan.com footer crest.
- * Peaks are solid footer green so they cut cleanly into the cream page above.
+ * Irregular mountain crest — few dramatic peaks (not dense diamonds).
+ * Solid footer green so the cream page ends in a real skyline.
  */
 function FooterMountains() {
   return (
     <div className="footer-mountains" aria-hidden="true">
       <svg
         className="footer-mountains-svg"
-        viewBox="0 0 1440 120"
+        viewBox="0 0 1440 100"
         preserveAspectRatio="none"
         focusable="false"
       >
-        {/* Soft distant ridge */}
         <path
           className="footer-mountains-far"
-          d="M0 120 V72
-            L60 58 L120 78 L190 42 L260 70 L340 28 L420 64 L510 18 L600 58
-            L690 22 L780 62 L870 16 L960 54 L1050 24 L1140 60 L1230 30 L1320 66 L1440 40
-            V120 Z"
+          d="M0 100 L0 58
+            L95 40 L180 62 L290 22 L400 54 L520 14 L640 48 L760 18 L880 52
+            L1000 12 L1120 46 L1240 24 L1360 50 L1440 34
+            L1440 100 Z"
         />
-        {/* Main crest — same green as footer body */}
         <path
           className="footer-mountains-main"
-          d="M0 120 V88
-            L55 74 L115 92 L175 60 L245 86 L320 48 L400 82 L475 44 L560 78
-            L640 36 L725 74 L810 40 L900 76 L985 42 L1075 78 L1160 50 L1250 84 L1340 58 L1440 80
-            V120 Z"
+          d="M0 100 L0 72
+            L70 58 L150 78 L250 38 L360 70 L470 28 L590 66 L700 32 L820 68
+            L930 24 L1050 64 L1160 36 L1280 70 L1380 48 L1440 62
+            L1440 100 Z"
         />
       </svg>
     </div>
