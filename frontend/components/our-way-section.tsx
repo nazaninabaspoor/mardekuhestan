@@ -16,7 +16,7 @@ import { ourWay } from "@/lib/brand";
  * Endpoints ARE the first/last stop seats.
  */
 const ROAD_PATH =
-  "M 0 100 C 90 96, 150 138, 255 138 S 400 92, 500 90 S 610 138, 745 138 S 900 98, 1000 100";
+  "M 0 110 C 90 106, 150 134, 255 134 S 400 102, 500 100 S 610 134, 745 134 S 900 108, 1000 110";
 
 const BEAD_SPACING = 8;
 const STOP_CLEARANCE = 14;
@@ -218,11 +218,6 @@ export function OurWaySection() {
                             <span className="our-way-map-num">{num}</span>
                             <h3 className="our-way-map-title">{step.title}</h3>
                             <p className="our-way-map-text">{step.body}</p>
-                          </div>
-
-                          <div className="our-way-popup" role="tooltip">
-                            <span className="our-way-popup-kicker">داستان راه</span>
-                            <p className="our-way-popup-story">{step.story}</p>
                           </div>
                         </article>
 
