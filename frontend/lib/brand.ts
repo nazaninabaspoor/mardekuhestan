@@ -269,6 +269,70 @@ export const homeCategoryProducts = {
 
 export type HomeDoorId = keyof typeof homeCategoryProducts;
 
+/** ویژه‌ها و تازه‌رسیده‌ها — زیر «چه به خانه می‌رسد» */
+export const featuredPicks = {
+  title: "تازه‌های راه سبز",
+  lead: "محصولاتی که همین هفته با همان مسیر کوتاه و روشن، به سفره می‌رسند.",
+  moreHref: "/products",
+  moreLabel: "مشاهده همه",
+  items: [
+    {
+      id: "feat-meat-loin",
+      name: "ران گوسفند",
+      note: "برش تازه از مرتع",
+      badge: "ویژه",
+      href: "/products?cat=fresh-meat",
+      image: "/brand/goosht.png",
+      alt: "ران گوسفند تازه مرد کوهستان",
+    },
+    {
+      id: "feat-dairy-cheese",
+      name: "پنیر سنتی",
+      note: "برای صبحانهٔ خانه",
+      badge: "تازه",
+      href: "/products?cat=dairy",
+      image: "/brand/panir.png",
+      alt: "پنیر سنتی مرد کوهستان",
+    },
+    {
+      id: "feat-sea-shrimp",
+      name: "میگوی روز",
+      note: "از آب، همان‌روز",
+      badge: "جدید",
+      href: "/products?cat=seafood",
+      image: "/brand/home-seafood.png",
+      alt: "میگوی تازه مرد کوهستان",
+    },
+    {
+      id: "feat-ready-stew",
+      name: "خورشت آماده",
+      note: "طعم خانه، فقط گرم کن",
+      badge: "ویژه",
+      href: "/products?cat=ready",
+      image: "/brand/akhary.png",
+      alt: "خورشت آماده مرد کوهستان",
+    },
+  ],
+} as const;
+
+export const contactInfo = {
+  company: "صنایع غذایی مرد کوهستان",
+  blurb:
+    "مرد کوهستان تولیدکننده فرآورده‌های پروتئینی سالم و باکیفیت است؛ محصولاتی که با تکیه بر فرآیندهای دقیق، استانداردهای تخصصی و احترام به طبیعت شکل می‌گیرند.",
+  address: "رباط کریم، روستای نوده، خیابان نوده دوم، پلاک ۰",
+  phones: [
+    { label: "۰۲۱-۵۶۴۴۳۳۹۴", href: "tel:02156443394" },
+    { label: "۰۲۱-۵۶۴۴۳۳۹۵", href: "tel:02156443395" },
+  ],
+  email: "info@mardekuhestan.com",
+  pages: [
+    { href: "/", label: "صفحه اصلی" },
+    { href: "/chain", label: "زنجیره" },
+    { href: "/way", label: "راه‌ها" },
+    { href: "/contact", label: "ارتباط با ما" },
+  ],
+} as const;
+
 export const latestArticles = [
   {
     id: "pasture-to-table",
