@@ -311,6 +311,26 @@ export function OurWaySection() {
       className={`our-way${journey ? " is-journeying" : ""}`}
       aria-labelledby="our-way-title"
     >
+      <div className="our-way-atmosphere" aria-hidden="true">
+        <div className="our-way-atmosphere-wash" />
+        <svg
+          className="our-way-atmosphere-ridges"
+          viewBox="0 0 1440 220"
+          preserveAspectRatio="none"
+          focusable="false"
+        >
+          <path
+            className="our-way-atmosphere-ridge our-way-atmosphere-ridge--far"
+            d="M0 220 L0 128 L95 98 L210 142 L340 72 L480 128 L620 58 L770 122 L920 68 L1070 132 L1220 84 L1360 118 L1440 96 L1440 220 Z"
+          />
+          <path
+            className="our-way-atmosphere-ridge our-way-atmosphere-ridge--near"
+            d="M0 220 L0 158 L80 138 L190 168 L320 112 L460 158 L600 104 L750 154 L890 110 L1040 162 L1180 124 L1320 156 L1440 138 L1440 220 Z"
+          />
+        </svg>
+        <div className="our-way-atmosphere-floor" />
+      </div>
+
       <h2 id="our-way-title" className="sr-only">
         {ourWay.title}
       </h2>
