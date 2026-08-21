@@ -288,10 +288,10 @@ export const upcomingDrops = {
     {
       id: "drop-green-stew",
       name: "خوراک راه سبز",
-      note: "یک قابلمه، طعم کامل مسیر از مرتع تا سفره",
+      note: "بشقاب میگو؛ تازه از آب تا سفره",
       eta: "به‌زودی",
-      image: "/brand/akhary.png",
-      alt: "خوراک راه سبز مرد کوهستان — به‌زودی",
+      image: "/brand/home-seafood.png",
+      alt: "بشقاب میگوی خوراک راه سبز — به‌زودی",
     },
   ],
 } as const;
