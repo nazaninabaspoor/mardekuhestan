@@ -126,17 +126,11 @@ function ShelfPane({
                     objectFit: paneId === "magazine" ? "cover" : "contain",
                   }}
                 />
-                {paneId === "magazine" ? (
-                  <span className="stories-shelf-page-edge" aria-hidden="true" />
-                ) : null}
               </div>
               <div className="stories-shelf-copy">
                 <span className="stories-shelf-kicker">{card.kicker}</span>
                 <strong>{card.title}</strong>
                 <span className="stories-shelf-meta">{card.meta}</span>
-                {paneId === "magazine" ? (
-                  <span className="stories-shelf-read">شروع خواندن</span>
-                ) : null}
               </div>
             </Link>
           </li>

@@ -91,8 +91,6 @@ export function FreshWaySection() {
             </Link>
           </div>
 
-          <p className="fresh-way-lead">{featuredPicks.lead}</p>
-
           <ul className="fresh-way-grid">
             {featuredPicks.items.map((item, index) => (
               <li

@@ -271,8 +271,7 @@ export type HomeDoorId = keyof typeof homeCategoryProducts;
 
 /** ویژه‌ها و تازه‌رسیده‌ها — زیر «چه به خانه می‌رسد» */
 export const featuredPicks = {
-  title: "تازه‌های راه سبز",
-  lead: "محصولاتی که همین هفته با همان مسیر کوتاه و روشن، به سفره می‌رسند.",
+  title: "برای سفرهٔ امروز",
   moreHref: "/products",
   moreLabel: "مشاهده همه",
   items: [
