@@ -2928,57 +2928,93 @@ body {
   color: var(--green);
 }
 
+.coming-soon-head {
+  --case-neon: color-mix(in srgb, var(--meadow) 78%, #9dffb0);
+  --case-neon-core: color-mix(in srgb, var(--green) 55%, #7dffb8);
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto 14px;
+  padding: 14px 22px;
+  border-radius: 16px;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--green) 88%, #01261c) 0%,
+      var(--green) 48%,
+      color-mix(in srgb, var(--green) 90%, #003528) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--milk) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--case-neon) 22%, transparent),
+    0 0 20px color-mix(in srgb, var(--case-neon-core) 18%, transparent),
+    0 10px 24px rgb(0 45 36 / 12%);
+}
+
+.coming-soon-head::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: 0;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--milk) 10%, transparent);
+  pointer-events: none;
+}
+
 .coming-soon-block-title {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 16px;
   width: 100%;
-  margin: 0 0 36px;
-  color: var(--green);
+  margin: 0;
+  color: var(--milk);
 }
 
 .coming-soon-block-title-text {
-  position: relative;
-  z-index: 1;
   display: inline-flex;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   align-items: center;
   gap: 8px;
   margin: 0;
+  min-width: 0;
   font-size: 14px;
   font-weight: 700;
-  line-height: 38px;
+  line-height: 1.3;
+  color: var(--milk);
 }
 
 .coming-soon-title-icon {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  color: var(--green);
-}
-
-.coming-soon-block-title-rule {
-  display: block;
-  flex: 1 1 auto;
-  min-width: 1.5rem;
-  height: 0;
-  border-bottom: 2px dotted color-mix(in srgb, var(--green) 60%, transparent);
-  opacity: 0.35;
+  color: color-mix(in srgb, var(--cream) 82%, var(--meadow));
 }
 
 .coming-soon-flag {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  height: 24px;
-  padding: 0 12px;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 14px;
   border-radius: 999px;
-  background: transparent;
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--earth) 65%, transparent);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--earth);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--cream) 70%, var(--milk)) 0%,
+      color-mix(in srgb, var(--milk) 90%, var(--green)) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 18%, transparent),
+    0 4px 12px rgb(0 20 16 / 16%);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--green);
 }
 
 .coming-soon-case {
@@ -3035,11 +3071,11 @@ body {
   position: absolute;
   display: grid;
   place-items: center;
-  color: color-mix(in srgb, var(--cream) 62%, var(--milk));
+  color: color-mix(in srgb, var(--cream) 78%, var(--milk));
   opacity: 0;
   transform: rotate(var(--decor-rot, 0deg));
-  filter: drop-shadow(0 3px 8px rgb(0 20 16 / 14%));
-  transition: opacity 900ms ease;
+  filter: drop-shadow(0 2px 6px rgb(0 20 16 / 12%));
+  transition: opacity 700ms ease;
   animation-duration: var(--decor-dur, 7s);
   animation-delay: var(--decor-delay, 0s);
   animation-timing-function: ease-in-out;
@@ -3264,18 +3300,33 @@ body {
 
 .coming-soon-meta {
   display: grid;
-  gap: 4px;
-  max-width: 14rem;
-  margin-top: 14px;
+  gap: 5px;
+  max-width: 15.5rem;
+  width: min(100%, 15.5rem);
+  margin-top: 16px;
+  padding: 12px 14px 13px;
   justify-items: center;
+  text-align: center;
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--earth) 82%, #5c2014) 0%,
+      var(--earth) 48%,
+      color-mix(in srgb, var(--earth) 88%, #3d120c) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--cream) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--milk) 18%, transparent),
+    0 8px 18px rgb(0 20 16 / 22%);
 }
 
 .coming-soon-eta {
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   line-height: 1;
-  color: color-mix(in srgb, var(--cream) 72%, #e8b89a);
+  color: color-mix(in srgb, var(--cream) 78%, #e8b89a);
   opacity: 0.95;
 }
 
@@ -3283,18 +3334,18 @@ body {
   margin: 0;
   font-size: clamp(15px, 1.7vw, 18px);
   font-weight: 800;
-  line-height: 1.2;
-  color: var(--milk);
+  line-height: 1.25;
+  color: var(--cream);
   text-wrap: balance;
 }
 
 .coming-soon-note {
   margin: 0;
-  max-width: 12.5rem;
+  max-width: none;
   font-size: 10.5px;
   font-weight: 400;
   line-height: 1.55;
-  color: color-mix(in srgb, var(--milk) 62%, transparent);
+  color: color-mix(in srgb, var(--milk) 82%, transparent);
   text-wrap: pretty;
 }
 
@@ -3516,8 +3567,14 @@ body {
     padding: 12px 0 24px;
   }
 
+  .coming-soon-head {
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 14px;
+  }
+
   .coming-soon-block-title {
-    margin-bottom: 22px;
+    gap: 12px;
   }
 
   .coming-soon-case {
@@ -3529,7 +3586,7 @@ body {
     padding-bottom: 8px;
   }
 
-  .coming-soon-decor-item:nth-child(n + 18) {
+  .coming-soon-decor-item:nth-child(n + 70) {
     display: none;
   }
 

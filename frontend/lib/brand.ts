@@ -271,7 +271,7 @@ export type HomeDoorId = keyof typeof homeCategoryProducts;
 
 /** دو محصول در راه — تیزر «به‌زودی» بین راه ما و مجله */
 export const upcomingDrops = {
-  kicker: "بزودی",
+  kicker: "به‌زودی",
   title: "در راه سفره",
   lead: "دو محصول تازه از همان مسیر سبز؛ هنوز نرسیده‌اند، اما طعم‌شان روشن است.",
   ctaLabel: "خبرم کن",
