@@ -313,6 +313,8 @@ export function OurWaySection() {
     >
       <div className="our-way-atmosphere" aria-hidden="true">
         <div className="our-way-atmosphere-wash" />
+        <div className="our-way-atmosphere-cap-mist" />
+        <div className="our-way-atmosphere-ridge-mist" />
         <div className="our-way-atmosphere-ceiling" />
         <svg
           className="our-way-atmosphere-caps"
@@ -346,6 +348,8 @@ export function OurWaySection() {
         </svg>
         <div className="our-way-atmosphere-floor" />
       </div>
+      <span className="our-way-seam our-way-seam--top" aria-hidden="true" />
+      <span className="our-way-seam our-way-seam--bottom" aria-hidden="true" />
 
       <h2 id="our-way-title" className="sr-only">
         {ourWay.title}
