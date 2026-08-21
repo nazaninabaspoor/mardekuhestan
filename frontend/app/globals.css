@@ -3301,51 +3301,49 @@ body {
 .coming-soon-meta {
   display: grid;
   gap: 5px;
-  max-width: 15.5rem;
-  width: min(100%, 15.5rem);
+  max-width: 11rem;
+  width: min(100%, 11rem);
   margin-top: 16px;
-  padding: 12px 14px 13px;
+  padding: 11px 12px 12px;
   justify-items: center;
   text-align: center;
   border-radius: 12px;
   background:
     linear-gradient(
-      165deg,
-      color-mix(in srgb, var(--earth) 82%, #5c2014) 0%,
-      var(--earth) 48%,
-      color-mix(in srgb, var(--earth) 88%, #3d120c) 100%
+      155deg,
+      color-mix(in srgb, var(--cream) 55%, var(--milk)) 0%,
+      color-mix(in srgb, var(--milk) 82%, var(--deep-cream)) 100%
     );
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--cream) 22%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--milk) 18%, transparent),
-    0 8px 18px rgb(0 20 16 / 22%);
+    inset 0 0 0 1.5px color-mix(in srgb, var(--green) 55%, transparent),
+    0 6px 14px rgb(0 20 16 / 16%);
 }
 
 .coming-soon-eta {
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   line-height: 1;
-  color: color-mix(in srgb, var(--cream) 78%, #e8b89a);
+  color: color-mix(in srgb, var(--earth) 72%, var(--green));
   opacity: 0.95;
 }
 
 .coming-soon-name {
   margin: 0;
-  font-size: clamp(15px, 1.7vw, 18px);
+  font-size: clamp(14px, 1.55vw, 16px);
   font-weight: 800;
   line-height: 1.25;
-  color: var(--cream);
+  color: var(--green);
   text-wrap: balance;
 }
 
 .coming-soon-note {
   margin: 0;
   max-width: none;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 400;
   line-height: 1.55;
-  color: color-mix(in srgb, var(--milk) 82%, transparent);
+  color: color-mix(in srgb, var(--green) 62%, #555);
   text-wrap: pretty;
 }
 
@@ -3762,25 +3760,24 @@ body {
   transform: none;
 }
 
-/* —— Magazine: cream plate, green type —— */
+/* —— Magazine: cream-brown plate, green type —— */
 .stories-shelf-card--magazine {
   display: grid;
   grid-template-rows: auto 1fr;
   flex: 1;
   width: 100%;
   min-height: 100%;
-  padding: 8px 8px 12px;
+  padding: 8px;
   border-radius: 12px;
   background:
     linear-gradient(
-      165deg,
-      var(--warm-cream) 0%,
-      var(--cream) 48%,
-      color-mix(in srgb, var(--cream) 88%, var(--milk)) 100%
+      155deg,
+      color-mix(in srgb, var(--cream) 55%, var(--milk)) 0%,
+      color-mix(in srgb, var(--milk) 82%, var(--deep-cream)) 100%
     );
   box-shadow:
-    inset -3px 0 0 color-mix(in srgb, var(--earth) 55%, var(--cream)),
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 14%, transparent),
+    inset -3px 0 0 color-mix(in srgb, var(--earth) 45%, var(--cream)),
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 16%, transparent),
     0 12px 26px rgb(0 45 36 / 8%);
   color: var(--green);
   transition:
@@ -3793,26 +3790,34 @@ body {
   aspect-ratio: 1.08;
   border-radius: 9px;
   overflow: hidden;
-  background: color-mix(in srgb, var(--milk) 35%, var(--cream));
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--milk) 70%, var(--cream)) 0%,
+      color-mix(in srgb, var(--deep-cream) 55%, var(--milk)) 100%
+    );
 }
 
 .stories-shelf-card--magazine .stories-shelf-visual::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 48%;
-  z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      rgb(0 28 22 / 28%) 100%
-    );
-  pointer-events: none;
+  display: none;
 }
 
-.stories-shelf-card--magazine .stories-shelf-visual img {
-  object-fit: cover;
+.stories-shelf-card--magazine .stories-shelf-visual-img,
+.stories-shelf-card--catalog .stories-shelf-visual-img {
+  object-fit: contain !important;
+  object-position: center;
+  padding: 6px;
+  background: color-mix(in srgb, var(--milk) 75%, var(--cream));
+}
+
+.stories-shelf-card--magazine .stories-shelf-visual img,
+.stories-shelf-card--catalog .stories-shelf-visual img {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  object-fit: contain;
+  object-position: center;
+  background: color-mix(in srgb, var(--milk) 75%, var(--cream));
   transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -3820,11 +3825,11 @@ body {
   display: grid;
   align-content: start;
   gap: 4px;
-  min-height: 4.6rem;
-  padding: 10px 6px 2px;
+  padding: 10px 6px 4px;
   text-align: center;
   border-top: 1px solid color-mix(in srgb, var(--green) 12%, transparent);
   margin-top: 2px;
+  background: transparent;
 }
 
 .stories-shelf-card--magazine .stories-shelf-kicker {
@@ -3839,7 +3844,6 @@ body {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  min-height: calc(1.45em * 2);
   font-size: 12.5px;
   font-weight: 700;
   line-height: 1.45;
@@ -3855,14 +3859,16 @@ body {
 .stories-shelf-card--magazine:focus-visible {
   transform: translateY(-5px);
   box-shadow:
-    inset -3px 0 0 color-mix(in srgb, var(--earth) 70%, var(--cream)),
+    inset -3px 0 0 color-mix(in srgb, var(--earth) 60%, var(--cream)),
     inset 0 0 0 1px color-mix(in srgb, var(--green) 22%, transparent),
     0 16px 32px rgb(0 45 36 / 12%);
 }
 
-.stories-shelf-card--magazine:hover .stories-shelf-visual img,
-.stories-shelf-card--magazine:focus-visible .stories-shelf-visual img {
-  transform: scale(1.045);
+.stories-shelf-card--magazine:hover .stories-shelf-visual-img,
+.stories-shelf-card--magazine:focus-visible .stories-shelf-visual-img,
+.stories-shelf-card--catalog:hover .stories-shelf-visual-img,
+.stories-shelf-card--catalog:focus-visible .stories-shelf-visual-img {
+  transform: scale(1.04);
 }
 
 .stories-shelf-card--magazine:hover .stories-shelf-copy strong,
@@ -3873,24 +3879,23 @@ body {
   text-decoration-color: color-mix(in srgb, var(--green) 40%, transparent);
 }
 
-/* —— Catalog: cream plate / lookbook sheet —— */
+/* —— Catalog: cream-brown plate / lookbook sheet —— */
 .stories-shelf-card--catalog {
   display: grid;
   grid-template-rows: auto 1fr;
   flex: 1;
   width: 100%;
   min-height: 100%;
-  padding: 8px 8px 12px;
+  padding: 8px;
   border-radius: 12px;
   background:
     linear-gradient(
-      165deg,
-      var(--warm-cream) 0%,
-      var(--cream) 52%,
-      color-mix(in srgb, var(--cream) 90%, var(--milk)) 100%
+      155deg,
+      color-mix(in srgb, var(--cream) 55%, var(--milk)) 0%,
+      color-mix(in srgb, var(--milk) 82%, var(--deep-cream)) 100%
     );
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--green) 14%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 16%, transparent),
     0 12px 26px rgb(0 45 36 / 8%);
   color: var(--green);
   transition:
@@ -3903,24 +3908,23 @@ body {
   aspect-ratio: 1.08;
   border-radius: 9px;
   overflow: hidden;
-  background: color-mix(in srgb, var(--milk) 28%, var(--cream));
-}
-
-.stories-shelf-card--catalog .stories-shelf-visual img {
-  padding: 8px;
-  object-fit: contain;
-  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--milk) 70%, var(--cream)) 0%,
+      color-mix(in srgb, var(--deep-cream) 55%, var(--milk)) 100%
+    );
 }
 
 .stories-shelf-card--catalog .stories-shelf-copy {
   display: grid;
   align-content: start;
   gap: 4px;
-  min-height: 4.6rem;
-  padding: 10px 6px 2px;
+  padding: 10px 6px 4px;
   text-align: center;
   border-top: 1px solid color-mix(in srgb, var(--green) 10%, transparent);
   margin-top: 2px;
+  background: transparent;
 }
 
 .stories-shelf-card--catalog .stories-shelf-kicker {
@@ -3934,7 +3938,6 @@ body {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  min-height: calc(1.45em * 2);
   font-size: 12.5px;
   font-weight: 700;
   line-height: 1.45;
@@ -3952,11 +3955,6 @@ body {
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--green) 22%, transparent),
     0 16px 32px rgb(0 45 36 / 12%);
-}
-
-.stories-shelf-card--catalog:hover .stories-shelf-visual img,
-.stories-shelf-card--catalog:focus-visible .stories-shelf-visual img {
-  transform: scale(1.05);
 }
 
 .stories-shelf-card:focus-visible {

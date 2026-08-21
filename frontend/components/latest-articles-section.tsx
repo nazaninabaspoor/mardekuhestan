@@ -122,9 +122,7 @@ function ShelfPane({
                   alt={card.alt}
                   fill
                   sizes="(max-width: 900px) 44vw, 260px"
-                  style={{
-                    objectFit: paneId === "magazine" ? "cover" : "contain",
-                  }}
+                  className="stories-shelf-visual-img"
                 />
               </div>
               <div className="stories-shelf-copy">
