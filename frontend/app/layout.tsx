@@ -36,7 +36,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" className={mardeKuhestan.variable}>
+    <html
+      lang="fa"
+      dir="rtl"
+      className={mardeKuhestan.variable}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preload" as="image" href="/brand/logo-white.svg" type="image/svg+xml" />
         <script
