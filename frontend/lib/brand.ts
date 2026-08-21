@@ -269,6 +269,33 @@ export const homeCategoryProducts = {
 
 export type HomeDoorId = keyof typeof homeCategoryProducts;
 
+/** دو محصول در راه — تیزر «به‌زودی» بین راه ما و مجله */
+export const upcomingDrops = {
+  kicker: "بزودی",
+  title: "در راه سفره",
+  lead: "دو محصول تازه از همان مسیر سبز؛ هنوز نرسیده‌اند، اما طعم‌شان روشن است.",
+  ctaLabel: "خبرم کن",
+  ctaHref: "/contact",
+  items: [
+    {
+      id: "drop-meadow-butter",
+      name: "کرهٔ مرتع",
+      note: "از شیر تازهٔ صبح؛ برای نان گرم خانه",
+      eta: "به‌زودی",
+      image: "/brand/home-dairy.png",
+      alt: "کرهٔ مرتع مرد کوهستان — به‌زودی",
+    },
+    {
+      id: "drop-green-stew",
+      name: "خوراک راه سبز",
+      note: "یک قابلمه، طعم کامل مسیر از مرتع تا سفره",
+      eta: "به‌زودی",
+      image: "/brand/akhary.png",
+      alt: "خوراک راه سبز مرد کوهستان — به‌زودی",
+    },
+  ],
+} as const;
+
 /** ویژه‌ها و تازه‌رسیده‌ها — زیر «چه به خانه می‌رسد» */
 export const featuredPicks = {
   title: "برای سفرهٔ امروز",

@@ -1,3 +1,4 @@
+import { ComingSoonSection } from "@/components/coming-soon-section";
 import { ForHomeSection } from "@/components/for-home-section";
 import { FreshWaySection } from "@/components/fresh-way-section";
 import { HeroSection } from "@/components/hero-section";
@@ -11,6 +12,7 @@ export default function HomePage() {
       <ForHomeSection />
       <FreshWaySection />
       <OurWaySection />
+      <ComingSoonSection />
       <LatestArticlesSection />
     </main>
   );

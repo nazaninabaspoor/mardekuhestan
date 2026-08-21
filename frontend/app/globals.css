@@ -2917,6 +2917,452 @@ body {
   }
 }
 
+/* —— Coming soon: dual product launch stage —— */
+.coming-soon {
+  --drop-neon: color-mix(in srgb, var(--meadow) 78%, #9dffb0);
+  --drop-neon-core: color-mix(in srgb, var(--green) 55%, #7dffb8);
+  --earth-glow: color-mix(in srgb, var(--earth) 55%, #ffb088);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 48px 0 56px;
+  color: var(--green);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--green) 88%, #01261c) 0%,
+      color-mix(in srgb, var(--green) 72%, var(--cream)) 18%,
+      var(--cream) 42%,
+      color-mix(in srgb, var(--cream) 92%, var(--milk)) 72%,
+      var(--cream) 100%
+    );
+}
+
+.coming-soon-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.coming-soon-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.coming-soon-glow--a {
+  top: 8%;
+  inset-inline-end: 8%;
+  width: min(42vw, 420px);
+  height: min(36vw, 340px);
+  background:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--drop-neon) 22%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+.coming-soon-glow--b {
+  bottom: 6%;
+  inset-inline-start: 4%;
+  width: min(40vw, 380px);
+  height: min(34vw, 300px);
+  background:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--earth-glow) 18%, transparent) 0%,
+      transparent 72%
+    );
+}
+
+.coming-soon-grid {
+  position: absolute;
+  inset: 12% 8% 18%;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--green) 35%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--green) 35%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%);
+}
+
+.coming-soon-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-head {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  max-width: 34rem;
+  margin: 0 auto 34px;
+  text-align: center;
+}
+
+.coming-soon-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 14px 5px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 92%, #01261c);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--drop-neon) 45%, transparent),
+    0 0 18px color-mix(in srgb, var(--drop-neon-core) 35%, transparent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--drop-neon);
+}
+
+.coming-soon-kicker-icon {
+  width: 14px;
+  height: 14px;
+  animation: coming-soon-spark 2.4s ease-in-out infinite;
+}
+
+.coming-soon-title {
+  margin: 0;
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--green);
+  text-wrap: balance;
+}
+
+.coming-soon-lead {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.85;
+  color: color-mix(in srgb, var(--green) 72%, #444);
+  text-wrap: pretty;
+}
+
+.coming-soon-stage {
+  position: relative;
+  margin: 0 auto;
+  max-width: 920px;
+}
+
+.coming-soon-drops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 36px;
+  align-items: stretch;
+}
+
+.coming-soon-drop {
+  opacity: 0;
+  transform: translateY(28px) scale(0.96);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(120ms + var(--drop-i, 0) * 140ms);
+}
+
+.coming-soon.is-visible .coming-soon-drop {
+  opacity: 1;
+  transform: none;
+}
+
+.coming-soon-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  min-height: 100%;
+  padding: 28px 18px 22px;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--green) 90%, #01261c) 0%,
+      var(--green) 48%,
+      color-mix(in srgb, var(--green) 86%, #003528) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--milk) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--drop-neon) 22%, transparent),
+    0 18px 40px rgb(0 45 36 / 18%);
+  transform-style: preserve-3d;
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 420ms ease;
+}
+
+.coming-soon-drop--east .coming-soon-card {
+  transform: rotateY(-7deg) rotateX(4deg);
+}
+
+.coming-soon-drop--west .coming-soon-card {
+  transform: rotateY(7deg) rotateX(4deg);
+}
+
+.coming-soon-card:hover,
+.coming-soon-card:focus-within {
+  transform: rotateY(0deg) rotateX(0deg) translateY(-8px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--milk) 18%, transparent),
+    0 0 0 1.5px color-mix(in srgb, var(--drop-neon) 55%, transparent),
+    0 0 28px color-mix(in srgb, var(--drop-neon-core) 40%, transparent),
+    0 24px 48px rgb(0 45 36 / 22%);
+}
+
+.coming-soon-orbits {
+  position: absolute;
+  inset: 10% 12% 34%;
+  pointer-events: none;
+}
+
+.coming-soon-orbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--drop-neon) 28%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--drop-neon-core) 18%, transparent);
+}
+
+.coming-soon-orbit--outer {
+  animation: coming-soon-spin 18s linear infinite;
+}
+
+.coming-soon-orbit--inner {
+  inset: 14%;
+  border-color: color-mix(in srgb, var(--earth-glow) 30%, transparent);
+  animation: coming-soon-spin 12s linear infinite reverse;
+}
+
+.coming-soon-pedestal {
+  position: absolute;
+  left: 50%;
+  bottom: 28%;
+  width: 62%;
+  height: 28px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.coming-soon-pedestal-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--drop-neon) 35%, transparent) 0%,
+      color-mix(in srgb, var(--green) 40%, transparent) 45%,
+      transparent 72%
+    );
+  box-shadow: 0 0 24px color-mix(in srgb, var(--drop-neon-core) 28%, transparent);
+}
+
+.coming-soon-pedestal-shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -6px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgb(0 20 16 / 45%) 0%, transparent 70%);
+}
+
+.coming-soon-visual {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: min(100%, 240px);
+  aspect-ratio: 1;
+  margin-bottom: 8px;
+}
+
+.coming-soon-art {
+  width: 88%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 22px rgb(0 20 16 / 35%));
+  transform: translateZ(36px) translateY(-6px);
+  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.coming-soon-card:hover .coming-soon-art,
+.coming-soon-card:focus-within .coming-soon-art {
+  transform: translateZ(48px) translateY(-14px) scale(1.04);
+}
+
+.coming-soon-copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding-top: 8px;
+  text-align: center;
+  color: var(--milk);
+}
+
+.coming-soon-eta {
+  justify-self: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--earth) 78%, #5a2418);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--earth-glow) 35%, transparent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--cream) 88%, #fff);
+}
+
+.coming-soon-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--milk);
+}
+
+.coming-soon-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--milk) 68%, transparent);
+}
+
+.coming-soon-foot {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin-top: 34px;
+  text-align: center;
+}
+
+.coming-soon-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  padding: 12px 28px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--drop-neon) 40%, transparent),
+    0 0 18px color-mix(in srgb, var(--drop-neon-core) 35%, transparent),
+    0 10px 24px rgb(0 45 36 / 16%);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--milk);
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
+}
+
+.coming-soon-cta-glow {
+  position: absolute;
+  inset: -40% -20%;
+  background:
+    linear-gradient(
+      110deg,
+      transparent 30%,
+      color-mix(in srgb, var(--drop-neon) 35%, transparent) 48%,
+      transparent 62%
+    );
+  transform: translateX(40%);
+  transition: transform 520ms ease;
+}
+
+.coming-soon-cta:hover,
+.coming-soon-cta:focus-visible {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--green) 88%, #01261c);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--drop-neon) 70%, #fff),
+    0 0 28px color-mix(in srgb, var(--drop-neon-core) 55%, transparent),
+    0 14px 28px rgb(0 45 36 / 18%);
+}
+
+.coming-soon-cta:hover .coming-soon-cta-glow,
+.coming-soon-cta:focus-visible .coming-soon-cta-glow {
+  transform: translateX(-40%);
+}
+
+.coming-soon-hint {
+  margin: 0;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--green) 62%, #555);
+}
+
+@keyframes coming-soon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes coming-soon-spark {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@media (max-width: 760px) {
+  .coming-soon {
+    padding: 36px 0 44px;
+  }
+
+  .coming-soon-drops {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 380px;
+    margin-inline: auto;
+  }
+
+  .coming-soon-drop--east .coming-soon-card,
+  .coming-soon-drop--west .coming-soon-card {
+    transform: none;
+  }
+
+  .coming-soon-card:hover,
+  .coming-soon-card:focus-within {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coming-soon-drop,
+  .coming-soon-art,
+  .coming-soon-card,
+  .coming-soon-cta,
+  .coming-soon-orbit,
+  .coming-soon-kicker-icon {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 .stories-shelf {
   position: relative;
   padding: 28px 0 32px;
