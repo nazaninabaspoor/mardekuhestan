@@ -109,12 +109,39 @@ export function ComingSoonSection() {
             </div>
 
             <div className="coming-soon-foot">
+              <div className="coming-soon-mascot">
+                <div className="coming-soon-mascot-cloud">
+                  <strong>از کوهستان</strong>
+                  <span>آغاز راه، هوای پاک.</span>
+                </div>
+                <Image
+                  src="/brand/our-way-01-climb.png"
+                  alt=""
+                  width={256}
+                  height={256}
+                  sizes="88px"
+                  className="coming-soon-mascot-art"
+                  aria-hidden="true"
+                />
+              </div>
+
               <Link href={upcomingDrops.ctaHref} className="coming-soon-cta">
                 <span className="coming-soon-cta-label">{upcomingDrops.ctaLabel}</span>
                 <span className="coming-soon-cta-arrow" aria-hidden="true">
                   ←
                 </span>
               </Link>
+
+              <div className="coming-soon-mark">
+                <Image
+                  src="/brand/orginal-clear.png"
+                  alt="مرد کوهستان"
+                  width={160}
+                  height={160}
+                  sizes="72px"
+                  className="coming-soon-mark-art"
+                />
+              </div>
             </div>
           </div>
         </div>
