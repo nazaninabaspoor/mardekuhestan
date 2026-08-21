@@ -40,7 +40,7 @@ export function ComingSoonSection() {
           observer.disconnect();
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.18 },
     );
 
     observer.observe(node);
@@ -66,28 +66,34 @@ export function ComingSoonSection() {
 
           <p className="coming-soon-lead">{upcomingDrops.lead}</p>
 
-          <div className="coming-soon-stage">
+          <div className="coming-soon-showcase">
+            <div className="coming-soon-floor" aria-hidden="true" />
+
             <ul className="coming-soon-drops">
               {upcomingDrops.items.map((item, index) => (
                 <li
                   key={item.id}
-                  className={`coming-soon-drop coming-soon-drop--${index === 0 ? "east" : "west"}`}
+                  className="coming-soon-drop"
                   style={{ ["--drop-i" as string]: index }}
                 >
-                  <article className="coming-soon-card">
-                    <div className="coming-soon-visual">
-                      <span className="coming-soon-ring" aria-hidden="true" />
-                      <Image
-                        src={item.image}
-                        alt={item.alt}
-                        width={640}
-                        height={640}
-                        sizes="(max-width: 700px) 70vw, 300px"
-                        className="coming-soon-art"
-                      />
+                  <article className="coming-soon-spot">
+                    <div className="coming-soon-spot-stage">
+                      <span className="coming-soon-halo" aria-hidden="true" />
+                      <span className="coming-soon-plinth" aria-hidden="true" />
+                      <div className="coming-soon-product">
+                        <Image
+                          src={item.image}
+                          alt={item.alt}
+                          width={720}
+                          height={720}
+                          sizes="(max-width: 760px) 70vw, 320px"
+                          className="coming-soon-art"
+                          priority={false}
+                        />
+                      </div>
                     </div>
 
-                    <div className="coming-soon-copy">
+                    <div className="coming-soon-meta">
                       <span className="coming-soon-eta">{item.eta}</span>
                       <h3 className="coming-soon-name">{item.name}</h3>
                       <p className="coming-soon-note">{item.note}</p>
@@ -96,13 +102,15 @@ export function ComingSoonSection() {
                 </li>
               ))}
             </ul>
+
+            <span className="coming-soon-divider" aria-hidden="true" />
           </div>
 
           <div className="coming-soon-foot">
+            <p className="coming-soon-hint">اولین نفرهایی باش که به سفره می‌رسند.</p>
             <Link href={upcomingDrops.ctaHref} className="coming-soon-cta">
               {upcomingDrops.ctaLabel}
             </Link>
-            <p className="coming-soon-hint">اولین نفرهایی باش که به سفره می‌رسند.</p>
           </div>
         </div>
       </div>
