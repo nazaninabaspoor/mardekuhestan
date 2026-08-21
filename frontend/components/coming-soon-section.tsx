@@ -107,12 +107,15 @@ export function ComingSoonSection() {
 
               <span className="coming-soon-divider" aria-hidden="true" />
             </div>
-          </div>
 
-          <div className="coming-soon-foot">
-            <Link href={upcomingDrops.ctaHref} className="coming-soon-cta">
-              {upcomingDrops.ctaLabel}
-            </Link>
+            <div className="coming-soon-foot">
+              <Link href={upcomingDrops.ctaHref} className="coming-soon-cta">
+                <span className="coming-soon-cta-label">{upcomingDrops.ctaLabel}</span>
+                <span className="coming-soon-cta-arrow" aria-hidden="true">
+                  ←
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
