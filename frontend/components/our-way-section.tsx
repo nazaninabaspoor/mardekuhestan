@@ -313,6 +313,22 @@ export function OurWaySection() {
     >
       <div className="our-way-atmosphere" aria-hidden="true">
         <div className="our-way-atmosphere-wash" />
+        <div className="our-way-atmosphere-ceiling" />
+        <svg
+          className="our-way-atmosphere-caps"
+          viewBox="0 0 1440 220"
+          preserveAspectRatio="none"
+          focusable="false"
+        >
+          <path
+            className="our-way-atmosphere-cap our-way-atmosphere-cap--far"
+            d="M0 0 L0 92 L95 122 L210 78 L340 148 L480 92 L620 162 L770 98 L920 152 L1070 88 L1220 136 L1360 102 L1440 124 L1440 0 Z"
+          />
+          <path
+            className="our-way-atmosphere-cap our-way-atmosphere-cap--near"
+            d="M0 0 L0 62 L80 82 L190 52 L320 108 L460 62 L600 116 L750 66 L890 110 L1040 58 L1180 96 L1320 64 L1440 82 L1440 0 Z"
+          />
+        </svg>
         <svg
           className="our-way-atmosphere-ridges"
           viewBox="0 0 1440 220"
