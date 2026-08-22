@@ -43,10 +43,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="preload" as="image" href="/brand/logo-white.svg" type="image/svg+xml" />
+        <link rel="preload" as="image" href="/brand/orginal-clear.png" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-teaser-pending");}}catch(e){}})();`,
+            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-logo-intro-pending");}}catch(e){}})();`,
           }}
         />
       </head>

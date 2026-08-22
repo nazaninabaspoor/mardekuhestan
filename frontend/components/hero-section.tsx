@@ -38,14 +38,17 @@ export function HeroSection() {
               <div className="landing-panel landing-copy landing-media-panel">
                 <div className="landing-panel-frame landing-media-frame landing-copy-frame">
                   <div className="landing-media-slot">
-                    <Image
-                      src="/brand/landing-way.png"
-                      alt=""
-                      fill
-                      priority
-                      sizes="(max-width: 900px) 100vw, 24vw"
-                      className="landing-media-cover landing-copy-photo"
-                    />
+                    <video
+                      className="landing-media-video landing-copy-photo"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/brand/landing-way.png"
+                      aria-hidden="true"
+                    >
+                      <source src="/brand/Pinterest.mp4" type="video/mp4" />
+                    </video>
                   </div>
                   <div className="landing-copy-vignette" aria-hidden="true" />
                 </div>
@@ -85,13 +88,20 @@ export function HeroSection() {
               <div className="landing-panel landing-media-panel">
                 <div className="landing-panel-frame landing-media-frame">
                   <div className="landing-media-slot">
-                    <Image
-                      src="/brand/landing-pasture.png"
-                      alt=""
-                      fill
-                      sizes="(max-width: 900px) 100vw, 38vw"
-                      className="landing-media-cover"
-                    />
+                    <video
+                      className="landing-media-video"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/brand/landing-pasture.png"
+                      aria-label="مرد کوهستان؛ پنجره رو به کوهستان"
+                    >
+                      <source
+                        src="/brand/Man_opening_window_to_mountains_202608221109.mp4"
+                        type="video/mp4"
+                      />
+                    </video>
                   </div>
                 </div>
               </div>

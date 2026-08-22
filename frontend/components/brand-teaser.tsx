@@ -1,81 +1,161 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-const HOLD_MS = 1650;
-const FADE_MS = 480;
+const TEASER_MS = 900;
+const FLY_MS = 580;
+
+type Phase = "teaser" | "fly" | "done";
+
+function buildFlightTransform(
+  x: number,
+  y: number,
+  scale: number,
+): string {
+  return `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale})`;
+}
 
 /**
- * Brand intro before home — logotype-led, not a boxed AI collage.
+ * Home intro — green teaser with «مرد کوهستان», morphs into header logotype.
  */
 export function BrandTeaser() {
   const pathname = usePathname();
   const isHome = pathname === "/" || pathname === "/playground";
-  const [phase, setPhase] = useState<"show" | "out" | "done">(
-    isHome ? "show" : "done",
-  );
+  const [phase, setPhase] = useState<Phase>(isHome ? "teaser" : "done");
+  const [transform, setTransform] = useState("");
+  const [ready, setReady] = useState(false);
+  const flightRef = useRef({ start: "", end: "" });
 
-  useEffect(() => {
-    if (!isHome) {
-      document.documentElement.classList.remove(
-        "is-teaser-lock",
-        "is-teaser-pending",
-      );
+  useLayoutEffect(() => {
+    if (!isHome) return;
+
+    const target = document.querySelector<HTMLElement>(".logo-badge");
+    if (!target) {
       setPhase("done");
       return;
     }
 
-    setPhase("show");
-    document.documentElement.classList.add("is-teaser-lock");
-    document.documentElement.classList.remove("is-teaser-pending");
+    const rect = target.getBoundingClientRect();
+    const endScale = rect.width / 92;
+    const startScale = 1;
 
-    const outTimer = window.setTimeout(() => setPhase("out"), HOLD_MS);
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight / 2;
+    const endX = rect.left + rect.width / 2;
+    const endY = rect.top + rect.height / 2;
+
+    flightRef.current = {
+      start: buildFlightTransform(startX, startY, startScale),
+      end: buildFlightTransform(endX, endY, endScale),
+    };
+    setTransform(flightRef.current.start);
+    setReady(true);
+  }, [isHome]);
+
+  useEffect(() => {
+    if (!isHome) {
+      document.documentElement.classList.remove(
+        "is-logo-intro-pending",
+        "is-logo-intro-active",
+        "is-logo-intro-teaser",
+        "is-logo-intro-flying",
+        "is-logo-intro-lock",
+      );
+      document.documentElement.classList.add("is-logo-intro-done");
+      setPhase("done");
+      return;
+    }
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      document.documentElement.classList.remove(
+        "is-logo-intro-pending",
+        "is-logo-intro-active",
+        "is-logo-intro-teaser",
+        "is-logo-intro-flying",
+        "is-logo-intro-lock",
+      );
+      document.documentElement.classList.add("is-logo-intro-done");
+      setPhase("done");
+      return;
+    }
+
+    document.documentElement.classList.remove("is-logo-intro-pending");
+    document.documentElement.classList.add(
+      "is-logo-intro-active",
+      "is-logo-intro-teaser",
+      "is-logo-intro-lock",
+    );
+
+    const flyTimer = window.setTimeout(() => {
+      document.documentElement.classList.remove("is-logo-intro-teaser");
+      document.documentElement.classList.add("is-logo-intro-flying");
+      setPhase("fly");
+    }, TEASER_MS);
+
     const doneTimer = window.setTimeout(() => {
       document.documentElement.classList.remove(
-        "is-teaser-lock",
-        "is-teaser-pending",
+        "is-logo-intro-active",
+        "is-logo-intro-flying",
+        "is-logo-intro-lock",
       );
+      document.documentElement.classList.add("is-logo-intro-done");
       setPhase("done");
-    }, HOLD_MS + FADE_MS);
+    }, TEASER_MS + FLY_MS + 28);
 
     return () => {
-      window.clearTimeout(outTimer);
+      window.clearTimeout(flyTimer);
       window.clearTimeout(doneTimer);
     };
   }, [isHome]);
+
+  useEffect(() => {
+    if (phase !== "fly") return;
+
+    let outer = 0;
+    let inner = 0;
+
+    outer = window.requestAnimationFrame(() => {
+      inner = window.requestAnimationFrame(() => {
+        setTransform(flightRef.current.end);
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(outer);
+      window.cancelAnimationFrame(inner);
+    };
+  }, [phase]);
 
   if (!isHome || phase === "done") return null;
 
   return (
     <div
-      className={`brand-teaser${phase === "out" ? " is-out" : " is-ready"}`}
+      className={`logo-intro${phase === "fly" ? " is-flying" : " is-teaser"}`}
       role="dialog"
       aria-modal="true"
       aria-label="تیزر مرد کوهستان"
     >
-      <div className="brand-teaser-wash" aria-hidden="true" />
-      <div className="brand-teaser-glow" aria-hidden="true" />
-      <svg
-        className="brand-teaser-peak"
-        viewBox="0 0 120 40"
-        aria-hidden="true"
-      >
-        <path d="M8 36 L60 6 L112 36" />
-      </svg>
+      <div className="logo-intro-backdrop" aria-hidden="true" />
 
-      <div className="brand-teaser-core">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="brand-teaser-mark"
-          src="/brand/logo-white.svg"
-          alt=""
-          width={302}
-          height={60}
-          decoding="async"
-          fetchPriority="high"
-        />
-        <p className="brand-teaser-line">این راه سبز است</p>
+      <div
+        className={`logo-intro-fly${phase === "fly" ? " is-flying" : " is-teaser"}${ready ? " is-ready" : ""}`}
+        style={{ transform }}
+      >
+        <div className="logo-intro-morph">
+          <p className="logo-intro-word">مرد کوهستان</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="logo-intro-mark"
+            src="/brand/orginal-clear.png"
+            alt=""
+            width={92}
+            height={92}
+            decoding="async"
+            fetchPriority="high"
+          />
+        </div>
       </div>
     </div>
   );
