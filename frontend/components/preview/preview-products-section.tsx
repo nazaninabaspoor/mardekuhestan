@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * Preview products — layout from mardekuhestan.com «محصولات ما»
- * + motion energy from Ogenix main-slider (float / bounce / stage).
+ * + floating produce motion from Ogenix main-slider.
  * Brand tokens only. Never used on `/`.
  */
 const CATALOG = [
@@ -78,34 +78,7 @@ const CATALOG = [
 
 type CatalogId = (typeof CATALOG)[number]["id"];
 
-function FloatLeaf({ className }: { className: string }) {
-  return (
-    <svg className={className} viewBox="0 0 40 52" aria-hidden="true">
-      <path
-        d="M20 48S6 34 6 20C6 10 12 4 20 4s14 6 14 16c0 14-14 28-14 28Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
-      <path d="M20 8v34" fill="none" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  );
-}
-
-function FloatPeak({ className }: { className: string }) {
-  return (
-    <svg className={className} viewBox="0 0 64 28" aria-hidden="true">
-      <path
-        d="M4 24 L32 4 L60 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const OX = "/brand/preview-ogenix";
 
 export function PreviewProductsSection() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -141,7 +114,9 @@ export function PreviewProductsSection() {
         </h2>
 
         <div className="preview-products-stage">
-          {/* RTL: first = right — category pills like official site */}
+          <div className="preview-products-leaf" aria-hidden="true" />
+
+          {/* RTL: first column = right — category pills like official site */}
           <div className="preview-products-tabs" role="tablist" aria-label="دسته‌های محصول">
             {CATALOG.map((item) => {
               const selected = item.id === activeId;
@@ -168,23 +143,56 @@ export function PreviewProductsSection() {
             </Link>
           </div>
 
-          <div className="preview-products-showcase" aria-hidden={false}>
-            <span className="preview-products-shape preview-products-shape--a" aria-hidden="true" />
-            <span className="preview-products-shape preview-products-shape--b" aria-hidden="true" />
-            <FloatLeaf className="preview-products-floater preview-products-floater--leaf-1" />
-            <FloatLeaf className="preview-products-floater preview-products-floater--leaf-2" />
-            <FloatPeak className="preview-products-floater preview-products-floater--peak" />
+          <div className="preview-products-showcase">
+            <span className="preview-products-orb" aria-hidden="true" />
+
+            <div className="preview-products-floater float-bob-y" aria-hidden="true">
+              <Image src={`${OX}/shape-1.png`} alt="" width={72} height={72} />
+            </div>
+            <div
+              className="preview-products-floater preview-products-floater--b float-bob-x"
+              aria-hidden="true"
+            >
+              <Image src={`${OX}/shape-2.png`} alt="" width={64} height={64} />
+            </div>
+            <div
+              className="preview-products-floater preview-products-floater--c float-bob-y"
+              aria-hidden="true"
+            >
+              <Image src={`${OX}/shape-6.png`} alt="" width={56} height={56} />
+            </div>
+            <div
+              className="preview-products-floater preview-products-floater--d float-bob-x"
+              aria-hidden="true"
+            >
+              <Image src={`${OX}/shape-7.png`} alt="" width={60} height={60} />
+            </div>
 
             <div className="preview-products-plate" key={active.id}>
               <span className="preview-products-badge" aria-hidden="true">
                 <svg viewBox="0 0 48 48" focusable="false">
-                  <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                  <path
-                    d="M12 30 L24 12 L36 30"
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinejoin="round"
+                    strokeWidth="1.2"
+                    opacity="0.55"
+                  />
+                  <path
+                    d="M14 30c2-6 6-12 10-16 4 4 8 10 10 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M18 28h12M20 32h8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
                   />
                 </svg>
               </span>
@@ -193,8 +201,8 @@ export function PreviewProductsSection() {
                 alt={active.alt}
                 width={900}
                 height={900}
-                sizes="(max-width: 900px) 78vw, 420px"
-                className="preview-products-plate-art"
+                sizes="(max-width: 900px) 78vw, 440px"
+                className="preview-products-plate-art img-bounce"
                 priority
               />
             </div>
