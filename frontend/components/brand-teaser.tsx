@@ -11,7 +11,7 @@ const FADE_MS = 480;
  */
 export function BrandTeaser() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome = pathname === "/" || pathname === "/playground";
   const [phase, setPhase] = useState<"show" | "out" | "done">(
     isHome ? "show" : "done",
   );

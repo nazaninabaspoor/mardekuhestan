@@ -46,7 +46,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/brand/logo-white.svg" type="image/svg+xml" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""){document.documentElement.classList.add("is-teaser-pending");}}catch(e){}})();`,
+            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-teaser-pending");}}catch(e){}})();`,
           }}
         />
       </head>
