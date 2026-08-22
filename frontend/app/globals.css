@@ -5425,32 +5425,24 @@ body {
   }
 }
 
-html.is-logo-intro-pending .site-canvas,
-html.is-logo-intro-teaser .site-canvas {
+html.is-logo-intro-pending .site-canvas {
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
+html.is-logo-intro-play .site-canvas {
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
 html.is-logo-intro-pending .logo-badge,
-html.is-logo-intro-active .logo-badge {
+html.is-logo-intro-play .logo-badge {
   opacity: 0;
   pointer-events: none;
 }
 
 html.is-logo-intro-done .logo-badge {
-  animation: logo-intro-header-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes logo-intro-header-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  opacity: 1;
 }
 
 html.is-logo-intro-lock,
@@ -5462,114 +5454,168 @@ html.is-logo-intro-lock body {
   position: fixed;
   inset: 0;
   z-index: 2147483000;
-  pointer-events: auto;
-  overflow: hidden;
-}
-
-.logo-intro.is-flying {
   pointer-events: none;
+  overflow: visible;
 }
 
 .logo-intro-backdrop {
   position: absolute;
   inset: 0;
-  z-index: 0;
   background: var(--green);
-  transition: opacity 400ms ease;
+  opacity: 1;
 }
 
-.logo-intro.is-flying .logo-intro-backdrop {
-  opacity: 0;
-}
-
-.logo-intro-fly {
+.logo-intro-track {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 2;
   width: 92px;
+  height: 92px;
   overflow: visible;
-  opacity: 0;
+  transform: translate3d(var(--intro-cx, 50vw), var(--intro-cy, 50vh), 0)
+    translate(-50%, -50%);
   transform-origin: center center;
-  will-change: transform, filter;
+  will-change: transform;
 }
 
-.logo-intro-fly.is-ready {
-  opacity: 1;
-}
-
-.logo-intro-morph {
+.logo-intro-core {
   position: relative;
   width: 92px;
   height: 92px;
-  display: grid;
-  place-items: center;
-  overflow: visible;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.logo-intro-word-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  white-space: nowrap;
 }
 
 .logo-intro-word {
-  position: absolute;
   margin: 0;
   font-family: var(--font-brand), "MardeKuhestan", sans-serif;
   font-size: clamp(1.15rem, 3.6vw, 1.55rem);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  white-space: nowrap;
   color: var(--cream);
-  opacity: 1;
-  transition:
-    opacity 400ms ease,
-    filter 400ms ease;
-}
-
-.logo-intro-fly.is-teaser .logo-intro-word {
-  animation: logo-intro-word-in 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.logo-intro-fly.is-flying .logo-intro-word {
-  opacity: 0;
-  filter: blur(5px);
 }
 
 .logo-intro-mark {
-  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 92px;
   height: auto;
   opacity: 0;
-  transform: scale(0.92);
-  transition:
-    opacity 420ms ease 60ms,
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+  transform: translate(-50%, -50%);
 }
 
-.logo-intro-fly.is-flying .logo-intro-mark {
-  opacity: 1;
-  transform: scale(1);
+.logo-intro--run .logo-intro-backdrop {
+  animation: intro-backdrop 1000ms linear forwards;
 }
 
-.logo-intro-fly.is-flying {
-  transition: transform 360ms cubic-bezier(0.16, 1, 0.18, 1);
-  filter: drop-shadow(0 8px 18px rgb(0 20 16 / 22%));
+.logo-intro--run .logo-intro-track {
+  animation: intro-track 1000ms linear forwards;
 }
 
-@keyframes logo-intro-word-in {
-  from {
+.logo-intro--run .logo-intro-word-wrap {
+  animation: intro-word 1000ms linear forwards;
+}
+
+.logo-intro--run .logo-intro-mark {
+  animation: intro-mark-show 1000ms linear forwards;
+}
+
+.logo-intro--run .logo-intro-core {
+  animation: intro-spin 1000ms cubic-bezier(0.08, 0.92, 0.12, 1) forwards;
+}
+
+@keyframes intro-word {
+  0% {
     opacity: 0;
-    transform: scale(0.94);
   }
 
-  to {
+  5% {
     opacity: 1;
-    transform: scale(1);
+  }
+
+  33% {
+    opacity: 1;
+  }
+
+  40% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-backdrop {
+  0%,
+  38% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-mark-show {
+  0%,
+  33% {
+    opacity: 0;
+  }
+
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-spin {
+  0%,
+  40% {
+    transform: rotate(0deg);
+  }
+
+  70% {
+    transform: rotate(1080deg);
+  }
+
+  100% {
+    transform: rotate(1080deg);
+  }
+}
+
+@keyframes intro-track {
+  0% {
+    transform: translate3d(var(--intro-cx), var(--intro-cy), 0) translate(-50%, -50%)
+      scale(1);
+  }
+
+  70% {
+    transform: translate3d(var(--intro-cx), var(--intro-cy), 0) translate(-50%, -50%)
+      scale(1);
+    animation-timing-function: cubic-bezier(0.18, 1, 0.22, 1);
+  }
+
+  100% {
+    transform: translate3d(var(--intro-ex), var(--intro-ey), 0) translate(-50%, -50%)
+      scale(var(--intro-es));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html.is-logo-intro-done .logo-badge {
-    animation: none;
-  }
-
   .logo-intro {
     display: none !important;
   }

@@ -17,14 +17,20 @@ export function HeroSection() {
               <div className="landing-panel landing-media-panel">
                 <div className="landing-panel-frame landing-media-frame">
                   <div className="landing-media-slot">
-                    <Image
-                      src="/brand/landing-home.png"
-                      alt=""
-                      fill
-                      priority
-                      sizes="(max-width: 900px) 100vw, 38vw"
-                      className="landing-media-cover"
-                    />
+                    <video
+                      className="landing-media-video"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/brand/landing-home.png"
+                      aria-hidden="true"
+                    >
+                      <source
+                        src="/brand/Pin%20on%20Come%20with%20me%20%E2%9C%A8.mp4"
+                        type="video/mp4"
+                      />
+                    </video>
                   </div>
                 </div>
               </div>
@@ -38,17 +44,14 @@ export function HeroSection() {
               <div className="landing-panel landing-copy landing-media-panel">
                 <div className="landing-panel-frame landing-media-frame landing-copy-frame">
                   <div className="landing-media-slot">
-                    <video
-                      className="landing-media-video landing-copy-photo"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      poster="/brand/landing-way.png"
-                      aria-hidden="true"
-                    >
-                      <source src="/brand/Pinterest.mp4" type="video/mp4" />
-                    </video>
+                    <Image
+                      src="/brand/%23road%20%23gloomy%20%23forest.jpg"
+                      alt=""
+                      fill
+                      priority
+                      sizes="(max-width: 900px) 100vw, 24vw"
+                      className="landing-media-cover landing-copy-photo"
+                    />
                   </div>
                   <div className="landing-copy-vignette" aria-hidden="true" />
                 </div>

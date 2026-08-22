@@ -1,150 +1,90 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
-const TEASER_MS = 900;
-const FLY_MS = 580;
+import { playIntroBell } from "@/lib/intro-bell";
 
-type Phase = "teaser" | "fly" | "done";
-
-function buildFlightTransform(
-  x: number,
-  y: number,
-  scale: number,
-): string {
-  return `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale})`;
-}
+const INTRO_MS = 1000;
 
 /**
- * Home intro — green teaser with «مرد کوهستان», morphs into header logotype.
+ * Home intro — single CSS timeline (no phase re-renders), ≤1s.
  */
 export function BrandTeaser() {
   const pathname = usePathname();
   const isHome = pathname === "/" || pathname === "/playground";
-  const [phase, setPhase] = useState<Phase>(isHome ? "teaser" : "done");
-  const [transform, setTransform] = useState("");
-  const [ready, setReady] = useState(false);
-  const flightRef = useRef({ start: "", end: "" });
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [done, setDone] = useState(!isHome);
 
   useLayoutEffect(() => {
-    if (!isHome) return;
+    if (!isHome) {
+      document.documentElement.classList.add("is-logo-intro-done");
+      return;
+    }
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.remove("is-logo-intro-pending");
+      document.documentElement.classList.add("is-logo-intro-done");
+      setDone(true);
+      return;
+    }
+
+    const root = rootRef.current;
     const target = document.querySelector<HTMLElement>(".logo-badge");
-    if (!target) {
-      setPhase("done");
+    if (!root || !target) {
+      document.documentElement.classList.remove("is-logo-intro-pending");
+      document.documentElement.classList.add("is-logo-intro-done");
+      setDone(true);
       return;
     }
 
     const rect = target.getBoundingClientRect();
-    const endScale = rect.width / 92;
-    const startScale = 1;
-
-    const startX = window.innerWidth / 2;
-    const startY = window.innerHeight / 2;
-    const endX = rect.left + rect.width / 2;
-    const endY = rect.top + rect.height / 2;
-
-    flightRef.current = {
-      start: buildFlightTransform(startX, startY, startScale),
-      end: buildFlightTransform(endX, endY, endScale),
-    };
-    setTransform(flightRef.current.start);
-    setReady(true);
-  }, [isHome]);
-
-  useEffect(() => {
-    if (!isHome) {
-      document.documentElement.classList.remove(
-        "is-logo-intro-pending",
-        "is-logo-intro-active",
-        "is-logo-intro-teaser",
-        "is-logo-intro-flying",
-        "is-logo-intro-lock",
-      );
-      document.documentElement.classList.add("is-logo-intro-done");
-      setPhase("done");
-      return;
-    }
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      document.documentElement.classList.remove(
-        "is-logo-intro-pending",
-        "is-logo-intro-active",
-        "is-logo-intro-teaser",
-        "is-logo-intro-flying",
-        "is-logo-intro-lock",
-      );
-      document.documentElement.classList.add("is-logo-intro-done");
-      setPhase("done");
-      return;
-    }
+    root.style.setProperty("--intro-cx", `${window.innerWidth / 2}px`);
+    root.style.setProperty("--intro-cy", `${window.innerHeight / 2}px`);
+    root.style.setProperty("--intro-ex", `${rect.left + rect.width / 2}px`);
+    root.style.setProperty("--intro-ey", `${rect.top + rect.height / 2}px`);
+    root.style.setProperty("--intro-es", String(rect.width / 92));
 
     document.documentElement.classList.remove("is-logo-intro-pending");
-    document.documentElement.classList.add(
-      "is-logo-intro-active",
-      "is-logo-intro-teaser",
-      "is-logo-intro-lock",
-    );
+    document.documentElement.classList.add("is-logo-intro-play", "is-logo-intro-lock");
 
-    const flyTimer = window.setTimeout(() => {
-      document.documentElement.classList.remove("is-logo-intro-teaser");
-      document.documentElement.classList.add("is-logo-intro-flying");
-      setPhase("fly");
-    }, TEASER_MS);
-
-    const doneTimer = window.setTimeout(() => {
-      document.documentElement.classList.remove(
-        "is-logo-intro-active",
-        "is-logo-intro-flying",
-        "is-logo-intro-lock",
-      );
+    const finish = () => {
+      document.documentElement.classList.remove("is-logo-intro-play", "is-logo-intro-lock");
       document.documentElement.classList.add("is-logo-intro-done");
-      setPhase("done");
-    }, TEASER_MS + FLY_MS + 28);
-
-    return () => {
-      window.clearTimeout(flyTimer);
-      window.clearTimeout(doneTimer);
+      setDone(true);
     };
-  }, [isHome]);
 
-  useEffect(() => {
-    if (phase !== "fly") return;
+    const track = root.querySelector<HTMLElement>(".logo-intro-track");
+    const onEnd = (event: AnimationEvent) => {
+      if (event.target !== track || event.animationName !== "intro-track") return;
+      track?.removeEventListener("animationend", onEnd);
+      finish();
+    };
 
-    let outer = 0;
-    let inner = 0;
+    track?.addEventListener("animationend", onEnd);
+    const fallback = window.setTimeout(finish, INTRO_MS + 48);
 
-    outer = window.requestAnimationFrame(() => {
-      inner = window.requestAnimationFrame(() => {
-        setTransform(flightRef.current.end);
-      });
+    requestAnimationFrame(() => {
+      root.classList.add("logo-intro--run");
+      window.setTimeout(() => playIntroBell(), 64);
     });
 
     return () => {
-      window.cancelAnimationFrame(outer);
-      window.cancelAnimationFrame(inner);
+      track?.removeEventListener("animationend", onEnd);
+      window.clearTimeout(fallback);
     };
-  }, [phase]);
+  }, [isHome]);
 
-  if (!isHome || phase === "done") return null;
+  if (!isHome || done) return null;
 
   return (
-    <div
-      className={`logo-intro${phase === "fly" ? " is-flying" : " is-teaser"}`}
-      role="dialog"
-      aria-modal="true"
-      aria-label="تیزر مرد کوهستان"
-    >
-      <div className="logo-intro-backdrop" aria-hidden="true" />
-
-      <div
-        className={`logo-intro-fly${phase === "fly" ? " is-flying" : " is-teaser"}${ready ? " is-ready" : ""}`}
-        style={{ transform }}
-      >
-        <div className="logo-intro-morph">
-          <p className="logo-intro-word">مرد کوهستان</p>
+    <div ref={rootRef} className="logo-intro" aria-hidden="true">
+      <div className="logo-intro-backdrop" />
+      <div className="logo-intro-track">
+        <div className="logo-intro-core">
+          <div className="logo-intro-word-wrap">
+            <p className="logo-intro-word">مرد کوهستان</p>
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="logo-intro-mark"
@@ -152,7 +92,7 @@ export function BrandTeaser() {
             alt=""
             width={92}
             height={92}
-            decoding="async"
+            decoding="sync"
             fetchPriority="high"
           />
         </div>
