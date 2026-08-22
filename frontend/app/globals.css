@@ -705,6 +705,22 @@ body {
     var(--hero-shadow-hover);
 }
 
+@media (min-width: 900px) {
+  .landing-shot--home:hover .landing-panel,
+  .landing-shot--home:focus-within .landing-panel {
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 14%),
+      6px 10px 26px rgb(0 45 36 / 12%);
+  }
+
+  .landing-shot--pasture:hover .landing-panel,
+  .landing-shot--pasture:focus-within .landing-panel {
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 14%),
+      -6px 10px 26px rgb(0 45 36 / 12%);
+  }
+}
+
 .landing-panel-frame {
   position: absolute;
   inset: var(--hero-rim);
@@ -1046,7 +1062,66 @@ body {
 @media (min-width: 900px) {
   .landing-grid {
     grid-template-columns: 1.12fr 0.76fr 1.12fr;
-    gap: 12px;
+    gap: 0;
+  }
+
+  /* Flush triptych: one shell, three panels, no double green seams */
+  .landing-shot:hover {
+    transform: none;
+  }
+
+  .landing-shot .landing-panel,
+  .landing-center .landing-panel {
+    box-shadow: none;
+  }
+
+  /* RTL: home = inline-start (right), pasture = inline-end (left) */
+  .landing-shot--home .landing-panel {
+    border-radius: 0 var(--hero-shell-radius) var(--hero-shell-radius) 0;
+    box-shadow:
+      inset 0 0 0 1px var(--hero-shell-line),
+      6px 10px 26px rgb(0 45 36 / 8%);
+  }
+
+  .landing-center .landing-panel {
+    border-radius: 0;
+    box-shadow:
+      inset 0 1px 0 var(--hero-shell-line),
+      inset 0 -1px 0 var(--hero-shell-line),
+      /* single soft seam — not a thick green bar */
+      inset 1px 0 0 color-mix(in srgb, var(--cream) 22%, transparent),
+      inset -1px 0 0 color-mix(in srgb, var(--cream) 22%, transparent);
+  }
+
+  .landing-shot--pasture .landing-panel {
+    border-radius: var(--hero-shell-radius) 0 0 var(--hero-shell-radius);
+    box-shadow:
+      inset 0 0 0 1px var(--hero-shell-line),
+      -6px 10px 26px rgb(0 45 36 / 8%);
+  }
+
+  /* Keep green rim only on outer edges; collapse meeting sides */
+  .landing-shot--home .landing-panel-frame {
+    top: var(--hero-rim);
+    bottom: var(--hero-rim);
+    inset-inline-start: var(--hero-rim);
+    inset-inline-end: 0;
+    border-radius: 0 var(--hero-frame-radius) var(--hero-frame-radius) 0;
+  }
+
+  .landing-center .landing-panel-frame {
+    top: var(--hero-rim);
+    bottom: var(--hero-rim);
+    inset-inline: 0;
+    border-radius: 0;
+  }
+
+  .landing-shot--pasture .landing-panel-frame {
+    top: var(--hero-rim);
+    bottom: var(--hero-rim);
+    inset-inline-end: var(--hero-rim);
+    inset-inline-start: 0;
+    border-radius: var(--hero-frame-radius) 0 0 var(--hero-frame-radius);
   }
 
   .landing-copy-body {
