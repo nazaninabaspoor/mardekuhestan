@@ -326,6 +326,28 @@ export const homeCategoryProducts = {
       image: PLATE.meat,
       alt: "بشقاب گوشت تازه — مخلوط خانه",
     },
+    {
+      id: "meat-ribs",
+      name: "دنده بره",
+      note: "برای جمعه",
+      teaser: "برای آتش آرام و سفرهٔ جمعه.",
+      story:
+        "دنده بره برای وقتی که خانه بوی کباب می‌گیرد و همه دور میز جمع می‌شوند.",
+      href: "/products?cat=fresh-meat",
+      image: PLATE.meat,
+      alt: "بشقاب گوشت تازه — دنده بره",
+    },
+    {
+      id: "meat-mince",
+      name: "گوشت چرخ‌کرده",
+      note: "روزانه",
+      teaser: "برای کوفته، کباب و خورشت خانه.",
+      story:
+        "گوشت چرخ‌کرده تازه برای پخت‌های هرروز؛ ساده، روشن و نزدیک به سفره.",
+      href: "/products?cat=fresh-meat",
+      image: PLATE.meat,
+      alt: "بشقاب گوشت تازه — گوشت چرخ‌کرده",
+    },
   ],
   seafood: [
     {

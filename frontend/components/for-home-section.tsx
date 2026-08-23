@@ -13,13 +13,13 @@ import {
 
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
 const CAT_PAGE_SIZE = 4;
-const PRODUCT_VISIBLE = 2;
+const PRODUCT_VISIBLE = 6;
 
 type ProductItem = (typeof homeCategoryProducts)[HomeDoorId][number];
 
 /**
  * «چه به خانه می‌رسد»
- * LuxLunch structure + brand guide bubble + emoji cats.
+ * Products live inside the green copy plate; compact LuxLunch glass.
  */
 export function ForHomeSection() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -128,7 +128,12 @@ export function ForHomeSection() {
               />
             </Link>
 
-            <nav className="for-home-cats" role="tablist" aria-label="دسته‌های محصول" key={catPage}>
+            <nav
+              className="for-home-cats"
+              role="tablist"
+              aria-label="دسته‌های محصول"
+              key={catPage}
+            >
               {visibleDoors.map((item) => {
                 const selected = item.id === activeDoorId;
                 return (
@@ -171,16 +176,23 @@ export function ForHomeSection() {
                   <PeakMark className="for-home-copy-peak" aria-hidden="true" />
                   <span>این راه سبز است</span>
                 </p>
+
                 <h2 id="for-home-title" className="for-home-title">
                   <span className="for-home-title-soft">چه به </span>
                   <span className="for-home-title-accent">خانه</span>
                   <span className="for-home-title-soft"> می‌رسد</span>
                 </h2>
+
                 <p className="for-home-lead">
-                  امروز «{activeProduct.name}» را از مسیر مرتع تا سفره می‌بینی.
-                  تازه، روشن و قابل اعتماد؛ همان حسی که خانواده می‌خواهد روی میز
-                  داشته باشد.
+                  امروز{" "}
+                  <em className="for-home-lead-name">{activeProduct.name}</em> را
+                  از مسیر{" "}
+                  <span className="for-home-lead-accent">مرتع تا سفره</span>{" "}
+                  می‌بینی؛{" "}
+                  <span className="for-home-lead-accent">تازه</span>، روشن و
+                  قابل اعتماد. همان حسی که خانواده می‌خواهد روی میز داشته باشد.
                 </p>
+
                 <div className="for-home-copy-actions">
                   <Link href={activeProduct.href} className="for-home-shop">
                     <span>این را برای سفره بردار</span>
@@ -194,51 +206,59 @@ export function ForHomeSection() {
                     داستان کوتاه این محصول
                   </button>
                 </div>
-              </div>
 
-              <div
-                className="for-home-products"
-                role="listbox"
-                aria-label={activeDoor.label}
-                key={activeDoor.id}
-              >
-                <p className="for-home-products-caption">
-                  <span aria-hidden="true">{activeDoor.emoji}</span>
-                  <span>{activeDoor.label}</span>
-                </p>
-                <div className="for-home-products-row">
-                  {visibleProducts.map((product, index) => {
-                    const selected = product.id === activeProduct.id;
-                    return (
-                      <button
-                        key={product.id}
-                        type="button"
-                        role="option"
-                        aria-selected={selected}
-                        className={`for-home-product-card${selected ? " is-active" : ""}`}
-                        style={{ ["--fh-i" as string]: index }}
-                        onClick={() => {
-                          setActiveProductId(product.id);
-                          setStoryOpen(false);
-                        }}
-                      >
-                        <span className="for-home-product-card-accent" aria-hidden="true" />
-                        <span className="for-home-product-card-media">
-                          <Image
-                            src={product.image}
-                            alt=""
-                            width={96}
-                            height={96}
-                            sizes="52px"
+                <div
+                  className="for-home-products"
+                  role="listbox"
+                  aria-label={activeDoor.label}
+                  key={activeDoor.id}
+                >
+                  <p className="for-home-products-caption">
+                    <span aria-hidden="true">{activeDoor.emoji}</span>
+                    <span>{activeDoor.label}</span>
+                    <span className="for-home-products-caption-hint">
+                      انتخاب‌های این مسیر
+                    </span>
+                  </p>
+                  <div className="for-home-products-row">
+                    {visibleProducts.map((product, index) => {
+                      const selected = product.id === activeProduct.id;
+                      return (
+                        <button
+                          key={product.id}
+                          type="button"
+                          role="option"
+                          aria-selected={selected}
+                          className={`for-home-product-card${selected ? " is-active" : ""}`}
+                          style={{ ["--fh-i" as string]: index }}
+                          onClick={() => {
+                            setActiveProductId(product.id);
+                            setStoryOpen(false);
+                          }}
+                        >
+                          <span
+                            className="for-home-product-card-accent"
+                            aria-hidden="true"
                           />
-                        </span>
-                        <span className="for-home-product-card-body">
-                          <strong>{product.name}</strong>
-                          <span className="for-home-product-card-pick">انتخاب کن</span>
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <span className="for-home-product-card-media">
+                            <Image
+                              src={product.image}
+                              alt=""
+                              width={96}
+                              height={96}
+                              sizes="44px"
+                            />
+                          </span>
+                          <span className="for-home-product-card-body">
+                            <strong>{product.name}</strong>
+                            <span className="for-home-product-card-pick">
+                              {product.note}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -247,14 +267,17 @@ export function ForHomeSection() {
               <div className="for-home-plate-wrap">
                 <div className="for-home-plate">
                   <span className="for-home-plate-arc" aria-hidden="true" />
-                  <span className="for-home-plate-arc for-home-plate-arc--b" aria-hidden="true" />
+                  <span
+                    className="for-home-plate-arc for-home-plate-arc--b"
+                    aria-hidden="true"
+                  />
                   <span className="for-home-plate-ring" aria-hidden="true" />
                   <Image
                     src={activeProduct.image}
                     alt={activeProduct.alt}
                     width={720}
                     height={720}
-                    sizes="(max-width: 900px) 70vw, 420px"
+                    sizes="(max-width: 900px) 70vw, 380px"
                     className="for-home-plate-art"
                     priority
                   />
@@ -264,7 +287,7 @@ export function ForHomeSection() {
                       alt=""
                       width={120}
                       height={120}
-                      sizes="88px"
+                      sizes="72px"
                     />
                   </span>
                 </div>
@@ -306,7 +329,9 @@ export function ForHomeSection() {
                     {products.map((product, index) => (
                       <span
                         key={product.id}
-                        className={`for-home-slider-seg${index === activeIndex ? " is-active" : ""}`}
+                        className={`for-home-slider-seg${
+                          index === activeIndex ? " is-active" : ""
+                        }`}
                       />
                     ))}
                   </div>
