@@ -17,7 +17,7 @@ type ProductItem = (typeof homeCategoryProducts)[HomeDoorId][number];
 
 /**
  * «چه به خانه می‌رسد»
- * Liquid-glass catalog: nav glass (cats | products) over mountain + content showcase.
+ * LuxLunch-inspired liquid glass — brand green/cream, RTL.
  */
 export function ForHomeSection() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -80,113 +80,131 @@ export function ForHomeSection() {
         <div className="for-home-case">
           <div className="for-home-case-shine" aria-hidden="true" />
 
-          <header className="for-home-head">
-            <div className="for-home-head-copy">
-              <PeakMark className="for-home-peak" aria-hidden="true" />
-              <h2 id="for-home-title" className="for-home-title">
-                چه به خانه می‌رسد
-              </h2>
-            </div>
-            <Link href="/products" className="for-home-all">
-              مشاهده همه
-            </Link>
-          </header>
-
           <div className="for-home-stage">
-            {/* RTL: right = cats, left-of-cats = products, far-left = showcase */}
-            <nav className="for-home-nav" aria-label="دسته‌ها و محصولات">
-              <div className="for-home-cats" role="tablist" aria-label="دسته‌های محصول">
-                {homeDoors.map((item) => {
-                  const selected = item.id === activeDoorId;
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={selected}
-                      className={`for-home-cat${selected ? " is-active" : ""}`}
-                      onClick={() => selectDoor(item.id)}
-                    >
-                      <span className="for-home-cat-label">{item.label}</span>
-                    </button>
-                  );
-                })}
+            {/* RTL col1 (right): menu + cream cards */}
+            <div className="for-home-panel">
+              <header className="for-home-head">
+                <div className="for-home-head-copy">
+                  <PeakMark className="for-home-peak" aria-hidden="true" />
+                  <h2 id="for-home-title" className="for-home-title">
+                    چه به خانه می‌رسد
+                  </h2>
+                </div>
+                <Link href="/products" className="for-home-all">
+                  مشاهده همه
+                </Link>
+              </header>
+
+              <p className="for-home-lead">
+                از مرتع تا سفره — مسیری که می‌شود به آن اعتماد کرد.
+              </p>
+
+              <div className="for-home-nav-shell">
+                <div className="for-home-cats" role="tablist" aria-label="دسته‌های محصول">
+                  {homeDoors.map((item) => {
+                    const selected = item.id === activeDoorId;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={selected}
+                        className={`for-home-cat${selected ? " is-active" : ""}`}
+                        onClick={() => selectDoor(item.id)}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div
+                  className="for-home-products"
+                  role="listbox"
+                  aria-label={`محصولات ${activeDoor.label}`}
+                  key={activeDoor.id}
+                >
+                  <p className="for-home-products-caption">{activeDoor.label}</p>
+                  {products.map((product, index) => {
+                    const selected = product.id === activeProduct.id;
+                    return (
+                      <button
+                        key={product.id}
+                        type="button"
+                        role="option"
+                        aria-selected={selected}
+                        className={`for-home-product-card${selected ? " is-active" : ""}`}
+                        style={{ ["--fh-i" as string]: index }}
+                        onClick={() => {
+                          setActiveProductId(product.id);
+                          setStoryOpen(false);
+                        }}
+                      >
+                        <span className="for-home-product-card-accent" aria-hidden="true" />
+                        <span className="for-home-product-card-media">
+                          <Image
+                            src={product.image}
+                            alt=""
+                            width={96}
+                            height={96}
+                            sizes="44px"
+                          />
+                        </span>
+                        <span className="for-home-product-card-body">
+                          <strong>{product.name}</strong>
+                          <em>{product.note}</em>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
+            </div>
 
-              <div className="for-home-nav-split" aria-hidden="true" />
-
-              <div
-                className="for-home-products"
-                role="listbox"
-                aria-label={`محصولات ${activeDoor.label}`}
-                key={activeDoor.id}
-              >
-                <p className="for-home-products-caption">{activeDoor.label}</p>
-                {products.map((product, index) => {
-                  const selected = product.id === activeProduct.id;
-                  return (
-                    <button
-                      key={product.id}
-                      type="button"
-                      role="option"
-                      aria-selected={selected}
-                      className={`for-home-product-card${selected ? " is-active" : ""}`}
-                      style={{ ["--fh-i" as string]: index }}
-                      onClick={() => {
-                        setActiveProductId(product.id);
-                        setStoryOpen(false);
-                      }}
-                    >
-                      <span className="for-home-product-card-media">
-                        <Image
-                          src={product.image}
-                          alt=""
-                          width={96}
-                          height={96}
-                          sizes="40px"
-                        />
-                      </span>
-                      <span className="for-home-product-card-body">
-                        <strong>{product.name}</strong>
-                        <em>{product.note}</em>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </nav>
-
+            {/* RTL col2 (left): hero plate */}
             <div className="for-home-showcase" key={activeProduct.id}>
               <div className="for-home-plate">
+                <span className="for-home-plate-arc" aria-hidden="true" />
+                <span className="for-home-plate-ring" aria-hidden="true" />
                 <Image
                   src={activeProduct.image}
                   alt={activeProduct.alt}
-                  width={560}
-                  height={560}
-                  sizes="(max-width: 900px) 58vw, 300px"
+                  width={640}
+                  height={640}
+                  sizes="(max-width: 900px) 70vw, 380px"
                   className="for-home-plate-art"
                   priority
                 />
+                <span className="for-home-plate-badge">
+                  <Image
+                    src={activeDoor.image}
+                    alt=""
+                    width={88}
+                    height={88}
+                    sizes="72px"
+                  />
+                </span>
               </div>
 
-              <div className="for-home-teaser-wrap">
-                <button
-                  type="button"
-                  className="for-home-teaser"
-                  onClick={() => setStoryOpen(true)}
-                  aria-haspopup="dialog"
-                  aria-expanded={storyOpen}
-                >
-                  <span className="for-home-teaser-meta">
-                    <span className="for-home-teaser-door">{activeDoor.label}</span>
+              <div className="for-home-showcase-foot">
+                <div className="for-home-teaser">
+                  <p className="for-home-teaser-meta">
+                    <span>{activeDoor.label}</span>
                     <PeakMark className="for-home-teaser-peak" aria-hidden="true" />
-                    <span className="for-home-teaser-kicker">{activeProduct.note}</span>
-                  </span>
-                  <span className="for-home-teaser-name">{activeProduct.name}</span>
-                  <span className="for-home-teaser-text">{activeProduct.teaser}</span>
-                  <span className="for-home-teaser-cta">ادامه داستان</span>
-                </button>
-
+                    <span>{activeProduct.note}</span>
+                  </p>
+                  <h3 className="for-home-teaser-name">{activeProduct.name}</h3>
+                  <p className="for-home-teaser-text">{activeProduct.teaser}</p>
+                  <button
+                    type="button"
+                    className="for-home-teaser-cta"
+                    onClick={() => setStoryOpen(true)}
+                    aria-haspopup="dialog"
+                    aria-expanded={storyOpen}
+                  >
+                    ادامه داستان
+                  </button>
+                </div>
                 <Link href={activeProduct.href} className="for-home-shop">
                   رفتن به فروشگاه
                 </Link>
