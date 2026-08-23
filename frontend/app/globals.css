@@ -26,6 +26,408 @@
   --hero-shadow-hover: 0 12px 30px rgb(0 45 36 / 10%);
 }
 
+/* Interactive journey on the original diorama artwork */
+.diorama-journey { position:relative; width:100%; overflow:visible; padding:36px 0 110px; background:#54764f; }
+.diorama-journey__heading { position:absolute; top:22px; right:clamp(22px,5vw,76px); z-index:20; display:flex; align-items:center; gap:18px; color:#005b48; }
+.diorama-journey__heading h2 { margin:0; font-size:clamp(34px,4vw,58px); line-height:1; text-shadow:0 2px 0 rgb(244 240 232 / 90%),0 9px 24px rgb(0 45 36 / 20%); }
+.diorama-journey__heading>div { display:flex; gap:6px; direction:ltr; }
+.diorama-journey__heading i { width:8px; height:8px; border-radius:50%; background:rgb(0 91 72 / 25%); transition:.35s; }
+.diorama-journey__heading i.is-active { background:#005b48; transform:scale(1.2); }
+.diorama-journey__scene { position:relative; width:100%; aspect-ratio:1680/1080; overflow:visible; }
+.diorama-journey__background { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; }
+.diorama-journey__route { position:absolute; inset:0; z-index:3; width:100%; height:100%; pointer-events:none; }
+.diorama-journey__road-shadow,.diorama-journey__road,.diorama-journey__road-progress { fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.diorama-journey__road-shadow { stroke:#0d4135; stroke-width:20; opacity:.42; filter:drop-shadow(0 6px 6px rgb(0 35 28 / 22%)); }
+.diorama-journey__road { stroke:#08735b; stroke-width:9; stroke-dasharray:2 13; opacity:.94; }
+.diorama-journey__road-progress { stroke:#bce69b; stroke-width:4; opacity:.94; filter:drop-shadow(0 0 5px rgb(188 230 155 / 72%)); }
+.diorama-journey__stations { position:absolute; inset:0; z-index:6; margin:0; padding:0; list-style:none; }
+.diorama-journey__station { position:absolute; width:0; height:0; }
+.diorama-journey__pin { position:absolute; z-index:4; display:grid; place-items:center; width:34px; height:34px; border:5px solid rgb(244 240 232 / 85%); border-radius:50%; background:#005b48; box-shadow:0 6px 18px rgb(0 45 36 / 32%); color:#f4f0e8; font-size:10px; font-weight:800; transform:translate(-50%,-50%); transition:.3s; }
+.diorama-journey__station.is-current .diorama-journey__pin { width:42px; height:42px; background:#c9a24b; color:#173a26; box-shadow:0 0 0 8px rgb(244 240 232 / 30%),0 8px 22px rgb(0 45 36 / 35%); }
+.diorama-journey__station article { position:absolute; top:0; width:160px; padding:10px 13px; border:1px solid rgb(255 255 255 / 66%); border-radius:17px; background:rgb(244 240 232 / 90%); box-shadow:0 13px 29px rgb(0 45 36 / 23%); text-align:center; backdrop-filter:blur(11px); transform:translateY(-50%); transition:.3s; }
+.diorama-journey__station--card-left article { right:34px; }
+.diorama-journey__station--card-right article { left:34px; }
+.diorama-journey__station.is-current article { background:rgb(244 240 232 / 96%); transform:translateY(-50%) scale(1.06); }
+.diorama-journey__station article small { color:#903828; font-size:8px; font-weight:800; letter-spacing:.12em; }
+.diorama-journey__station article h3 { margin:2px 0 4px; color:#005b48; font-size:14px; line-height:1.3; }
+.diorama-journey__station article p { margin:0; color:#3c5a44; font-size:10px; line-height:1.55; }
+.diorama-journey__scene-art { position:absolute; top:0; z-index:2; display:grid; place-items:center; width:128px; height:134px; transform:translateY(calc(-50% + var(--station-art-y, 0px))); filter:drop-shadow(0 11px 9px rgb(0 35 28 / 26%)); transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .35s; pointer-events:none; }
+.diorama-journey__station--card-left .diorama-journey__scene-art { left:46px; }
+.diorama-journey__station--card-right .diorama-journey__scene-art { right:46px; }
+.diorama-journey__scene-art img { display:block!important; width:118px!important; max-width:118px!important; height:126px!important; max-height:126px!important; object-fit:contain!important; object-position:center bottom!important; }
+.diorama-journey__station.is-current .diorama-journey__scene-art { transform:translateY(calc(-50% + var(--station-art-y, 0px))) scale(1.02); filter:drop-shadow(0 12px 9px rgb(0 35 28 / 30%)); }
+.diorama-journey__walker { position:absolute; z-index:10; width:clamp(72px,8vw,112px); opacity:0; pointer-events:none; transform:translate(-50%,-88%); filter:drop-shadow(0 9px 9px rgb(0 0 0 / 32%)); }
+.diorama-journey__walker.is-walking { opacity:1; }
+.diorama-journey__walker img { display:block; width:100%; height:auto; max-height:120px; object-fit:contain; object-position:center bottom; animation:diorama-walk .36s linear infinite; }
+.diorama-journey__walker span { position:absolute; left:50%; bottom:2px; width:30px; height:10px; border-radius:50%; background:rgb(221 199 150 / 52%); filter:blur(5px); animation:diorama-dust .55s ease-out infinite; }
+.diorama-journey__controls { position:absolute; right:0; bottom:0; left:0; z-index:15; display:flex; justify-content:center; padding:42px 16px 16px; background:linear-gradient(0deg,rgb(0 45 36 / 68%),transparent); }
+.diorama-journey__controls button { display:flex; align-items:center; gap:10px; padding:12px 32px; border:1px solid rgb(244 240 232 / 55%); border-radius:999px; background:#005b48; box-shadow:0 9px 25px rgb(0 35 28 / 30%); color:#f4f0e8; font:700 14px/1.5 inherit; cursor:pointer; transition:.18s; }
+.diorama-journey__controls button:hover:not(:disabled) { transform:translateY(-2px); background:#006e57; }
+.diorama-journey__controls button:disabled { opacity:.62; cursor:wait; }
+.diorama-journey__controls b { font-size:19px; }
+.diorama-journey__finale { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px; background:radial-gradient(circle at 50% 35%,#2c5140,#0e2318 75%); color:#f4f1e6; text-align:center; }
+.diorama-journey__finale>span { font-size:44px; }
+.diorama-journey__finale h3 { margin:8px 0; color:#c9a24b; font-size:30px; }
+.diorama-journey__finale p { max-width:360px; margin:0 0 22px; color:#d8e3d3; line-height:1.9; }
+.diorama-journey__finale button { padding:11px 26px; border:1.5px solid #c9a24b; border-radius:999px; background:transparent; color:#c9a24b; font:700 14px/1.5 inherit; cursor:pointer; }
+@keyframes diorama-walk { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-5px) rotate(1deg)} }
+@keyframes diorama-dust { 0%{opacity:.72;transform:translateX(-50%) scale(.5)} 100%{opacity:0;transform:translateX(-50%) scale(1.8)} }
+@media(max-width:760px){.diorama-journey__scene{min-width:900px;transform:translateX(18%)}.diorama-journey{overflow-x:auto;scrollbar-width:none}.diorama-journey__heading{position:sticky;right:18px;top:12px}.diorama-journey__station article{width:130px;padding:7px 9px}.diorama-journey__station article p{display:none}.diorama-journey__controls{position:sticky;bottom:0;margin-top:-78px}}
+@media(prefers-reduced-motion:reduce){.diorama-journey__walker img,.diorama-journey__walker span{animation:none}.diorama-journey__road-progress{transition:none}}
+
+/* High-fidelity game layered on the approved roadmap artwork */
+.image-trail-game { position:relative; width:min(1173px,100%); margin:0 auto; overflow:clip; background:#173a26; }
+.image-trail-game__bar { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; padding:15px 22px 28px; background:linear-gradient(180deg,rgb(10 35 42 / 94%),rgb(10 35 42 / 62%) 72%,transparent); color:#f4f0e8; backdrop-filter:blur(5px); }
+.image-trail-game__bar h2 { margin:0; font-size:clamp(18px,2.4vw,28px); line-height:1.2; }
+.image-trail-game__bar span { display:block; margin-top:3px; color:#c9d8c9; font-size:11px; }
+.image-trail-game__dots { display:flex; gap:7px; direction:ltr; }
+.image-trail-game__dots i { width:9px; height:9px; border-radius:50%; background:rgb(255 255 255 / 25%); transition:.35s; }
+.image-trail-game__dots i.is-active { background:#c9a24b; transform:scale(1.18); }
+.image-trail-game__scene { position:relative; margin-top:-20px; }
+.image-trail-game__art { display:block; width:100%; height:auto; image-rendering:auto; }
+.image-trail-game__route { position:absolute; inset:0; z-index:3; width:100%; height:100%; pointer-events:none; }
+.image-trail-game__guide,.image-trail-game__progress { fill:none; stroke-linecap:round; }
+.image-trail-game__guide { stroke:transparent; stroke-width:18; }
+.image-trail-game__progress { stroke:#d5ad50; stroke-width:4; opacity:.82; filter:drop-shadow(0 0 5px rgb(213 173 80 / 65%)); }
+.image-trail-game__hiker { position:absolute; z-index:8; width:clamp(76px,9vw,112px); opacity:0; pointer-events:none; transform:translate(-50%,-88%); filter:drop-shadow(0 10px 9px rgb(0 0 0 / 32%)); }
+.image-trail-game__hiker.is-walking { opacity:1; }
+.image-trail-game__hiker img { display:block; width:100%; height:auto; max-height:120px; object-fit:contain; object-position:center bottom; animation:image-trail-step .36s linear infinite; }
+.image-trail-game__hiker>span { position:absolute; left:50%; bottom:3px; width:34px; height:12px; border-radius:50%; background:rgb(220 200 155 / 48%); filter:blur(5px); animation:image-trail-dust .55s ease-out infinite; }
+.image-trail-game__controls { position:sticky; bottom:0; z-index:30; display:flex; justify-content:center; margin-top:-78px; padding:28px 16px 16px; background:linear-gradient(0deg,rgb(10 35 42 / 94%),rgb(10 35 42 / 56%) 70%,transparent); }
+.image-trail-game__controls button { display:flex; align-items:center; gap:10px; padding:13px 36px; border:0; border-radius:999px; background:#c9a24b; box-shadow:0 8px 24px rgb(0 25 20 / 32%); color:#17291c; font:700 15px/1.4 inherit; cursor:pointer; transition:.18s; }
+.image-trail-game__controls button:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 12px 28px rgb(201 162 75 / 42%); }
+.image-trail-game__controls button:disabled { opacity:.58; cursor:wait; }
+.image-trail-game__controls b { font-size:20px; }
+.image-trail-game__finale { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px; background:radial-gradient(circle at 50% 35%,#2c5140,#0e2318 75%); color:#f4f1e6; text-align:center; }
+.image-trail-game__finale>span { font-size:44px; }
+.image-trail-game__finale h3 { margin:8px 0; color:#c9a24b; font-size:30px; }
+.image-trail-game__finale p { max-width:360px; margin:0 0 22px; color:#d8e3d3; line-height:1.9; }
+.image-trail-game__finale button { padding:11px 26px; border:1.5px solid #c9a24b; border-radius:999px; background:transparent; color:#c9a24b; font:700 14px/1.5 inherit; cursor:pointer; }
+@keyframes image-trail-step { 0%,100%{transform:translateY(0) rotate(-1.2deg)} 50%{transform:translateY(-5px) rotate(1.2deg)} }
+@keyframes image-trail-dust { 0%{opacity:.7;transform:translateX(-50%) scale(.5)} 100%{opacity:0;transform:translateX(-50%) scale(1.8)} }
+@media(max-width:560px){.image-trail-game__bar{padding-inline:14px}.image-trail-game__bar h2{font-size:16px}.image-trail-game__hiker{width:72px}.image-trail-game__controls button{padding:11px 28px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.image-trail-game__hiker img,.image-trail-game__hiker>span{animation:none}.image-trail-game__progress{transition:none}}
+
+/* Interactive mountain trail game */
+.trail-game { position:relative; width:min(920px,100%); margin:0 auto; overflow:clip; background:#173a26; color:#16301f; }
+.trail-game__bar { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; padding:15px 22px 28px; background:linear-gradient(180deg,rgb(14 35 51 / 96%),rgb(14 35 51 / 72%) 70%,transparent); color:#f4f0e8; backdrop-filter:blur(4px); }
+.trail-game__bar h2 { margin:0; font-size:20px; line-height:1.3; }
+.trail-game__bar span { display:block; margin-top:2px; color:#c9d8c9; font-size:11px; }
+.trail-game__dots { display:flex; gap:7px; direction:ltr; }
+.trail-game__dots i { width:9px; height:9px; border-radius:50%; background:rgb(255 255 255 / 22%); transition:.4s; }
+.trail-game__dots i.is-filled { background:#c9a24b; transform:scale(1.18); }
+.trail-game__scene { position:relative; width:100%; margin-top:-20px; }
+.trail-game__scene>svg { display:block; width:100%; height:auto; }
+.trail-game__road-edge,.trail-game__road,.trail-game__progress { fill:none; stroke-linecap:round; }
+.trail-game__road-edge { stroke:#9f865f; stroke-width:29; opacity:.9; }
+.trail-game__road { stroke:#cfbb94; stroke-width:20; stroke-dasharray:3 15; }
+.trail-game__progress { stroke:#d2aa4e; stroke-width:7; stroke-dasharray:100; transition:stroke-dashoffset 1.5s cubic-bezier(.45,0,.2,1); filter:drop-shadow(0 0 6px rgb(210 170 78 / 62%)); }
+.trail-game__stations { position:absolute; inset:0; z-index:8; margin:0; padding:0; list-style:none; }
+.trail-game__station { position:absolute; width:0; height:0; }
+.trail-game__marker { position:absolute; z-index:3; display:grid; place-items:center; width:34px; height:34px; border:3px solid #c9a24b; border-radius:50%; background:#f4f1e6; color:#16301f; font:700 12px/1 serif; transform:translate(-50%,-50%); box-shadow:0 5px 14px rgb(0 0 0 / 28%); }
+.trail-game__station article { position:absolute; top:0; width:255px; max-width:60vw; padding:14px 16px 15px; border-radius:16px; background:#f4f1e6; box-shadow:0 12px 28px rgb(10 20 10 / 30%); opacity:0; pointer-events:none; transition:opacity .5s ease,transform .55s cubic-bezier(.2,.9,.25,1.1); }
+.trail-game__station--right article { right:28px; transform:translateY(-50%) translateX(8%) scale(.9); }
+.trail-game__station--left article { left:28px; transform:translateY(-50%) translateX(-8%) scale(.9); }
+.trail-game__station.is-visible article { opacity:1; pointer-events:auto; transform:translateY(-50%) translateX(0) scale(1); }
+.trail-game__station article small { color:#a67e28; font-weight:800; letter-spacing:.1em; }
+.trail-game__station article h3 { margin:2px 0 6px; color:#005b48; font-size:18px; }
+.trail-game__station article p { margin:0; color:#3c5a44; font-size:12px; line-height:1.8; }
+.trail-game__hiker { position:absolute; z-index:15; width:124px; pointer-events:none; transform:translate(-50%,-88%); transition:left 1.5s cubic-bezier(.45,0,.2,1),top 1.5s cubic-bezier(.45,0,.2,1); filter:drop-shadow(0 9px 8px rgb(0 0 0 / 30%)); }
+.trail-game__hiker img { display:block; width:100%; height:120px; object-fit:contain; object-position:center bottom; }
+.trail-game__hiker.is-walking img { animation:trail-hiker-walk .34s linear infinite; }
+.trail-game__dust { position:absolute; left:50%; bottom:4px; width:34px; height:12px; border-radius:50%; background:rgb(218 199 154 / 45%); filter:blur(5px); opacity:0; }
+.trail-game__hiker.is-walking .trail-game__dust { animation:trail-dust .55s ease-out infinite; }
+.trail-game__controls { position:sticky; bottom:0; z-index:30; display:flex; justify-content:center; padding:24px 16px 16px; background:linear-gradient(0deg,rgb(14 35 51 / 96%),rgb(14 35 51 / 62%) 70%,transparent); }
+.trail-game__controls button { display:flex; align-items:center; gap:10px; padding:13px 34px; border:0; border-radius:999px; background:#c9a24b; box-shadow:0 7px 20px rgb(201 162 75 / 38%); color:#1c2a17; font:700 15px/1.4 inherit; cursor:pointer; transition:.18s; }
+.trail-game__controls button:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 11px 25px rgb(201 162 75 / 48%); }
+.trail-game__controls button:disabled { opacity:.56; cursor:wait; }
+.trail-game__controls b { font-size:20px; }
+.trail-game__finale { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px; background:radial-gradient(circle at 50% 35%,#2c5140,#0e2318 75%); color:#f4f1e6; text-align:center; }
+.trail-game__finale>span { font-size:42px; }
+.trail-game__finale h3 { margin:8px 0; color:#c9a24b; font-size:30px; }
+.trail-game__finale p { max-width:360px; margin:0 0 22px; color:#d8e3d3; line-height:1.9; }
+.trail-game__finale button { padding:11px 26px; border:1.5px solid #c9a24b; border-radius:999px; background:transparent; color:#c9a24b; font:700 14px/1.5 inherit; cursor:pointer; }
+@keyframes trail-hiker-walk { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-5px) rotate(1deg)} }
+@keyframes trail-dust { 0%{opacity:.7;transform:translateX(-50%) scale(.5)} 100%{opacity:0;transform:translateX(-50%) scale(1.8)} }
+@media(max-width:560px){ .trail-game__bar h2{font-size:16px}.trail-game__station article{width:220px;max-width:70vw}.trail-game__station--right article,.trail-game__station--left article{right:auto;left:50%;transform:translate(-50%,18px) scale(.9)}.trail-game__station.is-visible article{transform:translate(-50%,18px) scale(1)}.trail-game__hiker{width:92px}.trail-game__hiker img{height:92px} }
+@media(prefers-reduced-motion:reduce){.trail-game__hiker,.trail-game__progress,.trail-game__station article{transition-duration:.01ms!important}.trail-game__hiker img,.trail-game__dust{animation:none!important}}
+
+/* Final roadmap artwork */
+.roadmap-showcase {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(28px, 5vw, 64px) 18px clamp(38px, 6vw, 78px);
+  background:
+    radial-gradient(circle at 50% 8%, rgb(226 214 194 / 58%), transparent 34%),
+    linear-gradient(180deg, #f3eee4 0%, #dce5d5 46%, #b8cfbc 100%);
+}
+
+.roadmap-showcase__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 26%, rgb(80 175 71 / 15%), transparent 25%),
+    radial-gradient(circle at 88% 72%, rgb(0 91 72 / 18%), transparent 28%);
+  pointer-events: none;
+}
+
+.roadmap-showcase__heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto 22px;
+  color: var(--green);
+}
+
+.roadmap-showcase__heading h2 {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1;
+}
+
+.roadmap-showcase__eyebrow {
+  color: var(--earth);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.roadmap-showcase__frame {
+  position: relative;
+  width: min(1173px, 100%);
+  margin: 0 auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  transform: perspective(1400px) rotateX(var(--roadmap-rx)) rotateY(var(--roadmap-ry));
+  transform-style: preserve-3d;
+  transition: transform 180ms cubic-bezier(.2,.75,.25,1);
+  will-change: transform;
+}
+
+.roadmap-showcase__frame::after {
+  content: none;
+}
+
+.roadmap-showcase__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: auto;
+  transform: translateZ(0);
+  filter: drop-shadow(0 32px 38px rgb(0 45 36 / 18%));
+}
+
+.roadmap-showcase__light {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at var(--roadmap-light-x) var(--roadmap-light-y), rgb(255 255 255 / 19%), transparent 22%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  transform: translateZ(24px);
+}
+
+.roadmap-showcase__hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform: translateZ(42px);
+  pointer-events: none;
+}
+
+.roadmap-showcase__hotspots li {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.roadmap-showcase__hotspots button {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgb(244 240 232 / 80%);
+  border-radius: 50%;
+  background: rgb(0 91 72 / 22%);
+  box-shadow: 0 0 0 0 rgb(213 242 196 / 48%);
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  animation: roadmap-hotspot-pulse 2.3s ease-out infinite;
+}
+
+.roadmap-showcase__hotspots button span {
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--cream);
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.roadmap-showcase__hotspots button:hover,
+.roadmap-showcase__hotspots button:focus-visible,
+.roadmap-showcase__hotspots button.is-active {
+  background: rgb(0 91 72 / 78%);
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+  transform: translate(-50%, -50%) scale(1.14);
+}
+
+.roadmap-showcase__step {
+  position: absolute;
+  right: clamp(14px, 3vw, 34px);
+  bottom: clamp(68px, 7vw, 94px);
+  z-index: 5;
+  width: min(360px, calc(100% - 28px));
+  padding: 16px 18px;
+  border: 1px solid rgb(244 240 232 / 44%);
+  border-radius: 18px;
+  background: rgb(0 69 55 / 84%);
+  box-shadow: 0 18px 50px rgb(0 30 24 / 28%);
+  color: var(--cream);
+  text-align: right;
+  backdrop-filter: blur(15px);
+  transform: translateZ(64px);
+}
+
+.roadmap-showcase__step span {
+  color: #bce69b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.roadmap-showcase__step strong {
+  display: block;
+  margin: 2px 0 5px;
+  font-size: 18px;
+}
+
+.roadmap-showcase__step p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.85;
+  color: rgb(244 240 232 / 88%);
+}
+
+@keyframes roadmap-hotspot-pulse {
+  70% { box-shadow: 0 0 0 14px rgb(213 242 196 / 0%); }
+  100% { box-shadow: 0 0 0 0 rgb(213 242 196 / 0%); }
+}
+
+.roadmap-showcase__expand {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid rgb(244 240 232 / 62%);
+  border-radius: 999px;
+  background: rgb(0 69 55 / 82%);
+  box-shadow: 0 8px 24px rgb(0 30 24 / 28%);
+  color: var(--cream);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.roadmap-showcase__expand:hover,
+.roadmap-showcase__expand:focus-visible {
+  background: var(--green);
+  transform: translateY(-2px);
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+}
+
+.roadmap-showcase__expand svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.roadmap-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgb(0 28 22 / 88%);
+  backdrop-filter: blur(14px);
+}
+
+.roadmap-lightbox__canvas {
+  width: min(1173px, 100%);
+  height: calc(100dvh - 36px);
+  overflow: auto;
+  border-radius: 18px;
+  box-shadow: 0 30px 100px rgb(0 0 0 / 45%);
+  scrollbar-width: thin;
+}
+
+.roadmap-lightbox__image {
+  display: block;
+  width: 100%;
+  min-width: min(760px, 100vw);
+  height: auto;
+}
+
+.roadmap-lightbox__close {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(244 240 232 / 54%);
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--cream);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .roadmap-showcase {
+    padding-inline: 10px;
+  }
+
+  .roadmap-showcase__heading {
+    justify-content: flex-start;
+    padding-inline: 12px;
+  }
+
+  .roadmap-showcase__eyebrow {
+    display: none;
+  }
+
+  .roadmap-showcase__expand {
+    right: 10px;
+    bottom: 10px;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -4002,6 +4404,37 @@ body {
     font-size: 10px;
   }
 }
+
+/* 3D roadmap overrides — kept after the legacy flat-map rules. */
+.our-way-heading { position:relative; z-index:5; width:max-content; margin:30px 5vw -70px 0; padding:0; border:0; background:none; box-shadow:none; text-align:right; }
+.our-way-heading-title { margin:0; color:var(--green); font-size:clamp(34px,4vw,54px); font-weight:700; line-height:1; text-shadow:0 2px 0 rgb(244 240 232 / 82%),0 8px 24px rgb(0 45 36 / 18%); }
+.our-way { min-height:780px; padding:0 0 22px; background:#d9dec8; perspective:1400px; }
+.our-way-atmosphere { background:linear-gradient(180deg,rgb(7 60 48 / 5%),rgb(4 55 43 / 18%)),url("/brand/roadmap-diorama-v1.png") center/cover no-repeat; transform:scale(1.015); animation:our-way-camera-breathe 14s ease-in-out infinite alternate; }
+.our-way-atmosphere::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgb(4 43 34 / 16%),transparent 22%,transparent 72%,rgb(4 43 34 / 24%)),radial-gradient(ellipse at 50% 42%,transparent 38%,rgb(4 43 34 / 16%) 100%); }
+.our-way-atmosphere>* { display:none; }
+.our-way>.shell { width:min(1440px,100%); max-width:none; }
+.our-way-map { margin:0; padding:0 0 28px; }
+.our-way-map-inner { min-width:1100px; height:690px; padding:0 70px; }
+.our-way-map-stage { height:690px; margin-top:0; transform-style:preserve-3d; }
+.our-way-map-wave { filter:drop-shadow(0 14px 6px rgb(0 38 30 / 26%)) drop-shadow(0 0 12px rgb(155 255 181 / 44%)); }
+.our-way-map-wave-glow { color:#123f35; opacity:.42; }
+.our-way-map-wave-line { color:#0a745c; opacity:.92; stroke-dasharray:2 9; animation:our-way-route-flow 8s linear infinite; }
+.our-way-map-bead { width:7px; height:7px; overflow:hidden; border:1px solid rgb(255 255 255 / 80%); border-radius:50%; background:#bde79b; box-shadow:0 2px 7px rgb(0 45 36 / 55%); color:transparent; font-size:0; }
+.our-way-map-pin { width:26px; height:26px; border:5px solid rgb(244 240 232 / 82%); background:#e5f4cc; box-shadow:0 8px 18px rgb(0 45 36 / 34%),inset 0 0 0 2px var(--green); color:transparent; font-size:0; }
+.our-way-map-pin::after { content:""; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgb(0 91 72 / 12%); }
+.our-way-map-stop--terminus .our-way-map-pin { width:38px; height:38px; font-size:0; }
+.our-way-map-card { width:170px; transform:translateX(-50%) translateZ(28px); filter:drop-shadow(0 14px 12px rgb(0 35 28 / 20%)); }
+.our-way-map-stop:nth-child(4) .our-way-map-card { transform:translateX(-50%) translateZ(22px) scale(.9); }
+.our-way-map-stop:nth-child(5) .our-way-map-card { transform:translateX(-50%) translateZ(18px) scale(.8); }
+.our-way-thought-cloud { max-width:150px; padding:10px 14px 11px; border:1px solid rgb(255 255 255 / 66%); border-radius:18px; background:linear-gradient(145deg,rgb(248 244 234 / 94%),rgb(224 235 206 / 88%)); box-shadow:0 14px 32px rgb(0 45 36 / 24%),inset 0 1px 0 #fff; backdrop-filter:blur(10px); }
+.our-way-map-art { max-width:152px; max-height:126px; filter:drop-shadow(0 16px 9px rgb(0 35 28 / 32%)); }
+.our-way-map-figure::after { bottom:-1px; width:72%; height:18px; background:radial-gradient(ellipse,rgb(0 35 28 / 38%),transparent 70%); filter:blur(2px); }
+.our-way-story { margin-top:-86px; }
+.our-way-story-card { border:1px solid rgb(244 240 232 / 24%); border-radius:24px; backdrop-filter:blur(18px); }
+@keyframes our-way-route-flow { to { stroke-dashoffset:-110; } }
+@keyframes our-way-camera-breathe { from { transform:scale(1.015) translate3d(0,0,0); } to { transform:scale(1.045) translate3d(0,-5px,0); } }
+@media (max-width:640px) { .our-way-heading { margin:22px 28px -58px 0; padding:0; } .our-way-map-inner { min-width:980px; height:640px; padding:0 54px; } .our-way-map-stage { height:640px; } }
+@media (prefers-reduced-motion:reduce) { .our-way-atmosphere,.our-way-map-wave-line { animation:none; } }
 
 /* —— Coming soon: product launch stage, real green plinths —— */
 .coming-soon {
