@@ -127,6 +127,8 @@ export const homeDoors = [
     href: "/products?cat=fresh-meat",
     label: "گوشت تازه",
     line: "از مرتع",
+    emoji: "🥩",
+    tint: "#903828",
     story:
       "از مرتع می‌آید و با همان دقتی که سفرهٔ جمعه می‌خواهد آماده می‌شود. مسیرش روشن است و برای خانه انتخاب می‌شود.",
     image: PLATE.meat,
@@ -137,6 +139,8 @@ export const homeDoors = [
     href: "/products?cat=seafood",
     label: "محصولات دریایی",
     line: "از آب",
+    emoji: "🐟",
+    tint: "#204078",
     story:
       "از آب تا آشپزخانه، با همان تازگی که روی سفره دیده می‌شود. برای وقتی که طعم دریا را می‌خواهید.",
     image: PLATE.seafood,
@@ -147,6 +151,8 @@ export const homeDoors = [
     href: "/products?cat=ready",
     label: "سوسیس و کالباس",
     line: "طعم عمیق",
+    emoji: "🌭",
+    tint: "#BE6516",
     story:
       "سوسیس‌های تخمیری و کالباس با طعمی عمیق؛ دور از حس صنعتی و نزدیک به سفرهٔ خانه.",
     image: PLATE.ready,
@@ -157,6 +163,8 @@ export const homeDoors = [
     href: "/products?cat=ready",
     label: "آماده‌پخت",
     line: "سریع و درست",
+    emoji: "🍳",
+    tint: "#861309",
     story:
       "ناگت، برگر و پیتزا؛ وقتی سرعت مهم است اما طعم نباید قربانی شود.",
     image: PLATE.ready,
@@ -167,6 +175,8 @@ export const homeDoors = [
     href: "/products?cat=ready",
     label: "غذای آماده",
     line: "طعم خانه",
+    emoji: "🍲",
+    tint: "#005B48",
     story:
       "از فسنجان تا پاستا؛ غذایی آماده برای وقتی که دلتان یک وعدهٔ کامل خانگی می‌خواهد.",
     image: PLATE.ready,
@@ -177,6 +187,8 @@ export const homeDoors = [
     href: "/products?cat=dairy",
     label: "لبنیات",
     line: "هر روز خانه",
+    emoji: "🧀",
+    tint: "#86C2EB",
     story:
       "پنیر و لبنیات طبیعی؛ طعمی غنی برای صبحانه و سفرهٔ هر روز.",
     image: PLATE.dairy,
@@ -187,6 +199,8 @@ export const homeDoors = [
     href: "/products",
     label: "کشاورزی",
     line: "از زمین",
+    emoji: "🌿",
+    tint: "#50AF47",
     story:
       "عسل کوهستان، برنج، زیتون و ادویه؛ سبدی از طعم‌های زمین.",
     image: PLATE.dairy,
@@ -197,6 +211,8 @@ export const homeDoors = [
     href: "/products",
     label: "نان و آشپزی",
     line: "کنار سفره",
+    emoji: "🥖",
+    tint: "#BE6516",
     story:
       "از نان و خمیر تا دیپ و درسینگ؛ ابزارهایی برای آشپزی راحت و خوش‌طعم.",
     image: PLATE.ready,
@@ -207,6 +223,8 @@ export const homeDoors = [
     href: "/products?cat=fresh-meat",
     label: "مرغ و طیور",
     line: "سبک و تازه",
+    emoji: "🍗",
+    tint: "#903828",
     story:
       "مرغ و طیور تازه برای وعده‌های سبک؛ از مسیری که می‌شود به آن اعتماد کرد.",
     image: PLATE.meat,
@@ -217,6 +235,8 @@ export const homeDoors = [
     href: "/products?cat=ready",
     label: "منجمد",
     line: "تازگی نگه‌داشته",
+    emoji: "❄️",
+    tint: "#86C2EB",
     story:
       "منجمد با استاندارد نگهداری درست؛ تازگی تا لحظهٔ پخت حفظ می‌شود.",
     image: PLATE.ready,
@@ -227,6 +247,8 @@ export const homeDoors = [
     href: "/products?cat=dairy",
     label: "صبحانه",
     line: "شروع روز",
+    emoji: "☀️",
+    tint: "#BE6516",
     story:
       "پنیر، ماست و کره؛ صبحانه‌ای آرام که ریشه در مرتع دارد.",
     image: PLATE.dairy,
@@ -237,6 +259,8 @@ export const homeDoors = [
     href: "/products",
     label: "چاشنی",
     line: "لمس آخر",
+    emoji: "🧂",
+    tint: "#5D686E",
     story:
       "ادویه، سس و چاشنی؛ آن لمس آخر که طعم را کامل می‌کند.",
     image: PLATE.ready,
@@ -247,6 +271,8 @@ export const homeDoors = [
     href: "/products",
     label: "ویژه کوهستان",
     line: "انتخاب ما",
+    emoji: "⛰️",
+    tint: "#005B48",
     story:
       "محصولات ویژه‌ای که با دقت بیشتر انتخاب شده‌اند؛ برای سفره‌ای که فرق می‌کند.",
     image: PLATE.meat,

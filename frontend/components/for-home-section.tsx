@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { PeakMark } from "@/components/brand-marks";
 import {
@@ -12,12 +12,14 @@ import {
 } from "@/lib/brand";
 
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
+const CAT_PAGE_SIZE = 4;
+const PRODUCT_VISIBLE = 3;
 
 type ProductItem = (typeof homeCategoryProducts)[HomeDoorId][number];
 
 /**
  * «چه به خانه می‌رسد»
- * LuxLunch-inspired liquid glass — brand green/cream, RTL.
+ * Ultra-clear liquid glass — compact, branded category chips, no scrollbars.
  */
 export function ForHomeSection() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -28,9 +30,22 @@ export function ForHomeSection() {
     homeCategoryProducts[DEFAULT_DOOR][0].id,
   );
   const [storyOpen, setStoryOpen] = useState(false);
+  const [catPage, setCatPage] = useState(0);
 
-  const activeDoor = homeDoors.find((item) => item.id === activeDoorId) ?? homeDoors[0];
+  const catPageCount = Math.ceil(homeDoors.length / CAT_PAGE_SIZE);
+  const visibleDoors = useMemo(
+    () =>
+      homeDoors.slice(
+        catPage * CAT_PAGE_SIZE,
+        catPage * CAT_PAGE_SIZE + CAT_PAGE_SIZE,
+      ),
+    [catPage],
+  );
+
+  const activeDoor =
+    homeDoors.find((item) => item.id === activeDoorId) ?? homeDoors[0];
   const products = homeCategoryProducts[activeDoorId];
+  const visibleProducts = products.slice(0, PRODUCT_VISIBLE);
   const activeProduct: ProductItem =
     products.find((item) => item.id === activeProductId) ?? products[0];
 
@@ -38,6 +53,10 @@ export function ForHomeSection() {
     setActiveDoorId(id);
     setActiveProductId(homeCategoryProducts[id][0].id);
     setStoryOpen(false);
+  };
+
+  const cycleCats = () => {
+    setCatPage((page) => (page + 1) % catPageCount);
   };
 
   useEffect(() => {
@@ -75,19 +94,20 @@ export function ForHomeSection() {
       ref={rootRef}
       className={`for-home for-home--catalog${visible ? " is-visible" : ""}`}
       aria-labelledby="for-home-title"
+      style={{ ["--fh-tint" as string]: activeDoor.tint }}
     >
       <div className="shell">
         <div className="for-home-case">
           <div className="for-home-case-shine" aria-hidden="true" />
 
           <div className="for-home-stage">
-            {/* RTL col1 (right): menu + cream cards */}
             <div className="for-home-panel">
               <header className="for-home-head">
                 <div className="for-home-head-copy">
                   <PeakMark className="for-home-peak" aria-hidden="true" />
                   <h2 id="for-home-title" className="for-home-title">
-                    چه به خانه می‌رسد
+                    <span className="for-home-title-soft">چه به</span>{" "}
+                    <span className="for-home-title-strong">خانه می‌رسد</span>
                   </h2>
                 </div>
                 <Link href="/products" className="for-home-all">
@@ -96,26 +116,59 @@ export function ForHomeSection() {
               </header>
 
               <p className="for-home-lead">
-                از مرتع تا سفره — مسیری که می‌شود به آن اعتماد کرد.
+                از مرتع تا سفره —{" "}
+                <em>مسیری که می‌شود به آن اعتماد کرد.</em>
               </p>
 
               <div className="for-home-nav-shell">
-                <div className="for-home-cats" role="tablist" aria-label="دسته‌های محصول">
-                  {homeDoors.map((item) => {
-                    const selected = item.id === activeDoorId;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={selected}
-                        className={`for-home-cat${selected ? " is-active" : ""}`}
-                        onClick={() => selectDoor(item.id)}
-                      >
-                        {item.label}
-                      </button>
-                    );
-                  })}
+                <div className="for-home-cats-wrap">
+                  <div
+                    className="for-home-cats"
+                    role="tablist"
+                    aria-label="دسته‌های محصول"
+                    key={catPage}
+                  >
+                    {visibleDoors.map((item) => {
+                      const selected = item.id === activeDoorId;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={selected}
+                          className={`for-home-cat${selected ? " is-active" : ""}`}
+                          style={{ ["--cat-tint" as string]: item.tint }}
+                          onClick={() => selectDoor(item.id)}
+                        >
+                          <span className="for-home-cat-ico" aria-hidden="true">
+                            {item.emoji}
+                          </span>
+                          <span className="for-home-cat-label">{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {catPageCount > 1 ? (
+                    <button
+                      type="button"
+                      className="for-home-cats-more"
+                      onClick={cycleCats}
+                      aria-label={
+                        catPage + 1 < catPageCount
+                          ? "دسته‌های بعدی"
+                          : "بازگشت به دسته‌های اول"
+                      }
+                    >
+                      <PeakMark className="for-home-cats-more-peak" aria-hidden="true" />
+                      <span className="for-home-cats-more-arrow" aria-hidden="true">
+                        {catPage + 1 < catPageCount ? "↓" : "↑"}
+                      </span>
+                      <span className="for-home-cats-more-text">
+                        {catPage + 1 < catPageCount ? "بیشتر" : "بازگشت"}
+                      </span>
+                    </button>
+                  ) : null}
                 </div>
 
                 <div
@@ -124,8 +177,14 @@ export function ForHomeSection() {
                   aria-label={`محصولات ${activeDoor.label}`}
                   key={activeDoor.id}
                 >
-                  <p className="for-home-products-caption">{activeDoor.label}</p>
-                  {products.map((product, index) => {
+                  <p className="for-home-products-caption">
+                    <span className="for-home-products-caption-emoji" aria-hidden="true">
+                      {activeDoor.emoji}
+                    </span>
+                    <span>{activeDoor.label}</span>
+                    <em>{activeDoor.line}</em>
+                  </p>
+                  {visibleProducts.map((product, index) => {
                     const selected = product.id === activeProduct.id;
                     return (
                       <button
@@ -161,7 +220,6 @@ export function ForHomeSection() {
               </div>
             </div>
 
-            {/* RTL col2 (left): hero plate */}
             <div className="for-home-showcase" key={activeProduct.id}>
               <div className="for-home-plate">
                 <span className="for-home-plate-arc" aria-hidden="true" />
@@ -171,7 +229,7 @@ export function ForHomeSection() {
                   alt={activeProduct.alt}
                   width={640}
                   height={640}
-                  sizes="(max-width: 900px) 70vw, 380px"
+                  sizes="(max-width: 900px) 60vw, 300px"
                   className="for-home-plate-art"
                   priority
                 />
@@ -181,7 +239,7 @@ export function ForHomeSection() {
                     alt=""
                     width={88}
                     height={88}
-                    sizes="72px"
+                    sizes="56px"
                   />
                 </span>
               </div>
@@ -189,9 +247,9 @@ export function ForHomeSection() {
               <div className="for-home-showcase-foot">
                 <div className="for-home-teaser">
                   <p className="for-home-teaser-meta">
-                    <span>{activeDoor.label}</span>
+                    <span className="for-home-teaser-door">{activeDoor.label}</span>
                     <PeakMark className="for-home-teaser-peak" aria-hidden="true" />
-                    <span>{activeProduct.note}</span>
+                    <span className="for-home-teaser-note">{activeProduct.note}</span>
                   </p>
                   <h3 className="for-home-teaser-name">{activeProduct.name}</h3>
                   <p className="for-home-teaser-text">{activeProduct.teaser}</p>
