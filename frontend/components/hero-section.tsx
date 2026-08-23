@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { PeakMark } from "@/components/brand-marks";
@@ -44,14 +43,20 @@ export function HeroSection() {
               <div className="landing-panel landing-copy landing-media-panel">
                 <div className="landing-panel-frame landing-media-frame landing-copy-frame">
                   <div className="landing-media-slot">
-                    <Image
-                      src="/brand/%23road%20%23gloomy%20%23forest.jpg"
-                      alt=""
-                      fill
-                      priority
-                      sizes="(max-width: 900px) 100vw, 24vw"
-                      className="landing-media-cover landing-copy-photo"
-                    />
+                    <video
+                      className="landing-media-video landing-copy-photo"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/brand/landing-way.png"
+                      aria-hidden="true"
+                    >
+                      <source
+                        src="/brand/Pin%20on%20Camping.mp4"
+                        type="video/mp4"
+                      />
+                    </video>
                   </div>
                   <div className="landing-copy-vignette" aria-hidden="true" />
                 </div>
