@@ -103,21 +103,19 @@ export function ForHomeSection() {
           <div className="for-home-stage">
             <div className="for-home-panel">
               <header className="for-home-head">
-                <div className="for-home-head-copy">
-                  <PeakMark className="for-home-peak" aria-hidden="true" />
-                  <h2 id="for-home-title" className="for-home-title">
-                    <span className="for-home-title-soft">چه به</span>{" "}
-                    <span className="for-home-title-strong">خانه می‌رسد</span>
-                  </h2>
-                </div>
+                <h2 id="for-home-title" className="for-home-title">
+                  <span className="for-home-title-soft">چه به </span>
+                  <span className="for-home-title-accent">خانه</span>
+                  <span className="for-home-title-soft"> می‌رسد</span>
+                </h2>
                 <Link href="/products" className="for-home-all">
                   مشاهده همه
                 </Link>
               </header>
 
               <p className="for-home-lead">
-                از مرتع تا سفره —{" "}
-                <em>مسیری که می‌شود به آن اعتماد کرد.</em>
+                <span>از مرتع تا سفره —</span>{" "}
+                <span className="for-home-lead-accent">طعمی که اعتماد می‌سازد.</span>
               </p>
 
               <div className="for-home-nav-shell">
@@ -177,13 +175,7 @@ export function ForHomeSection() {
                   aria-label={`محصولات ${activeDoor.label}`}
                   key={activeDoor.id}
                 >
-                  <p className="for-home-products-caption">
-                    <span className="for-home-products-caption-emoji" aria-hidden="true">
-                      {activeDoor.emoji}
-                    </span>
-                    <span>{activeDoor.label}</span>
-                    <em>{activeDoor.line}</em>
-                  </p>
+                  <p className="for-home-products-caption">{activeDoor.label}</p>
                   {visibleProducts.map((product, index) => {
                     const selected = product.id === activeProduct.id;
                     return (
@@ -199,19 +191,23 @@ export function ForHomeSection() {
                           setStoryOpen(false);
                         }}
                       >
-                        <span className="for-home-product-card-accent" aria-hidden="true" />
                         <span className="for-home-product-card-media">
                           <Image
                             src={product.image}
                             alt=""
                             width={96}
                             height={96}
-                            sizes="44px"
+                            sizes="48px"
                           />
                         </span>
                         <span className="for-home-product-card-body">
                           <strong>{product.name}</strong>
-                          <em>{product.note}</em>
+                          <span className="for-home-product-card-foot">
+                            <em>{product.note}</em>
+                            {selected ? (
+                              <span className="for-home-product-card-pick">انتخاب</span>
+                            ) : null}
+                          </span>
                         </span>
                       </button>
                     );
@@ -248,7 +244,9 @@ export function ForHomeSection() {
                 <div className="for-home-teaser">
                   <p className="for-home-teaser-meta">
                     <span className="for-home-teaser-door">{activeDoor.label}</span>
-                    <PeakMark className="for-home-teaser-peak" aria-hidden="true" />
+                    <span className="for-home-teaser-dot" aria-hidden="true">
+                      ·
+                    </span>
                     <span className="for-home-teaser-note">{activeProduct.note}</span>
                   </p>
                   <h3 className="for-home-teaser-name">{activeProduct.name}</h3>
