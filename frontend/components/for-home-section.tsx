@@ -109,43 +109,47 @@ export function ForHomeSection() {
 
           <div className="for-home-topbar">
             <Link href="/" className="for-home-brand" aria-label="مرد کوهستان">
-              <Image
-                src="/brand/logo-white.svg"
-                alt=""
-                width={160}
-                height={44}
-                className="for-home-brand-logo"
-                priority
-              />
+              <span className="for-home-brand-shell">
+                <Image
+                  src="/brand/logo-white.svg"
+                  alt=""
+                  width={160}
+                  height={44}
+                  className="for-home-brand-logo"
+                  priority
+                />
+              </span>
             </Link>
 
-            <nav className="for-home-cats" role="tablist" aria-label="دسته‌های محصول" key={catPage}>
-              {visibleDoors.map((item) => {
-                const selected = item.id === activeDoorId;
-                return (
+            <div className="for-home-cats-rail">
+              <nav className="for-home-cats" role="tablist" aria-label="دسته‌های محصول" key={catPage}>
+                {visibleDoors.map((item) => {
+                  const selected = item.id === activeDoorId;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={selected}
+                      className={`for-home-cat${selected ? " is-active" : ""}`}
+                      onClick={() => selectDoor(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+                {catPageCount > 1 ? (
                   <button
-                    key={item.id}
                     type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    className={`for-home-cat${selected ? " is-active" : ""}`}
-                    onClick={() => selectDoor(item.id)}
+                    className="for-home-cats-more"
+                    onClick={cycleCats}
+                    aria-label="دسته‌های بعدی"
                   >
-                    {item.label}
+                    ‹
                   </button>
-                );
-              })}
-              {catPageCount > 1 ? (
-                <button
-                  type="button"
-                  className="for-home-cats-more"
-                  onClick={cycleCats}
-                  aria-label="دسته‌های بعدی"
-                >
-                  ‹
-                </button>
-              ) : null}
-            </nav>
+                ) : null}
+              </nav>
+            </div>
 
             <Link href="/products" className="for-home-all">
               مشاهده همه
@@ -238,42 +242,44 @@ export function ForHomeSection() {
                 </span>
               </div>
 
-              <div className="for-home-slider" aria-label="جابه‌جایی محصول">
-                <button
-                  type="button"
-                  className="for-home-slider-btn"
-                  aria-label="قبلی"
-                  onClick={() => cycleProduct(-1)}
-                >
-                  ›
-                </button>
-                <div className="for-home-slider-track" aria-hidden="true">
-                  {products.map((product, index) => (
-                    <span
-                      key={product.id}
-                      className={`for-home-slider-seg${index === activeIndex ? " is-active" : ""}`}
-                    />
-                  ))}
+              <div className="for-home-showcase-tools">
+                <div className="for-home-slider" aria-label="جابه‌جایی محصول">
+                  <button
+                    type="button"
+                    className="for-home-slider-btn"
+                    aria-label="قبلی"
+                    onClick={() => cycleProduct(-1)}
+                  >
+                    ›
+                  </button>
+                  <div className="for-home-slider-track" aria-hidden="true">
+                    {products.map((product, index) => (
+                      <span
+                        key={product.id}
+                        className={`for-home-slider-seg${index === activeIndex ? " is-active" : ""}`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="for-home-slider-btn"
+                    aria-label="بعدی"
+                    onClick={() => cycleProduct(1)}
+                  >
+                    ‹
+                  </button>
                 </div>
+
                 <button
                   type="button"
-                  className="for-home-slider-btn"
-                  aria-label="بعدی"
-                  onClick={() => cycleProduct(1)}
+                  className="for-home-teaser-cta"
+                  onClick={() => setStoryOpen(true)}
+                  aria-haspopup="dialog"
+                  aria-expanded={storyOpen}
                 >
-                  ‹
+                  ادامه داستان
                 </button>
               </div>
-
-              <button
-                type="button"
-                className="for-home-teaser-cta"
-                onClick={() => setStoryOpen(true)}
-                aria-haspopup="dialog"
-                aria-expanded={storyOpen}
-              >
-                ادامه داستان
-              </button>
             </div>
           </div>
         </div>
