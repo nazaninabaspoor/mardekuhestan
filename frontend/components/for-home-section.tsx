@@ -204,9 +204,7 @@ export function ForHomeSection() {
                           <strong>{product.name}</strong>
                           <span className="for-home-product-card-foot">
                             <em>{product.note}</em>
-                            {selected ? (
-                              <span className="for-home-product-card-pick">انتخاب</span>
-                            ) : null}
+                            <span className="for-home-product-card-pick">انتخاب</span>
                           </span>
                         </span>
                       </button>
