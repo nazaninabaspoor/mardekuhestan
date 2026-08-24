@@ -24,4 +24,3 @@ export default function MagazinePage() {
     </section>
   );
 }
-jhbihgbgyh

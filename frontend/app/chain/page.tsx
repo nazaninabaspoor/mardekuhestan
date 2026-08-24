@@ -19,4 +19,3 @@ export default function ChainPage() {
     </section>
   );
 }
-LLLL

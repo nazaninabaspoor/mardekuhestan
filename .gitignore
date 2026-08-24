@@ -37,6 +37,7 @@ local_settings.py
 # Node / frontend
 node_modules/
 .next/
+.next-stale-*/
 out/
 dist/
 .turbo/

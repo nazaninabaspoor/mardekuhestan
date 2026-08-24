@@ -8,14 +8,22 @@
     "start": "next start"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "framer-motion": "^13.1.1",
+    "gsap": "^3.15.0",
+    "konva": "^10.3.1",
     "next": "^15.5.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-konva": "^19.2.5",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@types/node": "^22.18.0",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "@types/three": "^0.185.4",
     "typescript": "^5.9.2"
   }
 }
