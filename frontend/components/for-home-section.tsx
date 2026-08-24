@@ -17,6 +17,7 @@ const MARK_SHOP = "/brand/our-way-04-balance.png";
 const MARK_STORY = "/brand/our-way-03-quality.png";
 const MARK_SOON = "/brand/our-way-05-ahead.png";
 const BRAND_SEAL = "/brand/orginal-clear.png";
+const FIGURE_CHAR = "/brand/mardekoohestan-walker1.png";
 /** مسیر موقت داستان کوتاه — بعداً به صفحهٔ واقعی وصل می‌شود */
 const STORY_PLACEHOLDER = "#product-story";
 
@@ -152,6 +153,7 @@ export function ForHomeSection() {
   const [storyOpen, setStoryOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [catPage, setCatPage] = useState(0);
+  const [plateSpinning, setPlateSpinning] = useState(true);
 
   const catPageCount = Math.ceil(homeDoors.length / CAT_PAGE_SIZE);
   const visibleDoors = useMemo(
@@ -172,6 +174,12 @@ export function ForHomeSection() {
     products.findIndex((item) => item.id === activeProductId),
   );
   const activeProduct: ProductItem = products[activeIndex] ?? products[0];
+
+  useEffect(() => {
+    setPlateSpinning(true);
+    const timer = window.setTimeout(() => setPlateSpinning(false), 780);
+    return () => window.clearTimeout(timer);
+  }, [activeProduct.id]);
 
   const selectDoor = (id: HomeDoorId) => {
     setActiveDoorId(id);
@@ -463,7 +471,7 @@ export function ForHomeSection() {
                     </p>
                   )}
                   <Image
-                    src="/brand/mardekoohestan-walker1.png"
+                    src={FIGURE_CHAR}
                     alt="مرد کوهستان"
                     width={360}
                     height={520}
@@ -511,7 +519,7 @@ export function ForHomeSection() {
                 </div>
 
                 <div className="for-home-plate-wrap">
-                  <div className="for-home-plate" key={activeProduct.id}>
+                  <div className="for-home-plate">
                     <span className="for-home-plate-arc" aria-hidden="true" />
                     <span
                       className="for-home-plate-arc for-home-plate-arc--b"
@@ -519,21 +527,25 @@ export function ForHomeSection() {
                     />
                     <span className="for-home-plate-ring" aria-hidden="true" />
                     <Image
+                      key={activeProduct.id}
                       src={activeProduct.image}
                       alt={activeProduct.alt}
                       width={720}
                       height={720}
                       sizes="(max-width: 900px) 52vw, 360px"
-                      className="for-home-plate-art"
+                      className={`for-home-plate-art${
+                        plateSpinning ? " is-spinning" : ""
+                      }`}
                       priority
                     />
-                    <span className="for-home-plate-badge">
+                    <span className="for-home-plate-badge" aria-hidden="true">
                       <Image
-                        src={activeDoor.image}
+                        src={FIGURE_CHAR}
                         alt=""
                         width={120}
-                        height={120}
+                        height={160}
                         sizes="56px"
+                        className="for-home-plate-badge-img"
                       />
                     </span>
                   </div>
