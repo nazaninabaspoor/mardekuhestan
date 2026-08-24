@@ -1587,11 +1587,12 @@ body {
   overflow: hidden;
   padding: 16px 20px 14px;
   border-radius: 28px;
-  color: var(--cream);
+  color: var(--milk);
   background: rgb(255 255 255 / 12%);
-  border: 1px solid rgb(255 255 255 / 36%);
+  border: 2px solid var(--green);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 48%),
+    0 0 0 1px color-mix(in srgb, var(--green) 35%, transparent),
     0 30px 70px rgb(0 20 16 / 14%);
   backdrop-filter: blur(22px) saturate(1.4);
   -webkit-backdrop-filter: blur(22px) saturate(1.4);
@@ -1604,12 +1605,12 @@ body {
   inset: 0;
   z-index: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 2px;
   background: linear-gradient(
     145deg,
-    rgb(255 255 255 / 52%) 0%,
-    rgb(255 255 255 / 6%) 42%,
-    rgb(255 255 255 / 26%) 100%
+    color-mix(in srgb, var(--green) 18%, transparent) 0%,
+    transparent 42%,
+    color-mix(in srgb, var(--green) 12%, transparent) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -2007,12 +2008,9 @@ body {
   text-wrap: balance;
 }
 
-.for-home-title-soft {
-  color: var(--milk);
-}
-
+.for-home-title-soft,
 .for-home-title-accent {
-  color: color-mix(in srgb, var(--milk) 58%, var(--meadow));
+  color: var(--milk);
 }
 
 .for-home-lead {
@@ -2022,7 +2020,7 @@ body {
   font-size: 13.5px;
   font-weight: 400;
   line-height: 1.85;
-  color: color-mix(in srgb, var(--milk) 88%, transparent);
+  color: var(--milk);
   text-align: justify;
   text-align-last: right;
   text-wrap: pretty;
@@ -2031,21 +2029,12 @@ body {
 .for-home-lead-name {
   font-style: normal;
   font-weight: 800;
-  color: var(--cream);
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    color-mix(in srgb, var(--meadow) 28%, transparent) 50%,
-    transparent 100%
-  );
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 2px;
+  color: var(--milk);
 }
 
 .for-home-lead-accent {
   font-weight: 800;
-  color: color-mix(in srgb, var(--milk) 62%, var(--meadow));
+  color: var(--milk);
 }
 
 .for-home-copy-actions {
@@ -2128,7 +2117,8 @@ body {
 }
 
 .for-home-copy-buy.is-soon {
-  color: color-mix(in srgb, var(--milk) 78%, transparent);
+  color: var(--milk);
+  opacity: 0.78;
 }
 
 .for-home-copy-buy-badge {
@@ -2138,23 +2128,12 @@ body {
   min-height: 22px;
   padding: 0 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--meadow) 28%, transparent);
-  border: 1px solid color-mix(in srgb, var(--meadow) 42%, transparent);
-  color: var(--cream);
+  background: color-mix(in srgb, var(--cream) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cream) 42%, white);
+  color: var(--milk);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.02em;
-}
-
-.for-home-shop:hover,
-.for-home-shop:focus-visible {
-  transform: translateY(-2px);
-  filter: brightness(1.03);
-  box-shadow: 0 14px 30px rgb(0 20 16 / 28%);
-}
-
-.for-home-shop:active {
-  transform: translateY(0);
 }
 
 .for-home--catalog .for-home-products {
@@ -2164,7 +2143,7 @@ body {
   width: 100%;
   margin-top: 4px;
   padding-top: 10px;
-  border-top: 1px solid rgb(244 240 232 / 14%);
+  border-top: 1px solid color-mix(in srgb, var(--cream) 28%, white);
   max-height: none;
   overflow: visible;
   scrollbar-width: none;
@@ -2190,8 +2169,8 @@ body {
 .for-home-products-caption-hint {
   font-size: 10.5px;
   font-weight: 600;
-  color: color-mix(in srgb, var(--milk) 68%, var(--meadow));
-  opacity: 0.95;
+  color: var(--milk);
+  opacity: 0.72;
 }
 
 .for-home-products-row {
@@ -2209,19 +2188,19 @@ body {
   width: 100%;
   min-height: 54px;
   padding: 6px 8px 6px 6px;
-  border: 1px solid rgb(244 240 232 / 18%);
+  border: 1px solid color-mix(in srgb, var(--cream) 72%, white);
   border-radius: 12px;
   background:
     linear-gradient(
       155deg,
-      rgb(244 240 232 / 14%) 0%,
+      rgb(255 255 255 / 10%) 0%,
       rgb(244 240 232 / 6%) 100%
     );
-  color: var(--cream);
+  color: var(--milk);
   text-align: right;
   cursor: pointer;
   font-family: inherit;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
   opacity: 0;
   transform: translateY(6px);
   animation: for-home-card-in 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -2248,8 +2227,8 @@ body {
   width: 3px;
   height: 68%;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--cream) 70%, var(--meadow));
-  opacity: 0.9;
+  background: color-mix(in srgb, var(--cream) 82%, white);
+  opacity: 0.85;
 }
 
 .for-home-product-card:hover,
@@ -2258,27 +2237,27 @@ body {
   background:
     linear-gradient(
       155deg,
-      rgb(244 240 232 / 20%) 0%,
+      rgb(255 255 255 / 16%) 0%,
       rgb(244 240 232 / 10%) 100%
     );
-  border-color: rgb(244 240 232 / 32%);
+  border-color: color-mix(in srgb, var(--cream) 88%, white);
 }
 
 .for-home-product-card.is-active {
   background:
     linear-gradient(
       155deg,
-      rgb(244 240 232 / 22%) 0%,
-      color-mix(in srgb, var(--meadow) 22%, transparent) 100%
+      rgb(255 255 255 / 18%) 0%,
+      rgb(244 240 232 / 12%) 100%
     );
-  border-color: color-mix(in srgb, var(--cream) 45%, var(--meadow));
+  border-color: var(--cream);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    0 0 0 1px color-mix(in srgb, var(--meadow) 35%, transparent);
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    0 0 0 1px color-mix(in srgb, var(--cream) 55%, white);
 }
 
 .for-home-product-card.is-active .for-home-product-card-accent {
-  background: var(--meadow);
+  background: var(--cream);
   opacity: 1;
 }
 
@@ -2325,7 +2304,8 @@ body {
 .for-home-product-card-pick {
   font-size: 10.5px;
   font-weight: 700;
-  color: color-mix(in srgb, var(--milk) 72%, var(--meadow));
+  color: var(--milk);
+  opacity: 0.78;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2389,7 +2369,7 @@ body {
   padding: 8px 12px;
   border-radius: 16px 16px 16px 6px;
   background: var(--green);
-  color: var(--cream);
+  color: var(--milk);
   font-size: 11.5px;
   font-weight: 800;
   line-height: 1.45;
@@ -2541,7 +2521,7 @@ body {
   border: 1px solid rgb(244 240 232 / 28%);
   border-radius: 50%;
   background: rgb(244 240 232 / 10%);
-  color: var(--cream);
+  color: var(--milk);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -2695,7 +2675,7 @@ body {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: color-mix(in srgb, var(--cream) 70%, var(--meadow));
+  color: var(--milk);
 }
 
 .for-home-popup-title {
@@ -2703,14 +2683,14 @@ body {
   font-size: 22px;
   font-weight: 800;
   line-height: 1.25;
-  color: var(--cream);
+  color: var(--milk);
 }
 
 .for-home-popup-story {
   margin: 0;
   font-size: 13px;
   line-height: 1.75;
-  color: rgb(244 240 232 / 86%);
+  color: var(--milk);
 }
 
 .for-home-popup-cta {
@@ -2755,6 +2735,24 @@ body {
     grid-column: 1 / -1;
     order: 3;
     justify-content: flex-start;
+    gap: 5px;
+    padding-bottom: 2px;
+  }
+
+  .for-home-cat {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .for-home-copy-actions {
+    gap: 6px;
+  }
+
+  .for-home-copy-buy,
+  .for-home-copy-story {
+    font-size: 11px;
+    min-height: 38px;
+    padding-inline: 12px;
   }
 
   .for-home--catalog .for-home-stage {
