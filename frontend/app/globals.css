@@ -2003,30 +2003,23 @@ body {
 .for-home-title-mark {
   display: inline-grid;
   place-items: center;
-  width: 1.35em;
-  height: 1.35em;
+  width: 1.45em;
+  height: 1.45em;
   margin-inline-start: 4px;
-  border-radius: 50%;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--cream) 92%, white) 0%,
-      color-mix(in srgb, var(--milk) 70%, #50af47) 100%
-    );
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 75%),
-    0 0 0 1.5px color-mix(in srgb, var(--cream) 55%, #50af47),
-    0 4px 12px rgb(0 30 24 / 28%);
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
   flex-shrink: 0;
 }
 
 .for-home-title-mark-img {
-  width: 118%;
-  height: 118%;
-  object-fit: cover;
-  object-position: center 35%;
-  transform: translateY(4%);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 2px 6px rgb(0 20 16 / 32%));
 }
 
 .for-home-title-soft,
@@ -2114,29 +2107,21 @@ body {
 .for-home-copy-rule-mark {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      145deg,
-      #fff8ee 0%,
-      var(--cream) 42%,
-      color-mix(in srgb, var(--milk) 70%, #50af47) 100%
-    );
-  border: 1.5px solid color-mix(in srgb, var(--cream) 80%, white);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 80%),
-    0 0 0 3px color-mix(in srgb, var(--cream) 16%, transparent),
-    0 6px 14px rgb(0 30 24 / 28%);
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .for-home-copy-rule-logo {
-  width: 92%;
-  height: 92%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
+  filter: drop-shadow(0 3px 8px rgb(0 20 16 / 35%));
 }
 
 .for-home-copy-rule-peak {
@@ -2180,12 +2165,18 @@ body {
 }
 
 .for-home-shop {
-  border: 1px solid color-mix(in srgb, var(--cream) 78%, white);
-  background: var(--cream);
-  color: var(--green);
+  border: 1.5px solid color-mix(in srgb, var(--cream) 62%, #50af47);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, #50af47 48%, transparent) 0%,
+      color-mix(in srgb, var(--green) 78%, #003528) 100%
+    );
+  color: var(--cream);
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 70%),
-    0 8px 18px rgb(0 20 16 / 18%);
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    0 0 0 1px color-mix(in srgb, #50af47 28%, transparent),
+    0 8px 18px rgb(0 40 32 / 24%);
 }
 
 .for-home-shop-peak {
@@ -2241,7 +2232,11 @@ body {
 
 .for-home-shop:hover,
 .for-home-shop:focus-visible {
-  border-color: color-mix(in srgb, var(--cream) 88%, white);
+  border-color: color-mix(in srgb, var(--cream) 78%, #50af47);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 28%),
+    0 0 0 1px color-mix(in srgb, #50af47 40%, transparent),
+    0 10px 22px rgb(0 50 40 / 28%);
 }
 
 .for-home-shop:active {
@@ -2343,29 +2338,39 @@ body {
   --fh-tone: #903828;
   --fh-tone-hot: #be6516;
   position: relative;
+  isolation: isolate;
   display: grid;
-  grid-template-columns: 3px 40px minmax(0, 1fr);
-  gap: 7px;
+  grid-template-columns: 4px 54px minmax(0, 1fr);
+  gap: 10px;
   align-items: center;
   width: 100%;
-  min-height: 58px;
+  min-height: 72px;
   height: 100%;
-  padding: 7px 8px 7px 6px;
-  border: 1px solid color-mix(in srgb, var(--fh-tone) 58%, var(--cream));
+  padding: 10px 12px 10px 10px;
+  border: 1.5px solid color-mix(in srgb, var(--fh-tone) 78%, var(--cream));
   border-radius: 12px;
   background:
+    radial-gradient(
+      120% 140% at 12% 50%,
+      color-mix(in srgb, var(--fh-tone) 88%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone-hot) 42%, transparent) 42%,
+      transparent 72%
+    ),
     linear-gradient(
-      155deg,
-      color-mix(in srgb, var(--fh-tone) 34%, transparent) 0%,
-      color-mix(in srgb, var(--fh-tone) 18%, rgb(0 40 32 / 28%)) 100%
+      145deg,
+      color-mix(in srgb, var(--fh-tone) 72%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone-hot) 38%, transparent) 48%,
+      color-mix(in srgb, var(--fh-tone) 28%, rgb(0 28 22 / 35%)) 100%
     );
   color: var(--milk);
   text-align: right;
   cursor: pointer;
   font-family: inherit;
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--fh-tone) 28%, white),
-    0 4px 12px color-mix(in srgb, var(--fh-tone) 18%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--fh-tone-hot) 45%, white),
+    inset 0 0 28px color-mix(in srgb, var(--fh-tone) 32%, transparent),
+    0 6px 18px color-mix(in srgb, var(--fh-tone) 38%, transparent),
+    0 0 22px color-mix(in srgb, var(--fh-tone-hot) 22%, transparent);
   opacity: 0;
   transform: translateY(6px);
   animation: for-home-card-in 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -2376,6 +2381,29 @@ body {
     background 180ms ease,
     border-color 180ms ease,
     filter 180ms ease;
+  filter: saturate(1.22);
+}
+
+.for-home-product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      90% 120% at 18% 55%,
+      color-mix(in srgb, var(--fh-tone-hot) 55%, transparent) 0%,
+      transparent 58%
+    );
+  opacity: 0.85;
+  mix-blend-mode: soft-light;
+}
+
+.for-home-product-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .for-home--catalog .for-home-products::-webkit-scrollbar {
@@ -2393,98 +2421,142 @@ body {
 
 .for-home-product-card-accent {
   display: block;
-  width: 3px;
-  height: 68%;
+  width: 4px;
+  height: 78%;
   border-radius: 999px;
-  background: var(--fh-tone);
-  opacity: 0.95;
-  box-shadow: 0 0 6px color-mix(in srgb, var(--fh-tone) 45%, transparent);
+  background: linear-gradient(
+    180deg,
+    var(--fh-tone-hot) 0%,
+    var(--fh-tone) 100%
+  );
+  opacity: 1;
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--fh-tone-hot) 70%, transparent),
+    0 0 18px color-mix(in srgb, var(--fh-tone) 45%, transparent);
 }
 
 .for-home-product-card:hover,
 .for-home-product-card:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.01);
+  border-color: color-mix(in srgb, var(--fh-tone-hot) 92%, white);
   background:
+    radial-gradient(
+      130% 150% at 10% 50%,
+      color-mix(in srgb, var(--fh-tone-hot) 95%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone) 55%, transparent) 45%,
+      transparent 74%
+    ),
     linear-gradient(
-      155deg,
-      color-mix(in srgb, var(--fh-tone-hot) 48%, transparent) 0%,
-      color-mix(in srgb, var(--fh-tone) 32%, rgb(0 30 24 / 22%)) 100%
+      145deg,
+      color-mix(in srgb, var(--fh-tone-hot) 78%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone) 52%, transparent) 55%,
+      color-mix(in srgb, var(--fh-tone) 30%, rgb(0 22 18 / 30%)) 100%
     );
-  border-color: color-mix(in srgb, var(--fh-tone-hot) 75%, var(--cream));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--fh-tone-hot) 35%, white),
-    0 8px 18px color-mix(in srgb, var(--fh-tone-hot) 28%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--cream) 55%, white),
+    inset 0 0 36px color-mix(in srgb, var(--fh-tone-hot) 40%, transparent),
+    0 12px 28px color-mix(in srgb, var(--fh-tone-hot) 48%, transparent),
+    0 0 32px color-mix(in srgb, var(--fh-tone-hot) 35%, transparent);
+  filter: saturate(1.35) brightness(1.06);
 }
 
 .for-home-product-card:hover .for-home-product-card-accent,
 .for-home-product-card:focus-visible .for-home-product-card-accent {
   background: var(--fh-tone-hot);
   opacity: 1;
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--fh-tone-hot) 85%, transparent),
+    0 0 24px color-mix(in srgb, var(--fh-tone-hot) 55%, transparent);
 }
 
 .for-home-product-card.is-active {
+  border-color: color-mix(in srgb, var(--fh-tone-hot) 95%, white);
   background:
+    radial-gradient(
+      135% 155% at 8% 48%,
+      color-mix(in srgb, var(--fh-tone-hot) 100%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone) 68%, transparent) 40%,
+      transparent 70%
+    ),
     linear-gradient(
-      155deg,
-      color-mix(in srgb, var(--fh-tone-hot) 62%, transparent) 0%,
-      color-mix(in srgb, var(--fh-tone) 45%, rgb(0 25 20 / 18%)) 100%
+      145deg,
+      color-mix(in srgb, var(--fh-tone-hot) 85%, transparent) 0%,
+      color-mix(in srgb, var(--fh-tone) 58%, transparent) 52%,
+      color-mix(in srgb, var(--fh-tone) 35%, rgb(0 20 16 / 25%)) 100%
     );
-  border-color: var(--fh-tone-hot);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--cream) 45%, white),
-    0 0 0 1.5px color-mix(in srgb, var(--fh-tone-hot) 70%, white),
-    0 10px 22px color-mix(in srgb, var(--fh-tone-hot) 32%, transparent);
-  filter: saturate(1.08);
+    inset 0 1px 0 color-mix(in srgb, var(--cream) 60%, white),
+    inset 0 0 40px color-mix(in srgb, var(--fh-tone-hot) 48%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--fh-tone-hot) 80%, white),
+    0 14px 32px color-mix(in srgb, var(--fh-tone-hot) 52%, transparent),
+    0 0 36px color-mix(in srgb, var(--fh-tone-hot) 42%, transparent);
+  filter: saturate(1.42) brightness(1.08);
 }
 
 .for-home-product-card.is-active .for-home-product-card-accent {
   background: var(--fh-tone-hot);
   opacity: 1;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--fh-tone-hot) 55%, transparent);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--fh-tone-hot) 90%, transparent),
+    0 0 28px color-mix(in srgb, var(--fh-tone-hot) 60%, transparent);
 }
 
 .for-home-products:has(.for-home-product-card.is-active)
   .for-home-product-card:not(.is-active) {
-  filter: saturate(0.72) brightness(0.9);
-  border-color: color-mix(in srgb, var(--fh-tone) 38%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--fh-tone) 16%, white);
+  filter: saturate(0.78) brightness(0.88);
+  border-color: color-mix(in srgb, var(--fh-tone) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--fh-tone) 18%, white),
+    0 4px 12px color-mix(in srgb, var(--fh-tone) 18%, transparent);
 }
 
 .for-home-product-card-media {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   overflow: hidden;
-  background: color-mix(in srgb, var(--fh-tone) 55%, #003528);
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--fh-tone-hot) 70%, white) 0%,
+      color-mix(in srgb, var(--fh-tone) 75%, #002820) 100%
+    );
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--fh-tone-hot) 35%, white),
-    0 2px 6px color-mix(in srgb, var(--fh-tone) 25%, transparent);
+    inset 0 0 0 1.5px color-mix(in srgb, var(--fh-tone-hot) 55%, white),
+    0 0 14px color-mix(in srgb, var(--fh-tone-hot) 45%, transparent),
+    0 3px 8px color-mix(in srgb, var(--fh-tone) 35%, transparent);
 }
 
 .for-home-product-card.is-active .for-home-product-card-media {
-  background: color-mix(in srgb, var(--fh-tone-hot) 48%, #003528);
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--fh-tone-hot) 85%, white) 0%,
+      color-mix(in srgb, var(--fh-tone) 70%, #002820) 100%
+    );
   box-shadow:
-    inset 0 0 0 1.5px color-mix(in srgb, var(--fh-tone-hot) 55%, white),
-    0 3px 8px color-mix(in srgb, var(--fh-tone-hot) 30%, transparent);
+    inset 0 0 0 2px color-mix(in srgb, var(--fh-tone-hot) 70%, white),
+    0 0 18px color-mix(in srgb, var(--fh-tone-hot) 60%, transparent),
+    0 4px 12px color-mix(in srgb, var(--fh-tone-hot) 40%, transparent);
 }
 
 .for-home-product-card-media img {
-  width: 88%;
-  height: 88%;
+  width: 90%;
+  height: 90%;
   object-fit: contain;
 }
 
 .for-home-product-card-body {
   display: grid;
-  gap: 3px;
+  gap: 5px;
   min-width: 0;
   justify-items: start;
 }
 
 .for-home-product-card-body strong {
-  font-size: 12px;
+  font-size: 14.5px;
   font-weight: 800;
   line-height: 1.2;
   color: var(--milk);
@@ -2500,10 +2572,10 @@ body {
 }
 
 .for-home-product-card-pick {
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--milk);
-  opacity: 0.78;
+  opacity: 0.86;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

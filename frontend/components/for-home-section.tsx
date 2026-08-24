@@ -405,9 +405,9 @@ export function ForHomeSection() {
                             <Image
                               src={product.image}
                               alt=""
-                              width={96}
-                              height={96}
-                              sizes="44px"
+                              width={112}
+                              height={112}
+                              sizes="54px"
                             />
                           </span>
                           <span className="for-home-product-card-body">
