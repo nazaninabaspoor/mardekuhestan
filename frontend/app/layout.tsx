@@ -46,7 +46,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/brand/orginal-clear.png" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-logo-intro-pending");}}catch(e){}})();`,
+            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-logo-intro-pending");}if(p==="/v2"||p==="/v2/"){document.documentElement.classList.add("is-home-v2");}}catch(e){}})();`,
           }}
         />
       </head>

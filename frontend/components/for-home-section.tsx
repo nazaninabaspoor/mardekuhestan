@@ -495,6 +495,7 @@ export function ForHomeSection() {
                     />
                   </button>
                   <div className="for-home-slider-track" aria-hidden="true">
+                    <span className="for-home-slider-rail" />
                     {products.map((product, index) => (
                       <span
                         key={product.id}
@@ -503,6 +504,19 @@ export function ForHomeSection() {
                         }`}
                       />
                     ))}
+                    <span
+                      className="for-home-slider-walker"
+                      style={
+                        {
+                          ["--fh-walk"]:
+                            products.length <= 1
+                              ? "0%"
+                              : `${(activeIndex / (products.length - 1)) * 100}%`,
+                        } as CSSProperties
+                      }
+                    >
+                      🚶
+                    </span>
                   </div>
                   <button
                     type="button"
@@ -542,10 +556,11 @@ export function ForHomeSection() {
                       <Image
                         src={FIGURE_CHAR}
                         alt=""
-                        width={120}
-                        height={160}
-                        sizes="56px"
+                        width={160}
+                        height={220}
+                        sizes="72px"
                         className="for-home-plate-badge-img"
+                        priority
                       />
                     </span>
                   </div>

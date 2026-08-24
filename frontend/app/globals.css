@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --green: #005b48;
   --meadow: #50af47;
   --earth: #903828;
@@ -146,7 +146,7 @@
 @media(max-width:700px){.layout-toggle{position:sticky;display:table;top:10px;right:auto;margin:-48px 12px 8px auto}.layout-editor{position:sticky;top:58px;right:auto;width:220px;margin:0 12px 10px auto}}
 @media(prefers-reduced-motion:reduce){.roadmap-art__camera,.roadmap-art__depth,.journey-story,.journey-card{transition-duration:.01ms!important}.roadmap-art__walker.is-walking,.roadmap-art__walker.is-walking img,.roadmap-art__walker.is-walking span,.roadmap-art__hotspot::before,.roadmap-art__hotspot::after,.roadmap-art__atmosphere i,.roadmap-art__loader span,.journey-card{animation:none!important}}
 
-/* Misho journey — stage 01 */
+/* Misho journey â€” stage 01 */
 .misho-journey { position:relative; width:100%; height:max(720px,100svh); overflow:hidden; isolation:isolate; background:#0f3028; color:#153e32; }
 .misho-journey::before { content:""; position:absolute; inset:-30px; z-index:-1; background:linear-gradient(rgb(5 38 30 / 28%),rgb(5 38 30 / 36%)),url("/brand/misho-clean.png") center/cover no-repeat; filter:blur(24px) saturate(.85); transform:scale(1.06); }
 .misho-journey__viewport { position:absolute; top:50%; left:50%; width:min(100vw,calc(100svh * 1.5)); height:min(100svh,66.6667vw); aspect-ratio:3/2; overflow:hidden; opacity:0; transform:translate(-50%,-50%); transition:opacity 1.1s ease; }
@@ -177,7 +177,7 @@
 @media(max-width:760px){.misho-journey{height:700px}.misho-journey__viewport{width:900px;height:600px;top:46%}.misho-journey__stage-card{left:32%!important;top:69%!important}.misho-journey.is-stage-two .misho-journey__stage-card{left:62%!important;top:54%!important}.misho-journey__character{left:51%!important;top:80%!important;width:108px}.misho-journey__hint{bottom:14px;white-space:nowrap;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.misho-journey__viewport,.misho-journey__world,.misho-journey__character,.misho-journey__stage-card,.misho-journey__stage-floating{transition-duration:.01ms!important;animation:none!important}}
 
-/* Misho Base Camp — stage one */
+/* Misho Base Camp â€” stage one */
 .base-camp{position:relative;height:145svh;background:#173b31;isolation:isolate}
 .base-camp__sticky{position:sticky;top:0;width:100%;height:100svh;min-height:680px;overflow:hidden;background:#89abc0}
 .base-camp__fallback{position:absolute;inset:0;background:#75966d url("/brand/misho-clean.png") center/cover no-repeat;transform:scale(1.02)}
@@ -222,7 +222,7 @@
 @media(max-width:768px){.mountain-roadmap__hero{height:520px}.mountain-roadmap__container{width:calc(100% - 28px);margin-top:-112px}.mountain-roadmap__header{margin-bottom:60px}.mountain-roadmap__header p{font-size:15px}.mountain-roadmap__journey{height:1280px}.mountain-roadmap__path{right:13px;width:180%;transform:translateX(50%)}.mountain-roadmap__stage,.mountain-roadmap__stage.is-right,.mountain-roadmap__stage.is-left{right:42px;width:calc(100% - 42px)}.mountain-roadmap__stage.is-right,.mountain-roadmap__stage.is-left{transform:translateY(30px)}.mountain-roadmap__stage.is-visible.is-right,.mountain-roadmap__stage.is-visible.is-left{opacity:1;transform:none}.mountain-roadmap__stage.is-right .mountain-roadmap__dot,.mountain-roadmap__stage.is-left .mountain-roadmap__dot{right:-35px;left:auto;width:62px;height:62px}.mountain-roadmap__stage.is-right .mountain-roadmap__card,.mountain-roadmap__stage.is-left .mountain-roadmap__card{width:calc(100% - 48px);margin:0 48px 0 0;padding:18px 19px;border-radius:22px}.mountain-roadmap__card h3{font-size:24px}}
 @media(prefers-reduced-motion:reduce){.mountain-roadmap__mist{animation:none}.mountain-roadmap__path-light{display:none}.mountain-roadmap__stage{opacity:1!important;transition:none!important}.mountain-roadmap__stage.is-right{transform:translateX(0)}.mountain-roadmap__stage.is-left{transform:translateX(100%)}}
 
-/* Mountain Story Journey — 2.5D */
+/* Mountain Story Journey â€” 2.5D */
 .mountain-story{position:relative;overflow:hidden;background:#f4f0e8;color:#103c33;direction:rtl;isolation:isolate}.mountain-story__hero{position:relative;height:clamp(540px,68vw,760px);overflow:hidden;background:#87aa91}.mountain-story__mountain{object-fit:cover;object-position:center 39%;transform:scale(1.015)}.mountain-story__hero-grade{position:absolute;inset:0;background:linear-gradient(180deg,rgb(0 43 33 / 5%),transparent 48%,#f4f0e8 98%)}.mountain-story__mist{position:absolute;right:-12%;bottom:7%;width:125%;height:27%;background:linear-gradient(90deg,transparent,rgb(255 255 255 / 38%),transparent);filter:blur(31px);opacity:.6;animation:story-mist 16s ease-in-out infinite alternate}
 .mountain-story__container{position:relative;z-index:2;width:min(1000px,calc(100% - 40px));margin:-145px auto 0}.mountain-story__header{margin-bottom:75px;text-align:center}.mountain-story__header span{color:#a37842;font-size:13px;font-weight:800}.mountain-story__header h2{margin:15px 0 12px;color:#005b48;font-size:clamp(40px,6vw,66px);font-weight:900;line-height:1.08}.mountain-story__header p{margin:0;color:#52645d;font-size:17px;line-height:1.9}
 .mountain-story__journey{--walker-top:3%;position:relative;height:1450px}.mountain-story__route{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}.mountain-story__route-base,.mountain-story__route-progress{fill:none;stroke-linecap:round}.mountain-story__route-base{stroke:rgb(0 91 72 / 13%);stroke-width:12}.mountain-story__route-progress{stroke:url(#story-route-gradient);stroke-width:7;stroke-dasharray:1;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1);filter:drop-shadow(0 5px 9px rgb(0 91 72 / 24%))}
@@ -269,7 +269,7 @@
 .roadmap-editor-tools{display:grid;gap:6px;margin-bottom:12px}.roadmap-editor-tools button{width:100%;text-align:right}.editor-field select{height:34px;padding:0 8px;border:1px solid rgb(255 255 255 / 10%);border-radius:7px;background:#121a17;color:#fff}.editor-range{display:grid;gap:6px;margin:10px 0;color:#b9c7c1;font-size:11px}.editor-range span{display:flex;justify-content:space-between}.editor-range b{color:#d1ad68;font-weight:600}.editor-range input{width:100%;accent-color:#07836b}.roadmap-editor-canvas-wrap.is-canvas-locked{overscroll-behavior:contain;touch-action:none}.roadmap-editor-preview{min-height:calc(100vh - 72px);overflow:auto;background:#101714}.final-roadmap__cluster.is-active .final-roadmap__card small{font-weight:900;color:#005b48}
 @media(max-width:1000px){.roadmap-editor-workspace{grid-template-columns:180px minmax(360px,1fr) 220px}.roadmap-editor-toolbar{align-items:flex-start;flex-direction:column}.roadmap-editor-workspace{height:calc(100vh - 112px)}}
 
-/* Final roadmap — rendered directly from Roadmap Studio JSON */
+/* Final roadmap â€” rendered directly from Roadmap Studio JSON */
 .final-roadmap{position:relative;overflow:hidden;background:#354a38;direction:rtl;isolation:isolate}.final-roadmap__ambient{position:absolute;inset:-4%;z-index:-1;background:linear-gradient(180deg,rgb(241 241 235 / 52%),transparent 8%,transparent 92%,rgb(238 239 232 / 55%)),url("/brand/misho-roadmap-outpaint-v2.png") center/cover no-repeat;filter:blur(35px) saturate(.86);transform:scale(1.06)}.final-roadmap__scene{position:relative;width:min(1024px,100%);margin:auto;aspect-ratio:2/3;overflow:hidden}.final-roadmap__background{object-fit:cover;object-position:center;transform-origin:center}.final-roadmap__grade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgb(244 240 232 / 13%),transparent 6%,transparent 94%,rgb(244 240 232 / 14%));box-shadow:inset 0 0 80px rgb(9 33 21 / 10%)}
 .final-roadmap__route{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}.final-roadmap__route-shadow,.final-roadmap__route-line{fill:none;stroke-linecap:round;stroke-linejoin:round}.final-roadmap__route-shadow{stroke:rgb(0 31 23 / 26%);transform:translateY(3px)}.final-roadmap__route-line{filter:drop-shadow(0 2px 2px rgb(255 255 255 / 30%));animation:final-route-flow 12s linear infinite}
 .final-roadmap__card{position:absolute;z-index:8;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:12px;border:1px solid rgb(255 255 255 / 45%);background:linear-gradient(145deg,rgb(244 240 232 / 75%),rgb(230 230 215 / 59%));box-shadow:0 17px 40px rgb(18 42 27 / 17%),inset 0 1px 0 rgb(255 255 255 / 54%);color:#005b48;text-align:center;cursor:pointer;backdrop-filter:blur(16px) saturate(.94);-webkit-backdrop-filter:blur(16px) saturate(.94);transform-origin:center;transition:box-shadow .35s ease,border-color .35s ease}.final-roadmap__card:hover,.final-roadmap__cluster.is-active .final-roadmap__card{border-color:rgb(0 91 72 / 24%);box-shadow:0 23px 54px rgb(0 44 31 / 24%),inset 0 1px 0 rgb(255 255 255 / 68%)}.final-roadmap__card strong{display:block;font-size:clamp(12px,1.35vw,20px);font-weight:900;line-height:1.3}.final-roadmap__card small{display:block;margin-top:4px;color:#496158;font-size:clamp(7px,.75vw,11px);font-weight:600;line-height:1.5}
@@ -1720,7 +1720,7 @@ body {
     box-shadow:
       inset 0 1px 0 var(--hero-shell-line),
       inset 0 -1px 0 var(--hero-shell-line),
-      /* single soft seam — not a thick green bar */
+      /* single soft seam â€” not a thick green bar */
       inset 1px 0 0 color-mix(in srgb, var(--cream) 22%, transparent),
       inset -1px 0 0 color-mix(in srgb, var(--cream) 22%, transparent);
   }
@@ -1785,7 +1785,7 @@ body {
   border-bottom: none;
 }
 
-/* Catalog — LuxLunch structure; brand-green content plates on glass */
+/* Catalog â€” LuxLunch structure; brand-green content plates on glass */
 .for-home--catalog {
   isolation: isolate;
   padding: 10px 0 12px;
@@ -3179,32 +3179,35 @@ body {
 
 .for-home-plate-badge {
   position: absolute;
-  z-index: 2;
-  top: 6%;
-  right: 2%;
+  z-index: 3;
+  top: 4%;
+  right: 0;
   display: grid;
   place-items: center;
-  width: clamp(56px, 17%, 72px);
-  height: clamp(56px, 17%, 72px);
+  width: clamp(58px, 18%, 76px);
+  height: clamp(58px, 18%, 76px);
   border-radius: 50%;
   overflow: hidden;
   background:
-    radial-gradient(
-      circle at 40% 30%,
-      color-mix(in srgb, var(--cream) 55%, transparent) 0%,
-      color-mix(in srgb, var(--green) 88%, #003528) 100%
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--cream) 96%, white) 0%,
+      var(--milk) 100%
     );
-  border: 2px solid color-mix(in srgb, var(--cream) 72%, white);
-  box-shadow: 0 8px 18px rgb(0 40 32 / 26%);
+  border: 2px solid color-mix(in srgb, var(--cream) 80%, white);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 70%),
+    0 8px 18px rgb(0 40 32 / 28%);
 }
 
 .for-home-plate-badge-img,
 .for-home-plate-badge img {
-  width: 92%;
-  height: 92%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 2px 4px rgb(0 20 16 / 28%));
+  width: 210%;
+  height: 210%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 6%;
+  filter: drop-shadow(0 2px 4px rgb(0 20 16 / 22%));
 }
 
 @keyframes for-home-showcase-in {
@@ -3347,28 +3350,86 @@ body {
 }
 
 .for-home-slider-track {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  justify-content: space-between;
+  gap: 0;
   flex: 1;
-  min-height: 72px;
+  min-height: 88px;
   width: 100%;
+  padding: 6px 0;
+}
+
+.for-home-slider-rail {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 0;
+  border-left: 2px dashed color-mix(in srgb, var(--cream) 55%, white);
+  transform: translateX(-50%);
+  opacity: 0.85;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
 }
 
 .for-home-slider-seg {
-  width: 4px;
-  height: 10px;
+  position: relative;
+  z-index: 1;
+  width: 7px;
+  height: 7px;
   flex: 0 0 auto;
-  border-radius: 999px;
-  background: rgb(244 240 232 / 28%);
-  transition: height 160ms ease, background 160ms ease;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cream) 32%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cream) 28%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 35%, transparent);
+  transition:
+    transform 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .for-home-slider-seg.is-active {
   background: var(--cream);
-  height: 18px;
+  border-color: color-mix(in srgb, var(--cream) 70%, white);
+  transform: scale(1.35);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, #50af47 45%, transparent),
+    0 0 10px color-mix(in srgb, var(--cream) 40%, transparent);
+}
+
+.for-home-slider-walker {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: calc(8px + (100% - 16px) * var(--fh-walk, 0));
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border-radius: 50%;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--cream) 94%, white) 0%,
+      var(--milk) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--cream) 55%, white);
+  box-shadow: 0 4px 10px rgb(0 30 24 / 28%);
+  font-size: 12px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  transition: top 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
 .for-home-teaser-cta {
@@ -3830,7 +3891,7 @@ body {
   content: "";
 }
 
-/* Legacy product grid — not used by for-home-section catalog */
+/* Legacy product grid â€” not used by for-home-section catalog */
 .for-home-block-content .for-home-products {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -4496,7 +4557,7 @@ body {
   border-bottom: none;
 }
 
-/* —— Brown peaks above, brand-green ground below —— */
+/* â€”â€” Brown peaks above, brand-green ground below â€”â€” */
 .our-way-atmosphere {
   position: absolute;
   inset: 0;
@@ -4520,7 +4581,7 @@ body {
     );
 }
 
-/* Soft earth bloom under brown peaks — mirrors green floor mist */
+/* Soft earth bloom under brown peaks â€” mirrors green floor mist */
 .our-way-atmosphere-cap-mist {
   position: absolute;
   inset-inline: -4%;
@@ -4637,7 +4698,7 @@ body {
     );
 }
 
-/* Neon seams — thin brand lines between sections */
+/* Neon seams â€” thin brand lines between sections */
 .our-way-seam {
   position: absolute;
   inset-inline: 0;
@@ -4826,7 +4887,7 @@ body {
     box-shadow 280ms ease;
 }
 
-/* حلقه بزرگ، اموجی کوچک‌تر و متعادل داخلش */
+/* Ø­Ù„Ù‚Ù‡ Ø¨Ø²Ø±Ú¯ØŒ Ø§Ù…ÙˆØ¬ÛŒ Ú©ÙˆÚ†Ú©â€ŒØªØ± Ùˆ Ù…ØªØ¹Ø§Ø¯Ù„ Ø¯Ø§Ø®Ù„Ø´ */
 .our-way-map-stop--terminus .our-way-map-pin {
   width: 34px;
   height: 34px;
@@ -5272,7 +5333,7 @@ body {
   opacity: 0.85;
 }
 
-/* Thought cloud above character — brand cream/milk, no white */
+/* Thought cloud above character â€” brand cream/milk, no white */
 .our-way-thought {
   position: relative;
   z-index: 2;
@@ -5532,7 +5593,7 @@ body {
   }
 }
 
-/* 3D roadmap overrides — kept after the legacy flat-map rules. */
+/* 3D roadmap overrides â€” kept after the legacy flat-map rules. */
 .our-way-heading { position:relative; z-index:5; width:max-content; margin:30px 5vw -70px 0; padding:0; border:0; background:none; box-shadow:none; text-align:right; }
 .our-way-heading-title { margin:0; color:var(--green); font-size:clamp(34px,4vw,54px); font-weight:700; line-height:1; text-shadow:0 2px 0 rgb(244 240 232 / 82%),0 8px 24px rgb(0 45 36 / 18%); }
 .our-way { min-height:780px; padding:0 0 22px; background:#d9dec8; perspective:1400px; }
@@ -5563,7 +5624,7 @@ body {
 @media (max-width:640px) { .our-way-heading { margin:22px 28px -58px 0; padding:0; } .our-way-map-inner { min-width:980px; height:640px; padding:0 54px; } .our-way-map-stage { height:640px; } }
 @media (prefers-reduced-motion:reduce) { .our-way-atmosphere,.our-way-map-wave-line { animation:none; } }
 
-/* —— Coming soon: product launch stage, real green plinths —— */
+/* â€”â€” Coming soon: product launch stage, real green plinths â€”â€” */
 .coming-soon {
   position: relative;
   isolation: isolate;
@@ -5704,7 +5765,7 @@ body {
   pointer-events: none;
 }
 
-/* Dense soft constellation — tableware, herbs, peaks, dew */
+/* Dense soft constellation â€” tableware, herbs, peaks, dew */
 .coming-soon-decor {
   position: absolute;
   inset: 0;
@@ -5851,7 +5912,7 @@ body {
   animation-play-state: paused;
 }
 
-/* Green stone plinth — elliptical top + cylindrical body in perspective */
+/* Green stone plinth â€” elliptical top + cylindrical body in perspective */
 .coming-soon-base {
   position: relative;
   z-index: 1;
@@ -6406,7 +6467,7 @@ body {
   transform: none;
 }
 
-/* —— Magazine: cream-brown plate, green type —— */
+/* â€”â€” Magazine: cream-brown plate, green type â€”â€” */
 .stories-shelf-card--magazine {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -6525,7 +6586,7 @@ body {
   text-decoration-color: color-mix(in srgb, var(--green) 40%, transparent);
 }
 
-/* —— Catalog: cream-brown plate / lookbook sheet —— */
+/* â€”â€” Catalog: cream-brown plate / lookbook sheet â€”â€” */
 .stories-shelf-card--catalog {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -7238,7 +7299,7 @@ html.is-logo-intro-lock body {
   }
 }
 
-/* —— Preview lab (/preview only) — Milka rhythm, Marde Kuhestan brand —— */
+/* â€”â€” Preview lab (/preview only) â€” Milka rhythm, Marde Kuhestan brand â€”â€” */
 body:has(.preview-shell) .site-header,
 body:has(.preview-shell) .site-contour,
 body:has(.preview-shell) .skip-link {
@@ -7361,7 +7422,7 @@ body:has(.preview-shell) .site-canvas {
   display: none;
 }
 
-/* —— Preview hero: Ogenix main-slider composition + brand tokens —— */
+/* â€”â€” Preview hero: Ogenix main-slider composition + brand tokens â€”â€” */
 .preview-hero {
   position: relative;
   isolation: isolate;
@@ -7513,7 +7574,7 @@ body:has(.preview-shell) .site-canvas {
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  /* Match Ogenix LTR CTA order: راه ما left, فروشگاه right */
+  /* Match Ogenix LTR CTA order: Ø±Ø§Ù‡ Ù…Ø§ left, ÙØ±ÙˆØ´Ú¯Ø§Ù‡ right */
   direction: ltr;
 }
 
@@ -7716,7 +7777,7 @@ body:has(.preview-shell) .site-canvas {
   }
 }
 
-/* —— Preview products: official «محصولات ما» + Ogenix floaters —— */
+/* â€”â€” Preview products: official Â«Ù…Ø­ØµÙˆÙ„Ø§Øª Ù…Ø§Â» + Ogenix floaters â€”â€” */
 .preview-products {
   position: relative;
   isolation: isolate;
@@ -8072,6 +8133,29 @@ body:has(.preview-shell) .site-canvas {
   }
 }
 
+/* ========================================================================
+   /v2 styles live in app/v2/v2.css (imported by app/v2/page.tsx).
+   Legacy rules below are neutralized so they cannot fight the flush layout.
+   ======================================================================== */
 
+.is-home-v2 .site-canvas::before {
+  content: none !important;
+  display: none !important;
+}
 
+/* neutralize legacy floating v2 chrome if still present in cascade */
+.site-header--v2 .v2-menubar {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
 
+.landing--v2 {
+  padding: 0 !important;
+}
+
+.landing-v2-stage {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

@@ -1,13 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { V2SiteHeader } from "@/components/v2/v2-site-header";
 import { headerTools, navItems } from "@/lib/brand";
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  if (pathname === "/v2" || pathname?.startsWith("/v2/")) {
+    return <V2SiteHeader />;
+  }
 
   return (
     <header className="site-header">
