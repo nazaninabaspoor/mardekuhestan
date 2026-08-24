@@ -164,41 +164,11 @@ export function ForHomeSection() {
               ) : null}
             </nav>
 
-            <Link href="/products" className="for-home-all">
-              مشاهده همه
-            </Link>
           </div>
 
           <div className="for-home-stage">
             <div className="for-home-panel">
               <div className="for-home-copy-plate">
-                <p className="for-home-copy-kicker">
-                  <span className="for-home-copy-kicker-mark" aria-hidden="true">
-                    <svg viewBox="0 0 20 20" focusable="false">
-                      <circle
-                        cx="10"
-                        cy="10"
-                        r="9"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeOpacity="0.35"
-                        strokeWidth="1"
-                      />
-                      <path
-                        d="M10 4.2 L15.4 14.2 H4.6 Z"
-                        fill="currentColor"
-                        opacity="0.92"
-                      />
-                      <path
-                        d="M10 7.1 L13.1 13 H6.9 Z"
-                        fill="var(--green)"
-                        opacity="0.55"
-                      />
-                    </svg>
-                  </span>
-                  <span className="for-home-copy-kicker-text">این راه سبز است</span>
-                </p>
-
                 <h2 id="for-home-title" className="for-home-title">
                   <span className="for-home-title-soft">چه به </span>
                   <span className="for-home-title-accent">خانه</span>
@@ -245,13 +215,6 @@ export function ForHomeSection() {
                   aria-label={activeDoor.label}
                   key={activeDoor.id}
                 >
-                  <p className="for-home-products-caption">
-                    <span aria-hidden="true">{activeDoor.emoji}</span>
-                    <span>{activeDoor.label}</span>
-                    <span className="for-home-products-caption-hint">
-                      انتخاب‌های این مسیر
-                    </span>
-                  </p>
                   <div className="for-home-products-row">
                     {visibleProducts.map((product, index) => {
                       const selected = product.id === activeProduct.id;
