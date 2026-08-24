@@ -173,8 +173,30 @@ export function ForHomeSection() {
             <div className="for-home-panel">
               <div className="for-home-copy-plate">
                 <p className="for-home-copy-kicker">
-                  <PeakMark className="for-home-copy-peak" aria-hidden="true" />
-                  <span>این راه سبز است</span>
+                  <span className="for-home-copy-kicker-mark" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" focusable="false">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="9"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeOpacity="0.35"
+                        strokeWidth="1"
+                      />
+                      <path
+                        d="M10 4.2 L15.4 14.2 H4.6 Z"
+                        fill="currentColor"
+                        opacity="0.92"
+                      />
+                      <path
+                        d="M10 7.1 L13.1 13 H6.9 Z"
+                        fill="var(--green)"
+                        opacity="0.55"
+                      />
+                    </svg>
+                  </span>
+                  <span className="for-home-copy-kicker-text">این راه سبز است</span>
                 </p>
 
                 <h2 id="for-home-title" className="for-home-title">
@@ -204,6 +226,16 @@ export function ForHomeSection() {
                     onClick={() => setStoryOpen(true)}
                   >
                     داستان کوتاه این محصول
+                  </button>
+                  <button
+                    type="button"
+                    className="for-home-copy-buy is-soon"
+                    disabled
+                    aria-disabled="true"
+                    title="به‌زودی"
+                  >
+                    <span>خرید این محصول</span>
+                    <span className="for-home-copy-buy-badge">به‌زودی</span>
                   </button>
                 </div>
 
