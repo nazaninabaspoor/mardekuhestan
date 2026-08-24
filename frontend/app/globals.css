@@ -1585,7 +1585,7 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 12px 14px 18px;
+  padding: 10px 12px 10px;
   border-radius: 28px;
   color: var(--milk);
   background: rgb(255 255 255 / 12%);
@@ -1882,8 +1882,8 @@ body {
 
 .for-home--catalog .for-home-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.9fr);
-  gap: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.92fr);
+  gap: 0 10px;
   align-items: stretch;
 }
 
@@ -1894,18 +1894,19 @@ body {
   gap: 0;
   min-width: 0;
   max-width: none;
-  height: 100%;
+  height: auto;
+  align-self: stretch;
 }
 
 .for-home-copy-plate {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
-  justify-items: stretch;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
   width: 100%;
-  flex: 1;
-  padding: 16px 16px 14px;
+  height: 100%;
+  flex: 1 1 auto;
+  padding: 12px 14px 10px;
   border-radius: 20px;
   background:
     radial-gradient(
@@ -1996,15 +1997,17 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
+  flex: 0 0 auto;
 }
 
 .for-home-title-mark {
   display: inline-grid;
   place-items: center;
-  width: 1.15em;
-  height: 1.15em;
-  margin-inline-start: 2px;
+  width: 1.35em;
+  height: 1.35em;
+  margin-inline-start: 4px;
   border-radius: 50%;
+  overflow: hidden;
   background:
     linear-gradient(
       145deg,
@@ -2018,12 +2021,12 @@ body {
   flex-shrink: 0;
 }
 
-.for-home-title-peak {
-  width: 0.55em;
-  height: 0.38em;
-  color: var(--green);
-  transform: translateY(1px);
-  filter: drop-shadow(0 1px 1px rgb(0 40 32 / 18%));
+.for-home-title-mark-img {
+  width: 118%;
+  height: 118%;
+  object-fit: cover;
+  object-position: center 35%;
+  transform: translateY(4%);
 }
 
 .for-home-title-soft,
@@ -2042,6 +2045,7 @@ body {
   text-align: justify;
   text-align-last: right;
   text-wrap: pretty;
+  flex: 0 0 auto;
 }
 
 .for-home-lead-name {
@@ -2061,6 +2065,82 @@ body {
   gap: 7px;
   width: 100%;
   margin-top: 2px;
+  flex: 0 0 auto;
+}
+
+.for-home-copy-rule {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 6px 0 4px;
+  padding: 6px 0;
+  flex: 0 0 auto;
+}
+
+.for-home-copy-rule-line {
+  position: relative;
+  display: block;
+  height: 1px;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--cream) 55%, transparent) 8%,
+    color-mix(in srgb, var(--cream) 92%, white) 50%,
+    color-mix(in srgb, var(--cream) 55%, transparent) 92%,
+    transparent 100%
+  );
+}
+
+.for-home-copy-rule-line::before {
+  content: "";
+  position: absolute;
+  inset-inline: 8%;
+  top: 3px;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, #50af47 35%, transparent) 50%,
+    transparent 100%
+  );
+  opacity: 0.7;
+}
+
+.for-home-copy-rule-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      #fff8ee 0%,
+      var(--cream) 42%,
+      color-mix(in srgb, var(--milk) 70%, #50af47) 100%
+    );
+  border: 1.5px solid color-mix(in srgb, var(--cream) 80%, white);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 80%),
+    0 0 0 3px color-mix(in srgb, var(--cream) 16%, transparent),
+    0 6px 14px rgb(0 30 24 / 28%);
+}
+
+.for-home-copy-rule-logo {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.for-home-copy-rule-peak {
+  display: none;
 }
 
 .for-home-mark-emoji {
@@ -2215,12 +2295,14 @@ body {
   flex-direction: column;
   gap: 0;
   width: 100%;
-  margin-top: 2px;
+  margin-top: 0;
   padding-top: 0;
   border-top: 0;
   max-height: none;
   overflow: visible;
   scrollbar-width: none;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .for-home-products-caption {
@@ -2250,7 +2332,11 @@ body {
 .for-home-products-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 7px;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-content: stretch;
 }
 
 .for-home-product-card {
@@ -2262,8 +2348,9 @@ body {
   gap: 7px;
   align-items: center;
   width: 100%;
-  min-height: 54px;
-  padding: 6px 8px 6px 6px;
+  min-height: 58px;
+  height: 100%;
+  padding: 7px 8px 7px 6px;
   border: 1px solid color-mix(in srgb, var(--fh-tone) 58%, var(--cream));
   border-radius: 12px;
   background:
@@ -2428,19 +2515,22 @@ body {
   align-items: stretch;
   justify-items: stretch;
   min-width: 0;
-  height: 100%;
+  height: auto;
   min-height: 0;
-  padding: 2px 4px 0 0;
+  padding: 0;
+  align-self: stretch;
 }
 
 .for-home-showcase-stage {
+  --fh-hero: 360px;
   display: grid;
-  grid-template-columns: minmax(150px, 0.4fr) 48px minmax(210px, 0.56fr);
-  align-items: stretch;
+  grid-template-columns: minmax(150px, 0.34fr) 46px minmax(260px, 0.66fr);
+  align-items: end;
   gap: 0 12px;
   width: 100%;
   height: 100%;
-  min-height: 340px;
+  min-height: calc(var(--fh-hero) + 92px);
+  padding-top: 92px;
   direction: ltr;
   overflow: visible;
 }
@@ -2449,14 +2539,13 @@ body {
   position: relative;
   z-index: 3;
   display: grid;
-  justify-items: start;
+  justify-items: center;
   align-content: end;
-  align-self: stretch;
-  gap: 8px;
+  gap: 0;
   width: 100%;
-  max-width: 220px;
-  height: 100%;
-  margin-inline: 0 auto;
+  max-width: none;
+  height: var(--fh-hero);
+  margin-inline: 0;
 }
 
 .for-home-figure.is-talking .for-home-figure-art {
@@ -2465,6 +2554,10 @@ body {
 }
 
 .for-home-figure-hint {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  bottom: calc(100% + 6px);
   margin: 0;
   max-width: 9.5rem;
   padding: 7px 10px;
@@ -2484,8 +2577,10 @@ body {
 }
 
 .for-home-figure-tip {
-  position: relative;
-  z-index: 4;
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  bottom: calc(100% + 6px);
   width: min(100%, 168px);
   padding: 10px 11px 11px;
   border-radius: 16px 16px 16px 8px;
@@ -2596,9 +2691,10 @@ body {
 
 .for-home-figure-art {
   display: block;
-  width: 100%;
-  height: auto;
-  max-height: 380px;
+  width: auto;
+  height: var(--fh-hero, 360px);
+  max-height: var(--fh-hero, 360px);
+  max-width: 100%;
   object-fit: contain;
   object-position: center bottom;
   filter: drop-shadow(0 14px 22px rgb(0 20 16 / 28%));
@@ -2616,22 +2712,22 @@ body {
   z-index: 1;
   width: 100%;
   max-width: none;
-  height: 100%;
+  height: var(--fh-hero, 360px);
   margin-inline: 0;
   margin-inline-end: -2px;
   display: grid;
   align-items: end;
   justify-items: end;
   justify-self: stretch;
-  align-self: stretch;
+  align-self: end;
 }
 
 .for-home-plate {
   position: relative;
   z-index: 1;
-  width: min(100%, 380px);
-  height: min(100%, 380px);
-  max-height: 100%;
+  width: var(--fh-hero, 360px);
+  height: var(--fh-hero, 360px);
+  max-width: 100%;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -2789,9 +2885,9 @@ body {
   justify-content: space-between;
   gap: 10px;
   width: 40px;
-  height: 100%;
-  min-height: 0;
-  max-height: 380px;
+  height: var(--fh-hero, 360px);
+  min-height: var(--fh-hero, 360px);
+  max-height: var(--fh-hero, 360px);
   align-self: end;
   padding: 14px 4px;
   border-radius: 999px;
@@ -3152,16 +3248,20 @@ body {
   }
 
   .for-home-showcase-stage {
-    grid-template-columns: minmax(110px, 0.38fr) 42px minmax(170px, 0.55fr);
-    max-width: 520px;
+    --fh-hero: 300px;
+    grid-template-columns: minmax(110px, 0.34fr) 40px minmax(200px, 0.66fr);
+    max-width: 560px;
     margin-inline: auto;
     gap: 0 8px;
-    min-height: 280px;
+    min-height: calc(var(--fh-hero) + 80px);
+    padding-top: 80px;
   }
 
   .for-home-slider {
-    width: 36px;
-    max-height: 300px;
+    width: 34px;
+    height: var(--fh-hero);
+    min-height: var(--fh-hero);
+    max-height: var(--fh-hero);
     padding: 10px 3px;
     gap: 8px;
   }
@@ -3173,20 +3273,23 @@ body {
 
   .for-home-plate-wrap {
     max-width: none;
+    height: var(--fh-hero);
     margin-inline: auto;
   }
 
   .for-home-plate {
-    width: min(100%, 300px);
-    height: min(100%, 300px);
+    width: min(100%, var(--fh-hero));
+    height: min(100%, var(--fh-hero));
   }
 
   .for-home-figure {
-    max-width: 180px;
+    max-width: none;
+    height: var(--fh-hero);
   }
 
   .for-home-figure-art {
-    max-height: 300px;
+    height: var(--fh-hero);
+    max-height: var(--fh-hero);
   }
 
   .for-home-showcase-tools {

@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import { PeakMark } from "@/components/brand-marks";
 import {
   homeCategoryProducts,
   homeDoors,
@@ -17,6 +16,9 @@ const PRODUCT_VISIBLE = 6;
 const MARK_SHOP = "/brand/our-way-04-balance.png";
 const MARK_STORY = "/brand/our-way-03-quality.png";
 const MARK_SOON = "/brand/our-way-05-ahead.png";
+const BRAND_SEAL = "/brand/orginal-clear.png";
+/** مسیر موقت داستان کوتاه — بعداً به صفحهٔ واقعی وصل می‌شود */
+const STORY_PLACEHOLDER = "#product-story";
 
 type ProductItem = (typeof homeCategoryProducts)[HomeDoorId][number];
 
@@ -132,7 +134,7 @@ function MarkEmoji({
 }
 
 function figurePitch(product: ProductItem) {
-  return `ای جان، «${product.name}» رو دیدی؟ همون راه سبزه؛ از مرتع اومده تا سفرهٔ خانواده. تازه و روشن و قابل اعتماد — ببرش خونه، پشیمون که نمی‌شی هیچی!`;
+  return `ای جان، «${product.name}» همینه که می‌گفتم! سوالی داشتی ازم بپرس — من هوش طبیعی‌ام، نه مصنوعی 😄`;
 }
 
 /**
@@ -301,7 +303,14 @@ export function ForHomeSection() {
                   <span className="for-home-title-accent">خانه</span>
                   <span className="for-home-title-soft"> می‌رسد</span>
                   <span className="for-home-title-mark" aria-hidden="true">
-                    <PeakMark className="for-home-title-peak" />
+                    <Image
+                      src={MARK_SHOP}
+                      alt=""
+                      width={64}
+                      height={64}
+                      sizes="28px"
+                      className="for-home-title-mark-img"
+                    />
                   </span>
                 </h2>
 
@@ -345,6 +354,21 @@ export function ForHomeSection() {
                     <span>خرید این محصول</span>
                     <span className="for-home-copy-buy-badge">به‌زودی</span>
                   </button>
+                </div>
+
+                <div className="for-home-copy-rule" aria-hidden="true">
+                  <span className="for-home-copy-rule-line" />
+                  <span className="for-home-copy-rule-mark">
+                    <Image
+                      src={BRAND_SEAL}
+                      alt=""
+                      width={72}
+                      height={72}
+                      sizes="28px"
+                      className="for-home-copy-rule-logo"
+                    />
+                  </span>
+                  <span className="for-home-copy-rule-line" />
                 </div>
 
                 <div
@@ -419,13 +443,12 @@ export function ForHomeSection() {
                         {figurePitch(activeProduct)}
                       </p>
                       <div className="for-home-figure-tip-actions">
-                        <button
-                          type="button"
+                        <Link
+                          href={STORY_PLACEHOLDER}
                           className="for-home-figure-tip-btn"
-                          onClick={() => setStoryOpen(true)}
                         >
                           داستان کوتاه
-                        </button>
+                        </Link>
                         <Link
                           href={activeProduct.href}
                           className="for-home-figure-tip-cta"
@@ -436,16 +459,15 @@ export function ForHomeSection() {
                     </div>
                   ) : (
                     <p className="for-home-figure-hint" aria-hidden="true">
-                      سلام رفیق راه سبز! یکی از اینا رو بزن، برات با نمک و با
-                      حال می‌گم چرا به درد سفره‌تون می‌خوره 😉
+                      یکی رو بزن رفیق؛ بذار راه سبز رو با هم بچشیم 😉
                     </p>
                   )}
                   <Image
-                    src="/brand/our-way-01-climb.png"
+                    src="/brand/mardekoohestan-walker1.png"
                     alt="مرد کوهستان"
                     width={360}
                     height={520}
-                    sizes="(max-width: 900px) 28vw, 168px"
+                    sizes="(max-width: 900px) 32vw, 210px"
                     className="for-home-figure-art"
                     priority
                   />
@@ -501,7 +523,7 @@ export function ForHomeSection() {
                       alt={activeProduct.alt}
                       width={720}
                       height={720}
-                      sizes="(max-width: 900px) 52vw, 280px"
+                      sizes="(max-width: 900px) 52vw, 360px"
                       className="for-home-plate-art"
                       priority
                     />
