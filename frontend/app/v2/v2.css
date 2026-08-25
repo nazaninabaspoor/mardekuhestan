@@ -752,30 +752,47 @@
   position: absolute;
   inset: 0;
   margin: 0;
-  display: grid;
-  place-items: center;
-  font-size: clamp(4rem, 14vw, 9.5rem);
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  line-height: 0.85;
-  color: rgb(255 255 255 / 22%);
+  z-index: 0;
   pointer-events: none;
   user-select: none;
-  z-index: 0;
+  overflow: hidden;
+}
+
+.is-home-v2 .cine-watermark span {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  font-size: clamp(3.2rem, 11vw, 7.5rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  color: rgb(255 255 255 / 26%);
   white-space: nowrap;
 }
 
+.is-home-v2 .cine-watermark span:first-child {
+  top: 18%;
+}
+
+.is-home-v2 .cine-watermark span:last-child {
+  bottom: 12%;
+  opacity: 0.85;
+}
+
+/* Soft spotlight behind the product — exact ref “lamp” */
 .is-home-v2 .cine-disc {
   position: absolute;
   z-index: 0;
-  width: min(42%, 340px);
+  width: min(46%, 420px);
   aspect-ratio: 1;
-  right: 58%;
-  top: 52%;
-  translate: 50% -50%;
+  left: 50%;
+  top: 58%;
+  translate: -50% -50%;
   border-radius: 50%;
-  background: rgb(255 252 248 / 45%);
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 78%) 0%, rgb(255 252 248 / 35%) 42%, transparent 68%);
   pointer-events: none;
+  filter: blur(2px);
 }
 
 /* —— In-card nav —— */
@@ -892,16 +909,17 @@
   color: var(--cine-green);
 }
 
-/* —— 3-column grid —— */
+/* —— 3-column grid — ref proportions ~28 | 44 | 28 —— */
 .is-home-v2 .cine-grid {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(200px, 1fr) minmax(220px, 0.95fr) minmax(170px, 0.85fr);
+  grid-template-columns: minmax(180px, 0.92fr) minmax(260px, 1.4fr) minmax(160px, 0.88fr);
   align-items: center;
-  gap: clamp(0.75rem, 2.5vw, 2rem);
+  gap: clamp(0.5rem, 2vw, 1.5rem);
   direction: ltr;
-  min-height: 420px;
+  min-height: 460px;
+  padding-bottom: 0.5rem;
 }
 
 .is-home-v2 .cine-copy {
@@ -910,38 +928,40 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;
-  max-width: 17rem;
+  gap: 0.65rem;
+  max-width: 15.5rem;
+  justify-self: start;
+  padding-inline-start: 0.25rem;
 }
 
 .is-home-v2 .cine-script {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--cine-brown);
   font-style: italic;
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
 .is-home-v2 .cine-title {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.05rem;
+  gap: 0.02rem;
   font-family: inherit;
-  font-size: clamp(1.45rem, 2.6vw, 2.05rem);
+  font-size: clamp(1.55rem, 2.7vw, 2.15rem);
   font-weight: 900;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
   color: var(--cine-ink);
   text-transform: none;
 }
 
 .is-home-v2 .cine-lead {
   margin: 0;
-  max-width: 28ch;
-  font-size: 0.78rem;
-  line-height: 1.7;
+  max-width: 26ch;
+  font-size: 0.74rem;
+  line-height: 1.65;
   color: var(--cine-muted);
 }
 
@@ -949,21 +969,21 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.55rem;
-  margin-top: 0.35rem;
-  width: min(100%, 168px);
+  gap: 0.48rem;
+  margin-top: 0.45rem;
+  width: 148px;
 }
 
 .is-home-v2 .cine-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  min-height: 42px;
-  padding: 0 1rem;
-  border-radius: 8px;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 0.85rem;
+  border-radius: 7px;
   font-family: inherit;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -1002,6 +1022,19 @@
   perspective: 1000px;
   z-index: 3;
 }
+
+/* Local beans relative to pouch */
+.is-home-v2 .cine-float--local {
+  position: absolute;
+  z-index: 4;
+}
+
+.is-home-v2 .cine-hero .cine-float--near1 { top: 18%; left: 72%; width: 32px; }
+.is-home-v2 .cine-hero .cine-float--near2 { top: 48%; left: 78%; width: 26px; }
+.is-home-v2 .cine-hero .cine-float--near3 { top: 68%; left: 12%; width: 28px; }
+.is-home-v2 .cine-hero .cine-float--near4 { top: 28%; left: 8%; width: 24px; }
+.is-home-v2 .cine-hero .cine-float--mid1 { top: 6%; left: 62%; width: 40px; }
+.is-home-v2 .cine-hero .cine-float--mid2 { bottom: 12%; left: -4%; width: 44px; }
 
 .is-home-v2 .cine-pouch {
   position: relative;
@@ -1157,9 +1190,9 @@
   appearance: none;
   border: 0;
   padding: 0;
-  width: 52px;
-  height: 52px;
-  border-radius: 8px;
+  width: 48px;
+  height: 58px;
+  border-radius: 6px 6px 8px 8px;
   overflow: hidden;
   cursor: pointer;
   background: #1a1410;

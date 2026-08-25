@@ -61,8 +61,6 @@ export function ForHomeCinematic() {
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 40, damping: 18 });
   const sy = useSpring(my, { stiffness: 40, damping: 18 });
-  const farX = useTransform(sx, (v) => v * 0.35);
-  const farY = useTransform(sy, (v) => v * 0.35);
   const nearX = useTransform(sx, (v) => v * -0.55);
   const nearY = useTransform(sy, (v) => v * -0.55);
 
@@ -169,58 +167,59 @@ export function ForHomeCinematic() {
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >
-      {/* Depth-of-field floaters — outside/over card like the coffee beans */}
+      {/* Depth-of-field floaters — only soft foreground bokeh at frame edges */}
       {!reduceMotion && visible
-        ? floaters.map((item) => {
-            const isFg = item.blur >= 14;
-            return (
-              <motion.span
-                key={`${active.id}-${item.id}`}
-                className={`cine-float ${item.className}`}
-                style={{
-                  filter: `blur(${item.blur}px)`,
-                  scale: item.scale,
-                  x: isFg ? nearX : farX,
-                  y: isFg ? nearY : farY,
-                }}
-                aria-hidden="true"
-              >
+        ? floaters
+            .filter((item) => item.className.includes("fg"))
+            .map((item) => {
+              return (
                 <motion.span
-                  className="cine-float-inner"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: isFg ? 0.72 : 0.95,
-                    y: [0, -item.y, 0],
-                    x: [0, item.x, 0],
-                    rotate: [0, item.rotate, 0],
+                  key={`${active.id}-${item.id}`}
+                  className={`cine-float ${item.className}`}
+                  style={{
+                    filter: `blur(${item.blur}px)`,
+                    scale: item.scale,
+                    x: nearX,
+                    y: nearY,
                   }}
-                  transition={{
-                    opacity: { delay: 0.95, duration: 0.55 },
-                    y: {
-                      delay: 1 + item.delay,
-                      duration: item.duration,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    },
-                    x: {
-                      delay: 1 + item.delay,
-                      duration: item.duration * 1.08,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    },
-                    rotate: {
-                      delay: 1 + item.delay,
-                      duration: item.duration * 1.12,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    },
-                  }}
+                  aria-hidden="true"
                 >
-                  <Image src={item.image} alt="" width={180} height={180} sizes="140px" />
+                  <motion.span
+                    className="cine-float-inner"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: 0.55,
+                      y: [0, -item.y, 0],
+                      x: [0, item.x, 0],
+                      rotate: [0, item.rotate, 0],
+                    }}
+                    transition={{
+                      opacity: { delay: 0.95, duration: 0.55 },
+                      y: {
+                        delay: 1 + item.delay,
+                        duration: item.duration,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                      x: {
+                        delay: 1 + item.delay,
+                        duration: item.duration * 1.08,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                      rotate: {
+                        delay: 1 + item.delay,
+                        duration: item.duration * 1.12,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                    }}
+                  >
+                    <Image src={item.image} alt="" width={180} height={180} sizes="140px" />
+                  </motion.span>
                 </motion.span>
-              </motion.span>
-            );
-          })
+              );
+            })
         : null}
 
       <div className="cine-shell">
@@ -336,6 +335,51 @@ export function ForHomeCinematic() {
               animate={visible ? { opacity: 1, scale: 1 } : undefined}
               transition={{ ...ease, delay: 0.72 }}
             >
+              {/* Beans hugging the pouch — local to hero for exact placement */}
+              {!reduceMotion && visible
+                ? floaters
+                    .filter((f) => f.className.includes("near") || f.className.includes("mid"))
+                    .map((item) => (
+                      <motion.span
+                        key={`local-${active.id}-${item.id}`}
+                        className={`cine-float cine-float--local ${item.className}`}
+                        style={{ filter: `blur(${item.blur}px)`, scale: item.scale }}
+                        aria-hidden="true"
+                      >
+                        <motion.span
+                          className="cine-float-inner"
+                          animate={{
+                            y: [0, -item.y, 0],
+                            x: [0, item.x, 0],
+                            rotate: [0, item.rotate, 0],
+                          }}
+                          transition={{
+                            y: {
+                              delay: item.delay,
+                              duration: item.duration,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            },
+                            x: {
+                              delay: item.delay,
+                              duration: item.duration * 1.08,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            },
+                            rotate: {
+                              delay: item.delay,
+                              duration: item.duration * 1.12,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            },
+                          }}
+                        >
+                          <Image src={item.image} alt="" width={120} height={120} sizes="64px" />
+                        </motion.span>
+                      </motion.span>
+                    ))
+                : null}
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active.id}
