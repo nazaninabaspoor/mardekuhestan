@@ -9,7 +9,7 @@ import {
   homeDoors,
   type HomeDoorId,
 } from "@/lib/brand";
-import { ForHomeCinematic } from "@/components/v2/for-home-cinematic";
+import { ForHomeKitchen } from "@/components/v2/for-home-kitchen";
 
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
 const CAT_PAGE_SIZE = 6;
@@ -244,7 +244,7 @@ export function ForHomeSection({
   variant?: "default" | "v2";
 } = {}) {
   if (variant === "v2") {
-    return <ForHomeCinematic />;
+    return <ForHomeKitchen />;
   }
   return <ForHomeSectionDefault />;
 }

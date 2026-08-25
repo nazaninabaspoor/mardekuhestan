@@ -647,798 +647,661 @@
 }
 
 /* ========================================================================
-   for-home--v2 / cinematic — exact Smart Kitchen coffee-card UI (ref video)
-   Cream page · peach card · lamp disc · tall matte pouch · DoF beans
+   for-home--v2 / kitchen-ui — exact kitchen-wall food app (ref image)
+   Full-bleed kitchen photo · tilted plate · hero type · overview card ·
+   circular dish rail · glass dock + mic
    ======================================================================== */
 
-.is-home-v2 .for-home--v2.cine {
-  --cine-page: #f6f1f0;
-  --cine-card: #e8d2c4;
-  --cine-card-hi: #f0dfd2;
-  --cine-ink: #1a1210;
-  --cine-muted: #6a5348;
-  --cine-brown: #5a3a2e;
-  --cine-black: #12100e;
-  --cine-green: #005b48;
-  --cine-badge: #c45a3a;
-  --cine-label: #f7f1ea;
+.is-home-v2 .for-home--v2.kitchen-ui {
+  --kui-ink: #2c2c2c;
+  --kui-muted: #8a8a8a;
+  --kui-soft: #b0b0b0;
+  --kui-card: #ffffff;
+  --kui-rating: #cfe7c0;
+  --kui-green: #005b48;
   position: relative;
   isolation: isolate;
-  overflow: visible;
-  min-height: auto;
-  padding: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(2rem, 5vw, 3.25rem) !important;
+  overflow: hidden;
+  min-height: min(92vh, 820px);
+  padding: 0 !important;
   margin: 0;
-  background: var(--cine-page) !important;
+  background: #eceae8 !important;
   border: 0 !important;
   box-shadow: none !important;
-  color: var(--cine-ink);
+  color: var(--kui-ink);
 }
 
-.is-home-v2 .cine-page-wm {
+.is-home-v2 .kui-scene {
   position: absolute;
   inset: 0;
   z-index: 0;
-  margin: 0;
-  display: grid;
-  place-items: center;
-  font-size: clamp(4rem, 18vw, 12rem);
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  color: rgb(255 255 255 / 35%);
-  pointer-events: none;
-  user-select: none;
-  overflow: hidden;
-  opacity: 0.55;
 }
 
-.is-home-v2 .cine-shell {
-  position: relative;
-  z-index: 3;
-  width: min(1080px, calc(100% - 2.5rem));
-  margin-inline: auto;
+.is-home-v2 .kui-scene-img {
+  object-fit: cover;
+  object-position: center 40%;
 }
 
-/* —— Coffee-bean floaters (CSS seeds, DoF) —— */
-.is-home-v2 .cine-bean-float {
+.is-home-v2 .kui-blob {
   position: absolute;
-  z-index: 4;
-  pointer-events: none;
-  width: 36px;
-  aspect-ratio: 0.62;
-}
-
-.is-home-v2 .cine-bean-seed {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 58% 42% 55% 45% / 48% 52% 48% 52%;
-  background:
-    radial-gradient(ellipse 40% 30% at 32% 32%, #a87850 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 50%, #6b3e28 0%, #3a2216 55%, #1c100c 100%);
-  box-shadow:
-    inset 0 0 0 1px rgb(0 0 0 / 18%),
-    0 8px 16px rgb(40 20 10 / 22%);
-}
-
-.is-home-v2 .cine-bean-seed::after {
-  content: "";
-  position: absolute;
-  inset: 18% 46% 18% 46%;
-  border-radius: 999px;
-  background: rgb(20 10 6 / 45%);
-}
-
-.is-home-v2 .cine-bean-float .cine-bean-seed {
-  position: relative;
-}
-
-.is-home-v2 .cine-bean-float--fg1 {
-  top: 6%;
-  left: -1%;
-  z-index: 6;
-  width: clamp(88px, 11vw, 150px);
-}
-.is-home-v2 .cine-bean-float--fg2 {
-  bottom: 4%;
-  right: -1%;
-  z-index: 6;
-  width: clamp(96px, 12vw, 160px);
-}
-.is-home-v2 .cine-bean-float--edge1 {
-  top: 18%;
-  right: 4%;
-  z-index: 2;
-  width: clamp(52px, 6vw, 78px);
-}
-.is-home-v2 .cine-bean-float--edge2 {
-  bottom: 16%;
-  left: 5%;
-  z-index: 2;
-  width: clamp(48px, 5.5vw, 72px);
-}
-
-.is-home-v2 .cine-bean-float--local {
-  position: absolute;
-  z-index: 5;
-}
-
-.is-home-v2 .cine-hero .cine-bean-float--near1 { top: 14%; left: 78%; width: 28px; }
-.is-home-v2 .cine-hero .cine-bean-float--near2 { top: 46%; left: 84%; width: 22px; }
-.is-home-v2 .cine-hero .cine-bean-float--near3 { top: 72%; left: 8%; width: 24px; }
-.is-home-v2 .cine-hero .cine-bean-float--near4 { top: 24%; left: 4%; width: 20px; }
-.is-home-v2 .cine-hero .cine-bean-float--mid1 { top: 2%; left: 68%; width: 34px; }
-.is-home-v2 .cine-hero .cine-bean-float--mid2 { bottom: 8%; left: -8%; width: 38px; }
-
-/* —— Elevated peach card —— */
-.is-home-v2 .cine-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-  background:
-    radial-gradient(circle at 50% 58%, rgb(255 250 245 / 88%) 0%, transparent 38%),
-    linear-gradient(180deg, var(--cine-card-hi) 0%, var(--cine-card) 55%, #dfc4b4 100%);
-  box-shadow:
-    0 28px 60px rgb(60 35 20 / 18%),
-    0 10px 22px rgb(60 35 20 / 10%),
-    0 0 0 1px rgb(255 255 255 / 25%) inset;
-  padding: 1rem clamp(1.1rem, 2.8vw, 2.4rem) 1.35rem;
-  min-height: 0;
-}
-
-.is-home-v2 .cine-watermark {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  z-index: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  user-select: none;
-  overflow: hidden;
-  font-size: clamp(3.8rem, 14vw, 9.5rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  color: rgb(255 255 255 / 32%);
-  white-space: nowrap;
-}
-
-/* Soft spotlight / lamp behind pouch */
-.is-home-v2 .cine-disc {
-  position: absolute;
-  z-index: 0;
-  width: min(52%, 460px);
-  aspect-ratio: 1;
-  left: 50%;
-  top: 56%;
-  translate: -50% -50%;
   border-radius: 50%;
-  background:
-    radial-gradient(
-      circle,
-      rgb(255 255 255 / 92%) 0%,
-      rgb(255 252 248 / 55%) 28%,
-      rgb(255 248 240 / 22%) 48%,
-      transparent 68%
-    );
   pointer-events: none;
-  filter: blur(1px);
+  filter: blur(8px);
 }
 
-/* —— In-card nav —— */
-.is-home-v2 .cine-nav {
+.is-home-v2 .kui-blob--peach {
+  width: min(42vw, 480px);
+  aspect-ratio: 1.1;
+  left: 8%;
+  top: 18%;
+  background: radial-gradient(circle, rgb(232 210 190 / 55%) 0%, transparent 70%);
+}
+
+.is-home-v2 .kui-blob--teal {
+  width: min(38vw, 420px);
+  aspect-ratio: 1.3;
+  left: 28%;
+  top: 6%;
+  background: radial-gradient(ellipse, rgb(180 210 210 / 45%) 0%, transparent 68%);
+}
+
+.is-home-v2 .kui-stage {
   position: relative;
   z-index: 2;
+  width: min(1240px, calc(100% - 2rem));
+  margin-inline: auto;
+  min-height: min(92vh, 820px);
+  padding: clamp(1.25rem, 3vw, 2rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-areas:
+    "utils utils"
+    "hero card"
+    "rail rail"
+    "dock dock";
+  gap: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+/* —— Top utilities —— */
+.is-home-v2 .kui-utils {
+  grid-area: utils;
+  justify-self: end;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: clamp(0.75rem, 2.2vw, 1.85rem);
-  direction: rtl;
-  margin-bottom: clamp(0.85rem, 2.2vw, 1.5rem);
+  gap: 0.85rem;
+  position: relative;
+  z-index: 5;
+  padding-inline-end: 0.25rem;
 }
 
-.is-home-v2 .cine-nav-link {
-  font-family: inherit;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--cine-ink);
-  text-decoration: none;
-  opacity: 0.86;
-  transition: opacity 0.2s ease;
-}
-
-.is-home-v2 .cine-nav-link:hover,
-.is-home-v2 .cine-nav-link:focus-visible {
-  opacity: 1;
-  outline: none;
-}
-
-.is-home-v2 .cine-nav-link--btn {
+.is-home-v2 .kui-icon-btn {
   appearance: none;
   border: 0;
   background: transparent;
+  width: 36px;
+  height: 36px;
   padding: 0;
+  color: #4a4a4a;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  font: inherit;
-  color: inherit;
-}
-
-.is-home-v2 .cine-nav-logo {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  padding: 0.3rem;
-  border-radius: 3px;
-  background: var(--cine-black);
-  color: #fff;
-  text-decoration: none;
-  flex: 0 0 auto;
-  box-shadow: 0 6px 14px rgb(0 0 0 / 20%);
-  text-align: center;
 }
 
-.is-home-v2 .cine-nav-logo span {
-  font-size: 0.48rem;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
+.is-home-v2 .kui-icon-btn svg {
+  width: 22px;
+  height: 22px;
 }
 
-.is-home-v2 .cine-nav-drop {
-  position: relative;
-}
-
-.is-home-v2 .cine-nav-menu {
-  display: none;
+.is-home-v2 .kui-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 50%;
-  translate: 50% 0;
+  top: calc(100% + 0.45rem);
+  left: 0;
   min-width: 11rem;
-  padding: 0.4rem;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 14px 32px rgb(40 20 10 / 16%);
+  padding: 0.45rem;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 92%);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 36px rgb(0 0 0 / 12%);
+  display: grid;
+  gap: 0.15rem;
   z-index: 8;
 }
 
-.is-home-v2 .cine-nav-drop:hover .cine-nav-menu,
-.is-home-v2 .cine-nav-drop:focus-within .cine-nav-menu {
-  display: grid;
-  gap: 0.12rem;
-}
-
-.is-home-v2 .cine-nav-menu button {
+.is-home-v2 .kui-menu button {
   appearance: none;
   border: 0;
   background: transparent;
   text-align: right;
-  padding: 0.4rem 0.5rem;
-  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  border-radius: 9px;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--cine-ink);
+  color: var(--kui-ink);
   cursor: pointer;
 }
 
-.is-home-v2 .cine-nav-menu button:hover,
-.is-home-v2 .cine-nav-menu button.is-active {
+.is-home-v2 .kui-menu button:hover,
+.is-home-v2 .kui-menu button.is-active {
   background: rgb(0 91 72 / 8%);
-  color: var(--cine-green);
+  color: var(--kui-green);
 }
 
-/* —— 3-column grid ~ copy | pouch | features —— */
-.is-home-v2 .cine-grid {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(170px, 0.95fr) minmax(220px, 1.15fr) minmax(150px, 0.9fr);
-  align-items: center;
-  gap: clamp(0.35rem, 1.6vw, 1.1rem);
-  direction: ltr;
-  min-height: 420px;
-  padding-bottom: 0.15rem;
-}
-
-.is-home-v2 .cine-copy {
-  direction: rtl;
-  text-align: right;
+/* —— Left dots —— */
+.is-home-v2 .kui-dots {
+  position: absolute;
+  left: clamp(0.35rem, 1.5vw, 1rem);
+  top: 38%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0.55rem;
-  max-width: 14.5rem;
-  justify-self: start;
-}
-
-.is-home-v2 .cine-script {
-  margin: 0;
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--cine-brown);
-  font-style: italic;
-  opacity: 0.9;
-}
-
-.is-home-v2 .cine-title {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  font-family: inherit;
-  font-size: clamp(1.45rem, 2.5vw, 2rem);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--cine-ink);
-}
-
-.is-home-v2 .cine-lead {
-  margin: 0;
-  max-width: 24ch;
-  font-size: 0.7rem;
-  line-height: 1.6;
-  color: var(--cine-muted);
-}
-
-.is-home-v2 .cine-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.42rem;
-  margin-top: 0.35rem;
-  width: 142px;
-}
-
-.is-home-v2 .cine-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  min-height: 38px;
-  padding: 0 0.8rem;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-.is-home-v2 .cine-btn-arrow {
-  font-size: 0.85rem;
-  line-height: 1;
-}
-
-.is-home-v2 .cine-btn--primary {
-  background: var(--cine-brown);
-  color: #fff;
-}
-
-.is-home-v2 .cine-btn--dark {
-  background: var(--cine-black);
-  color: #fff;
-}
-
-.is-home-v2 .cine-btn:hover,
-.is-home-v2 .cine-btn:focus-visible {
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-  outline: none;
-}
-
-/* —— Tall matte coffee pouch —— */
-.is-home-v2 .cine-hero {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  perspective: 1100px;
   z-index: 3;
-  min-height: 400px;
 }
 
-.is-home-v2 .cine-pouch {
-  position: relative;
-  width: min(100%, 188px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 2;
-}
-
-.is-home-v2 .cine-pouch-glow {
-  position: absolute;
-  z-index: 0;
-  width: 220%;
-  aspect-ratio: 1;
-  top: 46%;
-  left: 50%;
-  translate: -50% -50%;
+.is-home-v2 .kui-dots span {
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgb(255 255 255 / 90%) 0%,
-    rgb(255 255 255 / 35%) 38%,
-    transparent 62%
-  );
-  pointer-events: none;
+  background: rgb(80 80 80 / 28%);
 }
 
-.is-home-v2 .cine-pouch-body {
+.is-home-v2 .kui-dots span.is-on {
+  background: rgb(60 60 60 / 55%);
+  height: 14px;
+  border-radius: 999px;
+}
+
+/* —— Hero —— */
+.is-home-v2 .kui-hero {
+  grid-area: hero;
+  display: grid;
+  grid-template-columns: minmax(200px, 0.95fr) minmax(180px, 1fr);
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  min-height: 340px;
+  padding-inline-start: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.is-home-v2 .kui-plate-wrap {
   position: relative;
-  z-index: 1;
-  width: 100%;
-  height: clamp(300px, 38vh, 360px);
-  /* standing coffee-bag: flat top, soft shoulder bevel, slight taper */
-  clip-path: polygon(
-    8% 0%,
-    92% 0%,
-    100% 7%,
-    96% 100%,
-    4% 100%,
-    0% 7%
-  );
+  display: grid;
+  place-items: center;
+  transform: rotate(14deg);
+  filter: drop-shadow(0 28px 40px rgb(40 30 20 / 22%));
+}
+
+.is-home-v2 .kui-plate {
+  width: min(100%, 340px);
+  aspect-ratio: 1;
+  border-radius: 28px;
   overflow: hidden;
-  background:
-    linear-gradient(90deg, rgb(255 255 255 / 6%) 0%, transparent 18%, transparent 82%, rgb(0 0 0 / 25%) 100%),
-    linear-gradient(165deg, #2a221c 0%, #0c0a08 48%, #181410 100%);
+  background: #fff;
+  padding: 12px;
   box-shadow:
-    0 26px 44px rgb(20 10 5 / 40%),
-    0 6px 14px rgb(20 10 5 / 22%),
-    inset 0 1px 0 rgb(255 255 255 / 12%),
-    inset 0 -20px 30px rgb(0 0 0 / 35%);
+    0 2px 0 rgb(255 255 255 / 80%) inset,
+    0 18px 40px rgb(0 0 0 / 14%);
 }
 
-/* Product print sits on upper bag face, fades into matte black */
-.is-home-v2 .cine-pouch-print {
-  position: absolute;
-  inset: 0 0 28% 0;
-  overflow: hidden;
-  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
-}
-
-.is-home-v2 .cine-pouch-art {
-  position: absolute;
-  inset: 0;
+.is-home-v2 .kui-plate img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover;
-  object-position: center 30%;
-  opacity: 0.95;
-  filter: saturate(0.92) contrast(1.06) brightness(0.9);
-}
-
-.is-home-v2 .cine-pouch-print::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgb(8 6 5 / 55%) 100%);
-  pointer-events: none;
-}
-
-/* Small light printed sticker — not a full-face slab */
-.is-home-v2 .cine-pouch-label {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: 11%;
-  translate: -50% 0;
-  width: 68%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.28rem;
-  padding: 0.55rem 0.45rem 0.6rem;
-  border-radius: 2px;
-  background: var(--cine-label);
-  color: var(--cine-ink);
-  text-align: center;
-  box-shadow:
-    0 4px 10px rgb(0 0 0 / 28%),
-    0 0 0 1px rgb(0 0 0 / 6%);
-}
-
-.is-home-v2 .cine-pouch-badge {
-  display: inline-block;
-  padding: 0.1rem 0.36rem;
-  border-radius: 1px;
-  background: var(--cine-badge);
-  color: #fff;
-  font-size: 0.48rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
-.is-home-v2 .cine-pouch-label strong {
-  font-size: clamp(0.72rem, 1.2vw, 0.92rem);
-  font-weight: 900;
-  line-height: 1.15;
-  color: var(--cine-ink);
-}
-
-.is-home-v2 .cine-pouch-brand {
-  font-size: 0.5rem;
-  opacity: 0.55;
-  letter-spacing: 0.08em;
-  color: var(--cine-muted);
-}
-
-.is-home-v2 .cine-pouch-shadow {
+  object-position: center;
   display: block;
-  position: relative;
-  z-index: 0;
-  width: 92%;
-  height: 18px;
-  margin-top: 2px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(30 15 8 / 48%) 0%, transparent 70%);
-  filter: blur(3px);
+  border-radius: 18px;
 }
 
-.is-home-v2 .cine-hero-controls {
-  display: flex;
-  gap: 0.35rem;
-  margin-top: 0.4rem;
-  opacity: 0.4;
-}
-
-.is-home-v2 .cine-nav-btn {
-  appearance: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid rgb(42 28 22 / 18%);
-  background: rgb(255 255 255 / 45%);
-  color: var(--cine-ink);
-  font-size: 1.05rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.is-home-v2 .cine-nav-btn:hover,
-.is-home-v2 .cine-nav-btn:focus-visible {
-  background: var(--cine-ink);
-  color: #fff;
-  outline: none;
-}
-
-/* —— Right features —— */
-.is-home-v2 .cine-side {
+.is-home-v2 .kui-hero-copy {
   direction: rtl;
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.55rem;
-  justify-self: end;
-  max-width: 12.5rem;
+  gap: 0.65rem;
+  padding-top: 1rem;
 }
 
-.is-home-v2 .cine-side-thumbs {
+.is-home-v2 .kui-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--kui-muted);
+}
+
+.is-home-v2 .kui-title {
+  margin: 0;
   display: flex;
-  gap: 0.5rem;
-  align-items: flex-end;
+  flex-direction: column;
+  gap: 0.05rem;
+  line-height: 1.05;
+  color: var(--kui-ink);
 }
 
-.is-home-v2 .cine-side-thumb {
+.is-home-v2 .kui-title-thin {
+  display: block;
+  font-size: clamp(2rem, 4.4vw, 3.35rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.is-home-v2 .kui-title-bold {
+  display: block;
+  font-size: clamp(2rem, 4.4vw, 3.35rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.is-home-v2 .kui-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.4rem;
+  margin-top: 0.35rem;
+}
+
+.is-home-v2 .kui-text-action {
   appearance: none;
   border: 0;
+  background: transparent;
   padding: 0;
-  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  text-decoration: none;
   cursor: pointer;
-  background: #14110f;
-  box-shadow: 0 7px 16px rgb(0 0 0 / 18%);
-  transition: transform 0.2s ease;
 }
 
-.is-home-v2 .cine-side-thumb--bag {
-  width: 40px;
-  height: 54px;
-  border-radius: 4px 4px 6px 6px;
-  clip-path: polygon(10% 0%, 90% 0%, 100% 8%, 95% 100%, 5% 100%, 0% 8%);
+.is-home-v2 .kui-play {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 8px;
+  border-color: transparent transparent transparent #3a3a3a;
 }
 
-.is-home-v2 .cine-side-thumb--cup {
-  width: 38px;
-  height: 44px;
-  border-radius: 45% 45% 8px 8px / 30% 30% 12px 12px;
+.is-home-v2 .kui-home-ico {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
 }
 
-.is-home-v2 .cine-side-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  opacity: 0.9;
-  filter: brightness(0.85) contrast(1.05);
+.is-home-v2 .kui-home-ico svg {
+  width: 16px;
+  height: 16px;
 }
 
-.is-home-v2 .cine-side-thumb:hover,
-.is-home-v2 .cine-side-thumb:focus-visible {
-  transform: scale(1.06);
-  outline: none;
+/* —— Overview card —— */
+.is-home-v2 .kui-card {
+  grid-area: card;
+  justify-self: end;
+  align-self: center;
+  width: min(100%, 280px);
+  direction: rtl;
+  text-align: right;
+  background: rgb(255 255 255 / 94%);
+  backdrop-filter: blur(10px);
+  border-radius: 26px;
+  padding: 1.15rem 1.2rem 1.05rem;
+  box-shadow:
+    0 22px 48px rgb(40 30 20 / 12%),
+    0 2px 8px rgb(40 30 20 / 6%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 
-.is-home-v2 .cine-side-title {
-  margin: 0.1rem 0 0;
-  font-size: 0.95rem;
+.is-home-v2 .kui-tabs {
+  display: flex;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.is-home-v2 .kui-tabs button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0 0 0.35rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--kui-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.is-home-v2 .kui-tabs button.is-active {
+  color: var(--kui-ink);
   font-weight: 800;
-  color: var(--cine-ink);
-  line-height: 1.3;
+  border-bottom-color: var(--kui-ink);
 }
 
-.is-home-v2 .cine-side-list {
+.is-home-v2 .kui-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  align-self: flex-start;
+  padding: 0.22rem 0.55rem;
+  border-radius: 8px;
+  background: var(--kui-rating);
+  color: #3a5a32;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.is-home-v2 .kui-rating svg {
+  width: 12px;
+  height: 12px;
+}
+
+.is-home-v2 .kui-card-title {
+  margin: 0.15rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.25;
+  color: var(--kui-ink);
+}
+
+.is-home-v2 .kui-card-sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  color: var(--kui-muted);
+}
+
+.is-home-v2 .kui-card-body {
+  margin: 0.55rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.7;
+  color: #6e6e6e;
+}
+
+.is-home-v2 .kui-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.is-home-v2 .kui-like {
+  appearance: none;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: #ececec;
+  color: #4a4a4a;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.is-home-v2 .kui-like svg,
+.is-home-v2 .kui-dislike svg {
+  width: 15px;
+  height: 15px;
+}
+
+.is-home-v2 .kui-dislike {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0.35rem;
+  color: #6a6a6a;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+/* —— Dish rail —— */
+.is-home-v2 .kui-rail {
+  grid-area: rail;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  padding: 0.25rem 0 0.5rem;
+}
+
+.is-home-v2 .kui-rail-arrow {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #5a5a5a;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.is-home-v2 .kui-rail-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  max-width: 17ch;
+  align-items: flex-end;
+  gap: clamp(0.75rem, 2.2vw, 1.6rem);
 }
 
-.is-home-v2 .cine-side-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.35rem;
-  font-size: 0.68rem;
-  line-height: 1.5;
-  color: var(--cine-muted);
-}
-
-.is-home-v2 .cine-bean {
-  flex: 0 0 auto;
-  width: 10px;
-  height: 14px;
-  margin-top: 0.12rem;
-  border-radius: 58% 42% 55% 45% / 48% 52% 48% 52%;
-  background: radial-gradient(circle at 35% 35%, #8a5a3a 0%, #3a2216 72%);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 15%);
-}
-
-.is-home-v2 .cine-inline-story {
+.is-home-v2 .kui-rail-item {
   appearance: none;
   border: 0;
   background: transparent;
   padding: 0;
-  margin: 0;
-  font: inherit;
-  font-size: 0.68rem;
-  color: inherit;
-  text-align: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-  opacity: 0.75;
+  width: 88px;
+  color: var(--kui-ink);
 }
 
-.is-home-v2 .cine-inline-story:hover,
-.is-home-v2 .cine-inline-story:focus-visible {
-  color: var(--cine-green);
-  opacity: 1;
+.is-home-v2 .kui-rail-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 10%);
+  display: grid;
+  place-items: center;
+}
+
+.is-home-v2 .kui-rail-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.is-home-v2 .kui-rail-item.is-active .kui-rail-thumb {
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  box-shadow:
+    0 14px 30px rgb(0 0 0 / 14%),
+    0 0 0 10px rgb(255 255 255 / 55%);
+}
+
+.is-home-v2 .kui-rail-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.35;
+  color: #5a5a5a;
+  max-width: 9ch;
+}
+
+.is-home-v2 .kui-rail-item.is-active .kui-rail-label {
+  color: var(--kui-ink);
+  font-weight: 800;
+}
+
+/* —— Dock + mic —— */
+.is-home-v2 .kui-dock-wrap {
+  grid-area: dock;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding-top: 0.25rem;
+}
+
+.is-home-v2 .kui-dock {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 55%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 12px 28px rgb(0 0 0 / 10%),
+    0 0 0 1px rgb(255 255 255 / 40%) inset;
+}
+
+.is-home-v2 .kui-dock-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #5a5a5a;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.is-home-v2 .kui-dock-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.is-home-v2 .kui-dock-btn.is-active,
+.is-home-v2 .kui-dock-btn:hover,
+.is-home-v2 .kui-dock-btn:focus-visible {
+  background: rgb(70 70 70 / 12%);
+  color: #2a2a2a;
+  outline: none;
+}
+
+.is-home-v2 .kui-mic {
+  appearance: none;
+  border: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+  color: #2a2a2a;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow:
+    0 14px 32px rgb(0 0 0 / 14%),
+    0 0 0 8px rgb(255 255 255 / 35%);
+}
+
+.is-home-v2 .kui-mic svg {
+  width: 24px;
+  height: 24px;
+}
+
+.is-home-v2 .kui-mic:hover,
+.is-home-v2 .kui-mic:focus-visible {
+  transform: translateY(-1px);
   outline: none;
 }
 
 @media (max-width: 1024px) {
-  .is-home-v2 .cine-grid {
+  .is-home-v2 .kui-stage {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    grid-template-areas:
+      "utils"
+      "hero"
+      "card"
+      "rail"
+      "dock";
     min-height: 0;
   }
 
-  .is-home-v2 .cine-copy,
-  .is-home-v2 .cine-side {
+  .is-home-v2 .kui-hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    min-height: 0;
+  }
+
+  .is-home-v2 .kui-hero-copy {
     align-items: center;
     text-align: center;
-    max-width: none;
+  }
+
+  .is-home-v2 .kui-card {
     justify-self: center;
+    width: min(100%, 340px);
   }
 
-  .is-home-v2 .cine-actions {
-    width: min(100%, 190px);
-  }
-
-  .is-home-v2 .cine-side-thumbs,
-  .is-home-v2 .cine-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .is-home-v2 .cine-side-list {
-    max-width: 32ch;
-  }
-
-  .is-home-v2 .cine-side-list li {
-    justify-content: center;
-  }
-
-  .is-home-v2 .cine-disc {
-    left: 50%;
-    right: auto;
-    top: 48%;
-    width: min(72%, 340px);
-  }
-
-  .is-home-v2 .cine-hero {
-    min-height: 340px;
-  }
-
-  .is-home-v2 .cine-bean-float--local,
-  .is-home-v2 .cine-bean-float--near1,
-  .is-home-v2 .cine-bean-float--near2,
-  .is-home-v2 .cine-bean-float--near3,
-  .is-home-v2 .cine-bean-float--near4,
-  .is-home-v2 .cine-bean-float--mid1,
-  .is-home-v2 .cine-bean-float--mid2,
-  .is-home-v2 .cine-bean-float--edge1,
-  .is-home-v2 .cine-bean-float--edge2 {
+  .is-home-v2 .kui-dots {
     display: none;
   }
 
-  .is-home-v2 .cine-pouch-body {
-    height: clamp(270px, 46vw, 330px);
+  .is-home-v2 .kui-plate-wrap {
+    transform: rotate(10deg);
   }
 }
 
 @media (max-width: 640px) {
-  .is-home-v2 .cine-shell {
-    width: calc(100% - 1.15rem);
+  .is-home-v2 .for-home--v2.kitchen-ui {
+    min-height: 0;
   }
 
-  .is-home-v2 .cine-card {
-    padding: 0.9rem 0.85rem 1.25rem;
+  .is-home-v2 .kui-stage {
+    width: calc(100% - 1rem);
+    padding-bottom: 1.25rem;
   }
 
-  .is-home-v2 .cine-nav {
-    gap: 0.55rem;
+  .is-home-v2 .kui-plate {
+    width: min(72vw, 260px);
+    border-radius: 22px;
   }
 
-  .is-home-v2 .cine-nav-link {
-    font-size: 0.6rem;
+  .is-home-v2 .kui-title-thin,
+  .is-home-v2 .kui-title-bold {
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
   }
 
-  .is-home-v2 .cine-nav-logo {
-    width: 44px;
-    height: 44px;
+  .is-home-v2 .kui-rail-item {
+    width: 70px;
   }
 
-  .is-home-v2 .cine-pouch {
-    width: min(52vw, 176px);
+  .is-home-v2 .kui-rail-thumb {
+    width: 52px;
+    height: 52px;
   }
 
-  .is-home-v2 .cine-pouch-label {
-    width: 72%;
-    bottom: 10%;
-    padding: 0.45rem 0.4rem 0.5rem;
+  .is-home-v2 .kui-rail-item.is-active .kui-rail-thumb {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
   }
 
-  .is-home-v2 .cine-bean-float--fg1,
-  .is-home-v2 .cine-bean-float--fg2 {
-    opacity: 0.55;
-    width: clamp(60px, 20vw, 100px);
-  }
-
-  .is-home-v2 .cine-watermark {
-    font-size: clamp(2.6rem, 20vw, 4.2rem);
+  .is-home-v2 .kui-rail-label {
+    font-size: 0.58rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .is-home-v2 .cine-btn,
-  .is-home-v2 .cine-nav-btn,
-  .is-home-v2 .cine-side-thumb {
+  .is-home-v2 .kui-mic {
     transition: none;
   }
 }
