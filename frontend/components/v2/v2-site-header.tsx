@@ -2,20 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { headerTools, navItems } from "@/lib/brand";
+import { navItems } from "@/lib/brand";
 
 /**
  * Shop header for /v2 — brand ribbon + white plate, logo on the right (RTL).
  */
 export function V2SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 48);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   return (
-    <header className="site-header site-header--v2">
-      <p className="v2-claim">از مزرعه تا سفره</p>
-
+    <header className={`site-header site-header--v2${scrolled ? " is-scrolled" : ""}`}>
       <div className="v2-header-body">
         <div className="shell v2-header-plate">
           <div className="v2-menubar">
@@ -52,48 +58,9 @@ export function V2SiteHeader() {
             </nav>
 
             <div className="v2-menubar-actions">
-              {headerTools.map((tool) => (
-                <Link
-                  key={tool.href}
-                  href={tool.href}
-                  className={
-                    tool.quiet ? "v2-tool-link is-quiet" : "v2-tool-link"
-                  }
-                >
-                  {tool.label}
-                </Link>
-              ))}
-              <form
-                className="v2-header-search"
-                action="/products"
-                role="search"
-              >
-                <input
-                  type="search"
-                  name="q"
-                  placeholder="جستجو در محصولات"
-                  autoComplete="off"
-                  aria-label="جستجو در محصولات"
-                />
-                <button type="submit" aria-label="جستجو">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <circle
-                      cx="11"
-                      cy="11"
-                      r="6.2"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                    <path
-                      d="M20 20l-3.4-3.4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                  </svg>
-                </button>
-              </form>
+              <Link href="/way" className="v2-menu-cta">
+                داستان ما
+              </Link>
               <button
                 type="button"
                 className="v2-menu-toggle"
