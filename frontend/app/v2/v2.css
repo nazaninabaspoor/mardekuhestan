@@ -648,24 +648,25 @@
 
 /* ========================================================================
    for-home--v2 / cinematic — exact Smart Kitchen coffee-card UI (ref video)
-   White page · elevated peach card · in-card nav · upright pouch · DoF beans
+   Cream page · peach card · lamp disc · tall matte pouch · DoF beans
    ======================================================================== */
 
 .is-home-v2 .for-home--v2.cine {
-  --cine-page: #f7f4f0;
-  --cine-card: #f0dfcc;
-  --cine-card-deep: #e8d2bb;
-  --cine-ink: #2a1c16;
-  --cine-muted: #6b5346;
-  --cine-brown: #5c3d30;
-  --cine-black: #14110f;
+  --cine-page: #f6f1f0;
+  --cine-card: #e8d2c4;
+  --cine-card-hi: #f0dfd2;
+  --cine-ink: #1a1210;
+  --cine-muted: #6a5348;
+  --cine-brown: #5a3a2e;
+  --cine-black: #12100e;
   --cine-green: #005b48;
-  --cine-badge: #c45a5a;
+  --cine-badge: #c45a3a;
+  --cine-label: #f7f1ea;
   position: relative;
   isolation: isolate;
   overflow: visible;
-  min-height: min(94vh, 860px);
-  padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(2.5rem, 6vw, 4.5rem) !important;
+  min-height: auto;
+  padding: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(2rem, 5vw, 3.25rem) !important;
   margin: 0;
   background: var(--cine-page) !important;
   border: 0 !important;
@@ -673,79 +674,115 @@
   color: var(--cine-ink);
 }
 
+.is-home-v2 .cine-page-wm {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(4rem, 18vw, 12rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: rgb(255 255 255 / 35%);
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  opacity: 0.55;
+}
+
 .is-home-v2 .cine-shell {
   position: relative;
   z-index: 3;
-  width: min(1120px, calc(100% - 2.75rem));
+  width: min(1080px, calc(100% - 2.5rem));
   margin-inline: auto;
 }
 
-/* —— Floating “beans” (oval, DoF) —— */
-.is-home-v2 .cine-float {
+/* —— Coffee-bean floaters (CSS seeds, DoF) —— */
+.is-home-v2 .cine-bean-float {
   position: absolute;
   z-index: 4;
-  width: clamp(28px, 3.6vw, 54px);
-  aspect-ratio: 0.68;
-  border-radius: 60% 40% 58% 42% / 45% 55% 45% 55%;
-  overflow: hidden;
   pointer-events: none;
-  box-shadow: 0 10px 22px rgb(40 20 10 / 16%);
+  width: 36px;
+  aspect-ratio: 0.62;
 }
 
-.is-home-v2 .cine-float img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transform: scale(1.2);
-  filter: sepia(0.35) saturate(0.75) brightness(0.92);
-}
-
-.is-home-v2 .cine-float-inner {
+.is-home-v2 .cine-bean-seed {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: 58% 42% 55% 45% / 48% 52% 48% 52%;
+  background:
+    radial-gradient(ellipse 40% 30% at 32% 32%, #a87850 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, #6b3e28 0%, #3a2216 55%, #1c100c 100%);
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 18%),
+    0 8px 16px rgb(40 20 10 / 22%);
 }
 
-/* Foreground bokeh — soft, not giant meat blobs */
-.is-home-v2 .cine-float--fg1 {
-  top: 10%;
-  left: 2%;
+.is-home-v2 .cine-bean-seed::after {
+  content: "";
+  position: absolute;
+  inset: 18% 46% 18% 46%;
+  border-radius: 999px;
+  background: rgb(20 10 6 / 45%);
+}
+
+.is-home-v2 .cine-bean-float .cine-bean-seed {
+  position: relative;
+}
+
+.is-home-v2 .cine-bean-float--fg1 {
+  top: 6%;
+  left: -1%;
   z-index: 6;
-  width: clamp(70px, 9vw, 120px);
-  aspect-ratio: 0.7;
+  width: clamp(88px, 11vw, 150px);
 }
-.is-home-v2 .cine-float--fg2 {
-  bottom: 8%;
-  right: 2%;
+.is-home-v2 .cine-bean-float--fg2 {
+  bottom: 4%;
+  right: -1%;
   z-index: 6;
-  width: clamp(80px, 10vw, 130px);
-  aspect-ratio: 0.7;
+  width: clamp(96px, 12vw, 160px);
+}
+.is-home-v2 .cine-bean-float--edge1 {
+  top: 18%;
+  right: 4%;
+  z-index: 2;
+  width: clamp(52px, 6vw, 78px);
+}
+.is-home-v2 .cine-bean-float--edge2 {
+  bottom: 16%;
+  left: 5%;
+  z-index: 2;
+  width: clamp(48px, 5.5vw, 72px);
 }
 
-/* Sharp beans around the pouch (center of card) */
-.is-home-v2 .cine-float--near1 { top: 36%; left: 49%; z-index: 5; width: 34px; }
-.is-home-v2 .cine-float--near2 { top: 48%; left: 57%; z-index: 5; width: 28px; }
-.is-home-v2 .cine-float--near3 { top: 58%; left: 46%; z-index: 5; width: 30px; }
-.is-home-v2 .cine-float--near4 { top: 42%; left: 42%; z-index: 5; width: 26px; }
+.is-home-v2 .cine-bean-float--local {
+  position: absolute;
+  z-index: 5;
+}
 
-.is-home-v2 .cine-float--mid1 { top: 22%; right: 14%; z-index: 4; width: clamp(40px, 5vw, 64px); }
-.is-home-v2 .cine-float--mid2 { bottom: 20%; left: 12%; z-index: 4; width: clamp(44px, 5.5vw, 70px); }
+.is-home-v2 .cine-hero .cine-bean-float--near1 { top: 14%; left: 78%; width: 28px; }
+.is-home-v2 .cine-hero .cine-bean-float--near2 { top: 46%; left: 84%; width: 22px; }
+.is-home-v2 .cine-hero .cine-bean-float--near3 { top: 72%; left: 8%; width: 24px; }
+.is-home-v2 .cine-hero .cine-bean-float--near4 { top: 24%; left: 4%; width: 20px; }
+.is-home-v2 .cine-hero .cine-bean-float--mid1 { top: 2%; left: 68%; width: 34px; }
+.is-home-v2 .cine-hero .cine-bean-float--mid2 { bottom: 8%; left: -8%; width: 38px; }
 
 /* —— Elevated peach card —— */
 .is-home-v2 .cine-card {
   position: relative;
-  overflow: visible;
-  border-radius: 4px;
+  overflow: hidden;
+  border-radius: 10px;
   background:
-    radial-gradient(circle at 50% 48%, rgb(255 250 244 / 55%) 0%, transparent 38%),
-    radial-gradient(circle at 22% 55%, rgb(255 248 240 / 55%) 0%, transparent 40%),
-    linear-gradient(180deg, #f4e6d5 0%, #efdcc8 50%, #e6d0b8 100%);
+    radial-gradient(circle at 50% 58%, rgb(255 250 245 / 88%) 0%, transparent 38%),
+    linear-gradient(180deg, var(--cine-card-hi) 0%, var(--cine-card) 55%, #dfc4b4 100%);
   box-shadow:
-    0 32px 70px rgb(60 35 15 / 18%),
-    0 10px 22px rgb(60 35 15 / 8%);
-  padding: 1.35rem clamp(1.1rem, 2.8vw, 2.4rem) 2.25rem;
-  min-height: min(64vh, 580px);
+    0 28px 60px rgb(60 35 20 / 18%),
+    0 10px 22px rgb(60 35 20 / 10%),
+    0 0 0 1px rgb(255 255 255 / 25%) inset;
+  padding: 1rem clamp(1.1rem, 2.8vw, 2.4rem) 1.35rem;
+  min-height: 0;
 }
 
 .is-home-v2 .cine-watermark {
@@ -753,46 +790,39 @@
   inset: 0;
   margin: 0;
   z-index: 0;
+  display: grid;
+  place-items: center;
   pointer-events: none;
   user-select: none;
   overflow: hidden;
-}
-
-.is-home-v2 .cine-watermark span {
-  position: absolute;
-  left: 50%;
-  translate: -50% 0;
-  font-size: clamp(3.2rem, 11vw, 7.5rem);
+  font-size: clamp(3.8rem, 14vw, 9.5rem);
   font-weight: 900;
-  letter-spacing: 0.04em;
-  line-height: 0.9;
-  color: rgb(255 255 255 / 26%);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: rgb(255 255 255 / 32%);
   white-space: nowrap;
 }
 
-.is-home-v2 .cine-watermark span:first-child {
-  top: 18%;
-}
-
-.is-home-v2 .cine-watermark span:last-child {
-  bottom: 12%;
-  opacity: 0.85;
-}
-
-/* Soft spotlight behind the product — exact ref “lamp” */
+/* Soft spotlight / lamp behind pouch */
 .is-home-v2 .cine-disc {
   position: absolute;
   z-index: 0;
-  width: min(46%, 420px);
+  width: min(52%, 460px);
   aspect-ratio: 1;
   left: 50%;
-  top: 58%;
+  top: 56%;
   translate: -50% -50%;
   border-radius: 50%;
   background:
-    radial-gradient(circle, rgb(255 255 255 / 78%) 0%, rgb(255 252 248 / 35%) 42%, transparent 68%);
+    radial-gradient(
+      circle,
+      rgb(255 255 255 / 92%) 0%,
+      rgb(255 252 248 / 55%) 28%,
+      rgb(255 248 240 / 22%) 48%,
+      transparent 68%
+    );
   pointer-events: none;
-  filter: blur(2px);
+  filter: blur(1px);
 }
 
 /* —— In-card nav —— */
@@ -802,19 +832,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.85rem, 2.4vw, 2rem);
+  gap: clamp(0.75rem, 2.2vw, 1.85rem);
   direction: rtl;
-  margin-bottom: clamp(1.25rem, 3vw, 2.25rem);
+  margin-bottom: clamp(0.85rem, 2.2vw, 1.5rem);
 }
 
 .is-home-v2 .cine-nav-link {
   font-family: inherit;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: var(--cine-ink);
   text-decoration: none;
-  opacity: 0.88;
+  opacity: 0.86;
   transition: opacity 0.2s ease;
 }
 
@@ -832,7 +862,7 @@
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
   font: inherit;
   color: inherit;
 }
@@ -840,29 +870,23 @@
 .is-home-v2 .cine-nav-logo {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 4px;
+  width: 52px;
+  height: 52px;
+  padding: 0.3rem;
+  border-radius: 3px;
   background: var(--cine-black);
   color: #fff;
   text-decoration: none;
-  overflow: hidden;
   flex: 0 0 auto;
-  box-shadow: 0 6px 16px rgb(0 0 0 / 18%);
-}
-
-.is-home-v2 .cine-nav-logo img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
+  box-shadow: 0 6px 14px rgb(0 0 0 / 20%);
+  text-align: center;
 }
 
 .is-home-v2 .cine-nav-logo span {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  font-size: 0.48rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
 }
 
 .is-home-v2 .cine-nav-drop {
@@ -872,21 +896,21 @@
 .is-home-v2 .cine-nav-menu {
   display: none;
   position: absolute;
-  top: calc(100% + 0.55rem);
+  top: calc(100% + 0.5rem);
   right: 50%;
   translate: 50% 0;
   min-width: 11rem;
   padding: 0.4rem;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #fff;
-  box-shadow: 0 16px 36px rgb(40 20 10 / 16%);
+  box-shadow: 0 14px 32px rgb(40 20 10 / 16%);
   z-index: 8;
 }
 
 .is-home-v2 .cine-nav-drop:hover .cine-nav-menu,
 .is-home-v2 .cine-nav-drop:focus-within .cine-nav-menu {
   display: grid;
-  gap: 0.15rem;
+  gap: 0.12rem;
 }
 
 .is-home-v2 .cine-nav-menu button {
@@ -894,10 +918,10 @@
   border: 0;
   background: transparent;
   text-align: right;
-  padding: 0.45rem 0.55rem;
-  border-radius: 7px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
   font-family: inherit;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--cine-ink);
   cursor: pointer;
@@ -909,17 +933,17 @@
   color: var(--cine-green);
 }
 
-/* —— 3-column grid — ref proportions ~28 | 44 | 28 —— */
+/* —— 3-column grid ~ copy | pouch | features —— */
 .is-home-v2 .cine-grid {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(180px, 0.92fr) minmax(260px, 1.4fr) minmax(160px, 0.88fr);
+  grid-template-columns: minmax(170px, 0.95fr) minmax(220px, 1.15fr) minmax(150px, 0.9fr);
   align-items: center;
-  gap: clamp(0.5rem, 2vw, 1.5rem);
+  gap: clamp(0.35rem, 1.6vw, 1.1rem);
   direction: ltr;
-  min-height: 460px;
-  padding-bottom: 0.5rem;
+  min-height: 420px;
+  padding-bottom: 0.15rem;
 }
 
 .is-home-v2 .cine-copy {
@@ -928,40 +952,38 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.65rem;
-  max-width: 15.5rem;
+  gap: 0.55rem;
+  max-width: 14.5rem;
   justify-self: start;
-  padding-inline-start: 0.25rem;
 }
 
 .is-home-v2 .cine-script {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--cine-brown);
   font-style: italic;
-  opacity: 0.88;
+  opacity: 0.9;
 }
 
 .is-home-v2 .cine-title {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.02rem;
+  gap: 0;
   font-family: inherit;
-  font-size: clamp(1.55rem, 2.7vw, 2.15rem);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
   font-weight: 900;
-  line-height: 1.18;
-  letter-spacing: -0.015em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--cine-ink);
-  text-transform: none;
 }
 
 .is-home-v2 .cine-lead {
   margin: 0;
-  max-width: 26ch;
-  font-size: 0.74rem;
-  line-height: 1.65;
+  max-width: 24ch;
+  font-size: 0.7rem;
+  line-height: 1.6;
   color: var(--cine-muted);
 }
 
@@ -969,21 +991,21 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.48rem;
-  margin-top: 0.45rem;
-  width: 148px;
+  gap: 0.42rem;
+  margin-top: 0.35rem;
+  width: 142px;
 }
 
 .is-home-v2 .cine-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  min-height: 40px;
-  padding: 0 0.85rem;
-  border-radius: 7px;
+  gap: 0.35rem;
+  min-height: 38px;
+  padding: 0 0.8rem;
+  border-radius: 6px;
   font-family: inherit;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -991,7 +1013,7 @@
 }
 
 .is-home-v2 .cine-btn-arrow {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1;
 }
 
@@ -1008,52 +1030,46 @@
 .is-home-v2 .cine-btn:hover,
 .is-home-v2 .cine-btn:focus-visible {
   transform: translateY(-1px);
-  filter: brightness(1.05);
+  filter: brightness(1.06);
   outline: none;
 }
 
-/* —— Upright pouch (coffee-bag silhouette) —— */
+/* —— Tall matte coffee pouch —— */
 .is-home-v2 .cine-hero {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  perspective: 1000px;
+  perspective: 1100px;
   z-index: 3;
+  min-height: 400px;
 }
-
-/* Local beans relative to pouch */
-.is-home-v2 .cine-float--local {
-  position: absolute;
-  z-index: 4;
-}
-
-.is-home-v2 .cine-hero .cine-float--near1 { top: 18%; left: 72%; width: 32px; }
-.is-home-v2 .cine-hero .cine-float--near2 { top: 48%; left: 78%; width: 26px; }
-.is-home-v2 .cine-hero .cine-float--near3 { top: 68%; left: 12%; width: 28px; }
-.is-home-v2 .cine-hero .cine-float--near4 { top: 28%; left: 8%; width: 24px; }
-.is-home-v2 .cine-hero .cine-float--mid1 { top: 6%; left: 62%; width: 40px; }
-.is-home-v2 .cine-hero .cine-float--mid2 { bottom: 12%; left: -4%; width: 44px; }
 
 .is-home-v2 .cine-pouch {
   position: relative;
-  width: min(100%, 228px);
+  width: min(100%, 188px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 2;
 }
 
 .is-home-v2 .cine-pouch-glow {
   position: absolute;
   z-index: 0;
-  width: 160%;
+  width: 220%;
   aspect-ratio: 1;
-  top: 42%;
+  top: 46%;
   left: 50%;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(255 255 255 / 75%) 0%, transparent 62%);
+  background: radial-gradient(
+    circle,
+    rgb(255 255 255 / 90%) 0%,
+    rgb(255 255 255 / 35%) 38%,
+    transparent 62%
+  );
   pointer-events: none;
 }
 
@@ -1061,22 +1077,34 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  height: clamp(280px, 36vh, 340px);
-  /* standing pouch: slightly wider bottom, soft top corners */
-  border-radius: 10px 10px 16px 16px;
+  height: clamp(300px, 38vh, 360px);
+  /* standing coffee-bag: flat top, soft shoulder bevel, slight taper */
   clip-path: polygon(
-    7% 0%,
-    93% 0%,
-    100% 10%,
-    98% 100%,
-    2% 100%,
-    0% 10%
+    8% 0%,
+    92% 0%,
+    100% 7%,
+    96% 100%,
+    4% 100%,
+    0% 7%
   );
   overflow: hidden;
-  background: linear-gradient(160deg, #2a2018 0%, #120e0c 55%, #1a1410 100%);
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 6%) 0%, transparent 18%, transparent 82%, rgb(0 0 0 / 25%) 100%),
+    linear-gradient(165deg, #2a221c 0%, #0c0a08 48%, #181410 100%);
   box-shadow:
-    0 26px 44px rgb(30 15 8 / 32%),
-    inset 0 1px 0 rgb(255 255 255 / 10%);
+    0 26px 44px rgb(20 10 5 / 40%),
+    0 6px 14px rgb(20 10 5 / 22%),
+    inset 0 1px 0 rgb(255 255 255 / 12%),
+    inset 0 -20px 30px rgb(0 0 0 / 35%);
+}
+
+/* Product print sits on upper bag face, fades into matte black */
+.is-home-v2 .cine-pouch-print {
+  position: absolute;
+  inset: 0 0 28% 0;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
 }
 
 .is-home-v2 .cine-pouch-art {
@@ -1085,79 +1113,95 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: cover;
-  opacity: 0.88;
-  filter: saturate(0.92) contrast(1.05);
+  object-position: center 30%;
+  opacity: 0.95;
+  filter: saturate(0.92) contrast(1.06) brightness(0.9);
 }
 
+.is-home-v2 .cine-pouch-print::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgb(8 6 5 / 55%) 100%);
+  pointer-events: none;
+}
+
+/* Small light printed sticker — not a full-face slab */
 .is-home-v2 .cine-pouch-label {
   position: absolute;
   z-index: 2;
   left: 50%;
-  top: 34%;
+  bottom: 11%;
   translate: -50% 0;
-  width: 72%;
+  width: 68%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.95rem 0.7rem 1.05rem;
-  border-radius: 3px;
-  background: rgb(10 8 6 / 78%);
-  color: #fff;
+  gap: 0.28rem;
+  padding: 0.55rem 0.45rem 0.6rem;
+  border-radius: 2px;
+  background: var(--cine-label);
+  color: var(--cine-ink);
   text-align: center;
-  box-shadow: 0 8px 18px rgb(0 0 0 / 25%);
+  box-shadow:
+    0 4px 10px rgb(0 0 0 / 28%),
+    0 0 0 1px rgb(0 0 0 / 6%);
 }
 
 .is-home-v2 .cine-pouch-badge {
   display: inline-block;
-  padding: 0.18rem 0.5rem;
-  border-radius: 2px;
+  padding: 0.1rem 0.36rem;
+  border-radius: 1px;
   background: var(--cine-badge);
-  font-size: 0.58rem;
+  color: #fff;
+  font-size: 0.48rem;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 .is-home-v2 .cine-pouch-label strong {
-  font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+  font-size: clamp(0.72rem, 1.2vw, 0.92rem);
   font-weight: 900;
-  line-height: 1.25;
+  line-height: 1.15;
+  color: var(--cine-ink);
 }
 
 .is-home-v2 .cine-pouch-brand {
-  font-size: 0.6rem;
-  opacity: 0.72;
+  font-size: 0.5rem;
+  opacity: 0.55;
   letter-spacing: 0.08em;
+  color: var(--cine-muted);
 }
 
 .is-home-v2 .cine-pouch-shadow {
   display: block;
   position: relative;
   z-index: 0;
-  width: 82%;
-  height: 20px;
+  width: 92%;
+  height: 18px;
   margin-top: 2px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgb(40 20 10 / 38%) 0%, transparent 72%);
+  background: radial-gradient(ellipse, rgb(30 15 8 / 48%) 0%, transparent 70%);
   filter: blur(3px);
 }
 
 .is-home-v2 .cine-hero-controls {
   display: flex;
-  gap: 0.45rem;
-  margin-top: 0.85rem;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  opacity: 0.4;
 }
 
 .is-home-v2 .cine-nav-btn {
   appearance: none;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 1px solid rgb(42 28 22 / 22%);
-  background: rgb(255 255 255 / 55%);
+  border: 1px solid rgb(42 28 22 / 18%);
+  background: rgb(255 255 255 / 45%);
   color: var(--cine-ink);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
@@ -1177,27 +1221,39 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;
-  padding-top: 0.35rem;
+  gap: 0.55rem;
+  justify-self: end;
+  max-width: 12.5rem;
 }
 
 .is-home-v2 .cine-side-thumbs {
   display: flex;
   gap: 0.5rem;
+  align-items: flex-end;
 }
 
 .is-home-v2 .cine-side-thumb {
   appearance: none;
   border: 0;
   padding: 0;
-  width: 48px;
-  height: 58px;
-  border-radius: 6px 6px 8px 8px;
   overflow: hidden;
   cursor: pointer;
-  background: #1a1410;
-  box-shadow: 0 8px 18px rgb(0 0 0 / 14%);
+  background: #14110f;
+  box-shadow: 0 7px 16px rgb(0 0 0 / 18%);
   transition: transform 0.2s ease;
+}
+
+.is-home-v2 .cine-side-thumb--bag {
+  width: 40px;
+  height: 54px;
+  border-radius: 4px 4px 6px 6px;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 8%, 95% 100%, 5% 100%, 0% 8%);
+}
+
+.is-home-v2 .cine-side-thumb--cup {
+  width: 38px;
+  height: 44px;
+  border-radius: 45% 45% 8px 8px / 30% 30% 12px 12px;
 }
 
 .is-home-v2 .cine-side-thumb img {
@@ -1205,7 +1261,8 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  opacity: 0.95;
+  opacity: 0.9;
+  filter: brightness(0.85) contrast(1.05);
 }
 
 .is-home-v2 .cine-side-thumb:hover,
@@ -1215,11 +1272,11 @@
 }
 
 .is-home-v2 .cine-side-title {
-  margin: 0.15rem 0 0;
-  font-size: 1rem;
+  margin: 0.1rem 0 0;
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--cine-ink);
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .is-home-v2 .cine-side-list {
@@ -1228,27 +1285,26 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  max-width: 18ch;
+  gap: 0.45rem;
+  max-width: 17ch;
 }
 
 .is-home-v2 .cine-side-list li {
   display: flex;
   align-items: flex-start;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  line-height: 1.55;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  line-height: 1.5;
   color: var(--cine-muted);
 }
 
 .is-home-v2 .cine-bean {
   flex: 0 0 auto;
-  width: 11px;
-  height: 15px;
-  margin-top: 0.15rem;
+  width: 10px;
+  height: 14px;
+  margin-top: 0.12rem;
   border-radius: 58% 42% 55% 45% / 48% 52% 48% 52%;
-  background:
-    radial-gradient(circle at 35% 35%, #8a5a3a 0%, #4a2c1c 70%);
+  background: radial-gradient(circle at 35% 35%, #8a5a3a 0%, #3a2216 72%);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 15%);
 }
 
@@ -1259,23 +1315,26 @@
   padding: 0;
   margin: 0;
   font: inherit;
+  font-size: 0.68rem;
   color: inherit;
   text-align: inherit;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 0.15em;
+  opacity: 0.75;
 }
 
 .is-home-v2 .cine-inline-story:hover,
 .is-home-v2 .cine-inline-story:focus-visible {
   color: var(--cine-green);
+  opacity: 1;
   outline: none;
 }
 
 @media (max-width: 1024px) {
   .is-home-v2 .cine-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
     min-height: 0;
   }
 
@@ -1284,19 +1343,21 @@
     align-items: center;
     text-align: center;
     max-width: none;
+    justify-self: center;
   }
 
   .is-home-v2 .cine-actions {
-    width: min(100%, 200px);
+    width: min(100%, 190px);
   }
 
   .is-home-v2 .cine-side-thumbs,
   .is-home-v2 .cine-nav {
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .is-home-v2 .cine-side-list {
-    max-width: 34ch;
+    max-width: 32ch;
   }
 
   .is-home-v2 .cine-side-list li {
@@ -1304,41 +1365,73 @@
   }
 
   .is-home-v2 .cine-disc {
-    right: 50%;
+    left: 50%;
+    right: auto;
+    top: 48%;
+    width: min(72%, 340px);
   }
 
-  .is-home-v2 .cine-float--near1,
-  .is-home-v2 .cine-float--near2,
-  .is-home-v2 .cine-float--near3,
-  .is-home-v2 .cine-float--near4 {
+  .is-home-v2 .cine-hero {
+    min-height: 340px;
+  }
+
+  .is-home-v2 .cine-bean-float--local,
+  .is-home-v2 .cine-bean-float--near1,
+  .is-home-v2 .cine-bean-float--near2,
+  .is-home-v2 .cine-bean-float--near3,
+  .is-home-v2 .cine-bean-float--near4,
+  .is-home-v2 .cine-bean-float--mid1,
+  .is-home-v2 .cine-bean-float--mid2,
+  .is-home-v2 .cine-bean-float--edge1,
+  .is-home-v2 .cine-bean-float--edge2 {
     display: none;
+  }
+
+  .is-home-v2 .cine-pouch-body {
+    height: clamp(270px, 46vw, 330px);
   }
 }
 
 @media (max-width: 640px) {
   .is-home-v2 .cine-shell {
-    width: calc(100% - 1.25rem);
+    width: calc(100% - 1.15rem);
   }
 
   .is-home-v2 .cine-card {
-    padding: 1rem 0.9rem 1.5rem;
+    padding: 0.9rem 0.85rem 1.25rem;
   }
 
   .is-home-v2 .cine-nav {
-    gap: 0.65rem;
+    gap: 0.55rem;
   }
 
   .is-home-v2 .cine-nav-link {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
+  }
+
+  .is-home-v2 .cine-nav-logo {
+    width: 44px;
+    height: 44px;
   }
 
   .is-home-v2 .cine-pouch {
-    width: min(70vw, 210px);
+    width: min(52vw, 176px);
   }
 
-  .is-home-v2 .cine-float--fg1,
-  .is-home-v2 .cine-float--fg2 {
-    opacity: 0.65;
+  .is-home-v2 .cine-pouch-label {
+    width: 72%;
+    bottom: 10%;
+    padding: 0.45rem 0.4rem 0.5rem;
+  }
+
+  .is-home-v2 .cine-bean-float--fg1,
+  .is-home-v2 .cine-bean-float--fg2 {
+    opacity: 0.55;
+    width: clamp(60px, 20vw, 100px);
+  }
+
+  .is-home-v2 .cine-watermark {
+    font-size: clamp(2.6rem, 20vw, 4.2rem);
   }
 }
 
