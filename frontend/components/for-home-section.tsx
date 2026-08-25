@@ -9,6 +9,7 @@ import {
   homeDoors,
   type HomeDoorId,
 } from "@/lib/brand";
+import { ForHomeCinematic } from "@/components/v2/for-home-cinematic";
 
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
 const CAT_PAGE_SIZE = 6;
@@ -242,7 +243,13 @@ export function ForHomeSection({
 }: {
   variant?: "default" | "v2";
 } = {}) {
-  const isV2 = variant === "v2";
+  if (variant === "v2") {
+    return <ForHomeCinematic />;
+  }
+  return <ForHomeSectionDefault />;
+}
+
+function ForHomeSectionDefault() {
   const rootRef = useRef<HTMLElement | null>(null);
   const dialogTitleId = useId();
   const [visible, setVisible] = useState(false);
@@ -291,7 +298,7 @@ export function ForHomeSection({
   const selectProduct = (id: string) => {
     setActiveProductId(id);
     setStoryOpen(false);
-    if (!isV2) setTipOpen(true);
+    setTipOpen(true);
   };
 
   const cycleCats = () => {
@@ -302,7 +309,7 @@ export function ForHomeSection({
     const next = (activeIndex + dir + products.length) % products.length;
     setActiveProductId(products[next].id);
     setStoryOpen(false);
-    if (!isV2) setTipOpen(true);
+    setTipOpen(true);
   };
 
   useEffect(() => {
@@ -383,7 +390,7 @@ export function ForHomeSection({
       <div className="for-home-products-row">
         {visibleProducts.map((product, index) => {
           const selected = product.id === activeProduct.id;
-          const tone = productTone(activeDoorId, index, variant);
+          const tone = productTone(activeDoorId, index);
           return (
             <button
               key={product.id}
@@ -401,11 +408,6 @@ export function ForHomeSection({
               onClick={() => selectProduct(product.id)}
             >
               <span className="for-home-product-card-accent" aria-hidden="true" />
-              {isV2 ? (
-                <span className="for-home-product-card-index" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              ) : null}
               <span className="for-home-product-card-media">
                 <Image
                   src={product.image}
@@ -419,9 +421,6 @@ export function ForHomeSection({
                 <strong>{product.name}</strong>
                 <span className="for-home-product-card-pick">{product.note}</span>
               </span>
-              {isV2 ? (
-                <span className="for-home-product-card-glow" aria-hidden="true" />
-              ) : null}
             </button>
           );
         })}
@@ -498,143 +497,6 @@ export function ForHomeSection({
       </div>
     </div>
   ) : null;
-
-  if (isV2) {
-    return (
-      <section
-        ref={rootRef}
-        className={`for-home for-home--catalog for-home--v2${visible ? " is-visible" : ""}`}
-        aria-labelledby="for-home-title"
-      >
-        <div className="for-home-v2-atmosphere" aria-hidden="true">
-          <span className="for-home-v2-blob for-home-v2-blob--a" />
-          <span className="for-home-v2-blob for-home-v2-blob--b" />
-          <span className="for-home-v2-blob for-home-v2-blob--c" />
-          <span className="for-home-v2-grain" />
-        </div>
-
-        <div className="for-home-v2-layout">
-          <div className="for-home-v2-hero">
-            <div className="for-home-v2-stage">
-              <div className="for-home-plate-wrap">
-                <span className="for-home-v2-stage-ring for-home-v2-stage-ring--a" aria-hidden="true" />
-                <span className="for-home-v2-stage-ring for-home-v2-stage-ring--b" aria-hidden="true" />
-                <div className="for-home-plate-orbit" aria-hidden="true">
-                  <span className="for-home-garnish for-home-garnish--1">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 3c4.5 2.2 7 6.2 7 10.4 0 2.6-1.2 4.6-3.2 5.6-1.4-3.8-3.6-6.8-6.8-9.2C10.6 6.4 11.4 4.6 12 3Z"
-                        fill="currentColor"
-                        opacity="0.9"
-                      />
-                      <path
-                        d="M9.2 9.8c3.1 2.4 5.2 5.4 6.4 9.2"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                        opacity="0.45"
-                      />
-                    </svg>
-                  </span>
-                  <span className="for-home-garnish for-home-garnish--2">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M5 19c6-1.5 10.5-5.5 13-12-4.8 1-8.8 3.8-11.5 8.2C5.8 16.4 5.2 17.8 5 19Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                  <span className="for-home-garnish for-home-garnish--3">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M12 4c.8 3.5.4 6.8-1.2 9.8C9.2 16.4 8 18.2 7 20c3.8-1.1 6.6-3.6 8.2-7.2C16.8 9.4 15.4 6.2 12 4Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                  <span className="for-home-garnish for-home-garnish--4">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <ellipse
-                        cx="12"
-                        cy="12"
-                        rx="4.2"
-                        ry="7.5"
-                        transform="rotate(-28 12 12)"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                  <span className="for-home-garnish for-home-garnish--5">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M18 6c-2.8 2-4.8 5-5.6 8.6-.5 2.2-.3 4.2.4 6 2.8-2.4 4.6-5.6 5.2-9.2.3-1.8.2-3.6 0-5.4Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <div className="for-home-plate">
-                  <span className="for-home-plate-arc" aria-hidden="true" />
-                  <span
-                    className="for-home-plate-arc for-home-plate-arc--b"
-                    aria-hidden="true"
-                  />
-                  <span className="for-home-plate-ring" aria-hidden="true" />
-                  <Image
-                    key={activeProduct.id}
-                    src={activeProduct.image}
-                    alt={activeProduct.alt}
-                    width={720}
-                    height={720}
-                    sizes="(max-width: 900px) 70vw, 420px"
-                    className={`for-home-plate-art${
-                      plateSpinning ? " is-spinning" : ""
-                    }`}
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="for-home-v2-copy" key={activeProduct.id}>
-              <p className="for-home-v2-copy-door">{activeDoor.label}</p>
-              <h2 id="for-home-title" className="for-home-title">
-                <span className="for-home-title-soft">چه به </span>
-                <span className="for-home-title-accent">خانه</span>
-                <span className="for-home-title-soft"> می‌رسد</span>
-              </h2>
-              <p className="for-home-lead">
-                <em className="for-home-lead-name">{activeProduct.name}</em>
-                {"؛ "}
-                {activeProduct.note}. تازه از مسیر مرتع تا سفره.
-              </p>
-              {copyActions}
-            </div>
-          </div>
-
-          <div className="for-home-v2-picks">
-            <p className="for-home-v2-picks-label">
-              <span>انتخاب محصول</span>
-              <span className="for-home-v2-picks-count">
-                {String(visibleProducts.length).padStart(2, "0")}
-              </span>
-            </p>
-            {productsGrid}
-          </div>
-
-          <aside className="for-home-v2-rail" aria-label="دسته‌بندی">
-            <div className="for-home-v2-rail-head">
-              <span className="for-home-v2-rail-peak" aria-hidden="true" />
-              <p className="for-home-v2-rail-kicker">انتخاب مسیر</p>
-              <p className="for-home-v2-rail-title">از مرتع</p>
-            </div>
-            {catsNav}
-          </aside>
-        </div>
-        {storyPopup}
-      </section>
-    );
-  }
 
   return (
     <section
