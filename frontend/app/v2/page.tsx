@@ -26,7 +26,7 @@ export default function HomeV2Page() {
       <V2PageEffects />
       <main className="home-main home-v2">
         <V2HeroSection />
-        <ForHomeSection />
+        <ForHomeSection variant="v2" />
         <OurWaySection />
         <ComingSoonSection />
         <LatestArticlesSection />

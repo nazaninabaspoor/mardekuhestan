@@ -109,7 +109,101 @@ const FALLBACK_TONES = [
   { base: "#50AF47", hot: "#86C2EB" },
 ] as const;
 
-function productTone(doorId: HomeDoorId, index: number) {
+/** Soft, minimal tones for /v2 catalog cards */
+const V2_DOOR_PRODUCT_TONES: Partial<
+  Record<HomeDoorId, ReadonlyArray<{ base: string; hot: string }>>
+> = {
+  "fresh-meat": [
+    { base: "#7A2E2E", hot: "#8F3A3A" },
+    { base: "#6B2828", hot: "#824040" },
+    { base: "#862F2F", hot: "#9A4545" },
+    { base: "#5C2428", hot: "#7A3838" },
+    { base: "#703030", hot: "#8A4242" },
+    { base: "#652A2A", hot: "#7E3C3C" },
+  ],
+  seafood: [
+    { base: "#1E3558", hot: "#2A4568" },
+    { base: "#243D68", hot: "#335278" },
+    { base: "#182E4C", hot: "#274060" },
+    { base: "#2A4570", hot: "#3A5A80" },
+    { base: "#1A324F", hot: "#284668" },
+  ],
+  sausage: [
+    { base: "#8A4A28", hot: "#9C5A34" },
+    { base: "#7A3E24", hot: "#8E4E30" },
+    { base: "#6E3420", hot: "#824030" },
+  ],
+  "cook-ready": [
+    { base: "#6E2E24", hot: "#824038" },
+    { base: "#7A3830", hot: "#8E4840" },
+    { base: "#5C2820", hot: "#703830" },
+  ],
+  "ready-meal": [
+    { base: "#1F4A3E", hot: "#2A5A4C" },
+    { base: "#245248", hot: "#306054" },
+    { base: "#1A4038", hot: "#265048" },
+  ],
+  dairy: [
+    { base: "#4A6E88", hot: "#5A7E98" },
+    { base: "#5A7E96", hot: "#6A8EA6" },
+    { base: "#3E6280", hot: "#4E7290" },
+  ],
+  farm: [
+    { base: "#3A6A3A", hot: "#4A7A4A" },
+    { base: "#2E5E32", hot: "#3E6E42" },
+    { base: "#4A6E48", hot: "#5A7E58" },
+    { base: "#4A5558", hot: "#5A6568" },
+  ],
+  bakery: [
+    { base: "#8A5228", hot: "#9C6234" },
+    { base: "#7A4224", hot: "#8E5230" },
+    { base: "#6E3A20", hot: "#824A30" },
+  ],
+  poultry: [
+    { base: "#7A3A2E", hot: "#8E4A3A" },
+    { base: "#8A4A30", hot: "#9C5A40" },
+    { base: "#6E3028", hot: "#824038" },
+  ],
+  frozen: [
+    { base: "#1E3558", hot: "#2A4568" },
+    { base: "#3E4A52", hot: "#4E5A62" },
+    { base: "#2A4570", hot: "#3A5A80" },
+  ],
+  breakfast: [
+    { base: "#8A5228", hot: "#9C6234" },
+    { base: "#5A7E96", hot: "#6A8EA6" },
+    { base: "#7A3E24", hot: "#8E4E30" },
+  ],
+  condiments: [
+    { base: "#4A5558", hot: "#5A6568" },
+    { base: "#6E2E24", hot: "#824038" },
+    { base: "#1F4A3E", hot: "#2A5A4C" },
+  ],
+  special: [
+    { base: "#1F4A3E", hot: "#2A5A4C" },
+    { base: "#7A2E2E", hot: "#8F3A3A" },
+    { base: "#1E3558", hot: "#2A4568" },
+  ],
+};
+
+const V2_FALLBACK_TONES = [
+  { base: "#1F4A3E", hot: "#2A5A4C" },
+  { base: "#7A2E2E", hot: "#8F3A3A" },
+  { base: "#1E3558", hot: "#2A4568" },
+  { base: "#4A5558", hot: "#5A6568" },
+  { base: "#6E2E24", hot: "#824038" },
+  { base: "#3A6A3A", hot: "#4A7A4A" },
+] as const;
+
+function productTone(
+  doorId: HomeDoorId,
+  index: number,
+  variant: "default" | "v2" = "default",
+) {
+  if (variant === "v2") {
+    const palette = V2_DOOR_PRODUCT_TONES[doorId] ?? V2_FALLBACK_TONES;
+    return palette[index % palette.length] ?? V2_FALLBACK_TONES[0];
+  }
   const palette = DOOR_PRODUCT_TONES[doorId] ?? FALLBACK_TONES;
   return palette[index % palette.length] ?? FALLBACK_TONES[0];
 }
@@ -141,8 +235,14 @@ function figurePitch(product: ProductItem) {
 /**
  * «چه به خانه می‌رسد»
  * Products live inside the green copy plate; compact LuxLunch glass.
+ * `variant="v2"` — softer tones, no character / scrollbar (employer page).
  */
-export function ForHomeSection() {
+export function ForHomeSection({
+  variant = "default",
+}: {
+  variant?: "default" | "v2";
+} = {}) {
+  const isV2 = variant === "v2";
   const rootRef = useRef<HTMLElement | null>(null);
   const dialogTitleId = useId();
   const [visible, setVisible] = useState(false);
@@ -191,7 +291,7 @@ export function ForHomeSection() {
   const selectProduct = (id: string) => {
     setActiveProductId(id);
     setStoryOpen(false);
-    setTipOpen(true);
+    if (!isV2) setTipOpen(true);
   };
 
   const cycleCats = () => {
@@ -202,7 +302,7 @@ export function ForHomeSection() {
     const next = (activeIndex + dir + products.length) % products.length;
     setActiveProductId(products[next].id);
     setStoryOpen(false);
-    setTipOpen(true);
+    if (!isV2) setTipOpen(true);
   };
 
   useEffect(() => {
@@ -235,6 +335,285 @@ export function ForHomeSection() {
     };
   }, [storyOpen]);
 
+  const catsNav = (
+    <nav
+      className="for-home-cats"
+      role="tablist"
+      aria-label="دسته‌های محصول"
+      key={catPage}
+    >
+      {visibleDoors.map((item) => {
+        const selected = item.id === activeDoorId;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={selected}
+            className={`for-home-cat${selected ? " is-active" : ""}`}
+            onClick={() => selectDoor(item.id)}
+          >
+            <span className="for-home-cat-emoji" aria-hidden="true">
+              {item.emoji}
+            </span>
+            <span className="for-home-cat-label">{item.label}</span>
+          </button>
+        );
+      })}
+      {catPageCount > 1 ? (
+        <button
+          type="button"
+          className="for-home-cats-more"
+          onClick={cycleCats}
+          aria-label="دسته‌های بعدی"
+        >
+          بیشتر
+        </button>
+      ) : null}
+    </nav>
+  );
+
+  const productsGrid = (
+    <div
+      className="for-home-products"
+      role="listbox"
+      aria-label={activeDoor.label}
+      key={activeDoor.id}
+    >
+      <div className="for-home-products-row">
+        {visibleProducts.map((product, index) => {
+          const selected = product.id === activeProduct.id;
+          const tone = productTone(activeDoorId, index, variant);
+          return (
+            <button
+              key={product.id}
+              type="button"
+              role="option"
+              aria-selected={selected}
+              className={`for-home-product-card${selected ? " is-active" : ""}`}
+              style={
+                {
+                  ["--fh-i"]: index,
+                  ["--fh-tone"]: tone.base,
+                  ["--fh-tone-hot"]: tone.hot,
+                } as CSSProperties
+              }
+              onClick={() => selectProduct(product.id)}
+            >
+              <span className="for-home-product-card-accent" aria-hidden="true" />
+              <span className="for-home-product-card-media">
+                <Image
+                  src={product.image}
+                  alt=""
+                  width={112}
+                  height={112}
+                  sizes="54px"
+                />
+              </span>
+              <span className="for-home-product-card-body">
+                <strong>{product.name}</strong>
+                <span className="for-home-product-card-pick">{product.note}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const copyActions = (
+    <div className="for-home-copy-actions">
+      <Link href={activeProduct.href} className="for-home-shop">
+        <MarkEmoji src={MARK_SHOP} className="for-home-mark-emoji" />
+        <span>این را برای سفره بردار</span>
+      </Link>
+      <button
+        type="button"
+        className="for-home-copy-story"
+        onClick={() => setStoryOpen(true)}
+      >
+        <MarkEmoji src={MARK_STORY} className="for-home-mark-emoji" />
+        <span>داستان کوتاه این محصول</span>
+      </button>
+      <button
+        type="button"
+        className="for-home-copy-buy is-soon"
+        disabled
+        aria-disabled="true"
+        title="به‌زودی"
+      >
+        <MarkEmoji src={MARK_SOON} className="for-home-mark-emoji" />
+        <span>خرید این محصول</span>
+        <span className="for-home-copy-buy-badge">به‌زودی</span>
+      </button>
+    </div>
+  );
+
+  const storyPopup = storyOpen ? (
+    <div
+      className="for-home-popup"
+      role="presentation"
+      onClick={() => setStoryOpen(false)}
+    >
+      <div
+        className="for-home-popup-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogTitleId}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="for-home-popup-close"
+          aria-label="بستن"
+          onClick={() => setStoryOpen(false)}
+        >
+          ×
+        </button>
+        <div className="for-home-popup-media">
+          <Image
+            src={activeProduct.image}
+            alt={activeProduct.alt}
+            width={360}
+            height={360}
+            sizes="168px"
+          />
+        </div>
+        <p className="for-home-popup-kicker">{activeDoor.label}</p>
+        <h3 id={dialogTitleId} className="for-home-popup-title">
+          {activeProduct.name}
+        </h3>
+        <p className="for-home-popup-story">{activeProduct.story}</p>
+        <Link href={activeProduct.href} className="for-home-popup-cta">
+          مشاهده در فروشگاه
+        </Link>
+      </div>
+    </div>
+  ) : null;
+
+  if (isV2) {
+    return (
+      <section
+        ref={rootRef}
+        className={`for-home for-home--catalog for-home--v2${visible ? " is-visible" : ""}`}
+        aria-labelledby="for-home-title"
+      >
+        <div className="for-home-v2-layout">
+          <div className="for-home-v2-hero">
+            <div className="for-home-plate-wrap">
+              <div className="for-home-plate-orbit" aria-hidden="true">
+                <span className="for-home-garnish for-home-garnish--1">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 3c4.5 2.2 7 6.2 7 10.4 0 2.6-1.2 4.6-3.2 5.6-1.4-3.8-3.6-6.8-6.8-9.2C10.6 6.4 11.4 4.6 12 3Z"
+                      fill="currentColor"
+                      opacity="0.9"
+                    />
+                    <path
+                      d="M9.2 9.8c3.1 2.4 5.2 5.4 6.4 9.2"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      opacity="0.45"
+                    />
+                  </svg>
+                </span>
+                <span className="for-home-garnish for-home-garnish--2">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 19c6-1.5 10.5-5.5 13-12-4.8 1-8.8 3.8-11.5 8.2C5.8 16.4 5.2 17.8 5 19Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+                <span className="for-home-garnish for-home-garnish--3">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 4c.8 3.5.4 6.8-1.2 9.8C9.2 16.4 8 18.2 7 20c3.8-1.1 6.6-3.6 8.2-7.2C16.8 9.4 15.4 6.2 12 4Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+                <span className="for-home-garnish for-home-garnish--4">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <ellipse
+                      cx="12"
+                      cy="12"
+                      rx="4.2"
+                      ry="7.5"
+                      transform="rotate(-28 12 12)"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+                <span className="for-home-garnish for-home-garnish--5">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M18 6c-2.8 2-4.8 5-5.6 8.6-.5 2.2-.3 4.2.4 6 2.8-2.4 4.6-5.6 5.2-9.2.3-1.8.2-3.6 0-5.4Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div className="for-home-plate">
+                <span className="for-home-plate-arc" aria-hidden="true" />
+                <span
+                  className="for-home-plate-arc for-home-plate-arc--b"
+                  aria-hidden="true"
+                />
+                <span className="for-home-plate-ring" aria-hidden="true" />
+                <Image
+                  key={activeProduct.id}
+                  src={activeProduct.image}
+                  alt={activeProduct.alt}
+                  width={720}
+                  height={720}
+                  sizes="(max-width: 900px) 70vw, 400px"
+                  className={`for-home-plate-art${
+                    plateSpinning ? " is-spinning" : ""
+                  }`}
+                  priority
+                />
+              </div>
+            </div>
+
+            <div className="for-home-v2-copy">
+              <p className="for-home-v2-copy-door">{activeDoor.label}</p>
+              <h2 id="for-home-title" className="for-home-title">
+                <span className="for-home-title-soft">چه به </span>
+                <span className="for-home-title-accent">خانه</span>
+                <span className="for-home-title-soft"> می‌رسد</span>
+              </h2>
+              <p className="for-home-lead">
+                <em className="for-home-lead-name">{activeProduct.name}</em>
+                {"؛ "}
+                {activeProduct.note}. تازه از مسیر مرتع تا سفره.
+              </p>
+              {copyActions}
+            </div>
+          </div>
+
+          <div className="for-home-v2-side">
+            <aside className="for-home-v2-rail" aria-label="دسته‌بندی">
+              <div className="for-home-v2-rail-head">
+                <span className="for-home-v2-rail-peak" aria-hidden="true" />
+                <p className="for-home-v2-rail-kicker">انتخاب مسیر</p>
+                <p className="for-home-v2-rail-title">از مرتع</p>
+              </div>
+              {catsNav}
+            </aside>
+
+            <div className="for-home-v2-picks">
+              <p className="for-home-v2-picks-label">انتخاب محصول</p>
+              {productsGrid}
+            </div>
+          </div>
+        </div>
+        {storyPopup}
+      </section>
+    );
+  }
+
   return (
     <section
       ref={rootRef}
@@ -265,42 +644,7 @@ export function ForHomeSection() {
               />
             </Link>
 
-            <nav
-              className="for-home-cats"
-              role="tablist"
-              aria-label="دسته‌های محصول"
-              key={catPage}
-            >
-              {visibleDoors.map((item) => {
-                const selected = item.id === activeDoorId;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    className={`for-home-cat${selected ? " is-active" : ""}`}
-                    onClick={() => selectDoor(item.id)}
-                  >
-                    <span className="for-home-cat-emoji" aria-hidden="true">
-                      {item.emoji}
-                    </span>
-                    <span className="for-home-cat-label">{item.label}</span>
-                  </button>
-                );
-              })}
-              {catPageCount > 1 ? (
-                <button
-                  type="button"
-                  className="for-home-cats-more"
-                  onClick={cycleCats}
-                  aria-label="دسته‌های بعدی"
-                >
-                  بیشتر
-                </button>
-              ) : null}
-            </nav>
-
+            {catsNav}
           </div>
 
           <div className="for-home-stage">
@@ -332,37 +676,7 @@ export function ForHomeSection() {
                   قابل اعتماد. همان حسی که خانواده می‌خواهد روی میز داشته باشد.
                 </p>
 
-                <div className="for-home-copy-actions">
-                  <Link href={activeProduct.href} className="for-home-shop">
-                    <MarkEmoji src={MARK_SHOP} className="for-home-mark-emoji" />
-                    <span>این را برای سفره بردار</span>
-                  </Link>
-                  <button
-                    type="button"
-                    className="for-home-copy-story"
-                    onClick={() => setStoryOpen(true)}
-                  >
-                    <MarkEmoji
-                      src={MARK_STORY}
-                      className="for-home-mark-emoji"
-                    />
-                    <span>داستان کوتاه این محصول</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="for-home-copy-buy is-soon"
-                    disabled
-                    aria-disabled="true"
-                    title="به‌زودی"
-                  >
-                    <MarkEmoji
-                      src={MARK_SOON}
-                      className="for-home-mark-emoji"
-                    />
-                    <span>خرید این محصول</span>
-                    <span className="for-home-copy-buy-badge">به‌زودی</span>
-                  </button>
-                </div>
+                {copyActions}
 
                 <div className="for-home-copy-rule" aria-hidden="true">
                   <span className="for-home-copy-rule-line" />
@@ -379,56 +693,7 @@ export function ForHomeSection() {
                   <span className="for-home-copy-rule-line" />
                 </div>
 
-                <div
-                  className="for-home-products"
-                  role="listbox"
-                  aria-label={activeDoor.label}
-                  key={activeDoor.id}
-                >
-                  <div className="for-home-products-row">
-                    {visibleProducts.map((product, index) => {
-                      const selected = product.id === activeProduct.id;
-                      const tone = productTone(activeDoorId, index);
-                      return (
-                        <button
-                          key={product.id}
-                          type="button"
-                          role="option"
-                          aria-selected={selected}
-                          className={`for-home-product-card${selected ? " is-active" : ""}`}
-                          style={
-                            {
-                              ["--fh-i"]: index,
-                              ["--fh-tone"]: tone.base,
-                              ["--fh-tone-hot"]: tone.hot,
-                            } as CSSProperties
-                          }
-                          onClick={() => selectProduct(product.id)}
-                        >
-                          <span
-                            className="for-home-product-card-accent"
-                            aria-hidden="true"
-                          />
-                          <span className="for-home-product-card-media">
-                            <Image
-                              src={product.image}
-                              alt=""
-                              width={112}
-                              height={112}
-                              sizes="54px"
-                            />
-                          </span>
-                          <span className="for-home-product-card-body">
-                            <strong>{product.name}</strong>
-                            <span className="for-home-product-card-pick">
-                              {product.note}
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                {productsGrid}
               </div>
             </div>
 
@@ -571,47 +836,7 @@ export function ForHomeSection() {
         </div>
       </div>
 
-      {storyOpen ? (
-        <div
-          className="for-home-popup"
-          role="presentation"
-          onClick={() => setStoryOpen(false)}
-        >
-          <div
-            className="for-home-popup-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={dialogTitleId}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="for-home-popup-close"
-              aria-label="بستن"
-              onClick={() => setStoryOpen(false)}
-            >
-              ×
-            </button>
-            <div className="for-home-popup-media">
-              <Image
-                src={activeProduct.image}
-                alt={activeProduct.alt}
-                width={360}
-                height={360}
-                sizes="168px"
-              />
-            </div>
-            <p className="for-home-popup-kicker">{activeDoor.label}</p>
-            <h3 id={dialogTitleId} className="for-home-popup-title">
-              {activeProduct.name}
-            </h3>
-            <p className="for-home-popup-story">{activeProduct.story}</p>
-            <Link href={activeProduct.href} className="for-home-popup-cta">
-              مشاهده در فروشگاه
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      {storyPopup}
     </section>
   );
 }
