@@ -1,14 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { heroVideos, type HeroVideo } from "@/lib/v2-videos";
 
 export function V2HeroSection() {
   const [active, setActive] = useState<HeroVideo>(heroVideos[0]);
   const [previous, setPrevious] = useState<HeroVideo | null>(null);
-  const [videoReady, setVideoReady] = useState(false);
+  const [videoReady, setVideoReady] = useState(true);
+  const activeVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = activeVideoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      setVideoReady(true);
+    }
+
+    const playPromise = video.play();
+    playPromise?.catch(() => {
+      // Muted autoplay is requested again by the media events below.
+    });
+  }, [active.id]);
 
   useEffect(() => {
     if (!previous || !videoReady) return;
@@ -49,9 +66,12 @@ export function V2HeroSection() {
           ) : null}
           <video
             key={active.id}
+            ref={activeVideoRef}
             className={`landing-v2-video${active.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? (previous ? " is-entering" : "") : " is-waiting"}`}
             autoPlay muted loop playsInline preload="auto"
+            onLoadedData={() => setVideoReady(true)}
             onCanPlay={() => setVideoReady(true)}
+            onPlaying={() => setVideoReady(true)}
             aria-label={`مرد کوهستان؛ ${active.label}`}
           >
             <source src={active.src} type="video/mp4" />
