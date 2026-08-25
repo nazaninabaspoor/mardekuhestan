@@ -8143,7 +8143,10 @@ body:has(.preview-shell) .site-canvas {
   display: none !important;
 }
 
-/* neutralize legacy floating v2 chrome if still present in cascade */
+.site-header--v2 .v2-topbar {
+  display: none !important;
+}
+
 .site-header--v2 .v2-menubar {
   border-radius: 0 !important;
   background: transparent !important;
@@ -8153,6 +8156,7 @@ body:has(.preview-shell) .site-canvas {
 
 .landing--v2 {
   padding: 0 !important;
+  margin: 0 !important;
 }
 
 .landing-v2-stage {
