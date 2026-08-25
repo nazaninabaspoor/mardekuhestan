@@ -8,16 +8,18 @@ import { heroVideos, type HeroVideo } from "@/lib/v2-videos";
 export function V2HeroSection() {
   const [active, setActive] = useState<HeroVideo>(heroVideos[0]);
   const [previous, setPrevious] = useState<HeroVideo | null>(null);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
-    if (!previous) return;
+    if (!previous || !videoReady) return;
     const timer = window.setTimeout(() => setPrevious(null), 900);
     return () => window.clearTimeout(timer);
-  }, [previous]);
+  }, [previous, videoReady]);
 
   function selectVideo(video: HeroVideo) {
     if (video.id === active.id) return;
     setPrevious(active);
+    setVideoReady(false);
     setActive(video);
   }
 
@@ -25,12 +27,21 @@ export function V2HeroSection() {
     <section className="landing landing--v2" aria-labelledby="hero-title">
       <div className="landing-v2-stage">
         <div className="landing-v2-media">
+          {active.id === "product" ? (
+            <video
+              key="product-ambient"
+              className="landing-v2-video landing-v2-video--product-ambient"
+              autoPlay muted loop playsInline preload="auto"
+              aria-hidden="true"
+            >
+              <source src={active.src} type="video/mp4" />
+            </video>
+          ) : null}
           {previous ? (
             <video
               key={`previous-${previous.id}`}
-              className="landing-v2-video is-leaving"
-              autoPlay muted loop playsInline preload="metadata"
-              poster={previous.poster}
+              className={`landing-v2-video${previous.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? " is-leaving" : ""}`}
+              autoPlay muted loop playsInline preload="auto"
               aria-hidden="true"
             >
               <source src={previous.src} type="video/mp4" />
@@ -38,9 +49,9 @@ export function V2HeroSection() {
           ) : null}
           <video
             key={active.id}
-            className={`landing-v2-video${previous ? " is-entering" : ""}`}
-            autoPlay muted loop playsInline preload="metadata"
-            poster={active.poster}
+            className={`landing-v2-video${active.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? (previous ? " is-entering" : "") : " is-waiting"}`}
+            autoPlay muted loop playsInline preload="auto"
+            onCanPlay={() => setVideoReady(true)}
             aria-label={`مرد کوهستان؛ ${active.label}`}
           >
             <source src={active.src} type="video/mp4" />
@@ -50,10 +61,13 @@ export function V2HeroSection() {
 
         <div className="shell landing-v2-shell">
           <div className="landing-v2-copy">
-            <p className="landing-v2-eyebrow">مرد کوهستان</p>
             <h1 id="hero-title">این راه سبز است</h1>
             <p className="landing-v2-lead">از مزرعه تا سفره؛ مسیری که با اعتماد ساخته می‌شود.</p>
-            <Link href="/chain" className="landing-v2-cta">شروع مسیر سبز</Link>
+            <Link href="/chain" className="landing-v2-cta">
+              <span key={active.id} className="landing-v2-cta-label">
+                {active.ctaLabel}
+              </span>
+            </Link>
           </div>
         </div>
 
@@ -69,7 +83,7 @@ export function V2HeroSection() {
                   aria-pressed={selected}
                   onClick={() => selectVideo(video)}
                 >
-                  <video autoPlay muted loop playsInline preload="metadata" poster={video.poster} aria-hidden="true">
+                  <video autoPlay muted loop playsInline preload="auto" poster={video.poster} aria-hidden="true">
                     <source src={video.src} type="video/mp4" />
                   </video>
                   <span className="landing-v2-preview-shade" />
