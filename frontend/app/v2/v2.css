@@ -5,6 +5,103 @@
   background: #f4f0e8 !important;
 }
 
+/* Gate hero until cinematic fling into kitchen */
+html.is-home-v2 {
+  scroll-behavior: auto !important;
+}
+
+html.is-v2-hero-locked,
+html.is-v2-hero-locked body {
+  overflow: hidden !important;
+  height: 100% !important;
+  max-height: 100svh !important;
+  overscroll-behavior: none !important;
+  touch-action: none !important;
+}
+
+html.is-v2-hero-locked .site-canvas {
+  min-height: 100svh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+html.is-v2-hero-locked main,
+html.is-v2-hero-locked .home-v2 {
+  overflow: hidden !important;
+  max-height: 100svh !important;
+}
+
+/* While gated, footer + below-fold sections cannot appear at all */
+html.is-v2-hero-locked .site-footer,
+html.is-v2-hero-locked .home-v2 > :not(.landing--v2) {
+  display: none !important;
+}
+
+html.is-v2-hero-locked .landing--v2 {
+  display: block !important;
+  min-height: 100svh !important;
+}
+
+html.is-v2-hero-locked .landing--v2 .landing-v2-stage {
+  min-height: 100svh !important;
+}
+
+html.is-v2-flinging {
+  pointer-events: none;
+}
+
+html.is-v2-flinging,
+html.is-v2-flinging body {
+  overflow: hidden !important;
+}
+
+/*
+  Native CSS bell cursor — zero JS lag.
+  Hotspot near the crown of the bell.
+*/
+html.is-v2-bell-cursor,
+html.is-v2-bell-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='34' viewBox='0 0 28 34' fill='none'%3E%3Cpath d='M7.5 12c0-4.6 2.7-8 6.5-8s6.5 3.4 6.5 8v7.2c0 1-.55 1.6-1.45 1.6H8.95c-.9 0-1.45-.6-1.45-1.6V12Z' fill='%23F0C15A' stroke='%23C48A2A' stroke-width='1.15'/%3E%3Cpath d='M9.6 13c.7-4 2.5-6.3 4.4-6.3 1 0 2 .55 2.7 1.5' stroke='%23FFF6D6' stroke-width='1.25' stroke-linecap='round' opacity='.9'/%3E%3Cellipse cx='14' cy='20.3' rx='7.6' ry='1.85' fill='%23D4A045' opacity='.55'/%3E%3Ccircle cx='14' cy='25.4' r='1.9' fill='%23F2D27A' stroke='%23C48A2A' stroke-width='.85'/%3E%3Ccircle cx='14' cy='25.4' r='.65' fill='%23FFF3C8'/%3E%3C/svg%3E") 14 4, auto !important;
+}
+
+html.is-v2-bell-cursor a,
+html.is-v2-bell-cursor button,
+html.is-v2-bell-cursor [role="button"],
+html.is-v2-bell-cursor .kui-plate-boomerang,
+html.is-v2-bell-cursor .kui-rail-item,
+html.is-v2-bell-cursor .kui-dock-btn,
+html.is-v2-bell-cursor label,
+html.is-v2-bell-cursor input,
+html.is-v2-bell-cursor select,
+html.is-v2-bell-cursor textarea {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='38' viewBox='0 0 28 34' fill='none'%3E%3Cpath d='M7.5 12c0-4.6 2.7-8 6.5-8s6.5 3.4 6.5 8v7.2c0 1-.55 1.6-1.45 1.6H8.95c-.9 0-1.45-.6-1.45-1.6V12Z' fill='%23F2D27A' stroke='%23C48A2A' stroke-width='1.15'/%3E%3Cpath d='M9.6 13c.7-4 2.5-6.3 4.4-6.3 1 0 2 .55 2.7 1.5' stroke='%23FFF6D6' stroke-width='1.25' stroke-linecap='round' opacity='.95'/%3E%3Cellipse cx='14' cy='20.3' rx='7.6' ry='1.85' fill='%23D4A045' opacity='.55'/%3E%3Ccircle cx='14' cy='25.4' r='1.9' fill='%23F2D27A' stroke='%23C48A2A' stroke-width='.85'/%3E%3Ccircle cx='14' cy='25.4' r='.65' fill='%23FFF3C8'/%3E%3C/svg%3E") 16 4, pointer !important;
+}
+
+.v2-bell-cursor {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-v2-bell-cursor,
+  html.is-v2-bell-cursor * {
+    cursor: auto !important;
+  }
+
+  html.is-v2-hero-locked,
+  html.is-v2-hero-locked body {
+    overflow: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    touch-action: auto !important;
+  }
+
+  html.is-v2-hero-locked .site-footer,
+  html.is-v2-hero-locked .home-v2 > :not(.landing--v2) {
+    display: revert !important;
+  }
+}
+
 .is-home-v2 .site-canvas {
   background: #f4f0e8 !important;
 }
@@ -50,12 +147,17 @@
   background: none !important;
 }
 
-.is-home-v2 .our-way,
-.is-home-v2 .for-home--catalog,
+.is-home-v2 .for-home--catalog:not(.kitchen-ui),
 .is-home-v2 .coming-soon,
 .is-home-v2 .stories-shelf,
 .is-home-v2 .site-footer,
 .is-home-v2 .landing--v2 {
+  background: #f4f0e8 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.is-home-v2 .our-way {
   background: #f4f0e8 !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -436,7 +538,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  min-height: clamp(620px, 82vh, 860px);
+  min-height: 100svh;
   border-radius: 0 !important;
   background: #005040;
   box-shadow: none !important;
@@ -647,310 +749,442 @@
 }
 
 /* ========================================================================
-   for-home--v2 / kitchen-ui — brand green field · hanging lamp · real packs
+   for-home--v2 / kitchen-ui — exact kitchen-wall food app (ref image)
+   Full-bleed kitchen photo · tilted plate · hero type · overview card ·
+   circular dish rail · glass dock + mic
    ======================================================================== */
 
 .is-home-v2 .for-home--v2.kitchen-ui {
-  --kui-ink: #1d1d1b;
-  --kui-muted: #6a6a6a;
-  --kui-soft: #9a9a9a;
+  --kui-ink: #2c2c2c;
+  --kui-muted: #8a8a8a;
+  --kui-soft: #b0b0b0;
   --kui-card: #ffffff;
   --kui-rating: #cfe7c0;
   --kui-green: #005b48;
-  --kui-cream: #f4f0e8;
+  --v2-header-h: 122px;
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: min(100vh, 900px);
+  /* Exact remaining viewport under the sticky v2 header */
+  height: calc(100svh - var(--v2-header-h));
+  min-height: calc(100svh - var(--v2-header-h));
+  max-height: calc(100svh - var(--v2-header-h));
   padding: 0 !important;
   margin: 0;
-  scroll-margin-top: 0.5rem;
-  background: var(--kui-green) !important;
+  scroll-margin-top: var(--v2-header-h);
+  background: #eceae8 !important;
   border: 0 !important;
   box-shadow: none !important;
-  color: var(--kui-cream);
+  color: var(--kui-ink);
 }
 
 .is-home-v2 .kui-scene {
   position: absolute;
   inset: 0;
   z-index: 0;
-  pointer-events: none;
-  background: var(--kui-green);
 }
 
-/* Soft overhead lamp wash — centered on the product plate */
+.is-home-v2 .kui-scene-img {
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+/* —— Pendant lamp + etched island brand ——
+   Lamp mouth measured in kitchen-wall-clean.png @ ~1427x463 of 1536x1024
+   = 7.1% from right. Keep seal angle; only the shared axis moves. */
+.is-home-v2 .kui-lamp-fx {
+  --lamp-right: 7.1%;
+  --lamp-y: 27%;
+  /* Raise seal onto the island surface (do not touch transform/angle) */
+  --pool-y: 71.5%;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .is-home-v2 .kui-lamp-glow {
   position: absolute;
-  top: 4%;
-  left: 58%;
-  width: min(62vw, 640px);
-  height: min(72vh, 680px);
-  translate: -50% 0;
+  right: var(--lamp-right);
+  left: auto;
+  top: var(--lamp-y);
+  /* Nested deep inside the shade cavity */
+  width: clamp(7px, 0.85vw, 11px);
+  height: clamp(5px, 0.6vw, 8px);
+  translate: 50% 88%;
   border-radius: 50%;
-  background:
-    radial-gradient(
-      ellipse at 50% 12%,
-      rgb(255 248 220 / 58%) 0%,
-      rgb(255 230 170 / 28%) 24%,
-      rgb(0 91 72 / 0%) 64%
-    );
-  filter: blur(1px);
-  transform-origin: 50% 0;
-  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    rgb(255 252 230 / 100%) 0%,
+    rgb(255 224 150 / 48%) 55%,
+    transparent 80%
+  );
+  filter: blur(0.2px);
+  opacity: 0.95;
+  animation: kui-lamp-pulse 4.2s ease-in-out infinite;
+  /* Soft occlude so it reads as inside metal */
+  box-shadow:
+    0 0 6px 1px rgb(255 236 180 / 35%),
+    inset 0 0 4px rgb(255 250 220 / 40%);
 }
 
-.is-home-v2 .kui-lamp {
+/* Tiny spill peeking from the shade mouth — not a long cone */
+.is-home-v2 .kui-lamp-beam {
   position: absolute;
-  top: -0.35rem;
-  left: 58%;
+  right: var(--lamp-right);
+  left: auto;
+  top: calc(var(--lamp-y) + 2.55%);
+  width: clamp(14px, 1.7vw, 22px);
+  height: clamp(18px, 3.6vh, 32px);
+  translate: 50% 0;
+  transform-origin: 50% 0;
+  background: linear-gradient(
+    180deg,
+    rgb(255 242 205 / 38%) 0%,
+    rgb(255 230 175 / 12%) 55%,
+    transparent 100%
+  );
+  clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
+  filter: blur(1.2px);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
+}
+
+.is-home-v2 .kui-lamp-beam::before,
+.is-home-v2 .kui-lamp-beam::after {
+  content: none;
+}
+
+.is-home-v2 .kui-lamp-pool {
+  position: absolute;
+  right: var(--lamp-right);
+  left: auto;
+  top: var(--pool-y);
+  width: clamp(84px, 9.5vw, 120px);
+  height: clamp(20px, 3vw, 30px);
+  translate: 50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(255 236 195 / 18%) 0%,
+    rgb(255 226 165 / 5%) 45%,
+    transparent 72%
+  );
+  filter: blur(2px);
+  opacity: 0.8;
+  animation: kui-lamp-pulse 4.2s ease-in-out infinite;
+}
+
+.is-home-v2 .kui-counter-brand,
+.is-home-v2 .kui-counter-logo,
+.is-home-v2 .kui-counter-word {
+  display: none !important;
+}
+
+@keyframes kui-lamp-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-home-v2 .kui-lamp-glow,
+  .is-home-v2 .kui-lamp-pool {
+    animation: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .is-home-v2 .kui-lamp-fx {
+    --lamp-right: 6.5%;
+    --lamp-y: 25%;
+    --pool-y: 69%;
+  }
+}
+
+@media (max-width: 640px) {
+  .is-home-v2 .kui-lamp-fx {
+    --lamp-right: 5.5%;
+    --lamp-y: 24%;
+    --pool-y: 68%;
+  }
+
+  .is-home-v2 .kui-lamp-beam {
+    height: clamp(24px, 4.5vh, 40px);
+  }
+}
+
+/* Pendant: cord starts at the absolute top edge of the section */
+.is-home-v2 .kui-pendant {
+  position: absolute;
+  top: 0;
+  left: 50%;
   translate: -50% 0;
-  z-index: 4;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: clamp(88px, 11vw, 132px);
-  transform-origin: 50% 0;
-  filter: drop-shadow(0 18px 28px rgb(0 0 0 / 28%));
+  width: max-content;
+  max-width: min(94vw, 560px);
+  pointer-events: none;
 }
 
-.is-home-v2 .kui-lamp-img {
-  width: 100% !important;
-  height: auto !important;
+.is-home-v2 .kui-bell-line {
   display: block;
-  object-fit: contain;
-}
-
-.is-home-v2 .kui-lamp-beam {
-  position: absolute;
-  top: 78%;
-  left: 50%;
-  translate: -50% 0;
-  width: clamp(160px, 28vw, 320px);
-  height: clamp(180px, 34vh, 340px);
-  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+  width: 1.5px;
+  height: clamp(26px, 3.8vh, 40px);
+  margin: 0 auto;
   background: linear-gradient(
     180deg,
-    rgb(255 236 180 / 45%) 0%,
-    rgb(255 230 160 / 16%) 42%,
-    rgb(255 220 140 / 0%) 100%
+    rgb(45 35 25 / 58%) 0%,
+    rgb(120 90 50 / 45%) 55%,
+    rgb(160 120 60 / 32%) 100%
   );
+  border-radius: 999px;
+}
+
+.is-home-v2 .kui-pendant-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
   pointer-events: none;
-  mix-blend-mode: soft-light;
 }
 
-.is-home-v2 .kui-lamp-cord,
-.is-home-v2 .kui-lamp-fixture,
-.is-home-v2 .kui-lamp-cap,
-.is-home-v2 .kui-lamp-shade,
-.is-home-v2 .kui-lamp-inner,
-.is-home-v2 .kui-lamp-bulb {
-  display: none !important;
+.is-home-v2 .kui-pendant .kui-dock,
+.is-home-v2 .kui-pendant .kui-dock-btn {
+  pointer-events: auto;
 }
 
-.is-home-v2 .kui-blob,
-.is-home-v2 .kui-scene-img {
-  display: none !important;
+.is-home-v2 .kui-bell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(42px, 4.6vw, 56px);
+  transform-origin: 50% 0;
+  animation: kui-bell-sway 4.8s ease-in-out infinite;
+}
+
+.is-home-v2 .kui-bell-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 16px rgb(180 120 40 / 28%));
+}
+
+.is-home-v2 .kui-bell-glow {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  translate: -50% 0;
+  width: 160%;
+  height: 130%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgb(255 236 170 / 36%) 0%,
+      rgb(255 220 140 / 12%) 42%,
+      transparent 72%
+    );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.is-home-v2 .kui-bell-wash {
+  display: none;
+}
+
+@keyframes kui-bell-sway {
+  0%,
+  100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-home-v2 .kui-bell { animation: none; }
+}
+
+.is-home-v2 .kui-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+.is-home-v2 .kui-blob--peach {
+  width: min(42vw, 480px);
+  aspect-ratio: 1.1;
+  left: 8%;
+  top: 18%;
+  background: radial-gradient(circle, rgb(232 210 190 / 55%) 0%, transparent 70%);
+}
+
+.is-home-v2 .kui-blob--teal {
+  width: min(38vw, 420px);
+  aspect-ratio: 1.3;
+  left: 28%;
+  top: 6%;
+  background: radial-gradient(ellipse, rgb(180 210 210 / 45%) 0%, transparent 68%);
 }
 
 .is-home-v2 .kui-stage {
   position: relative;
   z-index: 2;
-  width: min(1280px, calc(100% - 2rem));
+  width: min(1240px, calc(100% - 2rem));
   margin-inline: auto;
-  min-height: min(100vh, 900px);
-  padding: clamp(1rem, 2.5vw, 1.75rem) 0 clamp(1.25rem, 3vw, 2rem);
+  height: 100%;
+  min-height: 0;
+  /* Clear hanging category dock so kicker sits one line below it */
+  padding: clamp(6.25rem, 11.5vh, 7.75rem) 0 clamp(0.75rem, 2vw, 1.25rem);
   display: grid;
-  grid-template-columns: minmax(240px, 0.78fr) minmax(420px, 1.35fr);
-  grid-template-rows: auto 1fr auto auto;
-  grid-template-areas:
-    "utils utils"
-    "card hero"
-    "rail rail"
-    "dock dock";
-  gap: clamp(0.75rem, 2vw, 1.35rem) clamp(1rem, 2.5vw, 2rem);
-  align-items: center;
+  grid-template-columns: 1.28fr 0.72fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "hero card";
+  gap: clamp(0.3rem, 1.1vw, 0.75rem) clamp(0.45rem, 1.4vw, 1.1rem);
+  align-items: start;
+  overflow: visible;
 }
 
-/* —— Top utilities —— */
-.is-home-v2 .kui-utils {
-  grid-area: utils;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  position: relative;
-  z-index: 5;
-  padding-inline-end: 0.25rem;
-}
-
-.is-home-v2 .kui-icon-btn {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  color: rgb(244 240 232 / 88%);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-}
-
-.is-home-v2 .kui-icon-btn svg {
-  width: 22px;
-  height: 22px;
-}
-
+/* —— Top utilities removed (search/menu) —— */
+.is-home-v2 .kui-utils,
+.is-home-v2 .kui-icon-btn,
 .is-home-v2 .kui-menu {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  left: 0;
-  min-width: 11rem;
-  padding: 0.45rem;
-  border-radius: 14px;
-  background: rgb(255 255 255 / 96%);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 16px 36px rgb(0 0 0 / 18%);
-  display: grid;
-  gap: 0.15rem;
-  z-index: 8;
+  display: none !important;
 }
 
-.is-home-v2 .kui-menu button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  text-align: right;
-  padding: 0.45rem 0.55rem;
-  border-radius: 9px;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--kui-ink);
-  cursor: pointer;
-}
-
-.is-home-v2 .kui-menu button:hover,
-.is-home-v2 .kui-menu button.is-active {
-  background: rgb(0 91 72 / 10%);
-  color: var(--kui-green);
-}
-
+/* —— Left dots —— */
 .is-home-v2 .kui-dots {
-  position: absolute;
-  left: clamp(0.35rem, 1.5vw, 1rem);
-  top: 38%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  z-index: 3;
+  display: none !important;
 }
 
 .is-home-v2 .kui-dots span {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgb(244 240 232 / 35%);
+  background: rgb(80 80 80 / 28%);
 }
 
 .is-home-v2 .kui-dots span.is-on {
-  background: rgb(244 240 232 / 80%);
+  background: rgb(60 60 60 / 55%);
   height: 14px;
   border-radius: 999px;
 }
 
+/* —— Hero —— */
 .is-home-v2 .kui-hero {
   grid-area: hero;
   display: grid;
-  grid-template-columns: minmax(160px, 0.85fr) minmax(240px, 1.15fr);
+  grid-template-columns: minmax(200px, 0.95fr) minmax(200px, 1.05fr);
   align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  min-height: 380px;
-  padding-inline-end: 0.5rem;
-  position: relative;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  min-height: 0;
+  padding-top: 0.25rem;
+  padding-inline-start: clamp(0.5rem, 2vw, 1.5rem);
 }
 
 .is-home-v2 .kui-plate-wrap {
   position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  filter: drop-shadow(0 28px 40px rgb(0 20 12 / 38%));
-  will-change: transform;
-  z-index: 2;
-  order: 2;
+  transform: rotate(10deg);
+  filter: drop-shadow(0 22px 34px rgb(40 30 20 / 20%));
 }
 
 .is-home-v2 .kui-plate {
-  width: min(100%, 380px);
+  width: min(100%, 340px);
   aspect-ratio: 1;
-  border-radius: 28px;
-  overflow: hidden;
-  background: #f4f0e8;
-  padding: 0.65rem;
-  box-shadow:
-    0 2px 0 rgb(255 255 255 / 85%) inset,
-    0 18px 40px rgb(0 0 0 / 18%);
-  display: grid;
-  place-items: center;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
 }
 
-.is-home-v2 .kui-plate img {
+.is-home-v2 .kui-plate-boomerang {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transform-origin: 50% 55%;
+  will-change: transform;
+}
+
+.is-home-v2 .kui-plate img,
+.is-home-v2 .kui-plate-boomerang img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
-  object-position: center 45%;
+  object-fit: contain;
+  object-position: center;
   display: block;
-  border-radius: 20px;
+  border-radius: 0;
+  background: transparent !important;
+  pointer-events: none;
 }
 
 .is-home-v2 .kui-hero-copy {
-  order: 1;
   direction: rtl;
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.65rem;
-  padding-top: 0.5rem;
+  padding-top: 0.85rem;
+  min-width: 0;
 }
 
 .is-home-v2 .kui-kicker {
   margin: 0;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgb(244 240 232 / 72%);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgb(29 29 27 / 55%);
 }
 
 .is-home-v2 .kui-title {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.05rem;
-  line-height: 1.05;
-  color: var(--kui-cream);
+  line-height: 1.15;
+  color: var(--kui-ink);
+  max-width: 100%;
 }
 
-.is-home-v2 .kui-title-thin {
+.is-home-v2 .kui-title-line {
   display: block;
-  font-size: clamp(2rem, 4.4vw, 3.35rem);
-  font-weight: 400;
+  font-family: MardeKuhestan, sans-serif;
+  font-size: clamp(1.85rem, 3.6vw, 2.85rem);
+  font-weight: 800;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.is-home-v2 .kui-title-thin,
 .is-home-v2 .kui-title-bold {
-  display: block;
-  font-size: clamp(2rem, 4.4vw, 3.35rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
+  display: none;
 }
 
 .is-home-v2 .kui-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 1.1rem 1.4rem;
-  margin-top: 0.35rem;
+  margin-top: 0.15rem;
+}
+
+.is-home-v2 .kui-hero-copy .kui-rail {
+  width: 100%;
+  margin-top: 0.55rem;
+  padding: 0.65rem 0 0.1rem;
+  justify-content: flex-start;
+  border-top: 1px solid rgb(29 29 27 / 8%);
 }
 
 .is-home-v2 .kui-text-action {
@@ -964,7 +1198,7 @@
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 600;
-  color: rgb(244 240 232 / 88%);
+  color: #4a4a4a;
   text-decoration: none;
   cursor: pointer;
 }
@@ -974,7 +1208,7 @@
   height: 0;
   border-style: solid;
   border-width: 5px 0 5px 8px;
-  border-color: transparent transparent transparent var(--kui-cream);
+  border-color: transparent transparent transparent #3a3a3a;
 }
 
 .is-home-v2 .kui-home-ico {
@@ -989,29 +1223,188 @@
   height: 16px;
 }
 
+/* —— Product note: rope-hoisted recipe page —— */
 .is-home-v2 .kui-card {
+  --note-tilt: -1.8deg;
+  --rope-tone: #005b48;
   grid-area: card;
+  /* Toward hero/center in RTL without colliding */
   justify-self: start;
-  align-self: center;
-  width: min(100%, 300px);
+  align-self: start;
+  width: min(100%, 238px);
   direction: rtl;
   text-align: right;
-  background: rgb(255 255 255 / 96%);
-  backdrop-filter: blur(10px);
-  border-radius: 26px;
-  padding: 1.15rem 1.2rem 1.05rem;
-  box-shadow:
-    0 22px 48px rgb(0 20 12 / 22%),
-    0 2px 8px rgb(0 20 12 / 10%);
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  margin-top: 0.55rem;
+  margin-inline-start: clamp(0.15rem, 0.8vw, 0.55rem);
+  margin-inline-end: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  color: #1d1d1b;
+  display: block;
+  transform-origin: 50% 0;
+}
+
+.is-home-v2 .kui-card::before,
+.is-home-v2 .kui-card::after {
+  content: none;
+}
+
+.is-home-v2 .kui-note-pin,
+.is-home-v2 .kui-note-pin-svg,
+.is-home-v2 .kui-note-pin-img,
+.is-home-v2 .kui-note-paper,
+.is-home-v2 .kui-note-paper-img,
+.is-home-v2 .kui-note-shadow,
+.is-home-v2 .kui-note-flip,
+.is-home-v2 .kui-note-stack {
+  display: none !important;
+}
+
+.is-home-v2 .kui-note-hoist {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-note-hang {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  color: var(--kui-ink);
+  align-items: center;
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
+}
+
+.is-home-v2 .kui-note-rope {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 2px);
+  width: 36px;
+  height: min(28vh, 220px);
+  translate: -50% 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 4;
+  filter: drop-shadow(0 1px 1px rgb(20 18 14 / 18%));
+}
+
+.is-home-v2 .kui-note-knot {
+  position: relative;
+  z-index: 5;
+  width: 7px;
+  height: 7px;
+  margin-bottom: -3px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgb(255 255 255 / 45%),
+      var(--rope-tone, #005b48) 55%,
+      rgb(0 0 0 / 25%) 100%
+    );
+  box-shadow: 0 1px 2px rgb(20 18 14 / 28%);
+  flex-shrink: 0;
+}
+
+.is-home-v2 .kui-note-sheet {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  padding: 1.15rem 0.85rem 0.7rem;
+  overflow: hidden;
+  background-color: #f1ebe0;
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(100% - 0.78rem),
+      rgb(144 56 40 / 14%) calc(100% - 0.78rem),
+      transparent calc(100% - 0.72rem)
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 22px,
+      rgb(0 91 72 / 8%) 22px,
+      rgb(0 91 72 / 8%) 23px
+    );
+  background-position: 0 0, 0 2.85rem;
+  box-shadow:
+    0 14px 26px rgb(20 24 22 / 14%),
+    0 2px 4px rgb(20 18 14 / 10%);
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+}
+
+.is-home-v2 .kui-note-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 80% 30% at 50% 0%, rgb(0 0 0 / 7%), transparent 60%),
+    linear-gradient(
+      145deg,
+      rgb(255 255 255 / 18%) 0%,
+      transparent 40%,
+      transparent 75%,
+      rgb(110 90 60 / 5%) 100%
+    );
+}
+
+.is-home-v2 .kui-note-sheet::after {
+  content: none;
+}
+
+.is-home-v2 .kui-note-brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 0 0.4rem;
+}
+
+.is-home-v2 .kui-note-brand-mark {
+  width: auto;
+  height: 13px;
+  object-fit: contain;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.is-home-v2 .kui-note-brand-word {
+  display: none;
+}
+
+.is-home-v2 .kui-card-chrome {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0 0.4rem;
+  border-bottom: 1px dashed rgb(0 91 72 / 14%);
+  background: transparent;
 }
 
 .is-home-v2 .kui-tabs {
   display: flex;
-  gap: 1.1rem;
+  gap: 0.7rem;
   align-items: center;
 }
 
@@ -1019,128 +1412,192 @@
   appearance: none;
   border: 0;
   background: transparent;
-  padding: 0 0 0.35rem;
+  padding: 0 0 0.2rem;
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  color: var(--kui-soft);
+  letter-spacing: 0.04em;
+  color: rgb(29 29 27 / 36%);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px solid transparent;
+  transition: color 200ms ease, border-color 200ms ease;
 }
 
 .is-home-v2 .kui-tabs button.is-active {
-  color: var(--kui-ink);
+  color: #005b48;
   font-weight: 800;
-  border-bottom-color: var(--kui-ink);
+  border-bottom-color: #005b48;
 }
 
-.is-home-v2 .kui-rating {
+.is-home-v2 .kui-tabs button:hover,
+.is-home-v2 .kui-tabs button:focus-visible {
+  color: #005b48;
+  outline: none;
+}
+
+.is-home-v2 .kui-note-seal {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
-  align-self: flex-start;
-  padding: 0.22rem 0.55rem;
-  border-radius: 8px;
-  background: var(--kui-rating);
-  color: #3a5a32;
-  font-size: 0.78rem;
-  font-weight: 800;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0.9;
 }
 
-.is-home-v2 .kui-rating svg {
-  width: 12px;
-  height: 12px;
+.is-home-v2 .kui-note-seal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+}
+
+.is-home-v2 .kui-rating,
+.is-home-v2 .kui-rating-score,
+.is-home-v2 .kui-rating-unit,
+.is-home-v2 .kui-rating svg,
+.is-home-v2 .kui-card-meta,
+.is-home-v2 .kui-card-brand,
+.is-home-v2 .kui-card-sep,
+.is-home-v2 .kui-card-sub {
+  display: none;
+}
+
+.is-home-v2 .kui-card-dossier,
+.is-home-v2 .kui-card-body-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.18rem;
+  text-align: right;
+  padding: 0.55rem 0 0.4rem;
+}
+
+.is-home-v2 .kui-card-eyebrow {
+  margin: 0;
+  font-size: 0.52rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  color: rgb(29 29 27 / 42%);
 }
 
 .is-home-v2 .kui-card-title {
-  margin: 0.15rem 0 0;
-  font-size: 1.15rem;
-  font-weight: 900;
+  margin: 0.05rem 0 0;
+  font-family: MardeKuhestan, sans-serif;
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  font-weight: 800;
   line-height: 1.25;
-  color: var(--kui-ink);
+  color: #1d1d1b;
+  letter-spacing: -0.01em;
+  text-align: right;
 }
 
-.is-home-v2 .kui-card-sub {
-  margin: 0.2rem 0 0;
-  font-size: 0.72rem;
-  color: var(--kui-muted);
+.is-home-v2 .kui-card-note {
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgb(29 29 27 / 46%);
 }
 
 .is-home-v2 .kui-card-body {
-  margin: 0.55rem 0 0;
-  font-size: 0.74rem;
+  margin: 0.15rem 0 0;
+  font-size: 0.66rem;
   line-height: 1.7;
-  color: #6e6e6e;
+  color: rgb(29 29 27 / 68%);
+  max-width: none;
+  text-align: right;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .is-home-v2 .kui-card-foot {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  margin-top: 0.35rem;
-}
-
-.is-home-v2 .kui-like {
-  appearance: none;
-  border: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 999px;
-  background: #ececec;
-  color: #4a4a4a;
-  font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.is-home-v2 .kui-like svg,
-.is-home-v2 .kui-dislike svg {
-  width: 15px;
-  height: 15px;
-}
-
-.is-home-v2 .kui-dislike {
-  appearance: none;
-  border: 0;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+  padding: 0.4rem 0 0;
+  border-top: 1px dashed rgb(0 91 72 / 12%);
   background: transparent;
-  padding: 0.35rem;
-  color: #6a6a6a;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
 }
 
+.is-home-v2 .kui-card-cta {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #005b48;
+  text-decoration: none;
+  border-bottom: 1px solid rgb(0 91 72 / 24%);
+  padding-bottom: 0.05rem;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.is-home-v2 .kui-card-cta:hover,
+.is-home-v2 .kui-card-cta:focus-visible {
+  color: #005040;
+  border-bottom-color: #005b48;
+  outline: none;
+}
+
+.is-home-v2 .kui-like,
+.is-home-v2 .kui-dislike {
+  display: none !important;
+}
+
+/* —— Dish rail (under hero actions) —— */
 .is-home-v2 .kui-rail {
-  grid-area: rail;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  padding: 0.25rem 0 0.5rem;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+  overflow: visible;
 }
 
 .is-home-v2 .kui-rail-arrow {
   appearance: none;
   border: 0;
   background: transparent;
-  width: 36px;
-  height: 36px;
-  font-size: 1.6rem;
+  width: 34px;
+  height: 34px;
+  font-size: 1.5rem;
   line-height: 1;
-  color: rgb(244 240 232 / 75%);
+  color: #5a5a5a;
   cursor: pointer;
+  opacity: 0.7;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .is-home-v2 .kui-rail-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.65rem 0.35rem 0.2rem;
   display: flex;
   align-items: flex-end;
-  gap: clamp(0.75rem, 2.2vw, 1.6rem);
+  justify-content: center;
+  gap: clamp(0.85rem, 2vw, 1.45rem);
+  overflow: visible;
+  max-width: none;
+  flex-wrap: nowrap;
+}
+
+.is-home-v2 .kui-rail-list::-webkit-scrollbar {
+  display: none;
 }
 
 .is-home-v2 .kui-rail-item {
@@ -1151,39 +1608,46 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   cursor: pointer;
-  width: 88px;
-  color: var(--kui-cream);
+  width: 68px;
+  color: var(--kui-ink);
+  flex-shrink: 0;
+  transition: transform 220ms ease;
+}
+
+.is-home-v2 .kui-rail-item:hover {
+  transform: translateY(-2px);
 }
 
 .is-home-v2 .kui-rail-thumb {
-  width: 64px;
-  height: 64px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 42%, #fff 0%, #f4f0e8 70%, #e8e0d2 100%);
-  box-shadow: 0 8px 18px rgb(0 0 0 / 18%);
+  background: transparent;
+  box-shadow: none;
   display: grid;
   place-items: center;
+  transition: width 220ms ease, height 220ms ease, border-radius 220ms ease, filter 220ms ease;
+  filter: drop-shadow(0 6px 12px rgb(0 0 0 / 12%));
 }
 
 .is-home-v2 .kui-rail-thumb img {
-  width: 86% !important;
-  height: 86% !important;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  object-position: center;
-  display: block;
+  background: transparent !important;
 }
 
 .is-home-v2 .kui-rail-item.is-active .kui-rail-thumb {
-  width: 76px;
-  height: 76px;
-  border-radius: 22px;
-  box-shadow:
-    0 14px 30px rgb(0 0 0 / 20%),
-    0 0 0 10px rgb(255 255 255 / 22%);
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 16px rgb(0 45 36 / 16%));
+  outline: 1.5px solid rgb(0 91 72 / 35%);
+  outline-offset: 2px;
 }
 
 .is-home-v2 .kui-rail-label {
@@ -1191,99 +1655,122 @@
   font-weight: 600;
   text-align: center;
   line-height: 1.35;
-  color: rgb(244 240 232 / 78%);
-  max-width: 9ch;
+  color: rgb(29 29 27 / 62%);
+  max-width: 100%;
 }
 
 .is-home-v2 .kui-rail-item.is-active .kui-rail-label {
-  color: var(--kui-cream);
+  color: #005b48;
   font-weight: 800;
 }
 
+/* —— Category dock under pendant bell (mirror / luxury glass) —— */
 .is-home-v2 .kui-dock-wrap {
-  grid-area: dock;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
-  padding-top: 0.25rem;
+  display: none;
 }
 
 .is-home-v2 .kui-dock {
   display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: 18px;
-  background: rgb(255 255 255 / 18%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      165deg,
+      rgb(255 255 255 / 38%) 0%,
+      rgb(255 255 255 / 12%) 42%,
+      rgb(220 230 228 / 18%) 100%
+    );
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  border: 1px solid rgb(255 255 255 / 55%);
   box-shadow:
-    0 12px 28px rgb(0 0 0 / 14%),
-    0 0 0 1px rgb(255 255 255 / 22%) inset;
+    0 1px 0 rgb(255 255 255 / 70%) inset,
+    0 -1px 0 rgb(0 45 36 / 6%) inset,
+    0 10px 28px rgb(20 30 28 / 10%);
 }
 
 .is-home-v2 .kui-dock-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  color: rgb(244 240 232 / 85%);
+  appearance: none;
+  border: 0;
+  border-inline-start: 1px solid rgb(255 255 255 / 28%);
+  min-width: 0;
+  height: auto;
+  padding: 0.55rem 1rem;
+  border-radius: 0;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  color: rgb(29 29 27 / 62%);
+  background: transparent;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
+  font: inherit;
+  cursor: pointer;
+  transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+}
+
+.is-home-v2 .kui-dock-btn:first-child {
+  border-inline-start: 0;
+}
+
+.is-home-v2 .kui-dock-emoji {
+  display: none !important;
+}
+
+.is-home-v2 .kui-dock-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .is-home-v2 .kui-dock-btn svg {
-  width: 22px;
-  height: 22px;
+  display: none;
 }
 
-.is-home-v2 .kui-dock-btn.is-active,
 .is-home-v2 .kui-dock-btn:hover,
 .is-home-v2 .kui-dock-btn:focus-visible {
-  background: rgb(255 255 255 / 18%);
-  color: #fff;
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 42%) 0%,
+    rgb(255 255 255 / 12%) 100%
+  );
+  color: #005b48;
   outline: none;
+  transform: none;
+}
+
+.is-home-v2 .kui-dock-btn.is-active {
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 52%) 0%,
+    rgb(0 91 72 / 8%) 100%
+  );
+  color: #005b48;
+  font-weight: 800;
+  box-shadow:
+    inset 0 -1.5px 0 #005b48,
+    inset 0 0 0 1px rgb(255 255 255 / 25%);
 }
 
 .is-home-v2 .kui-mic {
-  appearance: none;
-  border: 0;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: #fff;
-  color: #2a2a2a;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  box-shadow:
-    0 14px 32px rgb(0 0 0 / 18%),
-    0 0 0 8px rgb(255 255 255 / 18%);
-}
-
-.is-home-v2 .kui-mic svg {
-  width: 24px;
-  height: 24px;
-}
-
-.is-home-v2 .kui-mic:hover,
-.is-home-v2 .kui-mic:focus-visible {
-  transform: translateY(-1px);
-  outline: none;
+  display: none !important;
 }
 
 @media (max-width: 1024px) {
   .is-home-v2 .kui-stage {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "utils"
       "hero"
-      "card"
-      "rail"
-      "dock";
+      "card";
+    height: 100%;
     min-height: 0;
+    padding-top: clamp(5.5rem, 12vh, 7.5rem);
   }
 
   .is-home-v2 .kui-hero {
@@ -1298,9 +1785,47 @@
     text-align: center;
   }
 
+  .is-home-v2 .kui-hero-copy .kui-rail {
+    justify-content: center;
+  }
+
+  .is-home-v2 .kui-rail {
+    justify-content: center;
+    overflow-x: auto;
+  }
+
+  .is-home-v2 .kui-rail-list {
+    justify-content: flex-start;
+  }
+
   .is-home-v2 .kui-card {
     justify-self: center;
-    width: min(100%, 340px);
+    width: min(100%, 250px);
+    margin-inline: auto;
+  }
+
+  .is-home-v2 .kui-note-sheet {
+    min-height: 0;
+  }
+
+  .is-home-v2 .kui-note-brand {
+    justify-content: center;
+  }
+
+  .is-home-v2 .kui-card-chrome {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .is-home-v2 .kui-card-foot {
+    justify-content: center;
+  }
+
+  .is-home-v2 .kui-card-title,
+  .is-home-v2 .kui-card-body,
+  .is-home-v2 .kui-card-note,
+  .is-home-v2 .kui-card-eyebrow {
+    text-align: center;
   }
 
   .is-home-v2 .kui-dots {
@@ -1308,21 +1833,31 @@
   }
 
   .is-home-v2 .kui-plate-wrap {
-    transform: rotate(10deg);
+    transform: rotate(8deg);
   }
 
-  .is-home-v2 .kui-lamp {
-    right: 8%;
+  .is-home-v2 .kui-bell {
+    width: clamp(40px, 12vw, 52px);
   }
 
-  .is-home-v2 .kui-lamp-cord {
-    height: clamp(64px, 10vh, 100px);
+  .is-home-v2 .kui-dock {
+    max-width: 94vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-radius: 2px;
+  }
+
+  .is-home-v2 .kui-dock-btn {
+    min-width: 0;
+    padding: 0.48rem 0.75rem;
   }
 }
 
 @media (max-width: 640px) {
   .is-home-v2 .for-home--v2.kitchen-ui {
-    min-height: 0;
+    height: calc(100svh - var(--v2-header-h));
+    min-height: calc(100svh - var(--v2-header-h));
+    max-height: calc(100svh - var(--v2-header-h));
   }
 
   .is-home-v2 .kui-stage {
@@ -1335,50 +1870,29 @@
     border-radius: 22px;
   }
 
-  .is-home-v2 .kui-title-thin,
-  .is-home-v2 .kui-title-bold {
-    font-size: clamp(1.6rem, 8vw, 2.2rem);
+  .is-home-v2 .kui-title-line {
+    font-size: clamp(1.55rem, 7vw, 2.1rem);
+    white-space: normal;
   }
 
   .is-home-v2 .kui-rail-item {
-    width: 70px;
+    width: 60px;
   }
 
   .is-home-v2 .kui-rail-thumb {
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
   }
 
   .is-home-v2 .kui-rail-item.is-active .kui-rail-thumb {
-    width: 62px;
-    height: 62px;
-    border-radius: 18px;
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
   }
 
   .is-home-v2 .kui-rail-label {
     font-size: 0.58rem;
   }
-
-  .is-home-v2 .kui-lamp-shade {
-    width: 64px;
-    height: 46px;
-  }
-
-  .is-home-v2 .kui-lamp-bulb {
-    width: 18px;
-    height: 14px;
-  }
-}
-
-/* Soft handoff from previous section */
-.is-home-v2 .for-home--v2.kitchen-ui::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 72px;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgb(0 91 72 / 0%), rgb(0 91 72 / 35%) 40%, var(--kui-green));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1386,7 +1900,6 @@
     transition: none;
   }
 }
-
 
 /* Interactive video showcase — scoped to the first viewport only. */
 .landing--v2 .landing-v2-media .landing-v2-video {

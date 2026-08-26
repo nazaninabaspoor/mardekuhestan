@@ -4,12 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+import { CatalogBook } from "@/components/catalog-book";
 import {
   articleGroups,
   brand,
-  catalogGroups,
   getArticlesByIds,
-  getCatalogByIds,
 } from "@/lib/brand";
 
 function ViewMoreIcon() {
@@ -45,26 +44,6 @@ function MagazineIcon() {
   );
 }
 
-function CatalogIcon() {
-  return (
-    <svg
-      className="stories-shelf-title-icon"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M12 3 4 7v10l8 4 8-4V7l-8-4z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path d="M12 11v10M4 7l8 4 8-4" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
 type ShelfCard = {
   id: string;
   href: string;
@@ -75,15 +54,13 @@ type ShelfCard = {
   alt: string;
 };
 
-function ShelfPane({
-  paneId,
+function MagazinePane({
   title,
   lead,
   icon,
   viewAllHref,
   cards,
 }: {
-  paneId: "magazine" | "catalog";
   title: string;
   lead: string;
   icon: ReactNode;
@@ -91,7 +68,7 @@ function ShelfPane({
   cards: ShelfCard[];
 }) {
   return (
-    <div className={`stories-shelf-pane stories-shelf-pane--${paneId}`}>
+    <div className="stories-shelf-pane stories-shelf-pane--magazine">
       <div className="stories-shelf-title">
         <h2 className="stories-shelf-title-text">
           {icon}
@@ -114,7 +91,7 @@ function ShelfPane({
           >
             <Link
               href={card.href}
-              className={`stories-shelf-card stories-shelf-card--${paneId}`}
+              className="stories-shelf-card stories-shelf-card--magazine"
             >
               <div className="stories-shelf-visual">
                 <Image
@@ -172,44 +149,27 @@ export function LatestArticlesSection() {
       alt: article.alt,
     }));
 
-  const catalogCards: ShelfCard[] = getCatalogByIds(catalogGroups[0].itemIds)
-    .slice(0, 2)
-    .map((item) => ({
-      id: item.id,
-      href: item.href,
-      kicker: item.category,
-      title: item.title,
-      meta: item.meta,
-      image: item.image,
-      alt: item.alt,
-    }));
-
   return (
-    <section
-      ref={rootRef}
-      className={`stories-shelf${visible ? " is-visible" : ""}`}
-      aria-label="مجله و کاتالوگ مرد کوهستان"
-    >
-      <div className="shell">
-        <div className="stories-shelf-split">
-          <ShelfPane
-            paneId="magazine"
+    <>
+      <section
+        ref={rootRef}
+        className={`stories-shelf stories-shelf--magazine-only${
+          visible ? " is-visible" : ""
+        }`}
+        aria-label={`مجله ${brand.name}`}
+      >
+        <div className="shell">
+          <MagazinePane
             title={`مجله ${brand.name}`}
             lead="داستان‌هایی برای خواندن؛ از مرتع تا سفره."
             icon={<MagazineIcon />}
             viewAllHref="/magazine"
             cards={magazineCards}
           />
-          <ShelfPane
-            paneId="catalog"
-            title="کاتالوگ و گالری"
-            lead="صفحه‌به‌صفحه ببینید چه چیزی برای خانه آماده است."
-            icon={<CatalogIcon />}
-            viewAllHref="/products"
-            cards={catalogCards}
-          />
         </div>
-      </div>
-    </section>
+      </section>
+
+      <CatalogBook />
+    </>
   );
 }

@@ -15,36 +15,88 @@ import {
   homeDoors,
   type HomeDoorId,
 } from "@/lib/brand";
+import { playCategoryBell } from "@/lib/v2-bell-audio";
 
-const LAMP = "/brand/v2/pendant-lamp.png";
+const KITCHEN_BG = "/brand/v2/kitchen-wall-clean.png";
+const BRAND_MARK = "/brand/logo.svg";
+const BRAND_SEAL = "/brand/orginal-clear.png";
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
-const VISIBLE = 4;
+const VISIBLE = 5;
 
-/** Official packaging product bands (square PNG). */
-const REAL_PACKS = Array.from(
-  { length: 28 },
-  (_, i) => `/brand/v2/products/prod-${String(i + 1).padStart(2, "0")}.png`,
-);
+/** Short labels for the hanging category dock */
+const CATEGORY_DOCK: ReadonlyArray<{ id: HomeDoorId; short: string }> = [
+  { id: "fresh-meat", short: "گوشت" },
+  { id: "seafood", short: "دریایی" },
+  { id: "dairy", short: "لبنیات" },
+  { id: "ready-meal", short: "آماده" },
+  { id: "farm", short: "کشاورزی" },
+];
+
+/** Rope tint per kitchen category */
+const ROPE_TONE: Record<HomeDoorId, string> = {
+  "fresh-meat": "#c0392b",
+  seafood: "#2f6fad",
+  dairy: "#005b48",
+  "ready-meal": "#be6516",
+  farm: "#50af47",
+};
+
+/** Matching cubic topology so Framer can morph the rope realistically */
+const ROPE_D = {
+  /** Long slack cord while lowering the new note */
+  enter: "M 24 0 C 4 55, 44 110, 14 165 C 0 210, 40 245, 24 270",
+  /** Settled natural hang above the note */
+  rest: "M 24 0 C 32 70, 14 140, 30 200 C 38 230, 16 255, 24 270",
+  /** Taut short pull as the note is yanked up */
+  leave: "M 24 0 C 22 50, 26 110, 23 170 C 21 210, 25 245, 24 270",
+} as const;
+
+function HangingBell() {
+  return (
+    <svg
+      className="kui-bell-svg"
+      viewBox="0 0 64 80"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id="kuiBellBody" x1="12" y1="10" x2="52" y2="70" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FFE9A8" />
+          <stop offset="0.45" stopColor="#F0C15A" />
+          <stop offset="1" stopColor="#C48A2A" />
+        </linearGradient>
+        <linearGradient id="kuiBellShine" x1="20" y1="20" x2="34" y2="50" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FFF8E0" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#FFF8E0" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M18 28c0-10.5 6-18 14-18s14 7.5 14 18v16c0 2.2-1.2 3.5-3.2 3.5H21.2c-2 0-3.2-1.3-3.2-3.5V28Z"
+        fill="url(#kuiBellBody)"
+      />
+      <path
+        d="M22 30c1.5-9 5.5-14.5 10-14.5 2.2 0 4.4 1.2 6 3.4"
+        stroke="url(#kuiBellShine)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.75"
+      />
+      <ellipse cx="32" cy="46.5" rx="17.5" ry="4.2" fill="#D4A045" opacity="0.55" />
+      <path d="M20 47.5h24" stroke="#E8C56A" strokeWidth="2.4" strokeLinecap="round" opacity="0.8" />
+      <circle cx="32" cy="58" r="4.2" fill="#F2D27A" stroke="#C48A2A" strokeWidth="1.2" />
+      <circle cx="32" cy="58" r="1.5" fill="#FFF3C8" />
+    </svg>
+  );
+}
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
-function splitTitle(name: string): [string, string] {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length <= 1) return [name, ""];
-  const mid = Math.ceil(parts.length / 2);
-  return [parts.slice(0, mid).join(" "), parts.slice(mid).join(" ")];
-}
-
-function packFor(doorId: HomeDoorId, productIndex: number) {
-  const doorOffset = homeDoors.findIndex((d) => d.id === doorId);
-  const base = Math.max(0, doorOffset) * 3;
-  return REAL_PACKS[mod(base + productIndex, REAL_PACKS.length)];
-}
-
 /**
- * Brand-green kitchen UI: lamp drop → plate boomerang → copy/card cascade.
+ * Kitchen-wall product showcase:
+ * hanging bell · category dock · editorial plate · rope-hoisted note · product rail.
  */
 export function ForHomeKitchen() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -53,60 +105,59 @@ export function ForHomeKitchen() {
   const [doorId, setDoorId] = useState<HomeDoorId>(DEFAULT_DOOR);
   const [idx, setIdx] = useState(0);
   const [tab, setTab] = useState<"overview" | "ingredients">("overview");
-  const [liked, setLiked] = useState(36);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [boomerangDone, setBoomerangDone] = useState(false);
 
   const door = homeDoors.find((d) => d.id === doorId) ?? homeDoors[0];
-  const products = homeCategoryProducts[doorId];
-  const safeIdx = mod(idx, products.length);
-  const active = products[safeIdx] ?? products[0];
-  const activeImage = packFor(doorId, safeIdx);
-  const [line1, line2] = splitTitle(active.name);
+  const products = homeCategoryProducts[doorId] as ReadonlyArray<{
+    id: string;
+    name: string;
+    note: string;
+    teaser: string;
+    story: string;
+    href: string;
+    image: string;
+    alt: string;
+  }>;
+  const active = products[mod(idx, Math.max(products.length, 1))] ?? products[0];
 
   const rail = useMemo(() => {
     const n = products.length;
     if (!n) return [];
+    /* Active sits in 3rd slot like the reference rail */
     const start = mod(idx - 2, n);
     return Array.from({ length: Math.min(VISIBLE, n) }, (_, i) => {
-      const absolute = mod(start + i, n);
-      const p = products[absolute];
-      return {
-        product: p,
-        absolute,
-        highlight: i === 2,
-        image: packFor(doorId, absolute),
-      };
+      const p = products[mod(start + i, n)];
+      return { product: p, absolute: mod(start + i, n), highlight: i === 2 };
     });
-  }, [products, idx, doorId]);
+  }, [products, idx]);
 
   useEffect(() => {
     const node = rootRef.current;
     if (!node) return;
+
+    const reveal = () => setVisible(true);
+
+    const onArrive = () => reveal();
+    window.addEventListener("v2:kitchen-arrive", onArrive);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          reveal();
           observer.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.12 },
     );
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("v2:kitchen-arrive", onArrive);
+    };
   }, []);
 
-  useEffect(() => {
-    setBoomerangDone(false);
-  }, [active.id]);
-
-  const spring: Transition = reduceMotion
+  const snap: Transition = reduceMotion
     ? { duration: 0 }
-    : { type: "spring", stiffness: 120, damping: 16, mass: 0.85 };
-
-  const soft: Transition = reduceMotion
-    ? { duration: 0 }
-    : { duration: 0.7, ease: [0.22, 0.7, 0.2, 1] };
+    : { duration: 0.34, ease: [0.16, 1, 0.3, 1] };
 
   const cycle = (dir: 1 | -1) => {
     setIdx((i) => mod(i + dir, products.length));
@@ -114,23 +165,16 @@ export function ForHomeKitchen() {
   };
 
   const selectDoor = (id: HomeDoorId) => {
+    if (id === doorId) return;
     setDoorId(id);
     setIdx(0);
-    setMenuOpen(false);
+    setTab("overview");
+    void playCategoryBell();
   };
 
-  const plateEnter = reduceMotion
-    ? { opacity: 1, x: 0, rotate: 12, scale: 1 }
-    : visible
-      ? {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          rotate: boomerangDone
-            ? 12
-            : [12, -10, 14, -6, 12],
-        }
-      : { opacity: 0, x: -140, rotate: -18, scale: 0.86 };
+  if (!active) {
+    return null;
+  }
 
   return (
     <section
@@ -142,170 +186,153 @@ export function ForHomeKitchen() {
       aria-labelledby="kitchen-ui-title"
     >
       <div className="kui-scene" aria-hidden="true">
-        <motion.span
-          className="kui-lamp-glow"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.65 }}
-          animate={visible ? { opacity: 1, scale: 1 } : undefined}
-          transition={{ ...soft, delay: 0.28 }}
+        <Image
+          src={KITCHEN_BG}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="kui-scene-img"
         />
+        <span className="kui-blob kui-blob--peach" />
+        <span className="kui-blob kui-blob--teal" />
+      </div>
+
+      {/* Cord starts exactly at the top edge of this section */}
+      <div className="kui-pendant" aria-hidden={false}>
+        <span className="kui-bell-line" aria-hidden="true" />
         <motion.div
-          className="kui-lamp"
-          initial={reduceMotion ? false : { y: -180, opacity: 0 }}
-          animate={visible ? { y: 0, opacity: 1 } : undefined}
-          transition={{ ...spring, delay: 0.04 }}
+          className="kui-pendant-inner"
+          initial={
+            reduceMotion ? false : { opacity: 0, y: -72, scale: 0.72, rotate: -8 }
+          }
+          animate={
+            visible
+              ? { opacity: 1, y: 0, scale: 1, rotate: 0 }
+              : undefined
+          }
+          transition={{ ...snap, delay: 0.14 }}
         >
-          <Image
-            src={LAMP}
-            alt=""
-            width={355}
-            height={420}
-            className="kui-lamp-img"
-            priority
-          />
-          <span className="kui-lamp-beam" />
+          <div className="kui-bell" aria-hidden="true">
+            <span className="kui-bell-glow" />
+            <HangingBell />
+            <span className="kui-bell-wash" />
+          </div>
+
+          <nav className="kui-dock" aria-label="دسته‌بندی محصولات">
+            {CATEGORY_DOCK.map(({ id, short }) => {
+              const cat = homeDoors.find((d) => d.id === id);
+              if (!cat) return null;
+              const activeCat = id === doorId;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`kui-dock-btn${activeCat ? " is-active" : ""}`}
+                  aria-pressed={activeCat}
+                  aria-label={cat.label}
+                  title={cat.label}
+                  onClick={() => selectDoor(id)}
+                >
+                  <span className="kui-dock-label">{short}</span>
+                </button>
+              );
+            })}
+          </nav>
         </motion.div>
       </div>
 
       <div className="kui-stage">
-        <motion.div
-          className="kui-utils"
-          initial={reduceMotion ? false : { opacity: 0, y: -10 }}
-          animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...soft, delay: 0.55 }}
-        >
-          <button type="button" className="kui-icon-btn" aria-label="جستجو">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-              <path d="M16.2 16.2 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="kui-icon-btn"
-            aria-label="منو"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-          </button>
-          {menuOpen ? (
-            <div className="kui-menu" role="listbox">
-              {homeDoors.slice(0, 8).map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  role="option"
-                  aria-selected={d.id === doorId}
-                  className={d.id === doorId ? "is-active" : undefined}
-                  onClick={() => selectDoor(d.id)}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </motion.div>
-
-        <div className="kui-dots" aria-hidden="true">
-          <span className="is-on" />
-          <span />
-          <span />
-          <span />
-        </div>
-
+        {/* Hero: tilted plate + type */}
         <div className="kui-hero">
           <motion.div
             className="kui-plate-wrap"
-            initial={reduceMotion ? false : { opacity: 0, x: -140, rotate: -18, scale: 0.86 }}
-            animate={plateEnter}
-            transition={
+            initial={
               reduceMotion
-                ? { duration: 0 }
-                : boomerangDone
-                  ? { duration: 0.35 }
-                  : {
-                      opacity: { duration: 0.45, delay: 0.42 },
-                      x: { type: "spring", stiffness: 90, damping: 14, delay: 0.42 },
-                      scale: { type: "spring", stiffness: 110, damping: 14, delay: 0.42 },
-                      rotate: {
-                        delay: 0.55,
-                        duration: 1.15,
-                        times: [0, 0.22, 0.45, 0.7, 1],
-                        ease: "easeInOut",
-                      },
-                    }
+                ? false
+                : { opacity: 0, y: 90, scale: 0.55, rotate: -28, x: 36 }
             }
-            onAnimationComplete={() => setBoomerangDone(true)}
+            animate={
+              visible
+                ? { opacity: 1, y: 0, scale: 1, rotate: 14, x: 0 }
+                : undefined
+            }
+            transition={{ ...snap, delay: 0 }}
           >
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
                 className="kui-plate"
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.9, rotate: -8 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  rotate: reduceMotion ? 0 : [0, -7, 8, -4, 0],
-                }}
-                exit={{ opacity: 0, scale: 0.94, x: 24 }}
-                transition={
-                  reduceMotion
-                    ? { duration: 0 }
-                    : {
-                        opacity: { duration: 0.3 },
-                        scale: { type: "spring", stiffness: 160, damping: 16 },
-                        rotate: { duration: 0.85, ease: "easeInOut" },
-                      }
-                }
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={snap}
               >
-                <Image
-                  src={activeImage}
-                  alt={active.alt}
-                  width={720}
-                  height={720}
-                  sizes="(max-width: 900px) 58vw, 360px"
-                  priority
-                />
+                <motion.div
+                  className="kui-plate-boomerang"
+                  whileHover={
+                    reduceMotion
+                      ? undefined
+                      : {
+                          scale: [1, 1.07, 0.97, 1.05, 1],
+                          rotate: [0, 2.8, -2.2, 1.6, 0],
+                          transition: {
+                            duration: 0.78,
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                          },
+                        }
+                  }
+                >
+                  <Image
+                    src={active.image}
+                    alt={active.alt}
+                    width={640}
+                    height={640}
+                    sizes="(max-width: 900px) 55vw, 340px"
+                    priority
+                  />
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           </motion.div>
 
           <motion.div
             className="kui-hero-copy"
-            initial={reduceMotion ? false : { opacity: 0, x: 28 }}
-            animate={visible ? { opacity: 1, x: 0 } : undefined}
-            transition={{ ...soft, delay: 0.85 }}
+            initial={
+              reduceMotion
+                ? false
+                : { opacity: 0, x: -56, y: 12, filter: "blur(10px)" }
+            }
+            animate={
+              visible
+                ? { opacity: 1, x: 0, y: 0, filter: "blur(0px)" }
+                : undefined
+            }
+            transition={{ ...snap, delay: 0.08 }}
           >
-            <p className="kui-kicker">#{mod(idx, 9) + 1} محبوب‌ترین انتخاب</p>
+            <p className="kui-kicker">
+              {doorId === "fresh-meat"
+                ? "برش تازهٔ امروز"
+                : doorId === "seafood"
+                  ? "تازگی امروز دریا"
+                  : doorId === "dairy"
+                    ? "لبنیات امروز خانه"
+                    : door.line}
+            </p>
             <h2 id="kitchen-ui-title" className="kui-title">
               <AnimatePresence mode="wait">
                 <motion.span
-                  key={`t1-${active.id}`}
-                  className="kui-title-thin"
-                  initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                  key={active.id}
+                  className="kui-title-line"
+                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
-                  transition={soft}
+                  transition={snap}
                 >
-                  {line1}
+                  {active.name}
                 </motion.span>
               </AnimatePresence>
-              {line2 ? (
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={`t2-${active.id}`}
-                    className="kui-title-bold"
-                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={soft}
-                  >
-                    {line2}
-                  </motion.span>
-                </AnimatePresence>
-              ) : null}
             </h2>
             <div className="kui-hero-actions">
               <button type="button" className="kui-text-action">
@@ -327,173 +354,259 @@ export function ForHomeKitchen() {
                 سفارش غذا
               </Link>
             </div>
+
+            <motion.div
+              className="kui-rail"
+              initial={
+                reduceMotion ? false : { opacity: 0, y: 28, scale: 0.92 }
+              }
+              animate={
+                visible ? { opacity: 1, y: 0, scale: 1 } : undefined
+              }
+              transition={{ ...snap, delay: 0.2 }}
+            >
+              <button
+                type="button"
+                className="kui-rail-arrow"
+                aria-label="قبلی"
+                onClick={() => cycle(-1)}
+              >
+                ‹
+              </button>
+              <ul className="kui-rail-list">
+                {rail.map(({ product, absolute, highlight }) => (
+                  <li key={`${product.id}-${absolute}`}>
+                    <button
+                      type="button"
+                      className={`kui-rail-item${highlight ? " is-active" : ""}`}
+                      onClick={() => setIdx(absolute)}
+                    >
+                      <span className="kui-rail-thumb">
+                        <Image
+                          src={product.image}
+                          alt=""
+                          width={120}
+                          height={120}
+                          sizes="72px"
+                        />
+                      </span>
+                      <span className="kui-rail-label">{product.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                className="kui-rail-arrow"
+                aria-label="بعدی"
+                onClick={() => cycle(1)}
+              >
+                ›
+              </button>
+            </motion.div>
           </motion.div>
         </div>
 
+        {/* Recipe note — hoisted by a category-colored rope */}
         <motion.aside
           className="kui-card"
-          initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.96 }}
-          animate={visible ? { opacity: 1, y: 0, scale: 1 } : undefined}
-          transition={{ ...spring, delay: 0.95 }}
+          style={{ ["--rope-tone" as string]: ROPE_TONE[doorId] ?? "#005b48" }}
+          initial={
+            reduceMotion
+              ? false
+              : { opacity: 0, x: 40, y: -24, rotate: -8, scale: 0.9 }
+          }
+          animate={
+            visible
+              ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
+              : undefined
+          }
+          transition={{ ...snap, delay: 0.18 }}
         >
-          <div className="kui-tabs" role="tablist">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={tab === "overview"}
-              className={tab === "overview" ? "is-active" : undefined}
-              onClick={() => setTab("overview")}
-            >
-              نگاه کلی
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={tab === "ingredients"}
-              className={tab === "ingredients" ? "is-active" : undefined}
-              onClick={() => setTab("ingredients")}
-            >
-              ترکیبات
-            </button>
-          </div>
+          <div className="kui-note-hoist">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={active.id}
+                className="kui-note-hang"
+                initial={
+                  reduceMotion
+                    ? false
+                    : { y: -340, opacity: 0.9, rotate: -5.5 }
+                }
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                  rotate: -1.8,
+                  transition: reduceMotion
+                    ? { duration: 0 }
+                    : {
+                        type: "spring",
+                        stiffness: 220,
+                        damping: 20,
+                        mass: 0.7,
+                        delay: 0.02,
+                      },
+                }}
+                exit={
+                  reduceMotion
+                    ? { opacity: 0 }
+                    : {
+                        y: -360,
+                        opacity: 0.88,
+                        rotate: 3.5,
+                        transition: {
+                          duration: 0.42,
+                          ease: [0.55, 0.02, 0.85, 0.35],
+                        },
+                      }
+                }
+              >
+                <svg
+                  className="kui-note-rope"
+                  viewBox="0 0 48 270"
+                  preserveAspectRatio="xMidYMax meet"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <motion.path
+                    d={ROPE_D.rest}
+                    fill="none"
+                    stroke={ROPE_TONE[doorId] ?? "#005b48"}
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
+                    initial={reduceMotion ? false : { d: ROPE_D.enter }}
+                    animate={{
+                      d: ROPE_D.rest,
+                      transition: reduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.72, ease: [0.22, 0.7, 0.2, 1] },
+                    }}
+                    exit={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            d: ROPE_D.leave,
+                            transition: {
+                              duration: 0.4,
+                              ease: [0.4, 0, 0.8, 0.2],
+                            },
+                          }
+                    }
+                  />
+                  <motion.path
+                    d={ROPE_D.rest}
+                    fill="none"
+                    stroke="rgb(255 255 255 / 32%)"
+                    strokeWidth="0.85"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
+                    initial={reduceMotion ? false : { d: ROPE_D.enter }}
+                    animate={{
+                      d: ROPE_D.rest,
+                      transition: reduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.72, ease: [0.22, 0.7, 0.2, 1] },
+                    }}
+                    exit={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            d: ROPE_D.leave,
+                            transition: {
+                              duration: 0.4,
+                              ease: [0.4, 0, 0.8, 0.2],
+                            },
+                          }
+                    }
+                    transform="translate(0.8 0)"
+                  />
+                </svg>
 
-          <div className="kui-rating">
-            <span>۴.۶</span>
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                d="M8 1.6l1.7 3.5 3.8.6-2.7 2.7.6 3.8L8 10.4 4.6 12.2l.6-3.8L2.5 5.7l3.8-.6L8 1.6Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+                <span className="kui-note-knot" aria-hidden="true" />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${active.id}-${tab}`}
-              initial={reduceMotion ? false : { opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            >
-              <h3 className="kui-card-title">{active.name}</h3>
-              <p className="kui-card-sub">{door.label} · مرد کوهستان</p>
-              <p className="kui-card-body">
-                {tab === "overview"
-                  ? active.teaser || active.story
-                  : `${active.note}. ${active.story}`}
-              </p>
-            </motion.div>
-          </AnimatePresence>
+                <div className="kui-note-sheet">
+                  <div className="kui-note-brand">
+                    <Image
+                      src={BRAND_MARK}
+                      alt=""
+                      width={151}
+                      height={30}
+                      className="kui-note-brand-mark"
+                    />
+                  </div>
 
-          <div className="kui-card-foot">
-            <button
-              type="button"
-              className="kui-like"
-              onClick={() => setLiked((n) => n + 1)}
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M6.2 17H4.4a1 1 0 0 1-1-1V9.2a1 1 0 0 1 1-1h1.8V17Zm2-9.2 2.7-3.4a1.4 1.4 0 0 1 2.4 1v2.2h3.2a1.4 1.4 0 0 1 1.4 1.6l-.9 5.2A1.8 1.8 0 0 1 15.1 17H8.2V7.8Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {liked} پسند
-            </button>
-            <button type="button" className="kui-dislike" aria-label="نپسندیدن">
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M13.8 3H15.6a1 1 0 0 1 1 1v6.8a1 1 0 0 1-1 1h-1.8V3Zm-2 9.2-2.7 3.4a1.4 1.4 0 0 1-2.4-1v-2.2H3.5a1.4 1.4 0 0 1-1.4-1.6l.9-5.2A1.8 1.8 0 0 1 4.9 3h6.9v9.2Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+                  <header className="kui-card-chrome">
+                    <div className="kui-tabs" role="tablist" aria-label="جزئیات محصول">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={tab === "overview"}
+                        className={tab === "overview" ? "is-active" : undefined}
+                        onClick={() => setTab("overview")}
+                      >
+                        نگاه کلی
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={tab === "ingredients"}
+                        className={tab === "ingredients" ? "is-active" : undefined}
+                        onClick={() => setTab("ingredients")}
+                      >
+                        ترکیبات
+                      </button>
+                    </div>
+                    <span className="kui-note-seal" aria-hidden="true">
+                      <Image
+                        src={BRAND_SEAL}
+                        alt=""
+                        width={40}
+                        height={40}
+                        sizes="18px"
+                        className="kui-note-seal-img"
+                      />
+                    </span>
+                  </header>
+
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={tab}
+                      className="kui-card-dossier"
+                      initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.22 }}
+                    >
+                      <p className="kui-card-eyebrow">{door.label}</p>
+                      <h3 className="kui-card-title">{active.name}</h3>
+                      <p className="kui-card-note">{active.note}</p>
+                      <p className="kui-card-body">
+                        {tab === "overview"
+                          ? active.teaser || active.story
+                          : active.story}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  <footer className="kui-card-foot">
+                    <Link href={active.href} className="kui-card-cta">
+                      مشاهده در فروشگاه
+                    </Link>
+                  </footer>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </motion.aside>
+      </div>
 
-        <motion.div
-          className="kui-rail"
-          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-          animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...soft, delay: 1.1 }}
-        >
-          <button
-            type="button"
-            className="kui-rail-arrow"
-            aria-label="قبلی"
-            onClick={() => cycle(-1)}
-          >
-            ‹
-          </button>
-          <ul className="kui-rail-list">
-            {rail.map(({ product, absolute, highlight, image }) => (
-              <li key={`${product.id}-${absolute}`}>
-                <button
-                  type="button"
-                  className={`kui-rail-item${highlight ? " is-active" : ""}`}
-                  onClick={() => setIdx(absolute)}
-                >
-                  <span className="kui-rail-thumb">
-                    <Image src={image} alt="" width={120} height={120} sizes="72px" />
-                  </span>
-                  <span className="kui-rail-label">{product.name}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          <button
-            type="button"
-            className="kui-rail-arrow"
-            aria-label="بعدی"
-            onClick={() => cycle(1)}
-          >
-            ›
-          </button>
-        </motion.div>
-
-        <motion.div
-          className="kui-dock-wrap"
-          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-          animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...soft, delay: 1.2 }}
-        >
-          <nav className="kui-dock" aria-label="میانبر">
-            <Link href="/products" className="kui-dock-btn is-active" aria-label="محصولات">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 4v4M16 4v4M5 9.5c.8 6 3.2 9 7 9s6.2-3 7-9H5Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-                <path d="M9 13.5h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </Link>
-            <Link href="/chain" className="kui-dock-btn" aria-label="مسیر غذا">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 19V8.5M8 8.5c0-2 1.2-3.5 3-3.5h.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M16 5v14M12.5 9H16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </Link>
-            <Link href="/contact" className="kui-dock-btn" aria-label="پیام">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 7.5h14v9.2a1.5 1.5 0 0 1-1.5 1.5H9l-4 2v-2.2A1.5 1.5 0 0 1 5 16.7V7.5Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <Link href="/account" className="kui-dock-btn" aria-label="حساب">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="9" r="3.2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M6.5 18.2c1.4-2.4 3.2-3.5 5.5-3.5s4.1 1.1 5.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </Link>
-          </nav>
-          <button type="button" className="kui-mic" aria-label="دستور صوتی">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="9" y="3.5" width="6" height="10" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-              <path d="M7 11.5a5 5 0 0 0 10 0M12 16.5v3.2M9.5 19.7h5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-          </button>
-        </motion.div>
+      <div className="kui-lamp-fx" aria-hidden="true">
+        <span className="kui-lamp-glow" />
+        <span className="kui-lamp-beam" />
+        <span className="kui-lamp-pool" />
       </div>
     </section>
   );
