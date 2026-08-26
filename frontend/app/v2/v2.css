@@ -661,9 +661,10 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: min(92vh, 820px);
+  min-height: min(100vh, 900px);
   padding: 0 !important;
   margin: 0;
+  scroll-margin-top: 0.5rem;
   background: var(--kui-green) !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -678,58 +679,73 @@
   background: var(--kui-green);
 }
 
-/* Soft overhead lamp wash */
+/* Soft overhead lamp wash — centered on the product plate */
 .is-home-v2 .kui-lamp-glow {
   position: absolute;
-  top: -8%;
+  top: 4%;
   left: 58%;
-  width: min(70vw, 720px);
-  height: min(70vh, 620px);
+  width: min(62vw, 640px);
+  height: min(72vh, 680px);
   translate: -50% 0;
   border-radius: 50%;
   background:
     radial-gradient(
-      ellipse at 50% 0%,
-      rgb(255 248 230 / 42%) 0%,
-      rgb(255 240 210 / 18%) 28%,
-      rgb(0 91 72 / 0%) 68%
+      ellipse at 50% 12%,
+      rgb(255 248 220 / 58%) 0%,
+      rgb(255 230 170 / 28%) 24%,
+      rgb(0 91 72 / 0%) 64%
     );
-  filter: blur(2px);
+  filter: blur(1px);
+  transform-origin: 50% 0;
+  pointer-events: none;
 }
 
 .is-home-v2 .kui-lamp {
   position: absolute;
-  top: 0;
-  right: clamp(12%, 18vw, 22%);
+  top: -0.35rem;
+  left: 58%;
+  translate: -50% 0;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
+  width: clamp(88px, 11vw, 132px);
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 18px 28px rgb(0 0 0 / 28%));
 }
 
-.is-home-v2 .kui-lamp-cord {
-  width: 2px;
-  height: clamp(48px, 8vh, 78px);
-  background: linear-gradient(180deg, rgb(20 20 18 / 55%), #1a1a18);
+.is-home-v2 .kui-lamp-img {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  object-fit: contain;
 }
 
-.is-home-v2 .kui-lamp-shade {
-  width: 46px;
-  height: 28px;
-  border-radius: 4px 4px 18px 18px / 4px 4px 22px 22px;
-  background: linear-gradient(180deg, #2a2a28 0%, #121210 100%);
-  box-shadow: 0 8px 18px rgb(0 0 0 / 28%);
+.is-home-v2 .kui-lamp-beam {
+  position: absolute;
+  top: 78%;
+  left: 50%;
+  translate: -50% 0;
+  width: clamp(160px, 28vw, 320px);
+  height: clamp(180px, 34vh, 340px);
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(255 236 180 / 45%) 0%,
+    rgb(255 230 160 / 16%) 42%,
+    rgb(255 220 140 / 0%) 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: soft-light;
 }
 
+.is-home-v2 .kui-lamp-cord,
+.is-home-v2 .kui-lamp-fixture,
+.is-home-v2 .kui-lamp-cap,
+.is-home-v2 .kui-lamp-shade,
+.is-home-v2 .kui-lamp-inner,
 .is-home-v2 .kui-lamp-bulb {
-  width: 14px;
-  height: 10px;
-  margin-top: -2px;
-  border-radius: 0 0 8px 8px;
-  background: radial-gradient(circle at 50% 30%, #fff8e8 0%, #f0d9a0 70%);
-  box-shadow:
-    0 0 18px 8px rgb(255 236 190 / 55%),
-    0 0 48px 18px rgb(255 220 150 / 28%);
+  display: none !important;
 }
 
 .is-home-v2 .kui-blob,
@@ -740,20 +756,20 @@
 .is-home-v2 .kui-stage {
   position: relative;
   z-index: 2;
-  width: min(1240px, calc(100% - 2rem));
+  width: min(1280px, calc(100% - 2rem));
   margin-inline: auto;
-  min-height: min(92vh, 820px);
-  padding: clamp(1.25rem, 3vw, 2rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+  min-height: min(100vh, 900px);
+  padding: clamp(1rem, 2.5vw, 1.75rem) 0 clamp(1.25rem, 3vw, 2rem);
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(240px, 0.78fr) minmax(420px, 1.35fr);
   grid-template-rows: auto 1fr auto auto;
   grid-template-areas:
     "utils utils"
-    "hero card"
+    "card hero"
     "rail rail"
     "dock dock";
-  gap: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2.5rem);
-  align-items: start;
+  gap: clamp(0.75rem, 2vw, 1.35rem) clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
 }
 
 /* —— Top utilities —— */
@@ -847,50 +863,56 @@
 .is-home-v2 .kui-hero {
   grid-area: hero;
   display: grid;
-  grid-template-columns: minmax(200px, 0.95fr) minmax(180px, 1fr);
+  grid-template-columns: minmax(160px, 0.85fr) minmax(240px, 1.15fr);
   align-items: center;
-  gap: clamp(0.5rem, 2vw, 1.5rem);
-  min-height: 340px;
-  padding-inline-start: clamp(0.5rem, 2vw, 1.5rem);
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  min-height: 380px;
+  padding-inline-end: 0.5rem;
+  position: relative;
 }
 
 .is-home-v2 .kui-plate-wrap {
   position: relative;
   display: grid;
   place-items: center;
-  transform: rotate(14deg);
-  filter: drop-shadow(0 28px 40px rgb(0 20 12 / 35%));
+  filter: drop-shadow(0 28px 40px rgb(0 20 12 / 38%));
+  will-change: transform;
+  z-index: 2;
+  order: 2;
 }
 
 .is-home-v2 .kui-plate {
-  width: min(100%, 340px);
+  width: min(100%, 380px);
   aspect-ratio: 1;
   border-radius: 28px;
   overflow: hidden;
-  background: #fff;
-  padding: 12px;
+  background: #f4f0e8;
+  padding: 0.65rem;
   box-shadow:
-    0 2px 0 rgb(255 255 255 / 80%) inset,
+    0 2px 0 rgb(255 255 255 / 85%) inset,
     0 18px 40px rgb(0 0 0 / 18%);
+  display: grid;
+  place-items: center;
 }
 
 .is-home-v2 .kui-plate img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover;
-  object-position: center 40%;
+  object-position: center 45%;
   display: block;
-  border-radius: 18px;
+  border-radius: 20px;
 }
 
 .is-home-v2 .kui-hero-copy {
+  order: 1;
   direction: rtl;
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.65rem;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
 }
 
 .is-home-v2 .kui-kicker {
@@ -969,9 +991,9 @@
 
 .is-home-v2 .kui-card {
   grid-area: card;
-  justify-self: end;
+  justify-self: start;
   align-self: center;
-  width: min(100%, 280px);
+  width: min(100%, 300px);
   direction: rtl;
   text-align: right;
   background: rgb(255 255 255 / 96%);
@@ -1140,17 +1162,19 @@
   height: 64px;
   border-radius: 50%;
   overflow: hidden;
-  background: #fff;
+  background:
+    radial-gradient(circle at 50% 42%, #fff 0%, #f4f0e8 70%, #e8e0d2 100%);
   box-shadow: 0 8px 18px rgb(0 0 0 / 18%);
   display: grid;
   place-items: center;
 }
 
 .is-home-v2 .kui-rail-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
+  width: 86% !important;
+  height: 86% !important;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 .is-home-v2 .kui-rail-item.is-active .kui-rail-thumb {
@@ -1288,7 +1312,11 @@
   }
 
   .is-home-v2 .kui-lamp {
-    right: 10%;
+    right: 8%;
+  }
+
+  .is-home-v2 .kui-lamp-cord {
+    height: clamp(64px, 10vh, 100px);
   }
 }
 
@@ -1332,9 +1360,25 @@
   }
 
   .is-home-v2 .kui-lamp-shade {
-    width: 36px;
-    height: 22px;
+    width: 64px;
+    height: 46px;
   }
+
+  .is-home-v2 .kui-lamp-bulb {
+    width: 18px;
+    height: 14px;
+  }
+}
+
+/* Soft handoff from previous section */
+.is-home-v2 .for-home--v2.kitchen-ui::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 72px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(0 91 72 / 0%), rgb(0 91 72 / 35%) 40%, var(--kui-green));
 }
 
 @media (prefers-reduced-motion: reduce) {

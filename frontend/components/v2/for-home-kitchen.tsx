@@ -16,13 +16,14 @@ import {
   type HomeDoorId,
 } from "@/lib/brand";
 
+const LAMP = "/brand/v2/pendant-lamp.png";
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
 const VISIBLE = 4;
 
-/** Real pack product crops (middle band of official packaging art). */
+/** Official packaging product bands (square PNG). */
 const REAL_PACKS = Array.from(
   { length: 28 },
-  (_, i) => `/brand/v2/products/prod-${String(i + 1).padStart(2, "0")}.jpg`,
+  (_, i) => `/brand/v2/products/prod-${String(i + 1).padStart(2, "0")}.png`,
 );
 
 function mod(n: number, m: number) {
@@ -43,8 +44,7 @@ function packFor(doorId: HomeDoorId, productIndex: number) {
 }
 
 /**
- * Kitchen-app for-home on brand green:
- * solid #005B48 · hanging lamp only · real pack product photos.
+ * Brand-green kitchen UI: lamp drop → plate boomerang → copy/card cascade.
  */
 export function ForHomeKitchen() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -55,6 +55,7 @@ export function ForHomeKitchen() {
   const [tab, setTab] = useState<"overview" | "ingredients">("overview");
   const [liked, setLiked] = useState(36);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [boomerangDone, setBoomerangDone] = useState(false);
 
   const door = homeDoors.find((d) => d.id === doorId) ?? homeDoors[0];
   const products = homeCategoryProducts[doorId];
@@ -89,15 +90,23 @@ export function ForHomeKitchen() {
           observer.disconnect();
         }
       },
-      { threshold: 0.08 },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
 
-  const ease: Transition = reduceMotion
+  useEffect(() => {
+    setBoomerangDone(false);
+  }, [active.id]);
+
+  const spring: Transition = reduceMotion
     ? { duration: 0 }
-    : { duration: 0.65, ease: [0.22, 0.7, 0.2, 1] };
+    : { type: "spring", stiffness: 120, damping: 16, mass: 0.85 };
+
+  const soft: Transition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.7, ease: [0.22, 0.7, 0.2, 1] };
 
   const cycle = (dir: 1 | -1) => {
     setIdx((i) => mod(i + dir, products.length));
@@ -110,25 +119,60 @@ export function ForHomeKitchen() {
     setMenuOpen(false);
   };
 
+  const plateEnter = reduceMotion
+    ? { opacity: 1, x: 0, rotate: 12, scale: 1 }
+    : visible
+      ? {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          rotate: boomerangDone
+            ? 12
+            : [12, -10, 14, -6, 12],
+        }
+      : { opacity: 0, x: -140, rotate: -18, scale: 0.86 };
+
   return (
     <section
       ref={rootRef}
+      id="for-home-kitchen"
       className={`for-home for-home--catalog for-home--v2 kitchen-ui${
         visible ? " is-visible" : ""
       }`}
       aria-labelledby="kitchen-ui-title"
     >
       <div className="kui-scene" aria-hidden="true">
-        <span className="kui-lamp-glow" />
-        <span className="kui-lamp">
-          <span className="kui-lamp-cord" />
-          <span className="kui-lamp-shade" />
-          <span className="kui-lamp-bulb" />
-        </span>
+        <motion.span
+          className="kui-lamp-glow"
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.65 }}
+          animate={visible ? { opacity: 1, scale: 1 } : undefined}
+          transition={{ ...soft, delay: 0.28 }}
+        />
+        <motion.div
+          className="kui-lamp"
+          initial={reduceMotion ? false : { y: -180, opacity: 0 }}
+          animate={visible ? { y: 0, opacity: 1 } : undefined}
+          transition={{ ...spring, delay: 0.04 }}
+        >
+          <Image
+            src={LAMP}
+            alt=""
+            width={355}
+            height={420}
+            className="kui-lamp-img"
+            priority
+          />
+          <span className="kui-lamp-beam" />
+        </motion.div>
       </div>
 
       <div className="kui-stage">
-        <div className="kui-utils">
+        <motion.div
+          className="kui-utils"
+          initial={reduceMotion ? false : { opacity: 0, y: -10 }}
+          animate={visible ? { opacity: 1, y: 0 } : undefined}
+          transition={{ ...soft, delay: 0.55 }}
+        >
           <button type="button" className="kui-icon-btn" aria-label="جستجو">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
@@ -162,7 +206,7 @@ export function ForHomeKitchen() {
               ))}
             </div>
           ) : null}
-        </div>
+        </motion.div>
 
         <div className="kui-dots" aria-hidden="true">
           <span className="is-on" />
@@ -174,25 +218,54 @@ export function ForHomeKitchen() {
         <div className="kui-hero">
           <motion.div
             className="kui-plate-wrap"
-            initial={reduceMotion ? false : { opacity: 0, y: 28, rotate: 8 }}
-            animate={visible ? { opacity: 1, y: 0, rotate: 14 } : undefined}
-            transition={{ ...ease, delay: 0.15 }}
+            initial={reduceMotion ? false : { opacity: 0, x: -140, rotate: -18, scale: 0.86 }}
+            animate={plateEnter}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : boomerangDone
+                  ? { duration: 0.35 }
+                  : {
+                      opacity: { duration: 0.45, delay: 0.42 },
+                      x: { type: "spring", stiffness: 90, damping: 14, delay: 0.42 },
+                      scale: { type: "spring", stiffness: 110, damping: 14, delay: 0.42 },
+                      rotate: {
+                        delay: 0.55,
+                        duration: 1.15,
+                        times: [0, 0.22, 0.45, 0.7, 1],
+                        ease: "easeInOut",
+                      },
+                    }
+            }
+            onAnimationComplete={() => setBoomerangDone(true)}
           >
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
                 className="kui-plate"
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={ease}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.9, rotate: -8 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  rotate: reduceMotion ? 0 : [0, -7, 8, -4, 0],
+                }}
+                exit={{ opacity: 0, scale: 0.94, x: 24 }}
+                transition={
+                  reduceMotion
+                    ? { duration: 0 }
+                    : {
+                        opacity: { duration: 0.3 },
+                        scale: { type: "spring", stiffness: 160, damping: 16 },
+                        rotate: { duration: 0.85, ease: "easeInOut" },
+                      }
+                }
               >
                 <Image
                   src={activeImage}
                   alt={active.alt}
-                  width={900}
-                  height={600}
-                  sizes="(max-width: 900px) 55vw, 340px"
+                  width={720}
+                  height={720}
+                  sizes="(max-width: 900px) 58vw, 360px"
                   priority
                 />
               </motion.div>
@@ -201,9 +274,9 @@ export function ForHomeKitchen() {
 
           <motion.div
             className="kui-hero-copy"
-            initial={reduceMotion ? false : { opacity: 0, x: 18 }}
+            initial={reduceMotion ? false : { opacity: 0, x: 28 }}
             animate={visible ? { opacity: 1, x: 0 } : undefined}
-            transition={{ ...ease, delay: 0.28 }}
+            transition={{ ...soft, delay: 0.85 }}
           >
             <p className="kui-kicker">#{mod(idx, 9) + 1} محبوب‌ترین انتخاب</p>
             <h2 id="kitchen-ui-title" className="kui-title">
@@ -211,10 +284,10 @@ export function ForHomeKitchen() {
                 <motion.span
                   key={`t1-${active.id}`}
                   className="kui-title-thin"
-                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                  initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
-                  transition={ease}
+                  transition={soft}
                 >
                   {line1}
                 </motion.span>
@@ -224,10 +297,10 @@ export function ForHomeKitchen() {
                   <motion.span
                     key={`t2-${active.id}`}
                     className="kui-title-bold"
-                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    transition={ease}
+                    transition={soft}
                   >
                     {line2}
                   </motion.span>
@@ -259,9 +332,9 @@ export function ForHomeKitchen() {
 
         <motion.aside
           className="kui-card"
-          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-          animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...ease, delay: 0.4 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.96 }}
+          animate={visible ? { opacity: 1, y: 0, scale: 1 } : undefined}
+          transition={{ ...spring, delay: 0.95 }}
         >
           <div className="kui-tabs" role="tablist">
             <button
@@ -345,9 +418,9 @@ export function ForHomeKitchen() {
 
         <motion.div
           className="kui-rail"
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
           animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...ease, delay: 0.5 }}
+          transition={{ ...soft, delay: 1.1 }}
         >
           <button
             type="button"
@@ -385,9 +458,9 @@ export function ForHomeKitchen() {
 
         <motion.div
           className="kui-dock-wrap"
-          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
           animate={visible ? { opacity: 1, y: 0 } : undefined}
-          transition={{ ...ease, delay: 0.58 }}
+          transition={{ ...soft, delay: 1.2 }}
         >
           <nav className="kui-dock" aria-label="میانبر">
             <Link href="/products" className="kui-dock-btn is-active" aria-label="محصولات">
