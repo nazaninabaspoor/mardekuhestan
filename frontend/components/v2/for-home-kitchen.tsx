@@ -16,9 +16,14 @@ import {
   type HomeDoorId,
 } from "@/lib/brand";
 
-const KITCHEN_BG = "/brand/v2/kitchen-wall-clean.png";
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
 const VISIBLE = 4;
+
+/** Real pack product crops (middle band of official packaging art). */
+const REAL_PACKS = Array.from(
+  { length: 28 },
+  (_, i) => `/brand/v2/products/prod-${String(i + 1).padStart(2, "0")}.jpg`,
+);
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
@@ -31,10 +36,15 @@ function splitTitle(name: string): [string, string] {
   return [parts.slice(0, mid).join(" "), parts.slice(mid).join(" ")];
 }
 
+function packFor(doorId: HomeDoorId, productIndex: number) {
+  const doorOffset = homeDoors.findIndex((d) => d.id === doorId);
+  const base = Math.max(0, doorOffset) * 3;
+  return REAL_PACKS[mod(base + productIndex, REAL_PACKS.length)];
+}
+
 /**
- * Pixel-faithful port of the kitchen-wall food UI reference:
- * fridge + island scene, tilted plate, hero type, overview card,
- * circular dish rail, glass dock + mic.
+ * Kitchen-app for-home on brand green:
+ * solid #005B48 · hanging lamp only · real pack product photos.
  */
 export function ForHomeKitchen() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -48,19 +58,26 @@ export function ForHomeKitchen() {
 
   const door = homeDoors.find((d) => d.id === doorId) ?? homeDoors[0];
   const products = homeCategoryProducts[doorId];
-  const active = products[mod(idx, products.length)] ?? products[0];
+  const safeIdx = mod(idx, products.length);
+  const active = products[safeIdx] ?? products[0];
+  const activeImage = packFor(doorId, safeIdx);
   const [line1, line2] = splitTitle(active.name);
 
   const rail = useMemo(() => {
     const n = products.length;
     if (!n) return [];
-    /* Active sits in 3rd slot like the reference rail */
     const start = mod(idx - 2, n);
     return Array.from({ length: Math.min(VISIBLE, n) }, (_, i) => {
-      const p = products[mod(start + i, n)];
-      return { product: p, absolute: mod(start + i, n), highlight: i === 2 };
+      const absolute = mod(start + i, n);
+      const p = products[absolute];
+      return {
+        product: p,
+        absolute,
+        highlight: i === 2,
+        image: packFor(doorId, absolute),
+      };
     });
-  }, [products, idx]);
+  }, [products, idx, doorId]);
 
   useEffect(() => {
     const node = rootRef.current;
@@ -102,20 +119,15 @@ export function ForHomeKitchen() {
       aria-labelledby="kitchen-ui-title"
     >
       <div className="kui-scene" aria-hidden="true">
-        <Image
-          src={KITCHEN_BG}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="kui-scene-img"
-        />
-        <span className="kui-blob kui-blob--peach" />
-        <span className="kui-blob kui-blob--teal" />
+        <span className="kui-lamp-glow" />
+        <span className="kui-lamp">
+          <span className="kui-lamp-cord" />
+          <span className="kui-lamp-shade" />
+          <span className="kui-lamp-bulb" />
+        </span>
       </div>
 
       <div className="kui-stage">
-        {/* Top-right utilities */}
         <div className="kui-utils">
           <button type="button" className="kui-icon-btn" aria-label="جستجو">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -152,7 +164,6 @@ export function ForHomeKitchen() {
           ) : null}
         </div>
 
-        {/* Left scroll dots */}
         <div className="kui-dots" aria-hidden="true">
           <span className="is-on" />
           <span />
@@ -160,7 +171,6 @@ export function ForHomeKitchen() {
           <span />
         </div>
 
-        {/* Hero: tilted plate + type */}
         <div className="kui-hero">
           <motion.div
             className="kui-plate-wrap"
@@ -178,10 +188,10 @@ export function ForHomeKitchen() {
                 transition={ease}
               >
                 <Image
-                  src={active.image}
+                  src={activeImage}
                   alt={active.alt}
-                  width={640}
-                  height={640}
+                  width={900}
+                  height={600}
                   sizes="(max-width: 900px) 55vw, 340px"
                   priority
                 />
@@ -247,7 +257,6 @@ export function ForHomeKitchen() {
           </motion.div>
         </div>
 
-        {/* Overview card */}
         <motion.aside
           className="kui-card"
           initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -294,9 +303,7 @@ export function ForHomeKitchen() {
               transition={{ duration: 0.25 }}
             >
               <h3 className="kui-card-title">{active.name}</h3>
-              <p className="kui-card-sub">
-                {door.label} · مرد کوهستان
-              </p>
+              <p className="kui-card-sub">{door.label} · مرد کوهستان</p>
               <p className="kui-card-body">
                 {tab === "overview"
                   ? active.teaser || active.story
@@ -336,7 +343,6 @@ export function ForHomeKitchen() {
           </div>
         </motion.aside>
 
-        {/* Dish carousel */}
         <motion.div
           className="kui-rail"
           initial={reduceMotion ? false : { opacity: 0, y: 16 }}
@@ -352,7 +358,7 @@ export function ForHomeKitchen() {
             ‹
           </button>
           <ul className="kui-rail-list">
-            {rail.map(({ product, absolute, highlight }) => (
+            {rail.map(({ product, absolute, highlight, image }) => (
               <li key={`${product.id}-${absolute}`}>
                 <button
                   type="button"
@@ -360,13 +366,7 @@ export function ForHomeKitchen() {
                   onClick={() => setIdx(absolute)}
                 >
                   <span className="kui-rail-thumb">
-                    <Image
-                      src={product.image}
-                      alt=""
-                      width={120}
-                      height={120}
-                      sizes="72px"
-                    />
+                    <Image src={image} alt="" width={120} height={120} sizes="72px" />
                   </span>
                   <span className="kui-rail-label">{product.name}</span>
                 </button>
@@ -383,7 +383,6 @@ export function ForHomeKitchen() {
           </button>
         </motion.div>
 
-        {/* Bottom dock + mic */}
         <motion.div
           className="kui-dock-wrap"
           initial={reduceMotion ? false : { opacity: 0, y: 18 }}
