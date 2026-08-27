@@ -75,9 +75,9 @@ export function V2MagazineNotebook() {
         const w = Math.min(280, vw - 56);
         setSize({ w, h: Math.round(w * 1.32), portrait: true });
       } else if (vw < 1100) {
-        setSize({ w: 260, h: 360, portrait: false });
+        setSize({ w: 285, h: 395, portrait: false });
       } else {
-        setSize({ w: 290, h: 400, portrait: false });
+        setSize({ w: 375, h: 520, portrait: false });
       }
     };
     update();
@@ -222,9 +222,9 @@ export function V2MagazineNotebook() {
                 height={size.h}
                 size="fixed"
                 minWidth={220}
-                maxWidth={380}
+                maxWidth={460}
                 minHeight={300}
-                maxHeight={520}
+                maxHeight={640}
                 drawShadow
                 flippingTime={920}
                 usePortrait={size.portrait}

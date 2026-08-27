@@ -1895,6 +1895,1760 @@ html.is-v2-bell-cursor textarea {
   }
 }
 
+/* Premium product-showcase refinement — scoped to the kitchen section only. */
+.is-home-v2 .for-home--v2.kitchen-ui {
+  height: auto;
+  min-height: 820px;
+  max-height: none;
+  padding: clamp(4.5rem, 7vw, 6.25rem) 0 clamp(5rem, 8vw, 7.5rem) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.is-home-v2 .kui-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 46%, rgb(255 255 255 / 34%), transparent 43%),
+    linear-gradient(rgb(250 248 243 / 10%), rgb(250 248 243 / 10%));
+  pointer-events: none;
+}
+
+/* The large black pendant is baked into the background image. Cover only its
+   wall-only footprint, then reuse the existing small gold lamp component. */
+.is-home-v2 .kui-scene::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  width: clamp(150px, 12.5vw, 240px);
+  height: 54%;
+  background:
+    radial-gradient(circle at 8% 74%, rgb(255 255 255 / 22%), transparent 42%),
+    linear-gradient(155deg, #e9e9e7 0%, #e5e6e4 62%, #e3e4e2 100%);
+  pointer-events: none;
+}
+
+.is-home-v2 .kui-lamp-fx {
+  display: none;
+}
+
+.is-home-v2 .kui-pendant {
+  left: auto;
+  right: clamp(2.5rem, 6.5vw, 7.5rem);
+  translate: 0 0;
+  opacity: 0.82;
+}
+
+.is-home-v2 .kui-bell-line {
+  height: clamp(130px, 17vh, 190px);
+}
+
+.is-home-v2 .kui-bell {
+  width: clamp(48px, 5vw, 62px);
+  filter: drop-shadow(0 0 12px rgb(240 193 90 / 20%));
+}
+
+.is-home-v2 .kui-category-bar.kui-dock {
+  position: relative;
+  z-index: 4;
+  align-self: center;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  margin: 0 auto;
+  padding: 0.3rem;
+  overflow-x: auto;
+  border-radius: 16px;
+  background: rgb(247 243 234 / 68%);
+  border-color: rgb(0 91 72 / 12%);
+  box-shadow: 0 12px 32px rgb(20 30 28 / 7%);
+  scrollbar-width: none;
+}
+
+.is-home-v2 .kui-category-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.is-home-v2 .kui-category-bar .kui-dock-btn {
+  position: relative;
+  padding: 0.62rem 1.15rem;
+  border: 0;
+  border-radius: 12px;
+  transition: color 280ms ease, background 280ms ease, box-shadow 280ms ease;
+}
+
+.is-home-v2 .kui-category-bar .kui-dock-btn.is-active {
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 0 5px 14px rgb(0 45 36 / 8%);
+}
+
+.is-home-v2 .kui-category-bar .kui-dock-btn.is-active::after {
+  content: "";
+  position: absolute;
+  right: 25%;
+  bottom: 0.2rem;
+  width: 50%;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--kui-green);
+  animation: kui-tab-in 280ms ease both;
+}
+
+@keyframes kui-tab-in {
+  from { opacity: 0; transform: scaleX(0.35); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+.is-home-v2 .kui-stage {
+  width: min(1320px, calc(100% - 3rem));
+  height: auto;
+  min-height: 0;
+  margin-top: clamp(3rem, 5vw, 4.25rem);
+  padding: 0;
+  direction: ltr;
+  grid-template-columns: minmax(180px, 23fr) minmax(0, 77fr);
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "card hero"
+    "rail rail";
+  column-gap: clamp(2.5rem, 4vw, 4.75rem);
+  row-gap: clamp(2.25rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.is-home-v2 .kui-hero {
+  grid-area: hero;
+  width: 100%;
+  padding: 0;
+  direction: ltr;
+  grid-template-columns: minmax(260px, 35fr) minmax(320px, 42fr);
+  grid-template-areas: "copy plate";
+  gap: clamp(2.5rem, 4vw, 4rem);
+  align-items: center;
+}
+
+.is-home-v2 .kui-plate-wrap {
+  grid-area: plate;
+  filter: drop-shadow(0 30px 35px rgb(0 0 0 / 10%));
+}
+
+.is-home-v2 .kui-plate {
+  width: min(100%, 375px);
+}
+
+.is-home-v2 .kui-plate-boomerang {
+  transition: filter 240ms ease;
+}
+
+.is-home-v2 .kui-hero-copy {
+  grid-area: copy;
+  direction: rtl;
+  gap: 0.7rem;
+  padding: 0;
+}
+
+.is-home-v2 .kui-kicker {
+  font-size: 0.74rem;
+  opacity: 0.78;
+}
+
+.is-home-v2 .kui-micro-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: -0.2rem 0 0;
+  font-size: 0.66rem;
+  font-weight: 650;
+  color: rgb(0 91 72 / 62%);
+}
+
+.is-home-v2 .kui-micro-brand::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: rgb(0 91 72 / 45%);
+}
+
+.is-home-v2 .kui-title-line {
+  font-size: clamp(2.35rem, 4.2vw, 3.65rem);
+  line-height: 1.04;
+}
+
+.is-home-v2 .kui-description {
+  max-width: 420px;
+  margin: 0.15rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: rgb(29 29 27 / 66%);
+}
+
+.is-home-v2 .kui-hero-actions {
+  gap: 0.65rem;
+  margin-top: 0.55rem;
+}
+
+.is-home-v2 .kui-text-action {
+  min-height: 42px;
+  padding: 0.62rem 1.15rem;
+  border-radius: 999px;
+  justify-content: center;
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.is-home-v2 .kui-text-action--primary {
+  background: var(--kui-green);
+  color: #f7f3ea;
+  box-shadow: 0 8px 20px rgb(0 91 72 / 14%);
+}
+
+.is-home-v2 .kui-text-action--secondary {
+  border: 1px solid rgb(0 91 72 / 24%);
+  background: rgb(247 243 234 / 22%);
+  color: var(--kui-green);
+}
+
+.is-home-v2 .kui-text-action:hover,
+.is-home-v2 .kui-text-action:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgb(0 91 72 / 13%);
+  outline: none;
+}
+
+.is-home-v2 .kui-text-action--secondary .kui-play {
+  border-left-color: var(--kui-green);
+}
+
+.is-home-v2 .kui-card {
+  grid-area: card;
+  justify-self: center;
+  width: min(100%, 186px);
+  margin: 0;
+}
+
+.is-home-v2 .kui-note-sheet {
+  padding: 1rem 0.8rem 0.75rem;
+  background-color: #f3ede3;
+  box-shadow: 0 18px 40px rgb(0 0 0 / 6%);
+}
+
+.is-home-v2 .kui-note-rope {
+  height: calc(
+    clamp(4.5rem, 7vw, 6.25rem) +
+    clamp(3rem, 5vw, 4.25rem) +
+    clamp(6rem, 8vw, 9rem)
+  );
+}
+
+.is-home-v2 .kui-card-body {
+  -webkit-line-clamp: 2;
+}
+
+.is-home-v2 .kui-rail,
+.is-home-v2 .kui-hero-copy .kui-rail {
+  grid-area: rail;
+  justify-self: center;
+  justify-content: center;
+  align-items: center;
+  width: min(650px, 100%);
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+}
+
+.is-home-v2 .kui-rail-list {
+  max-width: 560px;
+  flex: 1;
+  gap: clamp(0.65rem, 1.8vw, 1.25rem);
+  padding: 0.7rem 0.3rem 0.25rem;
+}
+
+.is-home-v2 .kui-rail-arrow {
+  border: 1px solid rgb(0 91 72 / 15%);
+  border-radius: 50%;
+  background: rgb(247 243 234 / 58%);
+  color: var(--kui-green);
+  transition: transform 220ms ease, background 220ms ease;
+}
+
+.is-home-v2 .kui-rail-arrow:hover,
+.is-home-v2 .kui-rail-arrow:focus-visible {
+  transform: translateY(-2px);
+  background: rgb(247 243 234 / 88%);
+  outline: none;
+}
+
+.is-home-v2 .kui-rail-item:hover {
+  transform: translateY(-4px);
+}
+
+.is-home-v2 .kui-rail-item.is-active {
+  transform: scale(1.08);
+}
+
+@media (max-width: 1024px) {
+  .is-home-v2 .for-home--v2.kitchen-ui {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .is-home-v2 .kui-stage {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "hero"
+      "card"
+      "rail";
+    padding: 0;
+  }
+
+  .is-home-v2 .kui-hero {
+    grid-template-columns: minmax(250px, 1fr) minmax(280px, 1.08fr);
+    grid-template-areas: "copy plate";
+  }
+
+  .is-home-v2 .kui-card {
+    width: min(100%, 210px);
+  }
+
+  .is-home-v2 .kui-bell-line {
+    height: clamp(100px, 14vh, 150px);
+  }
+
+  .is-home-v2 .kui-note-rope {
+    height: clamp(170px, 24vw, 230px);
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .for-home--v2.kitchen-ui {
+    padding: 4rem 0 5rem !important;
+  }
+
+  .is-home-v2 .kui-pendant {
+    display: none;
+  }
+
+  .is-home-v2 .kui-category-bar.kui-dock {
+    align-self: stretch;
+    width: auto;
+    justify-content: flex-start;
+    margin-inline: 0.75rem;
+  }
+
+  .is-home-v2 .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+    padding-inline: 0.9rem;
+  }
+
+  .is-home-v2 .kui-stage {
+    width: calc(100% - 1.5rem);
+    margin-top: 3rem;
+  }
+
+  .is-home-v2 .kui-hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "plate"
+      "copy";
+    gap: 2rem;
+  }
+
+  .is-home-v2 .kui-plate {
+    width: min(78vw, 300px);
+  }
+
+  .is-home-v2 .kui-hero-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .is-home-v2 .kui-micro-brand {
+    justify-content: center;
+  }
+
+  .is-home-v2 .kui-description {
+    text-align: center;
+  }
+
+  .is-home-v2 .kui-title-line {
+    font-size: clamp(2rem, 10vw, 2.85rem);
+    white-space: normal;
+  }
+
+  .is-home-v2 .kui-card {
+    width: min(72vw, 210px);
+  }
+
+  .is-home-v2 .kui-note-rope {
+    height: clamp(110px, 34vw, 150px);
+  }
+
+  .is-home-v2 .kui-rail {
+    width: 100%;
+  }
+
+  .is-home-v2 .kui-rail-list {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+/* Continuous landing-to-products hierarchy. */
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.65rem, 1.4vh, 0.9rem);
+  width: min(1180px, 100%);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  width: 100%;
+  min-width: 0;
+  padding-inline: 0;
+  box-sizing: border-box;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  font-size: clamp(1.125rem, 1.4vw, 1.5rem);
+  line-height: 1.3;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider {
+  width: clamp(48px, 5vw, 72px);
+  margin: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.45rem;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 4%), rgb(255 255 255 / 7%) 50%, rgb(255 255 255 / 4%));
+  box-shadow: 0 10px 24px rgb(0 0 0 / 18%), inset 0 1px 0 rgb(255 255 255 / 6%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-sizing: border-box;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  flex: 1 1 0;
+  max-width: 190px;
+  min-height: 40px;
+  padding: 0.55rem clamp(0.9rem, 1.5vw, 1.5rem);
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  font-size: clamp(2.125rem, 3.2vw, 3.25rem);
+  line-height: 1.05;
+}
+
+@media (min-width: 901px) {
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    grid-template-rows: minmax(104px, 18%) minmax(0, 64%) minmax(82px, 18%);
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    justify-self: center;
+    padding-top: 0.1rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    overflow: visible;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    left: 50%;
+    translate: -50% -50%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    position: relative;
+    left: 50%;
+    justify-self: start;
+    width: min(760px, 68vw);
+    margin: clamp(1.1rem, 2.8vh, 1.625rem) 0 0;
+    translate: -50% 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    gap: 0.65rem;
+    padding: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-glass-title {
+    align-self: stretch;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    align-self: stretch;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+    min-width: 94px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    justify-content: center;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery .kui-glass-title {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-section-title {
+    font-size: 1.125rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    border-radius: 20px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.1rem, 10vw, 3rem);
+  }
+}
+
+/* FINAL: single-axis product layout. Keep this block last. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+  height: auto;
+  min-height: 100svh;
+  max-height: none;
+  padding: clamp(1.25rem, 3vh, 2rem) 0 clamp(2.5rem, 5vh, 4rem) !important;
+  overflow: clip;
+  background: linear-gradient(180deg, #0b261e 0%, #061813 12%, #020907 42%, #030b09 100%) !important;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1180px, calc(100% - 2rem));
+  height: auto;
+  margin-inline: auto;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-height: none;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider { display: none; }
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.5vw, 1.625rem);
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  position: static;
+  display: inline-flex;
+  flex: 0 1 auto;
+  justify-content: center;
+  width: min(820px, 92vw);
+  max-width: none;
+  margin: 0 auto;
+  padding: 0.45rem;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-main {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: clamp(1.875rem, 4vh, 2.5rem) 0 0;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-gallery .kui-product-display {
+  --rig-wire-h: 66px;
+  --rig-lamp-h: 34px;
+  --rig-dish-top: clamp(145px, 18vw, 165px);
+  order: 1;
+  position: relative;
+  inset: auto;
+  width: min(620px, 80vw);
+  height: clamp(520px, 36vw, 570px);
+  min-height: 0;
+  max-height: none;
+  margin: 0 auto;
+  translate: none;
+}
+
+.is-home-v2 .kui-gallery .kui-spotlight-lamp {
+  top: 0;
+  right: auto;
+  left: 50%;
+  width: 34px;
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-spotlight-wire { height: var(--rig-wire-h); }
+.is-home-v2 .kui-gallery .kui-spotlight-lamp-svg { width: 34px; }
+
+.is-home-v2 .kui-gallery .kui-light-beam {
+  top: calc(var(--rig-wire-h) + var(--rig-lamp-h) + 5px);
+  right: auto;
+  left: 50%;
+  width: clamp(300px, 24vw, 380px);
+  height: clamp(300px, 26vw, 390px);
+  translate: -50% 0;
+  transform-origin: top center;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-product {
+  top: var(--rig-dish-top);
+  right: auto;
+  left: 50%;
+  width: clamp(340px, 27vw, 420px);
+  max-width: 76vw;
+  margin: 0;
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-floor-light {
+  top: calc(var(--rig-dish-top) + 230px);
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: min(500px, 72vw);
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-copy {
+  order: 2;
+  position: static;
+  inset: auto;
+  align-items: center;
+  width: min(560px, 92vw);
+  margin: clamp(0.75rem, 2vh, 1.25rem) auto 0;
+  translate: none;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-brand-journey,
+.is-home-v2 .kui-gallery .kui-hero-actions { justify-content: center; }
+.is-home-v2 .kui-gallery .kui-journey-line { display: none; }
+
+.is-home-v2 .kui-gallery .kui-title {
+  width: 100%;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  display: block;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.05;
+  white-space: normal;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-description {
+  max-width: 520px;
+  margin: 1rem auto 0;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-hero-actions { margin: 1.375rem auto 0; }
+
+.is-home-v2 .kui-gallery .kui-rail {
+  position: static;
+  display: flex;
+  align-self: auto;
+  justify-content: center;
+  width: min(700px, 90vw);
+  min-height: 0;
+  max-height: none;
+  margin: clamp(1.5rem, 3vh, 2rem) auto 0;
+  translate: none;
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    justify-content: flex-start;
+    width: min(100%, 520px);
+    overflow-x: auto;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+    min-width: 92px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    --rig-wire-h: 54px;
+    --rig-dish-top: 125px;
+    width: min(100%, 440px);
+    height: 455px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-light-beam {
+    width: min(320px, 78vw);
+    height: 310px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product { width: min(320px, 76vw); }
+  .is-home-v2 .kui-gallery .kui-floor-light { top: 315px; }
+}
+
+/* Centered vertical product composition — final positioning authority. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+  width: 100%;
+  height: auto;
+  min-height: 100svh;
+  max-height: none;
+  padding: clamp(1.25rem, 3vh, 2rem) 0 clamp(2.5rem, 5vh, 4rem) !important;
+  overflow: clip;
+  background: linear-gradient(180deg, #0b261e 0%, #061813 12%, #020907 42%, #030b09 100%) !important;
+  box-sizing: border-box;
+}
+
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery::before {
+  top: -100px;
+  height: 220px;
+  background: linear-gradient(to bottom, rgb(11 38 30 / 0%) 0%, rgb(11 38 30 / 56%) 48%, rgb(11 38 30 / 94%) 100%);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1180px, calc(100% - 2rem));
+  height: auto;
+  margin-inline: auto;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  position: static;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider {
+  display: none;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.5vw, 1.625rem);
+  line-height: 1.3;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  position: static;
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: min(820px, 92vw);
+  margin: 0 auto;
+  padding: 0.45rem;
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-main {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: clamp(1.875rem, 4vh, 2.5rem) 0 0;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-gallery .kui-product-display {
+  --rig-wire-h: 66px;
+  --rig-lamp-h: 34px;
+  --rig-dish-top: clamp(145px, 18vw, 165px);
+  order: 1;
+  position: relative;
+  inset: auto;
+  width: min(620px, 80vw);
+  height: clamp(520px, 36vw, 570px);
+  min-height: 0;
+  max-height: none;
+  margin: 0 auto;
+  translate: none;
+  overflow: visible;
+}
+
+.is-home-v2 .kui-gallery .kui-spotlight-lamp {
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: 34px;
+  margin: 0;
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-spotlight-wire {
+  height: var(--rig-wire-h);
+}
+
+.is-home-v2 .kui-gallery .kui-spotlight-lamp-svg {
+  width: 34px;
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam {
+  position: absolute;
+  top: calc(var(--rig-wire-h) + var(--rig-lamp-h) + 5px);
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: clamp(300px, 24vw, 380px);
+  height: clamp(300px, 26vw, 390px);
+  margin: 0;
+  translate: -50% 0;
+  transform-origin: top center;
+}
+
+.is-home-v2 .kui-gallery .kui-floor-light {
+  position: absolute;
+  top: calc(var(--rig-dish-top) + 230px);
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: min(500px, 72vw);
+  height: 120px;
+  margin: 0;
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-product {
+  position: absolute;
+  z-index: 3;
+  top: var(--rig-dish-top);
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: clamp(340px, 27vw, 420px);
+  max-width: 76vw;
+  margin: 0;
+  translate: -50% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-copy {
+  order: 2;
+  position: static;
+  inset: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(560px, 92vw);
+  margin: clamp(0.75rem, 2vh, 1.25rem) auto 0;
+  translate: none;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-brand-journey {
+  justify-content: center;
+  margin: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-journey-line {
+  display: none;
+}
+
+.is-home-v2 .kui-gallery .kui-title {
+  width: 100%;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  display: block;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.05;
+  white-space: normal;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-description {
+  max-width: 520px;
+  margin: 1rem auto 0;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-hero-actions {
+  justify-content: center;
+  margin: 1.375rem auto 0;
+}
+
+.is-home-v2 .kui-gallery .kui-rail {
+  position: static;
+  display: flex;
+  align-self: auto;
+  justify-content: center;
+  width: min(700px, 90vw);
+  min-height: 0;
+  max-height: none;
+  margin: clamp(1.5rem, 3vh, 2rem) auto 0;
+  translate: none;
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    width: min(100% - 1rem, 560px);
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    justify-content: flex-start;
+    width: min(100%, 520px);
+    border-radius: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+    min-width: 92px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    margin-top: 1.875rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    --rig-wire-h: 54px;
+    --rig-dish-top: 125px;
+    width: min(100%, 440px);
+    height: 455px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-light-beam {
+    width: min(320px, 78vw);
+    height: 310px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product {
+    width: min(320px, 76vw);
+  }
+
+  .is-home-v2 .kui-gallery .kui-floor-light {
+    top: 315px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2rem, 10vw, 2.75rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-hero-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Premium Product Gallery — final centered presentation layer. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+  min-height: 680px;
+  padding: clamp(3.125rem, 4vw, 4rem) 0 clamp(2.8rem, 4vw, 3.75rem) !important;
+  overflow: hidden;
+}
+
+.is-home-v2 .kui-gallery .kui-scene-img {
+  opacity: 0.72;
+}
+
+.is-home-v2 .kui-gallery .kui-scene::after {
+  background: rgb(250 248 242 / 14%);
+}
+
+.is-home-v2 .kui-gallery-shell {
+  position: relative;
+  z-index: 3;
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  direction: rtl;
+}
+
+.is-home-v2 .kui-gallery-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.is-home-v2 .kui-gallery-section-title {
+  margin: 0 0 1.1rem;
+  font-family: MardeKuhestan, sans-serif;
+  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  font-weight: 600;
+  color: var(--kui-green);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  overflow-x: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  flex: 0 0 auto;
+  padding: 0.4rem 0 0.65rem;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgb(0 91 72 / 48%);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:hover,
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:focus-visible,
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn.is-active {
+  background: transparent;
+  box-shadow: none;
+  color: var(--kui-green);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn.is-active::after {
+  right: 18%;
+  bottom: 0.1rem;
+  width: 64%;
+}
+
+.is-home-v2 .kui-gallery-main {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1.1fr);
+  grid-template-areas: "copy product";
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  margin-top: clamp(2.2rem, 3vw, 2.8rem);
+  direction: ltr;
+}
+
+.is-home-v2 .kui-gallery-copy {
+  grid-area: copy;
+  width: min(460px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-self: end;
+  text-align: center;
+  direction: rtl;
+}
+
+.is-home-v2 .kui-brand-journey {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgb(0 91 72 / 68%);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.is-home-v2 .kui-journey-line {
+  position: relative;
+  width: 72px;
+  height: 1px;
+  background: rgb(0 91 72 / 28%);
+}
+
+.is-home-v2 .kui-journey-line i {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  translate: 50% -50%;
+  border-radius: 50%;
+  background: var(--kui-green);
+  animation: kui-journey-dot 320ms ease both;
+}
+
+@keyframes kui-journey-dot {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.is-home-v2 .kui-gallery .kui-title {
+  margin-top: 0.8rem;
+  text-align: right;
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  font-size: clamp(2.875rem, 5vw, 4.625rem);
+  font-weight: 700;
+  line-height: 1;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.is-home-v2 .kui-gallery .kui-description {
+  max-width: 420px;
+  margin: 1rem 0 0;
+  text-align: right;
+  font-size: clamp(0.84rem, 1.2vw, 0.98rem);
+  line-height: 1.8;
+  color: rgb(29 29 27 / 62%);
+}
+
+.is-home-v2 .kui-product-display {
+  grid-area: product;
+  position: relative;
+  width: 100%;
+  min-height: 390px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+.is-home-v2 .kui-gallery-lamp {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+  margin-bottom: 0.25rem;
+  filter: drop-shadow(0 0 14px rgb(214 170 72 / 25%));
+}
+
+.is-home-v2 .kui-gallery-lamp-wire {
+  width: 1.5px;
+  height: clamp(44px, 5vw, 72px);
+  background: linear-gradient(#554b3c, #8c7550);
+  opacity: 0.58;
+}
+
+.is-home-v2 .kui-gallery-lamp-svg {
+  display: block;
+  width: clamp(36px, 3vw, 52px);
+  height: auto;
+}
+
+.is-home-v2 .kui-product-glow {
+  position: absolute;
+  z-index: 0;
+  top: 2%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(680px, 94vw);
+  aspect-ratio: 1.35;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 255 255 / 45%) 0%, rgb(255 255 255 / 10%) 42%, transparent 70%);
+  pointer-events: none;
+}
+
+.is-home-v2 .kui-gallery-product {
+  position: relative;
+  z-index: 2;
+  width: clamp(340px, 32vw, 470px);
+  max-width: 100%;
+  margin: 0;
+  transition: transform 220ms ease;
+  filter: drop-shadow(0 28px 34px rgb(0 0 0 / 10%));
+}
+
+.is-home-v2 .kui-gallery-product img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.is-home-v2 .kui-product-pedestal {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 70vw);
+  height: 70px;
+  margin-top: -38px;
+  border: 1px solid rgb(255 255 255 / 72%);
+  border-radius: 28px 28px 8px 8px;
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 -10px 30px rgb(255 255 255 / 30%), 0 18px 45px rgb(0 0 0 / 4%);
+}
+
+.is-home-v2 .kui-gallery .kui-hero-actions {
+  justify-content: flex-start;
+  margin-top: 1.5rem;
+}
+
+.is-home-v2 .kui-gallery .kui-text-action {
+  padding: 0.75rem 1.45rem;
+}
+
+.is-home-v2 .kui-gallery .kui-rail {
+  width: min(720px, 100%);
+  min-height: 90px;
+  margin-top: clamp(2.2rem, 3vw, 2.8rem);
+}
+
+.is-home-v2 .kui-gallery .kui-rail-list {
+  max-width: 610px;
+}
+
+.is-home-v2 .kui-gallery .kui-rail-item.is-active {
+  transform: translateY(-4px) scale(1.06);
+}
+
+@media (max-width: 760px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    min-height: 0;
+    padding: 3.5rem 0 4rem !important;
+  }
+
+  .is-home-v2 .kui-gallery-shell {
+    width: calc(100% - 1.25rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    align-self: stretch;
+    justify-content: flex-start;
+    padding-inline: 0.25rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.45rem, 13vw, 3.6rem);
+  }
+
+  .is-home-v2 .kui-product-display {
+    width: 100%;
+    min-height: 0;
+  }
+
+  .is-home-v2 .kui-gallery-product {
+    width: min(82vw, 360px);
+  }
+
+  .is-home-v2 .kui-gallery .kui-hero-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    width: 100%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail-list {
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .is-home-v2 .kui-gallery-main {
+    grid-template-columns: minmax(0, 0.9fr) minmax(300px, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .is-home-v2 .kui-gallery-product {
+    width: clamp(300px, 38vw, 410px);
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "product"
+      "copy";
+    gap: 1.75rem;
+  }
+
+  .is-home-v2 .kui-gallery-copy {
+    width: min(440px, 100%);
+    align-items: center;
+    justify-self: center;
+    text-align: center;
+  }
+
+  .is-home-v2 .kui-gallery-product {
+    width: min(82vw, 360px);
+  }
+
+  .is-home-v2 .kui-gallery .kui-title,
+  .is-home-v2 .kui-gallery .kui-description {
+    text-align: center;
+  }
+
+  .is-home-v2 .kui-gallery .kui-hero-actions {
+    justify-content: center;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    margin-top: 2rem;
+  }
+}
+
+/* Cinematic dark-green spotlight treatment. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+  --spot-cream: #f4f0e8;
+  --spot-muted: rgb(244 240 232 / 62%);
+  position: relative;
+  min-height: 100svh;
+  padding: clamp(3.75rem, 6vh, 5rem) 0 clamp(3.5rem, 6vh, 4.75rem) !important;
+  color: var(--spot-cream);
+  background: #030b09 !important;
+  isolation: isolate;
+}
+
+.is-home-v2 .kui-dark-atmosphere {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  opacity: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 68% 45%, #123329 0%, #071a15 36%, #030b09 70%, #010403 100%);
+  box-shadow: inset 0 0 180px rgb(0 0 0 / 55%);
+  transition: background 500ms ease;
+}
+
+.is-home-v2 .kui-gallery[data-category="seafood"] .kui-dark-atmosphere {
+  background: radial-gradient(circle at 68% 45%, #123934 0%, #071b18 38%, #020907 74%, #010403 100%);
+}
+
+.is-home-v2 .kui-gallery[data-category="dairy"] .kui-dark-atmosphere {
+  background: radial-gradient(circle at 68% 45%, #263c2f 0%, #0a1c16 38%, #030b09 72%, #010403 100%);
+}
+
+.is-home-v2 .kui-gallery[data-category="farm"] .kui-dark-atmosphere {
+  background: radial-gradient(circle at 68% 45%, #253824 0%, #0c1c13 38%, #030b09 72%, #010403 100%);
+}
+
+.is-home-v2 .kui-dark-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 28%, rgb(0 91 72 / 12%), transparent 34%),
+    radial-gradient(circle at 82% 64%, rgb(42 103 77 / 10%), transparent 38%);
+  animation: kui-ambient-drift 14s ease-in-out infinite alternate;
+}
+
+.is-home-v2 .kui-dark-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+@keyframes kui-ambient-drift {
+  from { transform: translate3d(-16px, -8px, 0) scale(1.02); }
+  to { transform: translate3d(20px, 14px, 0) scale(1.04); }
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-shell {
+  width: min(1240px, calc(100% - 2rem));
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  color: rgb(244 240 232 / 38%);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:hover,
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:focus-visible,
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn.is-active {
+  color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn.is-active::after {
+  height: 5px;
+  width: 5px;
+  right: calc(50% - 2.5px);
+  bottom: 0;
+  border-radius: 50%;
+  background: #50af47;
+  box-shadow: 0 0 10px rgb(80 175 71 / 72%);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-main {
+  grid-template-columns: minmax(0, 0.8fr) minmax(380px, 1.2fr);
+  gap: clamp(3rem, 6vw, 7rem);
+  min-height: min(54svh, 520px);
+  margin-top: clamp(2.25rem, 4vh, 3.25rem);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-copy {
+  width: min(430px, 100%);
+}
+
+.is-home-v2 .kui-gallery .kui-brand-journey {
+  color: var(--spot-muted);
+}
+
+.is-home-v2 .kui-gallery .kui-journey-line {
+  background: rgb(244 240 232 / 22%);
+}
+
+.is-home-v2 .kui-gallery .kui-journey-line i {
+  background: #50af47;
+  box-shadow: 0 0 10px rgb(80 175 71 / 52%);
+}
+
+.is-home-v2 .kui-gallery .kui-title {
+  overflow: hidden;
+  color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  color: var(--spot-cream);
+  font-size: clamp(3.25rem, 5.5vw, 5.5rem);
+  line-height: 0.95;
+}
+
+.is-home-v2 .kui-gallery .kui-description {
+  max-width: 380px;
+  color: var(--spot-muted);
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--primary {
+  position: relative;
+  overflow: hidden;
+  background: var(--spot-cream);
+  color: #07382e;
+  box-shadow: 0 10px 26px rgb(0 0 0 / 16%);
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  translate: -120% 0;
+  background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 42%) 50%, transparent 75%);
+  transition: translate 420ms ease;
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--primary:hover::after {
+  translate: 120% 0;
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--secondary {
+  color: var(--spot-cream);
+  border-color: rgb(244 240 232 / 28%);
+  background: transparent;
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--secondary .kui-play {
+  border-left-color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-text-action--secondary:hover {
+  border-color: rgb(244 240 232 / 48%);
+  background: rgb(255 255 255 / 4%);
+}
+
+.is-home-v2 .kui-gallery .kui-product-display {
+  min-height: min(54svh, 520px);
+  perspective: 1000px;
+  will-change: transform, opacity, filter;
+}
+
+.is-home-v2 .kui-spotlight-lamp {
+  position: absolute;
+  z-index: 5;
+  top: -145px;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 0 14px rgb(214 170 72 / 25%));
+  will-change: transform, opacity;
+}
+
+.is-home-v2 .kui-spotlight-wire {
+  display: block;
+  width: 1px;
+  height: clamp(100px, 15vh, 170px);
+  background: rgb(235 220 178 / 28%);
+}
+
+.is-home-v2 .kui-spotlight-lamp-svg {
+  width: clamp(36px, 3vw, 52px);
+  height: auto;
+}
+
+.is-home-v2 .kui-light-beam {
+  position: absolute;
+  z-index: 1;
+  top: 18px;
+  left: 50%;
+  width: min(560px, 56vw);
+  height: min(500px, 54svh);
+  translate: -50% 0;
+  transform-origin: 50% 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: kui-beam-react 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.is-home-v2 .kui-light-beam-soft,
+.is-home-v2 .kui-light-beam-core {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  clip-path: polygon(48% 0, 52% 0, 100% 100%, 0 100%);
+}
+
+.is-home-v2 .kui-light-beam-soft {
+  background: linear-gradient(to bottom, rgb(255 230 165 / 22%), rgb(255 221 150 / 8%) 55%, transparent 100%);
+  filter: blur(22px);
+  opacity: 0.72;
+}
+
+.is-home-v2 .kui-light-beam-core {
+  inset-inline: 18%;
+  background: linear-gradient(to bottom, rgb(255 226 157 / 20%), rgb(255 222 150 / 5%) 66%, transparent);
+  filter: blur(10px);
+  opacity: 0.28;
+}
+
+@keyframes kui-beam-react {
+  0% { opacity: 0.35; transform: scaleX(0.72); }
+  45% { opacity: 0.55; transform: scaleX(0.88); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+.is-home-v2 .kui-light-beam > i {
+  --particle-x: calc((var(--particle) * 47px) - 155px);
+  position: absolute;
+  left: 50%;
+  top: calc(18% + (var(--particle) * 8%));
+  width: 2px;
+  height: 2px;
+  translate: var(--particle-x) 0;
+  border-radius: 50%;
+  background: rgb(255 238 194 / 45%);
+  opacity: calc(0.08 + (var(--particle) * 0.018));
+  animation: kui-dust 7s ease-in-out infinite alternate;
+  animation-delay: calc(var(--particle) * -0.7s);
+}
+
+@keyframes kui-dust {
+  from { transform: translate3d(0, 8px, 0); }
+  to { transform: translate3d(5px, -12px, 0); }
+}
+
+.is-home-v2 .kui-gallery .kui-floor-light {
+  top: auto;
+  bottom: 1%;
+  width: min(560px, 52vw);
+  height: 110px;
+  aspect-ratio: auto;
+  background: radial-gradient(ellipse, rgb(244 210 135 / 17%) 0%, rgb(0 91 72 / 8%) 35%, transparent 72%);
+  filter: blur(20px);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-product {
+  z-index: 3;
+  width: clamp(380px, 34vw, 540px);
+  filter: drop-shadow(0 30px 42px rgb(0 0 0 / 34%));
+  transform-style: preserve-3d;
+}
+
+.is-home-v2 .kui-gallery .kui-rail {
+  color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-rail-arrow {
+  color: var(--spot-cream);
+  border-color: rgb(244 240 232 / 18%);
+  background: rgb(255 255 255 / 3%);
+}
+
+.is-home-v2 .kui-gallery .kui-rail-item {
+  opacity: 0.38;
+  color: var(--spot-cream);
+}
+
+.is-home-v2 .kui-gallery .kui-rail-item:hover {
+  opacity: 0.8;
+}
+
+.is-home-v2 .kui-gallery .kui-rail-item.is-active {
+  opacity: 1;
+}
+
+.is-home-v2 .kui-gallery .kui-rail-label,
+.is-home-v2 .kui-gallery .kui-rail-item.is-active .kui-rail-label {
+  color: inherit;
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    min-height: 100svh;
+    padding-top: 3.5rem !important;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    grid-template-areas:
+      "product"
+      "copy";
+    min-height: 0;
+    margin-top: 3.5rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    min-height: 390px;
+  }
+
+  .is-home-v2 .kui-spotlight-lamp {
+    top: -105px;
+    width: 36px;
+  }
+
+  .is-home-v2 .kui-spotlight-wire {
+    height: 92px;
+  }
+
+  .is-home-v2 .kui-spotlight-lamp-svg {
+    width: 34px;
+  }
+
+  .is-home-v2 .kui-light-beam {
+    width: min(420px, 96vw);
+    height: 390px;
+  }
+
+  .is-home-v2 .kui-light-beam > i {
+    display: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product {
+    width: min(78vw, 340px);
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.7rem, 13vw, 4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-home-v2 .kui-dark-atmosphere::before,
+  .is-home-v2 .kui-light-beam,
+  .is-home-v2 .kui-light-beam > i {
+    animation: none !important;
+  }
+
+  .is-home-v2 .kui-dark-atmosphere,
+  .is-home-v2 .kui-spotlight-lamp,
+  .is-home-v2 .kui-light-beam,
+  .is-home-v2 .kui-product-display,
+  .is-home-v2 .kui-gallery-copy,
+  .is-home-v2 .kui-gallery-header,
+  .is-home-v2 .kui-gallery .kui-rail {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .is-home-v2 .kui-mic {
     transition: none;
@@ -4263,7 +6017,8 @@ html.is-v2-bell-cursor textarea {
   --book-ink: #005b48;
   --book-soft: color-mix(in srgb, #005b48 55%, #1d1d1b);
   position: relative;
-  padding: clamp(2.75rem, 7vh, 4.5rem) 1.25rem clamp(3rem, 8vh, 5rem);
+  min-height: 0;
+  padding: clamp(3.5rem, 7vh, 5.5rem) clamp(1.5rem, 3vw, 3.5rem);
   background: var(--book-cream) !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -4276,17 +6031,21 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase-shell {
-  width: min(1100px, 100%);
+  width: min(1320px, 100%);
+  min-height: 0;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1.25rem, 3vh, 1.85rem);
 }
 
 .is-home-v2 .v2-bookcase-head {
-  text-align: center;
-  max-width: 34rem;
+  width: min(42rem, 100%);
+  max-width: 42rem;
+  margin-right: 0;
+  margin-left: auto;
+  text-align: right;
+  direction: rtl;
   opacity: 0;
   transform: translate3d(0, 14px, 0);
   transition:
@@ -4325,6 +6084,9 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase-tabs {
+  width: 100%;
+  max-width: 52rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -4372,6 +6134,7 @@ html.is-v2-bell-cursor textarea {
 
 .is-home-v2 .v2-bookcase-stage {
   position: relative;
+  margin-top: clamp(3.125rem, 5vw, 5rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4391,6 +6154,7 @@ html.is-v2-bell-cursor textarea {
 
 .is-home-v2 .v2-bookcase-book-wrap {
   position: relative;
+  z-index: 1;
   filter: drop-shadow(0 22px 40px rgb(29 29 27 / 18%));
 }
 
@@ -4634,6 +6398,8 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase-nav {
+  position: relative;
+  z-index: 2;
   flex: 0 0 auto;
   width: 42px;
   height: 42px;
@@ -4668,6 +6434,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase-foot {
+  margin-top: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4694,14 +6461,63 @@ html.is-v2-bell-cursor textarea {
   transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@media (max-width: 1099px) {
+  .is-home-v2 .v2-bookcase {
+    min-height: auto;
+    padding-block: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  .is-home-v2 .v2-bookcase-shell {
+    width: min(980px, 100%);
+  }
+
+  .is-home-v2 .v2-bookcase-stage {
+    margin-top: clamp(3.125rem, 7vw, 4rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .is-home-v2 .v2-bookcase-head {
+    width: min(34rem, 100%);
+    max-width: 34rem;
+  }
+
+  .is-home-v2 .v2-bookcase-tabs {
+    width: 100%;
+    max-width: none;
+    justify-content: center;
+  }
+
+  .is-home-v2 .v2-bookcase-stage {
+    margin-top: clamp(3.125rem, 8vw, 4rem);
+  }
+}
+
 @media (max-width: 720px) {
+  .is-home-v2 .v2-bookcase {
+    padding-inline: 0.75rem;
+  }
+
   .is-home-v2 .v2-bookcase-nav {
     width: 36px;
     height: 36px;
   }
 
   .is-home-v2 .v2-bookcase-stage {
+    width: min(100%, 430px);
     gap: 0.35rem;
+  }
+
+  .is-home-v2 .v2-bookcase-nav {
+    position: absolute;
+  }
+
+  .is-home-v2 .v2-bookcase-nav--prev {
+    right: 0;
+  }
+
+  .is-home-v2 .v2-bookcase-nav--next {
+    left: 0;
   }
 
   .is-home-v2 .v2-bookcase-book-wrap--notebook {
@@ -4716,5 +6532,871 @@ html.is-v2-bell-cursor textarea {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* Final coordinated sizing for the cinematic product stage. */
+@media (min-width: 701px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    --spot-stage-h: clamp(680px, calc(100svh - var(--v2-header-h)), 860px);
+    width: 100%;
+    height: var(--spot-stage-h);
+    min-height: var(--spot-stage-h);
+    max-height: var(--spot-stage-h);
+    padding: clamp(2.4rem, 4.5vh, 3.4rem) 0 clamp(1.75rem, 3.5vh, 2.6rem) !important;
+    box-sizing: border-box;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    height: 100%;
+    display: grid;
+    grid-template-rows: minmax(92px, 15%) minmax(0, 70%) minmax(70px, 15%);
+    align-items: center;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    align-self: start;
+    max-height: 120px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-section-title {
+    margin-bottom: 1.1rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-dock-label {
+    font-size: clamp(0.8125rem, 0.95vw, 1rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    grid-template-columns: minmax(320px, 0.82fr) minmax(420px, 1.18fr);
+    gap: clamp(3.75rem, 7vw, 6.875rem);
+    align-items: center;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-copy {
+    width: min(100%, 500px);
+    align-self: center;
+  }
+
+  .is-home-v2 .kui-gallery .kui-brand-journey {
+    margin: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title {
+    width: 100%;
+    margin-top: 1.125rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.875rem, 4.2vw, 4.25rem);
+    line-height: 0.98;
+    white-space: nowrap;
+  }
+
+  .is-home-v2 .kui-gallery .kui-description {
+    margin-top: 1.125rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-hero-actions {
+    gap: 0.75rem;
+    margin-top: 1.625rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-text-action {
+    min-height: 44px;
+    max-height: 48px;
+    padding-block: 0.65rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    --rig-lamp-top: 0px;
+    --rig-wire-h: clamp(70px, 10vh, 90px);
+    --rig-lamp-h: 34px;
+    --rig-air-gap: 70px;
+    --rig-dish-top: calc(var(--rig-lamp-top) + var(--rig-wire-h) + var(--rig-lamp-h) + var(--rig-air-gap));
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 430px;
+    max-height: 500px;
+    overflow: visible;
+  }
+
+  .is-home-v2 .kui-spotlight-lamp {
+    top: var(--rig-lamp-top);
+    left: 50%;
+    width: 34px;
+    translate: -50% 0;
+  }
+
+  .is-home-v2 .kui-spotlight-wire {
+    height: var(--rig-wire-h);
+  }
+
+  .is-home-v2 .kui-spotlight-lamp-svg {
+    width: clamp(26px, 2vw, 34px);
+  }
+
+  .is-home-v2 .kui-light-beam {
+    top: calc(var(--rig-lamp-top) + var(--rig-wire-h) + var(--rig-lamp-h) + 5px);
+    left: 50%;
+    width: min(420px, 38vw);
+    height: clamp(260px, 34vh, 330px);
+    translate: -50% 0;
+    transform-origin: 50% 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product {
+    position: absolute;
+    z-index: 3;
+    top: var(--rig-dish-top);
+    left: 50%;
+    width: clamp(380px, 31vw, 490px);
+    max-width: 100%;
+    translate: -50% 0;
+    filter: brightness(0.96) contrast(1.04) drop-shadow(0 30px 60px rgb(0 0 0 / 35%));
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 28%, rgb(255 234 185 / 20%), rgb(255 220 150 / 6%) 40%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-floor-light {
+    left: 50%;
+    bottom: -3%;
+    translate: -50% 0;
+    background: radial-gradient(circle, rgb(0 91 72 / 14%), transparent 68%);
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    align-self: end;
+    width: min(720px, 100%);
+    min-height: 70px;
+    max-height: 90px;
+    margin: 0 auto;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail-list {
+    padding-block: 0.25rem;
+  }
+}
+
+.is-home-v2 .kui-light-beam-soft,
+.is-home-v2 .kui-light-beam-middle,
+.is-home-v2 .kui-light-beam-core {
+  position: absolute;
+  transform-origin: 50% 0;
+  clip-path: polygon(48% 0, 52% 0, 100% 100%, 0 100%);
+}
+
+.is-home-v2 .kui-light-beam-soft {
+  inset: 0;
+  opacity: 0.1;
+  filter: blur(32px);
+}
+
+.is-home-v2 .kui-light-beam-middle {
+  inset: 0 10%;
+  background: linear-gradient(to bottom, rgb(255 232 180 / 18%), rgb(255 220 150 / 5%) 62%, transparent);
+  opacity: 0.13;
+  filter: blur(18px);
+}
+
+.is-home-v2 .kui-light-beam-core {
+  inset: 0 26%;
+  opacity: 0.16;
+  filter: blur(8px);
+}
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    grid-template-columns: minmax(270px, 0.9fr) minmax(330px, 1.1fr);
+    gap: 3rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.5rem, 5.4vw, 3.5rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    --rig-air-gap: 70px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-product {
+    width: clamp(340px, 39vw, 410px);
+  }
+}
+
+/* Premium glass header and coordinated product-switch lighting. */
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  position: relative;
+  z-index: 10;
+  width: min(1180px, 100%);
+  margin-inline: auto;
+  padding: clamp(1rem, 2.2vh, 1.375rem) clamp(1rem, 2.2vw, 1.75rem) clamp(0.875rem, 1.9vh, 1.25rem);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgb(255 255 255 / 8%), rgb(255 255 255 / 4%));
+  box-shadow: 0 10px 30px rgb(0 0 0 / 18%), inset 0 1px 0 rgb(255 255 255 / 8%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-sizing: border-box;
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  display: grid;
+  justify-items: center;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.2vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider {
+  display: block;
+  width: 120px;
+  height: 1px;
+  margin-top: 0.7rem;
+  background: linear-gradient(to right, transparent, rgb(244 240 232 / 75%), transparent);
+  box-shadow: 0 0 10px rgb(244 240 232 / 12%);
+}
+
+.is-home-v2 .kui-gallery .kui-glass-product-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.45rem, 0.8vw, 0.75rem);
+  margin-top: clamp(0.75rem, 1.6vh, 1.125rem);
+  direction: rtl;
+}
+
+.is-home-v2 .kui-gallery .kui-product-chip {
+  min-height: 38px;
+  padding: 0.5rem clamp(0.8rem, 1.15vw, 1.125rem);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  color: rgb(244 240 232 / 72%);
+  font: inherit;
+  font-size: clamp(0.75rem, 0.83vw, 0.875rem);
+  white-space: nowrap;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 280ms ease, color 280ms ease, background 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+}
+
+.is-home-v2 .kui-gallery .kui-product-chip:hover,
+.is-home-v2 .kui-gallery .kui-product-chip:focus-visible {
+  transform: translateY(-2px);
+  color: var(--spot-cream);
+  background: rgb(255 255 255 / 10%);
+  outline: none;
+}
+
+.is-home-v2 .kui-gallery .kui-product-chip.is-active {
+  color: var(--spot-cream);
+  border-color: rgb(244 240 232 / 22%);
+  background: rgb(244 240 232 / 14%);
+  box-shadow: 0 0 18px rgb(244 240 232 / 6%), inset 0 1px 0 rgb(255 255 255 / 8%);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  gap: clamp(0.7rem, 1.7vw, 1.5rem);
+  margin-top: 0.65rem;
+  opacity: 0.62;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  min-height: 24px;
+  font-size: 0.72rem;
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam {
+  filter: saturate(0.88);
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-soft {
+  background: linear-gradient(to bottom, rgb(255 238 198 / 28%), rgb(255 225 164 / 12%) 58%, transparent 100%);
+  opacity: 0.16;
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-middle {
+  background: linear-gradient(to bottom, rgb(255 240 203 / 32%), rgb(255 224 160 / 12%) 64%, transparent);
+  opacity: 0.2;
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-core {
+  background: linear-gradient(to bottom, rgb(255 244 214 / 36%), rgb(255 228 170 / 10%) 70%, transparent);
+  opacity: 0.24;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-product::after {
+  background: radial-gradient(circle at 50% 22%, rgb(255 235 185 / 26%), rgb(255 220 150 / 10%) 35%, transparent 64%);
+  mix-blend-mode: screen;
+}
+
+.is-home-v2 .kui-gallery .kui-floor-light {
+  background: radial-gradient(circle, rgb(244 220 168 / 11%) 0%, rgb(0 91 72 / 18%) 34%, rgb(0 91 72 / 7%) 52%, transparent 74%);
+  filter: blur(24px);
+}
+
+@media (min-width: 701px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    --spot-stage-h: clamp(760px, calc(100svh - var(--v2-header-h)), 900px);
+    padding: clamp(1.5rem, 2.8vh, 2rem) 0 clamp(1.25rem, 2.5vh, 1.75rem) !important;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.8vh, 1.75rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    align-self: start;
+    max-height: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    min-height: 0;
+    max-height: 560px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    min-height: 410px;
+    max-height: 480px;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    padding-inline: 1rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-chip {
+    min-height: 34px;
+    padding: 0.4rem 0.7rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    padding-top: 1.25rem !important;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    width: min(100% - 1rem, 560px);
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    padding: 1rem 0.75rem 0.8rem;
+    border-radius: 20px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-section-title {
+    font-size: clamp(1.45rem, 7vw, 1.9rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-minimal-divider {
+    width: 90px;
+    margin-top: 0.55rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-glass-product-list {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.1rem 0 0.35rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-glass-product-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-chip {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    margin-top: 0.45rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    margin-top: 1.75rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    min-height: 370px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-home-v2 .kui-gallery .kui-product-chip {
+    transition: none;
+  }
+}
+
+/* Final bridge composition: connected categories above, product carousel below. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  top: -120px;
+  height: 220px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(7 23 19 / 0%) 0%, rgb(7 23 19 / 48%) 48%, rgb(3 11 9 / 92%) 100%);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  padding: 0.75rem clamp(1rem, 2vw, 1.25rem);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgb(255 255 255 / 5.5%), rgb(255 255 255 / 3%));
+  border-color: rgb(255 255 255 / 8%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  grid-column: 3;
+  justify-self: end;
+  justify-items: end;
+  min-width: max-content;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  font-size: clamp(1.125rem, 1.5vw, 1.625rem);
+  font-weight: 700;
+  text-align: right;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider {
+  width: 76px;
+  margin-top: 0.35rem;
+  background: linear-gradient(to left, rgb(244 240 232 / 68%), transparent);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: auto;
+  margin: 0;
+  padding: 0.35rem;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%), inset 0 1px 0 rgb(255 255 255 / 5%);
+  opacity: 1;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  min-height: 36px;
+  padding: 0.45rem clamp(0.75rem, 1.15vw, 1.125rem);
+  border: 0;
+  border-radius: 999px;
+  color: rgb(244 240 232 / 56%);
+  background: transparent;
+  transition: color 280ms ease, background 280ms ease, box-shadow 280ms ease;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn::after {
+  display: none;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:hover,
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn:focus-visible {
+  color: var(--spot-cream);
+  background: rgb(244 240 232 / 6%);
+  outline: none;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn.is-active {
+  color: var(--spot-cream);
+  background: rgb(244 240 232 / 10%);
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 8%);
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  font-size: clamp(2.5rem, 4.2vw, 3.625rem);
+  line-height: 1.02;
+}
+
+.is-home-v2 .kui-gallery .kui-brand-journey {
+  margin-bottom: 0;
+}
+
+.is-home-v2 .kui-gallery .kui-title {
+  margin-top: 1rem;
+}
+
+.is-home-v2 .kui-gallery .kui-description {
+  margin-top: 1.125rem;
+}
+
+.is-home-v2 .kui-gallery .kui-hero-actions {
+  margin-top: 1.5rem;
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-soft {
+  opacity: 0.18;
+  filter: blur(30px);
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-middle {
+  opacity: 0.23;
+  filter: blur(18px);
+}
+
+.is-home-v2 .kui-gallery .kui-light-beam-core {
+  opacity: 0.29;
+  filter: blur(8px);
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-product::after {
+  background: radial-gradient(circle at 50% 18%, rgb(255 235 185 / 28%), rgb(255 220 150 / 12%) 38%, transparent 68%);
+}
+
+@media (min-width: 901px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
+    --spot-stage-h: clamp(760px, calc(100svh - var(--v2-header-h)), 900px);
+    overflow: visible;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    position: relative;
+    z-index: 2;
+    grid-template-rows: minmax(94px, 18%) minmax(0, 64%) minmax(76px, 18%);
+    gap: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    align-self: start;
+    margin-top: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-copy {
+    position: absolute;
+    z-index: 6;
+    top: 50%;
+    right: 0;
+    width: min(34%, 410px);
+    translate: 0 -50%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: min(560px, 48vw);
+    height: 100%;
+    min-height: 410px;
+    max-height: 480px;
+    translate: -50% -50%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    align-self: end;
+    width: min(760px, 100%);
+    min-height: 76px;
+    max-height: 104px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .is-home-v2 .kui-gallery .kui-glass-title {
+    grid-column: 2;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    grid-column: 1;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-copy {
+    width: 31%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.4rem, 4.5vw, 3.25rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery::before {
+    top: -80px;
+    height: 160px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-glass-title {
+    align-self: flex-end;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    align-self: center;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock::-webkit-scrollbar {
+    display: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    display: flex;
+    width: min(720px, 100%);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    padding: 0.75rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    min-height: 34px;
+    padding-inline: 0.75rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.35rem, 11vw, 3.25rem);
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Definitive continuous hierarchy — intentionally last in this stylesheet. */
+/* Higher-specificity reset keeps the section in one centered document flow. */
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-glass-title {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-gallery-section-title {
+  font-size: clamp(1.125rem, 1.5vw, 1.625rem);
+  text-align: center;
+}
+
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-minimal-divider {
+  display: none;
+}
+
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-category-bar.kui-dock {
+  width: min(820px, 92vw);
+}
+
+.is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-title-line {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+@media (min-width: 901px) {
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-product-display {
+    position: relative;
+    inset: auto;
+    left: auto;
+    margin-inline: auto;
+    translate: none;
+  }
+
+  .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery .kui-rail {
+    position: static;
+    left: auto;
+    justify-self: auto;
+    width: min(700px, 90vw);
+    margin: clamp(1.5rem, 3vh, 2rem) auto 0;
+    translate: none;
+  }
+}
+.is-home-v2 .kui-gallery .kui-gallery-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.65rem, 1.4vh, 0.9rem);
+  width: min(1180px, 100%);
+  max-height: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.is-home-v2 .kui-gallery .kui-glass-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  width: 100%;
+  min-width: 0;
+  padding-inline: clamp(0.25rem, 1vw, 0.75rem);
+  box-sizing: border-box;
+}
+
+.is-home-v2 .kui-gallery .kui-gallery-section-title {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.4vw, 1.5rem);
+  line-height: 1.3;
+  text-align: right;
+}
+
+.is-home-v2 .kui-gallery .kui-minimal-divider {
+  display: none;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: min(820px, 92vw);
+  max-width: none;
+  margin: 0;
+  padding: 0.45rem;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 4%), rgb(255 255 255 / 7%) 50%, rgb(255 255 255 / 4%));
+  box-shadow: 0 10px 24px rgb(0 0 0 / 18%), inset 0 1px 0 rgb(255 255 255 / 6%);
+  opacity: 1;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-sizing: border-box;
+}
+
+.is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+  flex: 1 1 0;
+  max-width: 190px;
+  min-height: 40px;
+  padding: 0.55rem clamp(0.9rem, 1.5vw, 1.5rem);
+}
+
+.is-home-v2 .kui-gallery .kui-title-line {
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.05;
+}
+
+@media (min-width: 901px) {
+  .is-home-v2 .kui-gallery .kui-gallery-shell {
+    grid-template-rows: minmax(104px, 18%) minmax(0, 64%) minmax(82px, 18%);
+  }
+
+  .is-home-v2 .kui-gallery .kui-gallery-main {
+    overflow: visible;
+  }
+
+  .is-home-v2 .kui-gallery .kui-product-display {
+    left: 50%;
+    translate: -50% -50%;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    position: relative;
+    left: 50%;
+    justify-self: start;
+    width: min(760px, 68vw);
+    margin: clamp(1.1rem, 2.8vh, 1.625rem) 0 0;
+    translate: -50% 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .is-home-v2 .kui-gallery .kui-gallery-header {
+    gap: 0.65rem;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar .kui-dock-btn {
+    flex: 0 0 auto;
+    min-width: 94px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-rail {
+    justify-content: center;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .is-home-v2 .kui-gallery .kui-glass-title {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .is-home-v2 .kui-gallery .kui-category-bar.kui-dock {
+    border-radius: 20px;
+  }
+
+  .is-home-v2 .kui-gallery .kui-title-line {
+    font-size: clamp(2.1rem, 10vw, 3rem);
   }
 }

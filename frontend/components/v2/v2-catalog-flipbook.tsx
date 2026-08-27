@@ -184,9 +184,9 @@ export function V2CatalogFlipbook() {
         const w = Math.min(300, vw - 48);
         setSize({ w, h: Math.round(w * 1.35), portrait: true });
       } else if (vw < 1100) {
-        setSize({ w: 300, h: 420, portrait: false });
+        setSize({ w: 320, h: 445, portrait: false });
       } else {
-        setSize({ w: 340, h: 470, portrait: false });
+        setSize({ w: 430, h: 595, portrait: false });
       }
     };
     update();
@@ -283,9 +283,9 @@ export function V2CatalogFlipbook() {
                 height={size.h}
                 size="fixed"
                 minWidth={240}
-                maxWidth={480}
+                maxWidth={540}
                 minHeight={320}
-                maxHeight={640}
+                maxHeight={740}
                 drawShadow
                 flippingTime={1000}
                 usePortrait={size.portrait}
