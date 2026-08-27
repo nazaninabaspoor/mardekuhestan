@@ -59,7 +59,7 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     eyebrow: "از مزرعه تا سفره",
     headline: "محصولات تازه",
     description: "محصولات تازه کشاورزی، انتخاب‌شده از دل طبیعت برای یک سفره رنگارنگ.",
-    heroImage: "/brand/home-dairy.png",
-    cardImage: "/brand/home-dairy.png",
+    heroImage: "/brand/landing-farm.png",
+    cardImage: "/brand/landing-farm.png",
   },
 ] as const;

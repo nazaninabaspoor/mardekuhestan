@@ -1,4 +1,5 @@
 import type { ProductCategory, ProductCategoryId } from "@/data/productCategories";
+import { CategoryIcon } from "./CategoryIcon";
 
 type ProductTabsProps = {
   categories: ReadonlyArray<ProductCategory>;
@@ -29,6 +30,7 @@ export function ProductTabs({
             aria-pressed={active}
             onClick={() => onChange(category.id)}
           >
+            <CategoryIcon id={category.id} />
             {category.title}
           </button>
         );
