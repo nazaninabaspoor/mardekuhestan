@@ -5,27 +5,14 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion, type Transition } from "framer-motion";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { homeCategoryProducts, homeDoors, type HomeDoorId } from "@/lib/brand";
+import { ProductTabs } from "@/components/product-showcase/ProductTabs";
+import { productCategories, type ProductCategoryId } from "@/data/productCategories";
+import { homeCategoryProducts } from "@/lib/brand";
 import { playCategoryBell } from "@/lib/v2-bell-audio";
 import styles from "./for-home-kitchen.module.css";
 
-const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
+const DEFAULT_DOOR: ProductCategoryId = "fresh-meat";
 const VISIBLE = 5;
-const CATEGORY_DOCK: ReadonlyArray<{ id: HomeDoorId; short: string }> = [
-  { id: "fresh-meat", short: "گوشت" },
-  { id: "seafood", short: "دریایی" },
-  { id: "dairy", short: "لبنیات" },
-  { id: "ready-meal", short: "آماده" },
-  { id: "farm", short: "کشاورزی" },
-];
-
-const JOURNEY_COPY: Partial<Record<HomeDoorId, string>> = {
-  "fresh-meat": "از دامداری تا سفره",
-  seafood: "از دریا تا سفره",
-  dairy: "از دامداری تا لبنیات تازه",
-  "ready-meal": "آماده برای طبخی سریع‌تر",
-  farm: "از مزرعه تا سفره",
-};
 
 const PRODUCT_COPY: Record<string, string> = {
   "meat-loin": "برشی تازه و خوش‌پخت، مناسب برای خوراک، کباب و پخت آرام.",
@@ -86,12 +73,13 @@ export function ForHomeKitchen() {
   const rootRef = useRef<HTMLElement | null>(null);
   const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
-  const [doorId, setDoorId] = useState<HomeDoorId>(DEFAULT_DOOR);
+  const [doorId, setDoorId] = useState<ProductCategoryId>(DEFAULT_DOOR);
   const [idx, setIdx] = useState(0);
   const switchingRef = useRef(false);
 
   const products = homeCategoryProducts[doorId] as ReadonlyArray<Product>;
   const active = products[mod(idx, Math.max(products.length, 1))] ?? products[0];
+  const activeCategory = productCategories.find((category) => category.id === doorId) ?? productCategories[0];
 
   const rail = useMemo(() => {
     if (!products.length) return [];
@@ -160,7 +148,7 @@ export function ForHomeKitchen() {
     ? { duration: 0 }
     : { duration: 0.35, ease: [0.16, 1, 0.3, 1] };
 
-  const switchProduct = async (nextIndex: number, nextDoorId = doorId) => {
+  const switchProduct = async (nextIndex: number, nextDoorId: ProductCategoryId = doorId) => {
     if (switchingRef.current || (nextDoorId === doorId && mod(nextIndex, products.length) === mod(idx, products.length))) return;
     if (reduceMotion || !rootRef.current) {
       setDoorId(nextDoorId);
@@ -195,7 +183,7 @@ export function ForHomeKitchen() {
       .to(root.querySelector(".kui-gallery-product"), { opacity: 0, scale: 0.96, filter: "brightness(.7)", duration: 0.2 }, "<");
   };
 
-  const selectDoor = (id: HomeDoorId) => {
+  const selectDoor = (id: ProductCategoryId) => {
     if (id === doorId) return;
     void switchProduct(0, id);
     void playCategoryBell();
@@ -223,25 +211,14 @@ export function ForHomeKitchen() {
             <h2 id="kui-section-title" className={`kui-gallery-section-title ${styles.sectionLabel}`}>منتخب محصولات مرد کوهستان</h2>
             <span className={`kui-minimal-divider ${styles.neonDivider}`} aria-hidden="true" />
           </div>
-          <nav className={`kui-category-bar kui-dock ${styles.categoryMenu}`} aria-label="دسته‌بندی محصولات">
-            {CATEGORY_DOCK.map(({ id, short }) => {
-              const category = homeDoors.find((item) => item.id === id);
-              if (!category) return null;
-              const selected = id === doorId;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  className={`kui-dock-btn ${styles.categoryItem}${selected ? ` is-active ${styles.categoryActive}` : ""}`}
-                  aria-pressed={selected}
-                  aria-label={category.label}
-                  onClick={() => selectDoor(id)}
-                >
-                  <span className="kui-dock-label">{short}</span>
-                </button>
-              );
-            })}
-          </nav>
+          <ProductTabs
+            categories={productCategories}
+            activeCategoryId={doorId}
+            onChange={selectDoor}
+            menuClassName={`kui-category-bar kui-dock ${styles.categoryMenu}`}
+            itemClassName={`kui-dock-btn ${styles.categoryItem}`}
+            activeItemClassName={`is-active ${styles.categoryActive}`}
+          />
         </header>
 
         <main className={`kui-gallery-main ${styles.main}`}>
@@ -255,7 +232,7 @@ export function ForHomeKitchen() {
               transition={transition}
             >
               <div className={`kui-brand-journey ${styles.eyebrow}`}>
-                <span>{JOURNEY_COPY[doorId] ?? "از مزرعه تا سفره"}</span>
+                <span>{activeCategory.eyebrow}</span>
                 <span className="kui-journey-line" aria-hidden="true"><i /></span>
               </div>
               <h3 className={`kui-title ${styles.productTitle}`}>
