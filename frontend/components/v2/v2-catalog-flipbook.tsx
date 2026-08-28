@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import {
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -12,31 +12,34 @@ import {
 import HTMLFlipBook from "react-pageflip";
 
 import {
-  catalogBookCopy,
-  catalogs,
-  type CatalogItem,
-} from "@/data/catalogs";
+  v2CatalogCopy,
+  v2Catalogs,
+  type V2CatalogSpread,
+} from "@/data/v2-reading-room";
 
+import { V2BookcaseScene } from "./v2-bookcase-scene";
 import { V2FlipPage } from "./v2-flip-page";
+import { useV2BookFlip } from "./use-v2-book-flip";
 
 const LOGO = "/brand/logo.svg";
-const CATALOG_COVER_ART = "/brand/v2/catalog-cover.png";
 
 function toPersianDigits(value: number) {
   return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
 }
 
-type FlipApi = {
-  pageFlip: () => {
-    flipNext: () => void;
-    flipPrev: () => void;
-    flip: (page: number) => void;
-    getCurrentPageIndex: () => number;
-    getPageCount: () => number;
-  };
-};
+function BookChrome() {
+  return (
+    <>
+      <span className="v2-book-spine" aria-hidden>
+        <span className="v2-book-spine-bands" />
+      </span>
+      <span className="v2-book-headband" aria-hidden />
+      <span className="v2-book-foreedge" aria-hidden />
+    </>
+  );
+}
 
-function catalogPages(): ReactElement[] {
+function buildCatalogPages(): ReactElement[] {
   const pages: ReactElement[] = [];
 
   pages.push(
@@ -48,12 +51,12 @@ function catalogPages(): ReactElement[] {
       <div className="v2-catalog-cover">
         <div className="v2-cover-art">
           <Image
-            src={CATALOG_COVER_ART}
+            src={v2CatalogCopy.cover}
             alt=""
             fill
             sizes="(max-width: 900px) 70vw, 360px"
             className="v2-cover-art-img"
-            priority={false}
+            priority
             aria-hidden
           />
         </div>
@@ -67,10 +70,10 @@ function catalogPages(): ReactElement[] {
             aria-hidden
           />
           <strong className="v2-catalog-cover-title">
-            {catalogBookCopy.coverTitle}
+            {v2CatalogCopy.coverTitle}
           </strong>
           <span className="v2-catalog-cover-sub">
-            {catalogBookCopy.coverSubtitle}
+            {v2CatalogCopy.coverSubtitle}
           </span>
           <em className="v2-catalog-cover-hint">ورق بزنید</em>
         </div>
@@ -78,7 +81,7 @@ function catalogPages(): ReactElement[] {
     </V2FlipPage>,
   );
 
-  catalogs.forEach((item) => {
+  v2Catalogs.forEach((item, index) => {
     const theme = {
       ["--page-bg"]: item.theme.background,
       ["--page-ink"]: item.theme.text,
@@ -88,17 +91,23 @@ function catalogPages(): ReactElement[] {
     pages.push(
       <V2FlipPage
         key={`${item.id}-copy`}
-        className="v2-flip-page--paper"
+        className="v2-flip-page--paper v2-flip-page--brand"
         style={theme}
       >
         <div className="v2-catalog-copy">
+          <span className="v2-catalog-copy-peak" aria-hidden />
+          <span className="v2-page-running">{v2CatalogCopy.running}</span>
           <span className="v2-catalog-copy-kicker">{item.category}</span>
           <h3 className="v2-catalog-copy-title">{item.title}</h3>
           <p className="v2-catalog-copy-desc">{item.description}</p>
-          <div className="v2-catalog-copy-meta">
-            <span>{item.year}</span>
-            <span>{toPersianDigits(item.pageCount)} صفحه</span>
+          <div className="v2-catalog-copy-panel">
+            <span className="v2-catalog-copy-quote">این راه سبز است</span>
+            <div className="v2-catalog-copy-meta">
+              <span>{item.year}</span>
+              <span>{toPersianDigits(item.pageCount)} صفحه</span>
+            </div>
           </div>
+          <span className="v2-catalog-copy-band" aria-hidden />
         </div>
       </V2FlipPage>,
     );
@@ -106,18 +115,20 @@ function catalogPages(): ReactElement[] {
     pages.push(
       <V2FlipPage
         key={`${item.id}-media`}
-        className="v2-flip-page--paper v2-flip-page--media"
+        className="v2-flip-page--paper v2-flip-page--media v2-flip-page--brand"
         style={theme}
       >
-        <div className="v2-catalog-media">
+        <figure className="v2-catalog-media">
           <Image
             src={item.image}
-            alt={item.title}
+            alt={item.alt}
             fill
             sizes="(max-width: 900px) 70vw, 400px"
             className="v2-catalog-media-img"
+            priority={index === 0}
           />
-        </div>
+          <figcaption className="v2-page-caption">{item.caption}</figcaption>
+        </figure>
       </V2FlipPage>,
     );
   });
@@ -146,16 +157,33 @@ function catalogPages(): ReactElement[] {
 }
 
 /**
- * Branded 3D catalog booklet for /v2 — StPageFlip page curl.
+ * Branded catalog hardcover for /v2 — StPageFlip motion preserved, open/close smoothed.
  */
 export function V2CatalogFlipbook() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const bookRef = useRef<FlipApi | null>(null);
   const [visible, setVisible] = useState(false);
-  const [page, setPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
-  const [size, setSize] = useState({ w: 340, h: 470, portrait: false });
+  const [size, setSize] = useState({ w: 284, h: 394 });
   const [mounted, setMounted] = useState(false);
+
+  const {
+    bookRef,
+    page,
+    pageCount,
+    bookState,
+    isOpen,
+    isSingleCover,
+    onFrontCover,
+    onLastCover,
+    onFlip,
+    onInit,
+    onChangeState,
+    flipNext,
+    flipPrev,
+    flipTo,
+    armOpenLayout,
+  } = useV2BookFlip(size);
+
+  const pages = useMemo(() => buildCatalogPages(), []);
 
   useEffect(() => {
     setMounted(true);
@@ -181,12 +209,12 @@ export function V2CatalogFlipbook() {
     const update = () => {
       const vw = window.innerWidth;
       if (vw < 720) {
-        const w = Math.min(300, vw - 48);
-        setSize({ w, h: Math.round(w * 1.35), portrait: true });
+        const w = Math.min(236, vw - 64);
+        setSize({ w, h: Math.round(w * 1.39) });
       } else if (vw < 1100) {
-        setSize({ w: 320, h: 445, portrait: false });
+        setSize({ w: 258, h: 358 });
       } else {
-        setSize({ w: 430, h: 595, portrait: false });
+        setSize({ w: 284, h: 394 });
       }
     };
     update();
@@ -194,31 +222,19 @@ export function V2CatalogFlipbook() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const onFlip = useCallback((e: { data: number }) => {
-    setPage(e.data);
-  }, []);
-
-  const onInit = useCallback(() => {
-    const count = bookRef.current?.pageFlip()?.getPageCount?.() ?? 0;
-    setPageCount(count);
-  }, []);
-
-  const flipNext = () => bookRef.current?.pageFlip()?.flipNext();
-  const flipPrev = () => bookRef.current?.pageFlip()?.flipPrev();
-
-  const goCatalog = (item: CatalogItem) => {
-    const idx = catalogs.findIndex((c) => c.id === item.id);
+  const goCatalog = (item: V2CatalogSpread) => {
+    const idx = v2Catalogs.findIndex((c) => c.id === item.id);
     if (idx < 0) return;
-    bookRef.current?.pageFlip()?.flip(1 + idx * 2);
+    flipTo(1 + idx * 2);
   };
 
   const activeCatalog =
     page <= 0
       ? null
-      : catalogs[
+      : v2Catalogs[
           Math.min(
             Math.max(Math.floor((page - 1) / 2), 0),
-            catalogs.length - 1,
+            v2Catalogs.length - 1,
           )
         ];
 
@@ -226,116 +242,152 @@ export function V2CatalogFlipbook() {
     <section
       ref={rootRef}
       id="v2-catalogs"
-      className={`v2-bookcase v2-bookcase--catalog${visible ? " is-visible" : ""}`}
-      aria-label={catalogBookCopy.sectionTitle}
+      className={`v2-bookcase v2-bookcase--catalog${visible ? " is-visible" : ""}${isOpen ? " is-spread" : ""}`}
+      aria-label={v2CatalogCopy.sectionTitle}
     >
+      <V2BookcaseScene variant="catalog" />
+
       <div className="v2-bookcase-shell">
-        <header className="v2-bookcase-head">
-          <p className="v2-bookcase-kicker">دفترچهٔ سبز</p>
-          <h2 className="v2-bookcase-title">{catalogBookCopy.sectionTitle}</h2>
-          <p className="v2-bookcase-lead">{catalogBookCopy.sectionSubtitle}</p>
-        </header>
+        <div className="v2-bookcase-layout">
+          <header className="v2-bookcase-head">
+            <p className="v2-bookcase-kicker">این راه سبز است</p>
+            <span className="v2-bookcase-mark" aria-hidden />
+            <h2 className="v2-bookcase-title">{v2CatalogCopy.sectionTitle}</h2>
+            <p className="v2-bookcase-lead">{v2CatalogCopy.sectionLead}</p>
+            <div className="v2-bookcase-tabs" role="tablist" aria-label="کاتالوگ‌ها">
+              {v2Catalogs.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  className={`v2-bookcase-tab${
+                    activeCatalog?.id === item.id ? " is-active" : ""
+                  }`}
+                  aria-selected={activeCatalog?.id === item.id}
+                  onClick={() => goCatalog(item)}
+                >
+                  {item.tabLabel}
+                </button>
+              ))}
+            </div>
+          </header>
 
-        <div className="v2-bookcase-tabs" role="tablist" aria-label="کاتالوگ‌ها">
-          {catalogs.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              className={`v2-bookcase-tab${
-                activeCatalog?.id === item.id ? " is-active" : ""
+          <div className="v2-bookcase-stage">
+            <div
+              className={`v2-book-object${isOpen ? " is-open" : ""}${
+                isSingleCover ? " is-cover" : ""
+              }${onFrontCover ? " is-front-cover" : ""}${
+                onLastCover ? " is-back-cover" : ""
+              }${
+                bookState === "flipping" || bookState === "user_fold"
+                  ? " is-turning"
+                  : ""
               }`}
-              aria-selected={activeCatalog?.id === item.id}
-              onClick={() => goCatalog(item)}
+              style={
+                {
+                  ["--page-w"]: `${size.w}px`,
+                  ["--page-h"]: `${size.h}px`,
+                } as CSSProperties
+              }
             >
-              {item.tabLabel}
-            </button>
-          ))}
-        </div>
-
-        <div className="v2-bookcase-stage">
-          <button
-            type="button"
-            className="v2-bookcase-nav v2-bookcase-nav--prev"
-            onClick={flipPrev}
-            aria-label="ورق قبلی"
-            disabled={page <= 0}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M14 6 8 12l6 6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-
-          <div className="v2-bookcase-book-wrap">
-            {mounted ? (
-              <HTMLFlipBook
-                key={`${size.w}x${size.h}-${size.portrait ? "p" : "l"}`}
-                ref={bookRef}
-                className="v2-flipbook"
-                style={{}}
-                width={size.w}
-                height={size.h}
-                size="fixed"
-                minWidth={240}
-                maxWidth={540}
-                minHeight={320}
-                maxHeight={740}
-                drawShadow
-                flippingTime={1000}
-                usePortrait={size.portrait}
-                startZIndex={2}
-                autoSize={false}
-                maxShadowOpacity={0.3}
-                showCover
-                mobileScrollSupport
-                clickEventForward
-                useMouseEvents
-                swipeDistance={28}
-                showPageCorners
-                disableFlipByClick={false}
-                startPage={0}
-                onFlip={onFlip}
-                onInit={onInit}
-              >
-                {catalogPages()}
-              </HTMLFlipBook>
-            ) : (
               <div
-                className="v2-flipbook-skeleton"
-                style={{ width: size.w, height: size.h }}
-                aria-hidden
-              />
-            )}
-          </div>
+                className="v2-book-case"
+                onPointerDown={page === 0 ? armOpenLayout : undefined}
+              >
+                <BookChrome />
+                <div className="v2-bookcase-book-wrap">
+                  {mounted ? (
+                    <HTMLFlipBook
+                      key={`cat-${size.w}x${size.h}`}
+                      ref={bookRef}
+                      className="v2-flipbook"
+                      style={{}}
+                      width={size.w}
+                      height={size.h}
+                      size="fixed"
+                      minWidth={size.w}
+                      maxWidth={size.w * 2}
+                      minHeight={size.h}
+                      maxHeight={size.h}
+                      drawShadow
+                      flippingTime={1000}
+                      usePortrait
+                      startZIndex={2}
+                      autoSize={false}
+                      maxShadowOpacity={0.65}
+                      showCover
+                      mobileScrollSupport
+                      clickEventForward
+                      useMouseEvents
+                      swipeDistance={16}
+                      showPageCorners={page > 0}
+                      disableFlipByClick={false}
+                      startPage={0}
+                      renderOnlyPageLengthChange
+                      onFlip={onFlip}
+                      onInit={onInit}
+                      onChangeState={onChangeState}
+                    >
+                      {pages}
+                    </HTMLFlipBook>
+                  ) : (
+                    <div
+                      className="v2-flipbook-skeleton"
+                      style={{ width: size.w, height: size.h }}
+                      aria-hidden
+                    />
+                  )}
+                </div>
+              </div>
+              <span className="v2-book-shadow" aria-hidden />
+            </div>
 
-          <button
-            type="button"
-            className="v2-bookcase-nav v2-bookcase-nav--next"
-            onClick={flipNext}
-            aria-label="ورق بعدی"
-            disabled={pageCount > 0 && page >= pageCount - 1}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M10 6l6 6-6 6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
+            <div className="v2-bookcase-navs">
+              <button
+                type="button"
+                className="v2-bookcase-nav v2-bookcase-nav--prev"
+                onClick={() => void flipPrev()}
+                aria-label="ورق قبلی"
+                disabled={page <= 0 || bookState === "flipping"}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M14 6 8 12l6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="v2-bookcase-nav v2-bookcase-nav--next"
+                onClick={() => void flipNext()}
+                aria-label="ورق بعدی"
+                disabled={
+                  (pageCount > 0 && page >= pageCount - 1) ||
+                  bookState === "flipping"
+                }
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M10 6l6 6-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
 
         <footer className="v2-bookcase-foot">
-          <span>
-            {toPersianDigits(Math.min(page + 1, Math.max(pageCount, 1)))} /{" "}
+          <span className="v2-bookcase-folio">
+            {toPersianDigits(Math.min(page + 1, Math.max(pageCount, 1)))}
+            <em>/</em>
             {toPersianDigits(Math.max(pageCount, 1))}
           </span>
           <div className="v2-bookcase-progress" aria-hidden="true">

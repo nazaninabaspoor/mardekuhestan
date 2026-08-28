@@ -20,8 +20,12 @@ export function SiteFooter() {
 
       <div className="footer-body">
         <div className="shell footer-grid">
-          <div className="footer-col footer-col--seal">
-            <Link href="/" className="footer-seal" aria-label="مرد کوهستان">
+          <div className="footer-brand">
+            <div className="footer-brand-copy">
+              <p className="footer-company">{contactInfo.company}</p>
+              <p className="footer-blurb">{contactInfo.blurb}</p>
+            </div>
+            <Link href="/" className="footer-seal footer-brand-seal" aria-label="مرد کوهستان">
               <Image
                 src="/brand/orginal-clear.png"
                 alt="مرد کوهستان — این راه سبز است"
@@ -30,11 +34,6 @@ export function SiteFooter() {
                 className="footer-seal-img"
               />
             </Link>
-          </div>
-
-          <div className="footer-col footer-col--about">
-            <p className="footer-company">{contactInfo.company}</p>
-            <p className="footer-blurb">{contactInfo.blurb}</p>
           </div>
 
           <nav className="footer-col footer-col--pages" aria-label="صفحات">
