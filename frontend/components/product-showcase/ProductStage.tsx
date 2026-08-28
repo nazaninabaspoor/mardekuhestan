@@ -9,27 +9,11 @@ import styles from "./ProductStage.module.css";
 
 type ProductStageProps = { category: ProductCategory };
 
-const particles = Array.from({ length: 16 }, (_, index) => ({
-  left: `${34 + ((index * 17) % 34)}%`,
-  top: `${19 + ((index * 23) % 31)}%`,
-  animationDelay: `${(index % 7) * 0.17}s`,
-}));
-
 export function ProductStage({ category }: ProductStageProps) {
   const reduceMotion = useReducedMotion();
 
   return (
     <div className={styles.stage}>
-      <span className={styles.cable} aria-hidden="true" />
-      <div className={styles.lamp} aria-hidden="true">
-        <Image src="/brand/v2/pendant-lamp.png" alt="" width={190} height={150} priority />
-      </div>
-      <div className={styles.beam} aria-hidden="true" />
-      <div className={styles.coreLight} aria-hidden="true" />
-      <div className={styles.particles} aria-hidden="true">
-        {particles.map((particle, index) => <i key={index} style={particle} />)}
-      </div>
-
       <div className={styles.productGroup}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -44,12 +28,6 @@ export function ProductStage({ category }: ProductStageProps) {
             <span className={styles.plateHighlight} aria-hidden="true" />
           </motion.div>
         </AnimatePresence>
-        <div className={styles.pedestal} aria-hidden="true">
-          <span className={styles.pedestalTop} />
-          <span className={styles.pedestalBody} />
-          <span className={styles.goldRim} />
-        </div>
-        <div className={styles.floorShadow} aria-hidden="true" />
       </div>
     </div>
   );

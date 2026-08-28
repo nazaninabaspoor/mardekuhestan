@@ -1,32 +1,34 @@
 "use client";
 
-import type { ProductCategory, ProductCategoryId } from "@/data/productCategories";
-import { ProductCard } from "./ProductCard";
+import { useRef } from "react";
+
+import { ProductCard, type ShowcaseProduct } from "./ProductCard";
 import styles from "./ProductCards.module.css";
 
 type ProductCardsProps = {
-  categories: ReadonlyArray<ProductCategory>;
-  activeCategoryId: ProductCategoryId;
-  onChange: (id: ProductCategoryId) => void;
+  title: string;
+  products: ReadonlyArray<ShowcaseProduct>;
 };
 
-export function ProductCards({ categories, activeCategoryId, onChange }: ProductCardsProps) {
-  const activeIndex = categories.findIndex((category) => category.id === activeCategoryId);
-  const cycle = (direction: -1 | 1) => {
-    const nextIndex = (activeIndex + direction + categories.length) % categories.length;
-    onChange(categories[nextIndex].id);
+export function ProductCards({ title, products = [] }: ProductCardsProps) {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const scroll = (direction: -1 | 1) => {
+    trackRef.current?.scrollBy({ left: direction * 360, behavior: "smooth" });
   };
 
   return (
-    <div className={styles.rail}>
-      <button type="button" className={styles.arrow} aria-label="دسته قبلی" onClick={() => cycle(-1)}>‹</button>
-      <div className={styles.cards}>
-        {categories.map((category) => {
-          const active = category.id === activeCategoryId;
-          return <ProductCard key={category.id} category={category} active={active} onClick={() => onChange(category.id)} />;
-        })}
+    <section className={styles.rail} aria-label={title}>
+      <header className={styles.header}>
+        <span aria-hidden="true" />
+        <h3>{title}</h3>
+        <span aria-hidden="true" />
+      </header>
+
+      <button type="button" className={`${styles.arrow} ${styles.previous}`} aria-label="محصولات قبلی" onClick={() => scroll(-1)}>‹</button>
+      <div ref={trackRef} className={styles.products}>
+        {products.map((product) => <ProductCard key={product.id} product={product} />)}
       </div>
-      <button type="button" className={styles.arrow} aria-label="دسته بعدی" onClick={() => cycle(1)}>›</button>
-    </div>
+      <button type="button" className={`${styles.arrow} ${styles.next}`} aria-label="محصولات بعدی" onClick={() => scroll(1)}>›</button>
+    </section>
   );
 }

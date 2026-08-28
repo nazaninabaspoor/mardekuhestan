@@ -25,6 +25,7 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     description: "انتخاب‌شده با دقت، تازه و مناسب برای یک وعده سالم و مطمئن.",
     heroImage: "/brand/home-meat.png",
     cardImage: "/brand/home-meat.png",
+    video: "/brand/teaser.mp4",
   },
   {
     id: "seafood",
@@ -34,6 +35,7 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     description: "تازه، سبک و خوش‌طعم؛ مناسب برای پخت روزانه و غذاهای سالم دریایی.",
     heroImage: "/brand/home-seafood.png",
     cardImage: "/brand/home-seafood.png",
+    video: "/brand/teaser.mp4",
   },
   {
     id: "dairy",
@@ -43,6 +45,7 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     description: "طعم ساده و طبیعی لبنیات تازه برای سفره‌ای سالم و روزمره.",
     heroImage: "/brand/home-dairy.png",
     cardImage: "/brand/home-dairy.png",
+    video: "/brand/teaser.mp4",
   },
   {
     id: "ready-meal",
@@ -52,6 +55,7 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     description: "انتخابی سریع و خوش‌طعم برای روزهایی که کیفیت هنوز اولویت شماست.",
     heroImage: "/brand/home-ready.png",
     cardImage: "/brand/home-ready.png",
+    video: "/brand/teaser.mp4",
   },
   {
     id: "farm",
@@ -61,5 +65,6 @@ export const productCategories: ReadonlyArray<ProductCategory> = [
     description: "محصولات تازه کشاورزی، انتخاب‌شده از دل طبیعت برای یک سفره رنگارنگ.",
     heroImage: "/brand/landing-farm.png",
     cardImage: "/brand/landing-farm.png",
+    video: "/brand/teaser.mp4",
   },
 ] as const;

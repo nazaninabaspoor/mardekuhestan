@@ -1,22 +1,7 @@
 .stage { position: relative; width: min(530px, 34vw); height: 520px; isolation: isolate; }
-.cable { position: absolute; z-index: 8; top: -38px; left: 50%; width: 1px; height: 70px; background: linear-gradient(#b58b45, #342917); transform: translateX(-50%); }
-.lamp { position: absolute; z-index: 9; top: 0; left: 50%; width: 102px; transform: translateX(-50%); filter: drop-shadow(0 8px 12px rgb(0 0 0 / 65%)); }
-.lamp img { display: block; width: 100%; height: auto; }
-.beam { position: absolute; z-index: 1; top: 78px; left: 50%; width: 278px; height: 322px; transform: translateX(-50%); transform-origin: 50% 0; clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); background: linear-gradient(to bottom, rgb(255 226 157 / 34%), rgb(220 172 87 / 11%) 48%, transparent 94%); filter: blur(9px); opacity: .86; }
-.coreLight { position: absolute; z-index: 2; top: 78px; left: 50%; width: 184px; height: 286px; transform: translateX(-50%); transform-origin: 50% 0; background: radial-gradient(ellipse at top, rgb(255 239 193 / 44%), rgb(226 179 91 / 12%) 44%, transparent 73%); filter: blur(13px); }
-.particles { position: absolute; z-index: 7; inset: 90px 0 auto; height: 210px; pointer-events: none; }
-.particles i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #f3cd80; box-shadow: 0 0 8px #efbd61; animation: stageTwinkle 2.8s ease-in-out var(--delay, 0s) infinite alternate; }
-.productGroup { position: absolute; z-index: 4; top: 140px; left: 50%; width: 100%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.productGroup { position: absolute; z-index: 4; top: 174px; left: 50%; display: flex; width: 100%; flex-direction: column; align-items: center; transform: translateX(-50%); }
 .plate { position: relative; z-index: 5; width: clamp(290px, 23vw, 370px); aspect-ratio: 1; filter: drop-shadow(0 26px 24px rgb(0 0 0 / 48%)) drop-shadow(0 0 2px rgb(244 198 111 / 62%)); }
 .productImage { object-fit: contain; }
 .plateHighlight { position: absolute; inset: 1.2%; border-radius: 50%; border-top: 1px solid rgb(255 224 160 / 38%); box-shadow: inset 0 8px 18px rgb(255 217 142 / 6%); pointer-events: none; }
-.pedestal { position: relative; z-index: 3; width: min(430px, 29vw); height: 64px; margin-top: -36px; }
-.pedestalTop, .pedestalBody, .goldRim { position: absolute; left: 50%; transform: translateX(-50%); border-radius: 50%; }
-.pedestalTop { z-index: 3; top: 0; width: 94%; height: 56px; border: 1px solid rgb(186 145 73 / 44%); background: radial-gradient(ellipse, #27352d 0%, #101914 61%, #070c09 100%); box-shadow: inset 0 4px 8px rgb(255 255 255 / 4%), 0 17px 22px rgb(0 0 0 / 55%); }
-.pedestalBody { z-index: 2; top: 20px; width: 100%; height: 52px; border: 1px solid rgb(147 112 56 / 48%); background: linear-gradient(#151e19, #050907); }
-.goldRim { z-index: 4; top: 54px; width: 92%; height: 2px; background: linear-gradient(90deg, transparent, #e7bb67 14%, #ffdd91 50%, #e7bb67 86%, transparent); box-shadow: 0 0 8px rgb(239 187 91 / 56%); }
-.floorShadow { width: min(470px, 32vw); height: 32px; margin-top: -20px; border-radius: 50%; background: rgb(0 0 0 / 55%); filter: blur(18px); }
-@keyframes stageTwinkle { from { opacity: .18; transform: translateY(4px); } to { opacity: .72; transform: translateY(-7px); } }
-@media (max-width: 1100px) { .stage { width: min(570px, 50vw); height: 500px; } .plate { width: clamp(340px, 34vw, 430px); } .pedestal { width: min(500px, 42vw); } }
-@media (max-width: 760px) { .stage { width: 100%; height: 430px; } .cable { top: -28px; height: 75px; } .lamp { top: 22px; width: 118px; } .beam { top: 91px; width: min(340px, 90vw); height: 310px; } .productGroup { top: 128px; } .plate { width: min(340px, 82vw); } .pedestal { width: min(390px, 90vw); margin-top: -35px; } .floorShadow { width: min(410px, 90vw); } }
-@media (prefers-reduced-motion: reduce) { .particles i { animation: none; } }
+@media (max-width: 1100px) { .stage { width: min(570px, 50vw); height: 500px; } .plate { width: clamp(340px, 34vw, 430px); } }
+@media (max-width: 760px) { .stage { width: 100%; height: 430px; } .productGroup { top: 128px; } .plate { width: min(340px, 82vw); } }
