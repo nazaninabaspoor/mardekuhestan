@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
-
 import type { ProductCategory, ProductCategoryId } from "@/data/productCategories";
-import { CategoryIcon } from "./CategoryIcon";
+import { ProductCard } from "./ProductCard";
 import styles from "./ProductCards.module.css";
 
 type ProductCardsProps = {
@@ -25,12 +23,7 @@ export function ProductCards({ categories, activeCategoryId, onChange }: Product
       <div className={styles.cards}>
         {categories.map((category) => {
           const active = category.id === activeCategoryId;
-          return (
-            <button key={category.id} type="button" className={`${styles.card}${active ? ` ${styles.active}` : ""}`} aria-pressed={active} onClick={() => onChange(category.id)}>
-              <span className={styles.visual}><Image src={category.cardImage} alt="" fill sizes="220px" /></span>
-              <span className={styles.caption}><span className={styles.icon}><CategoryIcon id={category.id} /></span><strong>{category.title}</strong></span>
-            </button>
-          );
+          return <ProductCard key={category.id} category={category} active={active} onClick={() => onChange(category.id)} />;
         })}
       </div>
       <button type="button" className={styles.arrow} aria-label="دسته بعدی" onClick={() => cycle(1)}>›</button>

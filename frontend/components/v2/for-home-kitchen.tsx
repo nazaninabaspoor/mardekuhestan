@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { ProductCards } from "@/components/product-showcase/ProductCards";
+import { MountainPath } from "@/components/product-showcase/MountainPath";
 import { ProductStage } from "@/components/product-showcase/ProductStage";
 import { ProductTabs } from "@/components/product-showcase/ProductTabs";
 import { productCategories, type ProductCategoryId } from "@/data/productCategories";
@@ -44,8 +45,9 @@ export function ForHomeKitchen() {
   return (
     <section ref={rootRef} id="for-home-kitchen" className={`${styles.section}${visible ? ` ${styles.visible}` : ""}`} data-category={activeCategoryId} aria-labelledby="product-showcase-title">
       <div className={styles.landscape} aria-hidden="true" />
-      <div className={styles.roadGlow} aria-hidden="true" />
       <div className={styles.vignette} aria-hidden="true" />
+      <div className={styles.mountainFog} aria-hidden="true" />
+      <MountainPath activeCategoryId={activeCategoryId} />
 
       <div className={styles.shell}>
         <header className={styles.header}>
