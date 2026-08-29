@@ -217,6 +217,7 @@ export function V2MagazineNotebook() {
       aria-label={`مجله ${brand.name}`}
     >
       <V2BookcaseScene variant="magazine" />
+      <span className="v2-section-edge v2-section-edge--top" aria-hidden="true" />
 
       <div className="v2-bookcase-shell">
         <div className="v2-bookcase-layout">
@@ -350,6 +351,7 @@ export function V2MagazineNotebook() {
           </Link>
         </footer>
       </div>
+      <span className="v2-section-edge v2-section-edge--bottom" aria-hidden="true" />
     </section>
   );
 }

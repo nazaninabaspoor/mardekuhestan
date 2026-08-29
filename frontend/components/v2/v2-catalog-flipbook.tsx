@@ -268,6 +268,7 @@ export function V2CatalogFlipbook() {
       aria-label={v2CatalogCopy.sectionTitle}
     >
       <V2BookcaseScene variant="catalog" />
+      <span className="v2-section-edge v2-section-edge--top" aria-hidden="true" />
 
       <div className="v2-bookcase-shell">
         <div className="v2-bookcase-layout">
@@ -435,6 +436,7 @@ export function V2CatalogFlipbook() {
           </div>
         </footer>
       </div>
+      <span className="v2-section-edge v2-section-edge--bottom" aria-hidden="true" />
     </section>
   );
 }
