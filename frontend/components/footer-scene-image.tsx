@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const FOOTER_SCENE = {
   default: "/brand/orginalfooter.png",
-  v2: "/brand/orginalfooter-daylight.png",
+  v2: "/brand/orginalfooter-daylight-v2.png",
 } as const;
 
 export function FooterSceneImage() {

@@ -27,6 +27,24 @@ function toPersianDigits(value: number) {
   return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
 }
 
+/** Wrap body into notebook rows — prefer phrase breaks over mid-phrase cuts. */
+function wrapNotebookLines(text: string, maxChars = 36): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if ([...next].length > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
 function BookChrome() {
   return (
     <>
@@ -87,6 +105,7 @@ function buildCatalogPages(): ReactElement[] {
       ["--page-ink"]: item.theme.text,
       ["--page-accent"]: item.theme.accent,
     } as CSSProperties;
+    const bodyLines = wrapNotebookLines(item.description, 36);
 
     pages.push(
       <V2FlipPage
@@ -95,19 +114,18 @@ function buildCatalogPages(): ReactElement[] {
         style={theme}
       >
         <div className="v2-catalog-copy">
-          <span className="v2-catalog-copy-peak" aria-hidden />
-          <span className="v2-page-running">{v2CatalogCopy.running}</span>
-          <span className="v2-catalog-copy-kicker">{item.category}</span>
-          <h3 className="v2-catalog-copy-title">{item.title}</h3>
-          <p className="v2-catalog-copy-desc">{item.description}</p>
-          <div className="v2-catalog-copy-panel">
-            <span className="v2-catalog-copy-quote">این راه سبز است</span>
-            <div className="v2-catalog-copy-meta">
-              <span>{item.year}</span>
-              <span>{toPersianDigits(item.pageCount)} صفحه</span>
-            </div>
-          </div>
-          <span className="v2-catalog-copy-band" aria-hidden />
+          <p className="v2-catalog-line v2-page-running">{v2CatalogCopy.running}</p>
+          <p className="v2-catalog-line v2-catalog-copy-kicker">{item.category}</p>
+          <h3 className="v2-catalog-line v2-catalog-copy-title">{item.title}</h3>
+          {bodyLines.map((line, lineIndex) => (
+            <p
+              key={`${item.id}-line-${lineIndex}`}
+              className="v2-catalog-line v2-catalog-copy-desc"
+            >
+              {line}
+            </p>
+          ))}
+          <p className="v2-catalog-line v2-catalog-copy-quote">این راه سبز است</p>
         </div>
       </V2FlipPage>,
     );
@@ -119,14 +137,16 @@ function buildCatalogPages(): ReactElement[] {
         style={theme}
       >
         <figure className="v2-catalog-media">
-          <Image
-            src={item.image}
-            alt={item.alt}
-            fill
-            sizes="(max-width: 900px) 70vw, 400px"
-            className="v2-catalog-media-img"
-            priority={index === 0}
-          />
+          <div className="v2-catalog-media-plate">
+            <Image
+              src={item.image}
+              alt={item.alt}
+              fill
+              sizes="(max-width: 900px) 70vw, 400px"
+              className="v2-catalog-media-img"
+              priority={index === 0}
+            />
+          </div>
           <figcaption className="v2-page-caption">{item.caption}</figcaption>
         </figure>
       </V2FlipPage>,
@@ -174,6 +194,7 @@ export function V2CatalogFlipbook() {
     isSingleCover,
     onFrontCover,
     onLastCover,
+    coverTransit,
     onFlip,
     onInit,
     onChangeState,
@@ -181,7 +202,7 @@ export function V2CatalogFlipbook() {
     flipPrev,
     flipTo,
     armOpenLayout,
-  } = useV2BookFlip(size);
+  } = useV2BookFlip(size, { stableShell: true });
 
   const pages = useMemo(() => buildCatalogPages(), []);
 
@@ -225,6 +246,7 @@ export function V2CatalogFlipbook() {
   const goCatalog = (item: V2CatalogSpread) => {
     const idx = v2Catalogs.findIndex((c) => c.id === item.id);
     if (idx < 0) return;
+    armOpenLayout();
     flipTo(1 + idx * 2);
   };
 
@@ -278,7 +300,7 @@ export function V2CatalogFlipbook() {
                 isSingleCover ? " is-cover" : ""
               }${onFrontCover ? " is-front-cover" : ""}${
                 onLastCover ? " is-back-cover" : ""
-              }${
+              }${coverTransit ? " is-cover-transit" : ""}${
                 bookState === "flipping" || bookState === "user_fold"
                   ? " is-turning"
                   : ""
@@ -310,7 +332,7 @@ export function V2CatalogFlipbook() {
                       minHeight={size.h}
                       maxHeight={size.h}
                       drawShadow
-                      flippingTime={1000}
+                      flippingTime={1100}
                       usePortrait
                       startZIndex={2}
                       autoSize={false}
@@ -342,11 +364,22 @@ export function V2CatalogFlipbook() {
               <span className="v2-book-shadow" aria-hidden />
             </div>
 
-            <div className="v2-bookcase-navs">
+            {onFrontCover && bookState === "read" ? (
+              <p className="v2-book-cue" aria-hidden>
+                ورق بزنید
+              </p>
+            ) : null}
+
+            <div
+              className={`v2-bookcase-navs${onFrontCover ? " is-cover-hidden" : ""}`}
+            >
               <button
                 type="button"
                 className="v2-bookcase-nav v2-bookcase-nav--prev"
-                onClick={() => void flipPrev()}
+                onClick={() => {
+                  armOpenLayout();
+                  void flipPrev();
+                }}
                 aria-label="ورق قبلی"
                 disabled={page <= 0 || bookState === "flipping"}
               >
@@ -363,7 +396,10 @@ export function V2CatalogFlipbook() {
               <button
                 type="button"
                 className="v2-bookcase-nav v2-bookcase-nav--next"
-                onClick={() => void flipNext()}
+                onClick={() => {
+                  armOpenLayout();
+                  void flipNext();
+                }}
                 aria-label="ورق بعدی"
                 disabled={
                   (pageCount > 0 && page >= pageCount - 1) ||

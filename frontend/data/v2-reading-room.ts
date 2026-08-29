@@ -69,7 +69,6 @@ export type V2CatalogSpread = {
   title: string;
   description: string;
   year: string;
-  pageCount: number;
   image: string;
   alt: string;
   caption: string;
@@ -87,6 +86,8 @@ export const v2CatalogCopy = {
   coverSubtitle: "کار در ارتفاع · بهار ۱۴۰۵",
   cover: "/brand/v2/book/cat-cover-team.png",
   running: "مرد کوهستان · کاتالوگ",
+  openHint: "ورق بزنید",
+  dragHint: "بکشید",
 } as const;
 
 export const v2Catalogs: readonly V2CatalogSpread[] = [
@@ -96,16 +97,15 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     category: "لبنیات",
     title: "شیر همان صبح",
     description:
-      "لبنیات را در دفتر نمی‌سازیم. در مه صبح، کنار مشک و قالب پنیر، با همان حوصله‌ای که مرتع می‌طلبد.",
+      "لبنیات را در دفتر نمی‌سازیم؛ در مه صبح، کنار مشک و قالب پنیر، با همان حوصله‌ای که مرتع می‌طلبد. شیر همان روز از ارتفاع می‌آید و تا سفره مسیرش روشن می‌ماند.",
     year: "۱۴۰۵",
-    pageCount: 24,
-    image: "/brand/v2/book/cat-work-dairy.png",
+    image: "/brand/v2/book/cat-work-dairy-full.png",
     alt: "مرد کوهستان و همکار کنار مشک شیر و پنیر در مرتع صبحگاهی",
     caption: "لبنیات در ارتفاع",
     theme: {
-      background: "#0a5540",
-      accent: "#86C2EB",
-      text: "#F4F0E8",
+      background: "#F4F0E8",
+      accent: "#0a5540",
+      text: "#0a5540",
     },
   },
   {
@@ -114,16 +114,15 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     category: "گوشت",
     title: "با حوصله، نه با شتاب",
     description:
-      "گوشت تازه از گله‌ای می‌آید که در ارتفاع نفس می‌کشد. چوپان و مرد کوهستان کنار هم‌اند؛ عجله در کار نیست.",
+      "گوشت تازه از گله‌ای می‌آید که در ارتفاع نفس می‌کشد. چوپان و مرد کوهستان کنار هم‌اند؛ عجله در کار نیست. انتخاب برش و زمان درست، طعم را تا خانه نگه می‌دارد.",
     year: "۱۴۰۵",
-    pageCount: 18,
-    image: "/brand/v2/book/cat-work-flock.png",
+    image: "/brand/v2/book/cat-work-flock-full.png",
     alt: "مرد کوهستان و چوپان میان گله در مه کوهستان",
     caption: "گله در مرتع",
     theme: {
-      background: "#903828",
-      accent: "#F4F0E8",
-      text: "#F4F0E8",
+      background: "#F4F0E8",
+      accent: "#0a5540",
+      text: "#0a5540",
     },
   },
   {
@@ -132,16 +131,15 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     category: "راه ما",
     title: "جلسه روی نیمکت",
     description:
-      "تصمیم‌های این راه در اتاق شیشه‌ای گرفته نمی‌شود. صبح، روی چوب، با دفترچه، رو به کوه.",
+      "تصمیم‌های این راه در اتاق شیشه‌ای گرفته نمی‌شود. صبح، روی چوب، با دفترچه، رو به کوه. حرف از فصل است و از زمانی که محصول به سفره می‌رسد.",
     year: "۱۴۰۵",
-    pageCount: 32,
-    image: "/brand/v2/book/cat-work-meeting.png",
+    image: "/brand/v2/book/cat-work-meeting-full.png",
     alt: "جلسه کاری مرد کوهستان با همکاران روی نیمکت چوبی در مزرعه کوهستانی",
     caption: "مزرعه، پیش از روز",
     theme: {
-      background: "#204078",
-      accent: "#86C2EB",
-      text: "#F4F0E8",
+      background: "#F4F0E8",
+      accent: "#0a5540",
+      text: "#0a5540",
     },
   },
   {
@@ -150,16 +148,15 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     category: "محصولات",
     title: "آنچه در خانه می‌ماند",
     description:
-      "عسل، روغن، غله. محصول را در مرتع ثبت می‌کنیم تا وقتی به سفره رسید، همان راه پشتش باشد.",
+      "عسل، روغن، غله. محصول را در مرتع ثبت می‌کنیم تا وقتی به سفره رسید، همان راه پشتش باشد. سفرهٔ مرد کوهستان ساده، گرم و قابل اعتماد است.",
     year: "۱۴۰۵",
-    pageCount: 40,
-    image: "/brand/v2/book/cat-work-photo.png",
+    image: "/brand/v2/book/cat-work-photo-full.png",
     alt: "مرد کوهستان و همکار در حال عکاسی از محصولات روی سنگ مرتع",
     caption: "ثبت محصول در ارتفاع",
     theme: {
-      background: "#0a5540",
-      accent: "#50AF47",
-      text: "#F4F0E8",
+      background: "#F4F0E8",
+      accent: "#0a5540",
+      text: "#0a5540",
     },
   },
 ];
