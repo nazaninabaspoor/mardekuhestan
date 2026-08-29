@@ -1,21 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { FooterSceneImage } from "@/components/footer-scene-image";
 import { contactInfo } from "@/lib/brand";
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-scene" aria-hidden="true">
-        <Image
-          src="/brand/orginalfooter.png"
-          alt=""
-          width={1591}
-          height={988}
-          sizes="100vw"
-          className="footer-scene-art"
-          priority={false}
-        />
+        <FooterSceneImage />
       </div>
 
       <div className="footer-body">

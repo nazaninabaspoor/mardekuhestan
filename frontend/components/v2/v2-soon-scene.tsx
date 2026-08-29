@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 
-const SOON_SCENE = "/brand/v2/v2-soon-mountain-stage.png";
+const SOON_SCENE = "/brand/v2/v2-soon-green-path.png";
 
 /**
- * Full-bleed mountain stage — same stack as V2BookcaseScene.
+ * Sunlit green-path still life — same stack as V2BookcaseScene.
  */
 export function V2SoonScene() {
   return (
@@ -18,7 +18,7 @@ export function V2SoonScene() {
         quality={95}
         className="v2-bookcase-scene-img"
         priority={false}
-        style={{ objectFit: "cover", objectPosition: "50% 56%" }}
+        style={{ objectFit: "cover", objectPosition: "42% 48%" }}
       />
       <span className="v2-bookcase-scene-veil" />
     </div>

@@ -224,7 +224,7 @@ html.is-v2-bell-cursor textarea {
   margin-top: 0;
   padding: 0;
   border: 0;
-  background: #050807 !important;
+  background: #eef5f1 !important;
 }
 
 /* Footer — full scenic plate; only the lowest hills trimmed (no zoom, no tiny box) */
@@ -234,6 +234,7 @@ html.is-v2-bell-cursor textarea {
   line-height: 0;
   width: 100%;
   overflow: hidden;
+  background: #dceee6;
 }
 
 .is-home-v2 .footer-scene-art,
@@ -261,9 +262,9 @@ html.is-v2-bell-cursor textarea {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgb(5 8 7 / 10%) 18%,
-    rgb(5 8 7 / 42%) 58%,
-    rgb(5 8 7 / 78%) 100%
+    rgb(10 85 64 / 6%) 18%,
+    rgb(10 85 64 / 20%) 58%,
+    rgb(10 85 64 / 52%) 100%
   );
 }
 
@@ -342,8 +343,8 @@ html.is-v2-bell-cursor textarea {
 .is-home-v2 .footer-bottom {
   position: relative;
   z-index: 2;
-  border-top: 1px solid rgb(244 240 232 / 10%);
-  background: rgb(4 12 10 / 88%);
+  border-top: 1px solid rgb(244 240 232 / 14%);
+  background: rgb(10 85 64 / 82%);
   backdrop-filter: blur(4px);
 }
 
@@ -5962,6 +5963,7 @@ html.is-v2-bell-cursor textarea {
 .is-home-v2 .v2-bookcase--soon {
   min-height: min(100svh, 980px);
   padding-top: clamp(1.5rem, 3vh, 2.25rem) !important;
+  background: #dceee6 !important;
 }
 
 .is-home-v2 .v2-bookcase--soon::after {
@@ -5975,9 +5977,9 @@ html.is-v2-bell-cursor textarea {
   pointer-events: none;
   background: linear-gradient(
     0deg,
-    #050807 0%,
-    rgb(5 8 7 / 94%) 24%,
-    rgb(5 8 7 / 52%) 52%,
+    rgb(10 85 64 / 42%) 0%,
+    rgb(10 85 64 / 22%) 32%,
+    rgb(10 85 64 / 8%) 58%,
     transparent 100%
   );
 }
@@ -5993,14 +5995,14 @@ html.is-v2-bell-cursor textarea {
   pointer-events: none;
   background: linear-gradient(
     0deg,
-    rgb(5 8 7 / 100%) 0%,
-    rgb(5 8 7 / 72%) 45%,
+    rgb(10 85 64 / 38%) 0%,
+    rgb(10 85 64 / 14%) 48%,
     transparent 100%
   );
 }
 
 .is-home-v2 .v2-bookcase-scene--soon .v2-bookcase-scene-img {
-  object-position: 50% 56%;
+  object-position: 42% 48%;
 }
 
 .is-home-v2 .v2-soon-head {
@@ -6052,9 +6054,9 @@ html.is-v2-bell-cursor textarea {
   transform: translateX(-50%);
   background: linear-gradient(
     0deg,
-    rgb(5 8 7 / 92%) 0%,
-    rgb(5 8 7 / 58%) 38%,
-    rgb(5 8 7 / 16%) 72%,
+    rgb(10 85 64 / 48%) 0%,
+    rgb(10 85 64 / 24%) 38%,
+    rgb(10 85 64 / 6%) 72%,
     transparent 100%
   );
 }
@@ -6069,11 +6071,13 @@ html.is-v2-bell-cursor textarea {
   width: clamp(157px, 27.6vw, 231px);
   height: auto;
   margin: 0.69rem auto 0.48rem;
-  filter: brightness(0) invert(1) drop-shadow(0 4px 18px rgb(0 0 0 / 35%));
+  filter: drop-shadow(0 4px 14px rgb(10 85 64 / 18%));
 }
 
 .is-home-v2 .v2-soon-head .v2-bookcase-kicker {
   font-size: clamp(0.84rem, 1.41vw, 0.94rem);
+  color: #0a5540;
+  text-shadow: none;
 }
 
 .is-home-v2 .v2-soon-tagline {
@@ -6084,6 +6088,8 @@ html.is-v2-bell-cursor textarea {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-align: center;
+  color: color-mix(in srgb, #0a5540 78%, #1d1d1b);
+  text-shadow: none;
 }
 
 .is-home-v2 .v2-soon-headline {
@@ -6095,9 +6101,8 @@ html.is-v2-bell-cursor textarea {
   line-height: 1.1;
   color: #f4f0e8;
   text-shadow:
-    0 0 40px rgb(0 91 72 / 38%),
-    0 2px 0 rgb(0 0 0 / 50%),
-    0 14px 36px rgb(0 0 0 / 62%);
+    0 1px 0 rgb(10 85 64 / 35%),
+    0 10px 28px rgb(10 85 64 / 42%);
 }
 
 .is-home-v2 .v2-soon-mark {
@@ -6108,20 +6113,20 @@ html.is-v2-bell-cursor textarea {
   background: linear-gradient(
       135deg,
       transparent 49%,
-      #50af47 49.5% 50.5%,
+      #f4f0e8 49.5% 50.5%,
       transparent 51%
     ),
     linear-gradient(
       225deg,
       transparent 49%,
-      #50af47 49.5% 50.5%,
+      #f4f0e8 49.5% 50.5%,
       transparent 51%
     );
   background-size: 50% 100%, 50% 100%;
   background-position: left center, right center;
   background-repeat: no-repeat;
   opacity: 0.92;
-  filter: drop-shadow(0 0 14px rgb(80 175 71 / 55%));
+  filter: drop-shadow(0 0 10px rgb(244 240 232 / 35%));
 }
 
 .is-home-v2 .v2-soon-lead {
@@ -6132,53 +6137,48 @@ html.is-v2-bell-cursor textarea {
   font-weight: 600;
   line-height: 1.85;
   letter-spacing: 0.01em;
-  color: rgb(244 240 232 / 92%);
-  text-shadow:
-    0 1px 0 rgb(0 0 0 / 40%),
-    0 6px 22px rgb(0 0 0 / 55%);
+  color: rgb(244 240 232 / 94%);
+  text-shadow: 0 6px 18px rgb(10 85 64 / 38%);
 }
 
 .is-home-v2 .v2-soon-lead-line {
   display: block;
   margin-top: 0.35rem;
-  color: rgb(244 240 232 / 78%);
+  color: rgb(244 240 232 / 82%);
 }
 
 .is-home-v2 .v2-bookcase-scene--soon .v2-bookcase-scene-veil {
   background:
     linear-gradient(
       0deg,
-      rgb(5 8 7 / 78%) 0%,
-      rgb(5 8 7 / 32%) 14%,
-      rgb(5 8 7 / 6%) 28%,
-      transparent 42%
+      rgb(10 85 64 / 32%) 0%,
+      rgb(10 85 64 / 10%) 16%,
+      transparent 34%
     ),
     linear-gradient(
       180deg,
-      rgb(5 8 7 / 52%) 0%,
-      rgb(5 8 7 / 12%) 18%,
-      rgb(5 8 7 / 4%) 42%,
-      rgb(5 8 7 / 28%) 72%,
-      rgb(5 8 7 / 72%) 100%
+      rgb(244 240 232 / 18%) 0%,
+      rgb(10 85 64 / 6%) 22%,
+      transparent 48%,
+      rgb(10 85 64 / 10%) 78%,
+      rgb(10 85 64 / 26%) 100%
     ),
     radial-gradient(
       ellipse 55% 42% at 50% 18%,
-      rgb(5 8 7 / 42%) 0%,
+      rgb(244 240 232 / 14%) 0%,
       transparent 72%
     ),
     linear-gradient(
       90deg,
-      rgb(5 8 7 / 4%) 0%,
-      rgb(5 8 7 / 8%) 24%,
-      rgb(5 8 7 / 32%) 50%,
-      rgb(5 8 7 / 22%) 70%,
-      rgb(5 8 7 / 12%) 100%
+      rgb(10 85 64 / 4%) 0%,
+      transparent 42%,
+      rgb(10 85 64 / 8%) 100%
     );
 }
 
 @media (max-width: 640px) {
   .is-home-v2 .v2-bookcase-scene--soon .v2-bookcase-scene-img {
-    object-position: 50% 54%;
+    object-position: 44% 46%;
   }
 
   .is-home-v2 .v2-soon-head {
@@ -6279,6 +6279,209 @@ html.is-v2-bell-cursor textarea {
       rgb(5 8 7 / 22%) 70%,
       rgb(5 8 7 / 12%) 100%
     );
+}
+
+/* Magazine + catalog — daylight plates, brand #0a5540 (not hacker-dark) */
+.is-home-v2 .v2-bookcase--magazine,
+.is-home-v2 .v2-bookcase--catalog {
+  background: #0a5540 !important;
+  color: #f4f0e8;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-scene {
+  background: #0a5540;
+}
+
+.is-home-v2 .v2-bookcase-scene--magazine .v2-bookcase-scene-veil,
+.is-home-v2 .v2-bookcase-scene--catalog .v2-bookcase-scene-veil {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(10 85 64 / 28%) 0%,
+      rgb(244 240 232 / 6%) 22%,
+      transparent 48%,
+      rgb(10 85 64 / 14%) 78%,
+      rgb(10 85 64 / 38%) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgb(10 85 64 / 10%) 0%,
+      transparent 42%,
+      rgb(10 85 64 / 12%) 100%
+    );
+}
+
+/* Magazine + catalog — typography + chrome on brand green */
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-kicker,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-kicker {
+  color: color-mix(in srgb, #86c2eb 42%, #f4f0e8);
+  text-shadow: none;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-mark,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-mark {
+  background: linear-gradient(
+      135deg,
+      transparent 49%,
+      #f4f0e8 49.5% 50.5%,
+      transparent 51%
+    ),
+    linear-gradient(
+      225deg,
+      transparent 49%,
+      #f4f0e8 49.5% 50.5%,
+      transparent 51%
+    );
+  background-size: 50% 100%, 50% 100%;
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+  filter: none;
+  opacity: 0.9;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-title,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-title {
+  color: #f4f0e8;
+  text-shadow: 0 8px 22px rgb(0 0 0 / 22%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-lead,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-lead {
+  color: rgb(244 240 232 / 82%);
+  text-shadow: none;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab {
+  background: rgb(244 240 232 / 10%);
+  color: rgb(244 240 232 / 78%);
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 16%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab:hover,
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab:focus-visible,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab:hover,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab:focus-visible {
+  background: rgb(244 240 232 / 18%);
+  color: #f4f0e8;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 28%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab.is-active,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab.is-active {
+  background: color-mix(in srgb, #f4f0e8 22%, #0a5540);
+  color: #f4f0e8;
+  box-shadow:
+    inset 0 0 0 1px rgb(244 240 232 / 24%),
+    0 0 18px rgb(0 0 0 / 16%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav {
+  background: rgb(244 240 232 / 12%);
+  color: #f4f0e8;
+  box-shadow:
+    inset 0 0 0 1px rgb(244 240 232 / 22%),
+    0 10px 22px rgb(0 0 0 / 22%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:hover:not(:disabled),
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:focus-visible:not(:disabled),
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav:hover:not(:disabled),
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav:focus-visible:not(:disabled) {
+  background: color-mix(in srgb, #f4f0e8 24%, #0a5540);
+  color: #f4f0e8;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-foot,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-foot {
+  color: rgb(244 240 232 / 62%);
+  text-shadow: none;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-folio,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-folio {
+  color: rgb(244 240 232 / 72%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-folio em,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-folio em {
+  color: rgb(244 240 232 / 48%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-progress,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-progress {
+  background: rgb(244 240 232 / 16%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-progress > span,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-progress > span {
+  background: #86c2eb;
+  box-shadow: 0 0 10px rgb(134 194 235 / 35%);
+}
+
+/* Flipbook pages — brand green #0a5540 inside magazine + catalog */
+.is-home-v2 .v2-bookcase--magazine .v2-flipbook .stf__item,
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page,
+.is-home-v2 .v2-bookcase--catalog .v2-flipbook .stf__item,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page {
+  background-color: #0a5540 !important;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page--back,
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page--back.v2-flip-page,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page--back,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page--back.v2-flip-page {
+  background-color: #0a5540 !important;
+  background: #0a5540 !important;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-flipbook-skeleton,
+.is-home-v2 .v2-bookcase--catalog .v2-flipbook-skeleton {
+  background: linear-gradient(145deg, #0a5540 0%, #084a38 100%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page {
+  background: var(--page-bg, #0a5540);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page--paper,
+.is-home-v2 .v2-bookcase--magazine .v2-flip-page--brand,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page--paper,
+.is-home-v2 .v2-bookcase--catalog .v2-flip-page--brand {
+  background:
+    radial-gradient(
+      ellipse at 12% 8%,
+      rgb(255 255 255 / 8%),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 88% 92%,
+      rgb(0 0 0 / 22%),
+      transparent 48%
+    ),
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--page-bg, #0a5540) 88%, #fff) 0%,
+      var(--page-bg, #0a5540) 42%,
+      color-mix(in srgb, var(--page-bg, #0a5540) 78%, #000) 100%
+    ) !important;
+  background-color: var(--page-bg, #0a5540) !important;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-mag-story {
+  --page-bg: #0a5540;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-catalog-cover--back,
+.is-home-v2 .v2-bookcase--magazine .v2-mag-cover--back,
+.is-home-v2 .v2-bookcase--catalog .v2-catalog-cover--back,
+.is-home-v2 .v2-bookcase--catalog .v2-mag-cover--back {
+  background:
+    radial-gradient(circle at 30% 20%, rgb(134 194 235 / 18%), transparent 45%),
+    linear-gradient(160deg, #084a38 0%, #0a5540 58%, #063528 100%);
 }
 
 .is-home-v2 .v2-bookcase-scene-grain {
@@ -7395,7 +7598,7 @@ html.is-v2-bell-cursor textarea {
   }
 
   .is-home-v2 .v2-bookcase-scene--soon .v2-bookcase-scene-img {
-    object-position: 50% 58%;
+    object-position: 44% 50%;
   }
 }
 

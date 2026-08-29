@@ -103,7 +103,7 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     alt: "مرد کوهستان و همکار کنار مشک شیر و پنیر در مرتع صبحگاهی",
     caption: "لبنیات در ارتفاع",
     theme: {
-      background: "#005B48",
+      background: "#0a5540",
       accent: "#86C2EB",
       text: "#F4F0E8",
     },
@@ -157,7 +157,7 @@ export const v2Catalogs: readonly V2CatalogSpread[] = [
     alt: "مرد کوهستان و همکار در حال عکاسی از محصولات روی سنگ مرتع",
     caption: "ثبت محصول در ارتفاع",
     theme: {
-      background: "#005040",
+      background: "#0a5540",
       accent: "#50AF47",
       text: "#F4F0E8",
     },
