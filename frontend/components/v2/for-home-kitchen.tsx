@@ -55,6 +55,7 @@ export function ForHomeKitchen() {
       <div className={styles.landscape} aria-hidden="true" />
       <div className={styles.vignette} aria-hidden="true" />
       <div className={styles.mountainFog} aria-hidden="true" />
+      <div className={styles.bottomBridge} aria-hidden="true" />
       <div className={styles.shell}>
         <header className={styles.header}>
           <div className={styles.headingRow}>
