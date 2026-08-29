@@ -35,9 +35,9 @@ function waitFrames(count = 2): Promise<void> {
 
 /**
  * Portrait + showCover: single cover at ends, spread in the middle.
- * When `stableShell` is true, the spread shell opens only after the cover
- * has landed (and closes before/while the cover returns) so a real book
- * cover never shows an empty opposite page.
+ *
+ * stableShell (catalog): only the hard-cover open/close stays single-page.
+ * Interior flips keep the normal two-page spread the whole time.
  */
 export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
   const stableShell = options?.stableShell ?? false;
@@ -46,25 +46,20 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
   const [pageCount, setPageCount] = useState(0);
   const [bookState, setBookState] = useState("read");
   const [layoutOpen, setLayoutOpen] = useState(false);
-  /** True while opening/closing the hard cover — force single-page chrome. */
+  /** Only while the hardcover is opening or closing — never for interior flips. */
   const [coverTransit, setCoverTransit] = useState(false);
   const busyRef = useRef(false);
   const preparingRef = useRef(false);
   const lastLayoutRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const coverTransitRef = useRef(false);
 
   const onLastCover = pageCount > 1 && page >= pageCount - 1;
   const onFrontCover = page <= 0;
   const isSingleCover = onFrontCover || onLastCover;
 
-  const setCoverGate = useCallback((next: boolean) => {
-    coverTransitRef.current = next;
-    setCoverTransit(next);
-  }, []);
-
   const isOpen = stableShell
-    ? page > 0 && !onLastCover && !coverTransit && layoutOpen
+    ? // Interior spread stays open during normal page turns.
+      page > 0 && !onLastCover && !coverTransit
     : (!isSingleCover && page > 0) ||
       layoutOpen ||
       bookState === "flipping" ||
@@ -75,21 +70,22 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
       const next = e.data;
       setPage(next);
       const last = pageCount > 1 && next >= pageCount - 1;
+
+      if (!stableShell) return;
+
       if (next <= 0 || last) {
-        setCoverGate(true);
-        if (stableShell) {
-          setLayoutOpen(false);
-          lastLayoutRef.current = false;
-        }
+        // Landed on a hard cover
+        setCoverTransit(true);
+        setLayoutOpen(false);
+        lastLayoutRef.current = false;
       } else {
-        setCoverGate(false);
-        if (stableShell) {
-          setLayoutOpen(true);
-          lastLayoutRef.current = true;
-        }
+        // Landed on an interior spread
+        setCoverTransit(false);
+        setLayoutOpen(true);
+        lastLayoutRef.current = true;
       }
     },
-    [pageCount, setCoverGate, stableShell],
+    [pageCount, stableShell],
   );
 
   const onInit = useCallback(() => {
@@ -103,52 +99,34 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
 
       if (next === "flipping" || next === "user_fold") {
         preparingRef.current = false;
-        // Stay single while the hard cover is the active page.
+        // Cover motion only when we are still on a hard cover page.
+        // Do NOT gate page 1 here — that broke normal interior flips.
         if (stableShell && (page <= 0 || onLastCover)) {
-          setCoverGate(true);
-          setLayoutOpen(false);
-          lastLayoutRef.current = false;
-        } else if (stableShell && page === 1) {
-          // Closing cover via drag: FlipDirection.BACK === 1
-          requestAnimationFrame(() => {
-            try {
-              const flip = bookRef.current?.pageFlip() as unknown as {
-                getRender?: () => { getDirection?: () => number };
-              };
-              const dir = flip?.getRender?.()?.getDirection?.();
-              if (dir === 1) {
-                setCoverGate(true);
-                setLayoutOpen(false);
-                lastLayoutRef.current = false;
-              }
-            } catch {
-              /* engine internals may differ by build */
-            }
-          });
+          setCoverTransit(true);
         }
       }
 
       if (next === "read") {
         busyRef.current = false;
         preparingRef.current = false;
+        if (!stableShell) return;
+
         const last = pageCount > 1 && page >= pageCount - 1;
-        if (stableShell) {
-          if (page > 0 && !last) {
-            setCoverGate(false);
-            setLayoutOpen(true);
-            lastLayoutRef.current = true;
-          } else {
-            setCoverGate(page <= 0 || last);
-            setLayoutOpen(false);
-            lastLayoutRef.current = false;
-          }
-          requestAnimationFrame(() => {
-            bookRef.current?.pageFlip()?.update?.();
-          });
+        if (page > 0 && !last) {
+          setCoverTransit(false);
+          setLayoutOpen(true);
+          lastLayoutRef.current = true;
+        } else {
+          setCoverTransit(true);
+          setLayoutOpen(false);
+          lastLayoutRef.current = false;
         }
+        requestAnimationFrame(() => {
+          bookRef.current?.pageFlip()?.update?.();
+        });
       }
     },
-    [stableShell, page, onLastCover, pageCount, setCoverGate],
+    [stableShell, page, onLastCover, pageCount],
   );
 
   useEffect(() => {
@@ -180,7 +158,7 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
     return () => cancelAnimationFrame(id);
   }, [bookState, page, pageCount, size.w, size.h, stableShell]);
 
-  /** Catalog: never pre-expand — cover must flip as a single page first. */
+  /** Catalog: do not pre-expand to a spread before the cover flips. */
   const prepareOpenLayout = useCallback(async () => {
     if (!stableShell) {
       if (page > 0 || layoutOpen) return;
@@ -197,12 +175,12 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
       return;
     }
 
-    setCoverGate(true);
+    setCoverTransit(true);
     setLayoutOpen(false);
     lastLayoutRef.current = false;
     await waitFrames(2);
     bookRef.current?.pageFlip()?.update?.();
-  }, [page, layoutOpen, stableShell, setCoverGate]);
+  }, [page, layoutOpen, stableShell]);
 
   const flipNext = useCallback(async () => {
     if (busyRef.current) return;
@@ -211,16 +189,13 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
     if (bookState === "flipping" || bookState === "user_fold") return;
     busyRef.current = true;
     try {
-      if (page === 0) {
-        setCoverGate(true);
-        await prepareOpenLayout();
-      }
+      if (page === 0) await prepareOpenLayout();
       api.flipNext("top");
     } catch {
       busyRef.current = false;
       preparingRef.current = false;
     }
-  }, [bookState, page, prepareOpenLayout, setCoverGate]);
+  }, [bookState, page, prepareOpenLayout]);
 
   const flipPrev = useCallback(async () => {
     if (busyRef.current) return;
@@ -230,20 +205,18 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
     if (page <= 0) return;
     busyRef.current = true;
     try {
-      // Closing onto the front cover — drop the opposite page first.
-      if (stableShell && page <= 1) {
-        setCoverGate(true);
-        setLayoutOpen(false);
-        lastLayoutRef.current = false;
+      // Only when leaving the first interior spread back onto the cover.
+      if (stableShell && page === 1) {
+        setCoverTransit(true);
         await waitFrames(2);
         api.update?.();
-        await waitFrames(2);
+        await waitFrames(1);
       }
       api.flipPrev("top");
     } catch {
       busyRef.current = false;
     }
-  }, [bookState, page, stableShell, setCoverGate]);
+  }, [bookState, page, stableShell]);
 
   const flipTo = useCallback(
     async (index: number) => {
@@ -255,22 +228,21 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
       busyRef.current = true;
       try {
         if (page === 0 && index > 0) {
-          setCoverGate(true);
           await prepareOpenLayout();
-        } else if (stableShell && index <= 0) {
-          setCoverGate(true);
-          setLayoutOpen(false);
-          lastLayoutRef.current = false;
+        } else if (stableShell && index <= 0 && page > 0) {
+          setCoverTransit(true);
           await waitFrames(2);
           api.update?.();
+          await waitFrames(1);
         }
+        // Interior jump (tab): keep spread open — do not touch coverTransit.
         api.flip(index);
       } catch {
         busyRef.current = false;
         preparingRef.current = false;
       }
     },
-    [bookState, page, prepareOpenLayout, setCoverGate, stableShell],
+    [bookState, page, prepareOpenLayout, stableShell],
   );
 
   const armOpenLayout = useCallback(() => {
@@ -279,11 +251,9 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
       void prepareOpenLayout();
       return;
     }
-    // Catalog: mark cover transit only — do not widen to a spread yet.
     if (page > 0) return;
-    setCoverGate(true);
-    setLayoutOpen(false);
-  }, [page, layoutOpen, prepareOpenLayout, stableShell, setCoverGate]);
+    setCoverTransit(true);
+  }, [page, layoutOpen, prepareOpenLayout, stableShell]);
 
   return {
     bookRef,
