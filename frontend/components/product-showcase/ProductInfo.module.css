@@ -1,18 +1,15 @@
-.root { position: relative; z-index: 20; width: min(490px, 100%); direction: rtl; text-align: right; }
-.root > div { display: flex; flex-direction: column; align-items: flex-end; width: 100%; }
-.eyebrow { display: flex; align-items: center; justify-content: flex-start; gap: .72rem; margin: 0; color: #c9a45c; font-size: clamp(.86rem, .94vw, .96rem); font-weight: 600; line-height: 1; }
-.eyebrowLine { width: 32px; height: 1px; background: linear-gradient(90deg, transparent, #c9a45c); }
-.eyebrowDot { width: 4px; height: 4px; border-radius: 50%; background: rgb(201 164 92 / 80%); box-shadow: 0 0 8px rgb(201 164 92 / 34%); }
-.root h3 { width: 100%; margin: 1.3rem 0 0; color: #faf7f1; font-size: clamp(3rem, 3.55vw, 4rem); font-weight: 760; line-height: 1.12; letter-spacing: -.035em; text-align: right; text-shadow: 0 4px 22px rgb(0 0 0 / 28%); }
-.description { width: 100%; max-width: 430px; margin: 1.2rem 0 0; color: rgb(239 234 224 / 84%); font-size: clamp(1rem, 1.08vw, 1.08rem); font-weight: 430; line-height: 1.9; text-align: right; }
-.actions { display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start; width: 100%; gap: .75rem; margin-top: 1.65rem; direction: ltr; }
-.primaryAction, .videoAction { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; min-height: 58px; border-radius: 15px; padding: .7rem 1.25rem; outline: none; font: inherit; font-size: .98rem; cursor: pointer; transition: color .3s ease, background-color .3s ease, border-color .3s ease; }
-.primaryAction { min-width: 218px; }
-.videoAction { min-width: 156px; }
-.primaryAction { border: 0; color: #073b30; background: #f4f0e8; box-shadow: 0 8px 30px rgb(0 0 0 / 12%); font-weight: 700; }
-.primaryAction:hover { background: #fff; }
-.primaryAction svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s ease; }
-.primaryAction:hover svg { transform: translateX(-4px); }
+.root { position: relative; z-index: 20; width: min(490px, 100%); direction: rtl; text-align: center; }
+.root > div { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.eyebrow { display: flex; align-items: center; justify-content: center; gap: .72rem; margin: 0; color: #c9a45c; font-size: clamp(.86rem, .94vw, .96rem); font-weight: 600; line-height: 1; }
+.eyebrowLine { width: 36px; height: 1px; background: linear-gradient(90deg, transparent, rgb(201 164 92 / 88%), transparent); }
+.root h3 { width: 100%; margin: 1.3rem 0 0; color: #faf7f1; font-size: clamp(3rem, 3.55vw, 4rem); font-weight: 760; line-height: 1.12; letter-spacing: -.035em; text-align: center; text-shadow: 0 4px 22px rgb(0 0 0 / 28%); }
+.description { width: 100%; max-width: 380px; margin: 1.05rem auto 0; color: rgb(239 234 224 / 84%); font-size: clamp(.92rem, 1vw, 1rem); font-weight: 430; line-height: 1.85; text-align: center; }
+.actions { display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; width: 100%; gap: .65rem; margin-top: 1.35rem; direction: ltr; }
+.primaryAction, .videoAction { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; border-radius: 999px; padding: .6rem 1.15rem; outline: none; font: inherit; font-size: .9rem; cursor: pointer; transition: color .25s ease, background-color .25s ease, border-color .25s ease, transform .25s ease; }
+.primaryAction { min-width: 172px; }
+.videoAction { min-width: 138px; }
+.primaryAction { border: 1px solid rgb(244 240 232 / 72%); color: #0a5540; background: #eee5d3; box-shadow: 0 7px 20px rgb(0 0 0 / 10%); font-weight: 700; }
+.primaryAction:hover { border-color: #f4f0e8; background: #f4f0e8; }
 .videoAction { border: 1px solid rgb(201 164 92 / 42%); color: #f4f0e8; background: rgb(4 30 24 / 32%); backdrop-filter: blur(12px); font-weight: 560; }
 .videoAction:hover { border-color: rgb(213 180 108 / 75%); background: rgb(10 48 39 / 65%); }
 .playIcon { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid rgb(201 164 92 / 35%); border-radius: 50%; transition: border-color .3s ease, background-color .3s ease; }

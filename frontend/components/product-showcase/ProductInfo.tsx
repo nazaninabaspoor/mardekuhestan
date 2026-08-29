@@ -28,7 +28,7 @@ export function ProductInfo({ category, onViewProduct, onPlayVideo }: ProductInf
           <p className={styles.eyebrow}>
             <span className={styles.eyebrowLine} aria-hidden="true" />
             <span>{category.eyebrow}</span>
-            <span className={styles.eyebrowDot} aria-hidden="true" />
+            <span className={styles.eyebrowLine} aria-hidden="true" />
           </p>
 
           <h3>{category.headline}</h3>
@@ -44,7 +44,6 @@ export function ProductInfo({ category, onViewProduct, onPlayVideo }: ProductInf
               transition={{ duration: 0.2 }}
             >
               <span>مشاهده محصول</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6" /></svg>
             </motion.button>
 
             {category.video && (

@@ -2618,6 +2618,74 @@ html.is-v2-bell-cursor textarea {
   }
 }
 
+/* Hero -> products colour bridge. */
+.landing--v2 {
+  --brand-green: #0a5540;
+  --brand-green-dark: #084735;
+  --brand-green-deep: #063a2c;
+  --brand-green-deeper: #042f24;
+  --brand-green-darkest: #03251c;
+  --warm-gold: #e8b35d;
+  --warm-gold-soft: #d69a45;
+  --warm-cream: #f4f0e8;
+  --text-light: rgb(244 240 232 / 94%);
+  --text-muted: rgb(244 240 232 / 62%);
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.landing--v2 .landing-v2-stage {
+  overflow: visible;
+}
+
+.landing--v2 .landing-v2-media {
+  overflow: hidden;
+}
+
+.landing--v2 .landing-v2-video:not(.landing-v2-video--product-ambient) {
+  filter: saturate(0.94) contrast(1.02) brightness(0.95);
+}
+
+.landing--v2::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 3;
+  height: clamp(90px, 9vw, 145px);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(10 85 64 / 0%) 0%,
+    rgb(10 85 64 / 10%) 25%,
+    rgb(10 85 64 / 30%) 50%,
+    rgb(10 85 64 / 68%) 78%,
+    var(--brand-green) 100%
+  );
+}
+
+.landing--v2 .landing-v2-shell {
+  z-index: 4;
+}
+
+.landing--v2 .landing-v2-playlist {
+  z-index: 10;
+  background: transparent;
+  transform: translateY(clamp(16px, 2vw, 28px));
+}
+
+@media (max-width: 768px) {
+  .landing--v2::after {
+    height: 100px;
+  }
+
+  .landing--v2 .landing-v2-playlist {
+    transform: translateY(10px);
+  }
+}
+
 /* FINAL: single-axis product layout. Keep this block last. */
 .is-home-v2 .for-home--v2.kitchen-ui.kui-gallery {
   height: auto;
@@ -4032,7 +4100,8 @@ html.is-v2-bell-cursor textarea {
 }
 
 .landing--v2 .landing-v2-copy {
-  transform: none;
+  align-items: flex-start;
+  transform: translateX(clamp(96px, 8vw, 152px));
 }
 
 .landing--v2 .landing-v2-copy h1 {
@@ -4046,7 +4115,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .landing--v2 .landing-v2-cta {
-  margin-top: 28px;
+  margin-top: 20px;
 }
 
 .landing-v2-preview-label {
@@ -4057,6 +4126,13 @@ html.is-v2-bell-cursor textarea {
 
 .landing-v2-preview-index {
   bottom: 9px;
+}
+
+@media (max-width: 980px) {
+  .landing--v2 .landing-v2-copy {
+    align-items: flex-start;
+    transform: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -5142,7 +5218,7 @@ html.is-v2-bell-cursor textarea {
 
 .landing-v2-playlist {
   right: clamp(20px, 4vw, 72px);
-  bottom: clamp(20px, 3.4vh, 38px);
+  bottom: clamp(88px, 10vh, 120px);
   left: clamp(20px, 4vw, 72px);
 }
 
@@ -5262,6 +5338,10 @@ html.is-v2-bell-cursor textarea {
 }
 
 @media (max-width: 640px) {
+  .landing-v2-playlist {
+    bottom: 44px;
+  }
+
   .landing--v2 .landing-v2-video {
     object-position: 54% center;
   }

@@ -58,8 +58,7 @@ export function ForHomeKitchen() {
       <div className={styles.shell}>
         <header className={styles.header}>
           <div className={styles.headingRow}>
-            <span className={styles.leafMark} aria-hidden="true">⌁</span>
-            <h2 id="product-showcase-title">منتخب محصولات مرد کوهستان</h2>
+            <h2 id="product-showcase-title">محصولات مرد کوهستان</h2>
           </div>
           <ProductTabs
             categories={productCategories}
