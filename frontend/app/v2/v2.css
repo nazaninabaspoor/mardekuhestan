@@ -5985,7 +5985,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .site-header--v2 .v2-logo-img {
-  width: 82px !important;
+  width: 92px !important;
 }
 
 .site-header--v2 .v2-logo-word {
@@ -5993,7 +5993,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .site-header--v2.is-scrolled .v2-logo-img {
-  width: 66px !important;
+  width: 74px !important;
 }
 
 @media (max-width: 1240px) {
@@ -6006,7 +6006,7 @@ html.is-v2-bell-cursor textarea {
   }
 
   .site-header--v2 .v2-logo-img {
-    width: 72px !important;
+    width: 80px !important;
   }
 }
 
@@ -6026,14 +6026,14 @@ html.is-v2-bell-cursor textarea {
 
   .site-header--v2 .v2-logo-img,
   .site-header--v2.is-scrolled .v2-logo-img {
-    width: 58px !important;
+    width: 64px !important;
   }
 }
 
 @media (max-width: 640px) {
   .site-header--v2 .v2-logo-img,
   .site-header--v2.is-scrolled .v2-logo-img {
-    width: 54px !important;
+    width: 60px !important;
   }
 }
 /* ═══════════════════════════════════════════════════════════

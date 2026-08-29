@@ -139,7 +139,6 @@ export function V2SiteHeader() {
                 ref={logoImageRef}
                 style={{ opacity: logoReady ? 1 : 0 }}
               />
-              <span className="v2-logo-word">مرد کوهستان</span>
             </Link>
 
             <nav className="v2-primary-nav" aria-label="منوی اصلی">
