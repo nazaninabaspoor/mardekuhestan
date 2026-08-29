@@ -21,8 +21,32 @@ import { useV2BookFlip } from "./use-v2-book-flip";
 
 const LOGO = "/brand/logo.svg";
 
+const MAG_PAGE_THEME = {
+  ["--page-bg"]: "#F4F0E8",
+  ["--page-ink"]: "#0a5540",
+  ["--page-accent"]: "#0a5540",
+} as CSSProperties;
+
 function toPersianDigits(value: number) {
   return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+}
+
+/** Same notebook wrap as catalog — text sits on ruled lines. */
+function wrapNotebookLines(text: string, maxChars = 36): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if ([...next].length > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
 }
 
 function BookChrome() {
@@ -77,23 +101,35 @@ function buildMagazinePages(): ReactElement[] {
   );
 
   v2MagazineIssue.stories.forEach((story, index) => {
+    const bodyLines = wrapNotebookLines(
+      `${story.excerpt} ${story.body}`,
+      36,
+    );
+
     pages.push(
       <V2FlipPage
         key={`${story.id}-story`}
-        className="v2-flip-page--paper v2-flip-page--brand v2-mag-story"
+        className="v2-flip-page--paper v2-flip-page--brand"
+        style={MAG_PAGE_THEME}
       >
-        <div className="v2-mag-story-inner">
-          <span className="v2-mag-story-peak" aria-hidden />
-          <span className="v2-page-running">{v2MagazineIssue.running}</span>
-          <span className="v2-mag-story-kicker">{story.kicker}</span>
-          <h3 className="v2-mag-story-title">{story.title}</h3>
-          <p className="v2-mag-story-excerpt">{story.excerpt}</p>
-          <p className="v2-mag-story-body">{story.body}</p>
-          <div className="v2-mag-story-foot">
-            <span className="v2-mag-story-motto">این راه سبز است</span>
-            <span className="v2-page-folio">{story.folio}</span>
-          </div>
-          <span className="v2-mag-story-band" aria-hidden />
+        <div className="v2-catalog-copy">
+          <p className="v2-catalog-line v2-page-running">
+            {v2MagazineIssue.running}
+          </p>
+          <p className="v2-catalog-line v2-catalog-copy-kicker">
+            {story.kicker}
+          </p>
+          <h3 className="v2-catalog-line v2-catalog-copy-title">
+            {story.title}
+          </h3>
+          {bodyLines.map((line, lineIndex) => (
+            <p
+              key={`${story.id}-line-${lineIndex}`}
+              className="v2-catalog-line v2-catalog-copy-desc"
+            >
+              {line}
+            </p>
+          ))}
         </div>
       </V2FlipPage>,
     );
@@ -101,17 +137,20 @@ function buildMagazinePages(): ReactElement[] {
     pages.push(
       <V2FlipPage
         key={`${story.id}-photo`}
-        className="v2-flip-page--paper v2-flip-page--media v2-flip-page--brand v2-mag-photo"
+        className="v2-flip-page--paper v2-flip-page--media v2-flip-page--brand"
+        style={MAG_PAGE_THEME}
       >
-        <figure className="v2-mag-photo-frame">
-          <Image
-            src={story.image}
-            alt={story.alt}
-            fill
-            sizes="(max-width: 900px) 60vw, 320px"
-            className="v2-mag-photo-img"
-            priority={index === 0}
-          />
+        <figure className="v2-catalog-media">
+          <div className="v2-catalog-media-plate">
+            <Image
+              src={story.image}
+              alt={story.alt}
+              fill
+              sizes="(max-width: 900px) 60vw, 320px"
+              className="v2-catalog-media-img"
+              priority={index === 0}
+            />
+          </div>
           <figcaption className="v2-page-caption">{story.caption}</figcaption>
         </figure>
       </V2FlipPage>,
@@ -133,7 +172,6 @@ function buildMagazinePages(): ReactElement[] {
           className="v2-catalog-cover-seal"
           aria-hidden
         />
-        <span>این راه سبز است</span>
         <Link href="/magazine" className="v2-mag-all">
           همهٔ داستان‌ها
         </Link>
@@ -145,7 +183,7 @@ function buildMagazinePages(): ReactElement[] {
 }
 
 /**
- * Branded magazine hardcover for /v2 — StPageFlip motion preserved, open/close smoothed.
+ * Branded magazine hardcover for /v2 — same open/close shell as catalog.
  */
 export function V2MagazineNotebook() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -162,13 +200,14 @@ export function V2MagazineNotebook() {
     isSingleCover,
     onFrontCover,
     onLastCover,
+    coverTransit,
     onFlip,
     onInit,
     onChangeState,
     flipNext,
     flipPrev,
     armOpenLayout,
-  } = useV2BookFlip(size);
+  } = useV2BookFlip(size, { stableShell: true });
 
   const pages = useMemo(() => buildMagazinePages(), []);
 
@@ -222,8 +261,6 @@ export function V2MagazineNotebook() {
       <div className="v2-bookcase-shell">
         <div className="v2-bookcase-layout">
           <header className="v2-bookcase-head">
-            <p className="v2-bookcase-kicker">{v2MagazineIssue.kicker}</p>
-            <span className="v2-bookcase-mark" aria-hidden />
             <h2 className="v2-bookcase-title">{v2MagazineIssue.title}</h2>
             <p className="v2-bookcase-lead">{v2MagazineIssue.lead}</p>
           </header>
@@ -234,7 +271,7 @@ export function V2MagazineNotebook() {
                 isSingleCover ? " is-cover" : ""
               }${onFrontCover ? " is-front-cover" : ""}${
                 onLastCover ? " is-back-cover" : ""
-              }${
+              }${coverTransit ? " is-cover-transit" : ""}${
                 bookState === "flipping" || bookState === "user_fold"
                   ? " is-turning"
                   : ""
@@ -251,12 +288,12 @@ export function V2MagazineNotebook() {
                 onPointerDown={page === 0 ? armOpenLayout : undefined}
               >
                 <BookChrome />
-                <div className="v2-bookcase-book-wrap v2-bookcase-book-wrap--notebook">
+                <div className="v2-bookcase-book-wrap">
                   {mounted ? (
                     <HTMLFlipBook
                       key={`mag-${size.w}x${size.h}`}
                       ref={bookRef}
-                      className="v2-flipbook v2-flipbook--notebook"
+                      className="v2-flipbook"
                       style={{}}
                       width={size.w}
                       height={size.h}
@@ -266,7 +303,7 @@ export function V2MagazineNotebook() {
                       minHeight={size.h}
                       maxHeight={size.h}
                       drawShadow
-                      flippingTime={1000}
+                      flippingTime={1100}
                       usePortrait
                       startZIndex={2}
                       autoSize={false}
@@ -298,11 +335,16 @@ export function V2MagazineNotebook() {
               <span className="v2-book-shadow" aria-hidden />
             </div>
 
-            <div className="v2-bookcase-navs">
+            <div
+              className={`v2-bookcase-navs${onFrontCover ? " is-cover-hidden" : ""}`}
+            >
               <button
                 type="button"
                 className="v2-bookcase-nav v2-bookcase-nav--prev"
-                onClick={() => void flipPrev()}
+                onClick={() => {
+                  armOpenLayout();
+                  void flipPrev();
+                }}
                 aria-label="ورق قبلی"
                 disabled={page <= 0 || bookState === "flipping"}
               >
@@ -319,7 +361,10 @@ export function V2MagazineNotebook() {
               <button
                 type="button"
                 className="v2-bookcase-nav v2-bookcase-nav--next"
-                onClick={() => void flipNext()}
+                onClick={() => {
+                  armOpenLayout();
+                  void flipNext();
+                }}
                 aria-label="ورق بعدی"
                 disabled={
                   (pageCount > 0 && page >= pageCount - 1) ||

@@ -273,8 +273,6 @@ export function V2CatalogFlipbook() {
       <div className="v2-bookcase-shell">
         <div className="v2-bookcase-layout">
           <header className="v2-bookcase-head">
-            <p className="v2-bookcase-kicker">این راه سبز است</p>
-            <span className="v2-bookcase-mark" aria-hidden />
             <h2 className="v2-bookcase-title">{v2CatalogCopy.sectionTitle}</h2>
             <p className="v2-bookcase-lead">{v2CatalogCopy.sectionLead}</p>
             <div className="v2-bookcase-tabs" role="tablist" aria-label="کاتالوگ‌ها">
@@ -364,12 +362,6 @@ export function V2CatalogFlipbook() {
               </div>
               <span className="v2-book-shadow" aria-hidden />
             </div>
-
-            {onFrontCover && bookState === "read" ? (
-              <p className="v2-book-cue" aria-hidden>
-                ورق بزنید
-              </p>
-            ) : null}
 
             <div
               className={`v2-bookcase-navs${onFrontCover ? " is-cover-hidden" : ""}`}

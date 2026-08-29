@@ -76,9 +76,16 @@ export function useV2BookFlip(size: Size, options?: { stableShell?: boolean }) {
         setLayoutOpen(false);
         lastLayoutRef.current = false;
       } else {
+        const wasClosed = !lastLayoutRef.current;
         setCoverTransit(false);
         setLayoutOpen(true);
         lastLayoutRef.current = true;
+        // After cover → spread, let StPageFlip remeasure full page widths.
+        if (wasClosed) {
+          requestAnimationFrame(() => {
+            bookRef.current?.pageFlip()?.update?.();
+          });
+        }
       }
     },
     [stableShell],

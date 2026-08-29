@@ -6998,10 +6998,6 @@ html.is-v2-bell-cursor textarea {
   background-color: var(--page-bg, #0a5540) !important;
 }
 
-.is-home-v2 .v2-bookcase--magazine .v2-mag-story {
-  --page-bg: #0a5540;
-}
-
 .is-home-v2 .v2-bookcase--magazine .v2-catalog-cover--back,
 .is-home-v2 .v2-bookcase--magazine .v2-mag-cover--back,
 .is-home-v2 .v2-bookcase--catalog .v2-catalog-cover--back,
@@ -7723,11 +7719,49 @@ html.is-v2-bell-cursor textarea {
 
 .is-home-v2 .v2-catalog-cover-hint,
 .is-home-v2 .v2-mag-cover-hint {
-  margin-top: 0.2rem;
+  margin-top: 0.55rem;
   font-style: normal;
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  color: rgb(244 240 232 / 58%);
+  font-family: MardeKuhestan, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fff;
+  text-shadow:
+    0 0 1px rgb(0 0 0 / 90%),
+    0 1px 3px rgb(0 0 0 / 75%),
+    0 0 18px rgb(255 255 255 / 70%),
+    0 0 36px rgb(244 240 232 / 45%);
+  opacity: 1;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav {
+  background: #0a5540;
+  color: #f4f0e8;
+  box-shadow:
+    inset 0 0 0 1px rgb(244 240 232 / 12%),
+    0 10px 22px rgb(10 85 64 / 22%);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:hover:not(:disabled),
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:focus-visible:not(:disabled),
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav:hover:not(:disabled),
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav:focus-visible:not(:disabled) {
+  background: color-mix(in srgb, #0a5540 82%, #000);
+  color: #f4f0e8;
+  transform: translateY(-1px);
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-title,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-title {
+  margin-top: 0;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-head .v2-bookcase-mark,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-head .v2-bookcase-mark,
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-kicker,
+.is-home-v2 .v2-bookcase--catalog .v2-bookcase-kicker {
+  display: none !important;
 }
 
 .is-home-v2 .v2-catalog-cover--back,
@@ -8007,30 +8041,30 @@ html.is-v2-bell-cursor textarea {
   background: linear-gradient(transparent, rgb(5 8 7 / 88%));
 }
 
-/* Catalog interiors — cream notebook paper + clean center gutter */
-.is-home-v2 .v2-bookcase--catalog .v2-flipbook .stf__item,
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page {
+/* Catalog + magazine interiors — cream notebook paper + clean center gutter */
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flipbook .stf__item,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page {
   background-color: #f4f0e8 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--hard,
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--hard.v2-flip-page {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--hard,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--hard.v2-flip-page {
   background-color: #1a0c08 !important;
   background: #1a0c08 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--back,
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--back.v2-flip-page {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--back,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--back.v2-flip-page {
   background-color: #0a5540 !important;
   background: #0a5540 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-flipbook-skeleton {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flipbook-skeleton {
   background: linear-gradient(145deg, #f4f0e8 0%, #e8dfd0 100%);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--paper,
-.is-home-v2 .v2-bookcase--catalog .v2-flip-page--brand {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--paper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-flip-page--brand {
   --rule: 28px;
   background: #f4f0e8 !important;
   background-color: #f4f0e8 !important;
@@ -8039,7 +8073,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 /* Ruled notebook — every row is exactly --rule; baseline sits on the stroke */
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy {
   --rule: 28px;
   --rule-ink: rgb(10 85 64 / 22%);
   display: flex;
@@ -8064,14 +8098,14 @@ html.is-v2-bell-cursor textarea {
   box-shadow: none;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy::before,
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-peak,
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-band {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy::before,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-peak,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-band {
   display: none !important;
   content: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-line {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-line {
   margin: 0 !important;
   padding: 0 0 2px !important;
   height: var(--rule) !important;
@@ -8094,31 +8128,31 @@ html.is-v2-bell-cursor textarea {
   color: #0a5540;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-line--blank {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-line--blank {
   display: none;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-page-running {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-page-running {
   font-size: 10px !important;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: color-mix(in srgb, #0a5540 48%, #5d686e) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-kicker {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-kicker {
   font-size: 11px !important;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #0a5540 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-title {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-title {
   font-size: 16px !important;
   font-weight: 800;
   color: #0a5540 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-desc {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-desc {
   font-size: 12.5px !important;
   font-weight: 400;
   color: color-mix(in srgb, #0a5540 86%, #1d1d1b) !important;
@@ -8126,14 +8160,14 @@ html.is-v2-bell-cursor textarea {
   justify-content: flex-start;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-copy-quote {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-copy-quote {
   font-size: 12px !important;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: #0a5540 !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-media {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-media {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
@@ -8144,7 +8178,7 @@ html.is-v2-bell-cursor textarea {
   overflow: hidden;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-media-plate {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-media-plate {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
@@ -8157,12 +8191,12 @@ html.is-v2-bell-cursor textarea {
     0 1px 0 rgb(255 255 255 / 35%);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-media-img {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-media-img {
   object-fit: cover;
   object-position: center 28%;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-page-caption {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-page-caption {
   position: static;
   flex: 0 0 auto;
   padding: 0.15rem 0.1rem 0;
@@ -8173,11 +8207,12 @@ html.is-v2-bell-cursor textarea {
   text-align: center;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-catalog-cover {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-catalog-cover,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-mag-cover {
   background: #0a0c0b;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-cover-art::after {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-cover-art::after {
   height: 48%;
   background: linear-gradient(
     180deg,
@@ -8187,8 +8222,8 @@ html.is-v2-bell-cursor textarea {
   );
 }
 
-/* Catalog book chrome — centered shell, soft ajar, eased open */
-.is-home-v2 .v2-bookcase--catalog .v2-bookcase-stage {
+/* Catalog + magazine book chrome — centered shell, soft ajar, eased open */
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-bookcase-stage {
   width: min(100%, calc(var(--page-w, 284px) * 2 + 2rem));
   margin-inline: auto;
   display: flex;
@@ -8197,11 +8232,11 @@ html.is-v2-bell-cursor textarea {
   gap: 0.55rem;
 }
 
-.is-home-v2 .v2-bookcase--catalog.is-spread .v2-bookcase-layout {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine).is-spread .v2-bookcase-layout {
   gap: clamp(1.1rem, 2.2vh, 1.75rem);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object {
   width: var(--page-w) !important;
   max-width: 100%;
   margin-inline: auto;
@@ -8210,59 +8245,59 @@ html.is-v2-bell-cursor textarea {
   transition: width 0.56s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning {
   width: calc(var(--page-w) * 2) !important;
 }
 
 /* Cover open/close only — never clamp interior spreads */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open),
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open),
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-cover-transit:not(.is-open),
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover.is-turning:not(.is-open),
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-back-cover.is-turning:not(.is-open) {
   width: var(--page-w) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .sft__wrapper {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-cover-transit:not(.is-open) .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover.is-turning:not(.is-open) .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-back-cover.is-turning:not(.is-open) .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-cover-transit:not(.is-open) .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover.is-turning:not(.is-open) .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-back-cover.is-turning:not(.is-open) .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-cover-transit:not(.is-open) .sft__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover.is-turning:not(.is-open) .sft__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-back-cover.is-turning:not(.is-open) .sft__wrapper {
   width: var(--page-w) !important;
   min-width: var(--page-w) !important;
 }
 
 /* Hide empty left slot only on the closed/opening front cover */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover:not(.is-open) .stf__item.--left,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .stf__item.--left {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover:not(.is-open) .stf__item.--left,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-cover-transit:not(.is-open) .stf__item.--left {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover:not(.is-turning):not(.is-open) .stf__item.--right {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-back-cover:not(.is-turning):not(.is-open) .stf__item.--right {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
 /* Interior spreads: keep both sides visible — never override item width */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__item.--left,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__item.--right {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .stf__item.--left,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .stf__item.--right {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-case {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-case {
   width: 100%;
   display: block;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-bookcase-book-wrap {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-bookcase-book-wrap {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -8275,32 +8310,32 @@ html.is-v2-bell-cursor textarea {
 }
 
 /* Outer shell only — page items sized by StPageFlip */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .v2-flipbook-skeleton,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .sft__wrapper {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object .v2-flipbook-skeleton,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object .sft__wrapper {
   width: var(--page-w) !important;
   min-width: var(--page-w) !important;
   max-width: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .sft__wrapper {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-flipbook,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .sft__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .stf__wrapper,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .sft__wrapper {
   width: calc(var(--page-w) * 2) !important;
   min-width: calc(var(--page-w) * 2) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-bookcase-book-wrap,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-bookcase-book-wrap {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-bookcase-book-wrap,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-bookcase-book-wrap {
   overflow: visible;
 }
 
 /* Default: gently ajar from the spine (left) — pages peek at the fore-edge */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover:not(.is-open):not(.is-turning)
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover:not(.is-open):not(.is-turning)
   .v2-book-foreedge {
   display: block;
   right: -7px;
@@ -8308,7 +8343,7 @@ html.is-v2-bell-cursor textarea {
   opacity: 0.92;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover:not(.is-open):not(.is-turning)
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover:not(.is-open):not(.is-turning)
   .v2-bookcase-book-wrap {
   transform: perspective(1600px) rotateY(-5deg);
   transform-origin: left center;
@@ -8321,7 +8356,7 @@ html.is-v2-bell-cursor textarea {
     0 28px 50px rgb(0 0 0 / 26%);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover:not(.is-open):not(.is-turning):hover
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-front-cover:not(.is-open):not(.is-turning):hover
   .v2-bookcase-book-wrap {
   transform: perspective(1600px) rotateY(-6.5deg);
   box-shadow:
@@ -8333,8 +8368,8 @@ html.is-v2-bell-cursor textarea {
     0 30px 52px rgb(0 0 0 / 28%);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-bookcase-book-wrap,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-bookcase-book-wrap {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-bookcase-book-wrap,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-bookcase-book-wrap {
   transform: none;
   background: #f4f0e8 !important;
   border-radius: 2px;
@@ -8343,7 +8378,7 @@ html.is-v2-bell-cursor textarea {
     0 18px 40px rgb(0 0 0 / 26%) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open.is-cover .v2-bookcase-book-wrap {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open.is-cover .v2-bookcase-book-wrap {
   background: #1a0c08 !important;
   border-radius: 3px 10px 10px 3px;
   box-shadow:
@@ -8353,8 +8388,8 @@ html.is-v2-bell-cursor textarea {
     0 30px 58px rgb(0 0 0 / 50%) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-bookcase-book-wrap::before,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-bookcase-book-wrap::before {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-bookcase-book-wrap::before,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-bookcase-book-wrap::before {
   display: none !important;
   content: none !important;
   width: 0 !important;
@@ -8362,8 +8397,8 @@ html.is-v2-bell-cursor textarea {
   box-shadow: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-bookcase-book-wrap::after,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-bookcase-book-wrap::after {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-bookcase-book-wrap::after,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-bookcase-book-wrap::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -8379,37 +8414,37 @@ html.is-v2-bell-cursor textarea {
   transition: opacity 0.35s ease;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open.is-cover .v2-bookcase-book-wrap::after {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open.is-cover .v2-bookcase-book-wrap::after {
   opacity: 0;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-catalog-copy,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-catalog-copy,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-catalog-media,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-catalog-media {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-catalog-copy,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-catalog-copy,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-catalog-media,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-catalog-media {
   box-shadow: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-spine,
-.is-home-v2 .v2-bookcase--catalog .v2-book-headband {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-spine,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-headband {
   transition: opacity 0.35s ease, left 0.45s ease, width 0.45s ease, transform 0.45s ease;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-book-spine,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-book-spine {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-book-spine,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-book-spine {
   opacity: 0;
   pointer-events: none;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-book-headband,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-book-headband {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-book-headband,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-book-headband {
   width: 22px;
   height: 8px;
   top: -4px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 28%);
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-shadow {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-shadow {
   width: calc(var(--page-w) * 0.92);
   transition:
     width 0.56s cubic-bezier(0.22, 1, 0.36, 1),
@@ -8417,30 +8452,33 @@ html.is-v2-bell-cursor textarea {
     filter 0.45s ease;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-book-shadow,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-book-shadow {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-open .v2-book-shadow,
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-object.is-turning .v2-book-shadow {
   width: calc(var(--page-w) * 1.85);
 }
 
-/* Tiny cover cue — text only */
-.is-home-v2 .v2-bookcase--catalog .v2-book-cue {
-  margin: 0.1rem 0 0;
+/* Cover cue — text only, high-contrast on both sections */
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-book-cue {
+  margin: 0.2rem 0 0;
   padding: 0;
   border: 0;
   background: none;
   box-shadow: none;
   font-family: MardeKuhestan, sans-serif;
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: color-mix(in srgb, #0a5540 68%, #f4f0e8);
-  text-shadow: 0 1px 10px rgb(244 240 232 / 65%);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #0a5540;
+  text-shadow:
+    0 0 1px rgb(244 240 232 / 95%),
+    0 1px 2px rgb(244 240 232 / 90%),
+    0 0 16px rgb(244 240 232 / 85%);
   text-align: center;
   pointer-events: none;
-  opacity: 0.72;
+  opacity: 1;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-bookcase-navs.is-cover-hidden {
+.is-home-v2 :is(.v2-bookcase--catalog, .v2-bookcase--magazine) .v2-bookcase-navs.is-cover-hidden {
   visibility: hidden;
   pointer-events: none;
   height: 0;
