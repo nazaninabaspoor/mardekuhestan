@@ -7958,43 +7958,46 @@ html.is-v2-bell-cursor textarea {
   width: calc(var(--page-w) * 2) !important;
 }
 
-/* Cover open/close: stay single — no opposite page like a real hardcover */
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning {
+/* Cover open/close only — never clamp interior spreads */
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open),
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open),
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) {
   width: var(--page-w) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning .v2-flipbook,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .stf__block,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning .stf__block,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning .stf__block {
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .v2-flipbook,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .v2-flipbook,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .v2-flipbook,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .stf__wrapper,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .stf__wrapper,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .stf__wrapper,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .sft__wrapper,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover.is-turning:not(.is-open) .sft__wrapper,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover.is-turning:not(.is-open) .sft__wrapper {
   width: var(--page-w) !important;
   min-width: var(--page-w) !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit .stf__item.--left,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover .stf__item.--left {
+/* Hide empty left slot only on the closed/opening front cover */
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-front-cover:not(.is-open) .stf__item.--left,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-cover-transit:not(.is-open) .stf__item.--left {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }
 
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover:not(.is-turning) .stf__item.--right {
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-back-cover:not(.is-turning):not(.is-open) .stf__item.--right {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+/* Interior spreads: keep both sides visible — never override item width */
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__item.--left,
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__item.--right {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-book-case {
@@ -8008,37 +8011,28 @@ html.is-v2-bell-cursor textarea {
   overflow: hidden;
   will-change: transform, box-shadow;
   transition:
-    width 0.56s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.35s ease,
     border-radius 0.35s ease;
 }
 
+/* Outer shell only — page items sized by StPageFlip */
 .is-home-v2 .v2-bookcase--catalog .v2-book-object .v2-flipbook,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object .v2-flipbook-skeleton,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object .stf__block {
+.is-home-v2 .v2-bookcase--catalog .v2-book-object .sft__wrapper {
   width: var(--page-w) !important;
   min-width: var(--page-w) !important;
   max-width: none !important;
-  transition:
-    width 0.56s cubic-bezier(0.22, 1, 0.36, 1),
-    min-width 0.56s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .v2-flipbook,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .v2-flipbook,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__wrapper,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-open .stf__block,
 .is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .stf__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .sft__wrapper,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .stf__parent,
-.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .stf__block {
+.is-home-v2 .v2-bookcase--catalog .v2-book-object.is-turning .sft__wrapper {
   width: calc(var(--page-w) * 2) !important;
   min-width: calc(var(--page-w) * 2) !important;
 }
