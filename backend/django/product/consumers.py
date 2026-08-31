@@ -16,11 +16,16 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Final
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.layers import get_channel_layer
+from django.core.exceptions import ValidationError
 
 from product.constants import ProductEvent
+from product.utils import resolve_product_domain
+from sec.constants import RATE_SCOPE_WS_CONNECT, RATE_SCOPE_WS_MESSAGE
+from sec.rate_limit import check_rate_limit
+from sec import validators as sec_validators
 
 logger = logging.getLogger(__name__)
 
@@ -190,6 +195,23 @@ class _CatalogStreamMixin:
 
     subscribed_groups: set[str]
 
+    def _ws_client_id(self) -> str:
+        client = self.scope.get("client")
+        if client:
+            return client[0]
+        headers = dict(self.scope.get("headers") or [])
+        forwarded = headers.get(b"x-forwarded-for", b"").decode("utf-8", errors="ignore")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
+        return "ws:unknown"
+
+    async def _enforce_ws_rate(self, scope: str) -> bool:
+        result = await sync_to_async(check_rate_limit)(
+            scope=scope,
+            identifier=self._ws_client_id(),
+        )
+        return result.allowed
+
     async def catalog_event(self, event: dict[str, Any]) -> None:
         await self.send_json(event["data"])
 
@@ -205,6 +227,25 @@ class _CatalogStreamMixin:
         self.subscribed_groups.clear()
 
 
+def _validate_ws_subscribe_params(*, domain: Any, category: Any) -> tuple[str | None, str | None]:
+    safe_domain = None
+    safe_category = None
+    if domain:
+        raw = sec_validators.validate_query_param(str(domain), field_label="domain")
+        resolved = resolve_product_domain(raw)
+        if not resolved:
+            raise ValidationError("دامنه معتبر نیست.")
+        safe_domain = resolved
+    if category:
+        from product import validators as product_validators
+
+        safe_category = sec_validators.validate_query_param(
+            str(category), field_label="category"
+        )
+        product_validators.validate_category_slug(safe_category)
+    return safe_domain, safe_category
+
+
 class ProductCatalogConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
     """
     فید لحظه‌ای فروشگاه.
@@ -217,6 +258,9 @@ class ProductCatalogConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
     """
 
     async def connect(self) -> None:
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_CONNECT):
+            await self.close(code=4429)
+            return
         self.subscribed_groups = set()
         await self.accept()
         await self._join_group(CatalogGroups.PUBLIC)
@@ -232,19 +276,45 @@ class ProductCatalogConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
         await self._leave_all_groups()
 
     async def receive_json(self, content: dict[str, Any], **kwargs: Any) -> None:
-        action = (content.get("action") or "").strip().lower()
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_MESSAGE):
+            await self.close(code=4429)
+            return
+        try:
+            payload = sec_validators.validate_websocket_payload(content)
+            action = sec_validators.validate_websocket_action(payload.get("action"))
+        except ValidationError:
+            await self.send_json(
+                {
+                    "event": "catalog.error",
+                    "ts": _utc_now_iso(),
+                    "payload": {"message": "درخواست نامعتبر است."},
+                }
+            )
+            return
 
         if action == "ping":
             await self.send_json({"event": "pong", "ts": _utc_now_iso(), "payload": {}})
             return
 
         if action == "subscribe":
-            domain = content.get("domain")
-            category = content.get("category")
+            try:
+                domain, category = await sync_to_async(_validate_ws_subscribe_params)(
+                    domain=payload.get("domain"),
+                    category=payload.get("category"),
+                )
+            except ValidationError:
+                await self.send_json(
+                    {
+                        "event": "catalog.error",
+                        "ts": _utc_now_iso(),
+                        "payload": {"message": "subscribe نامعتبر است."},
+                    }
+                )
+                return
             if domain:
-                await self._join_group(CatalogGroups.domain(str(domain)))
+                await self._join_group(CatalogGroups.domain(domain))
             if category:
-                await self._join_group(CatalogGroups.category(str(category)))
+                await self._join_group(CatalogGroups.category(category))
             await self.send_json(
                 {
                     "event": "catalog.subscribed",
@@ -255,8 +325,8 @@ class ProductCatalogConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
             return
 
         if action == "unsubscribe":
-            domain = content.get("domain")
-            category = content.get("category")
+            domain = payload.get("domain")
+            category = payload.get("category")
             if domain:
                 group = CatalogGroups.domain(str(domain))
                 if group in self.subscribed_groups:
@@ -291,6 +361,9 @@ class ProductDetailConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
     product_id: int
 
     async def connect(self) -> None:
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_CONNECT):
+            await self.close(code=4429)
+            return
         self.product_id = int(self.scope["url_route"]["kwargs"]["product_id"])
         self.subscribed_groups = set()
         await self.accept()
@@ -307,7 +380,15 @@ class ProductDetailConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
         await self._leave_all_groups()
 
     async def receive_json(self, content: dict[str, Any], **kwargs: Any) -> None:
-        if (content.get("action") or "").lower() == "ping":
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_MESSAGE):
+            await self.close(code=4429)
+            return
+        try:
+            payload = sec_validators.validate_websocket_payload(content)
+            action = sec_validators.validate_websocket_action(payload.get("action"))
+        except ValidationError:
+            return
+        if action == "ping":
             await self.send_json({"event": "pong", "ts": _utc_now_iso(), "payload": {}})
 
 
@@ -318,6 +399,9 @@ class ProductAdminConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
         user = self.scope.get("user")
         if user is None or not user.is_authenticated or not user.is_staff:
             await self.close(code=4401)
+            return
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_CONNECT):
+            await self.close(code=4429)
             return
 
         self.subscribed_groups = set()
@@ -335,5 +419,13 @@ class ProductAdminConsumer(_CatalogStreamMixin, AsyncJsonWebsocketConsumer):
         await self._leave_all_groups()
 
     async def receive_json(self, content: dict[str, Any], **kwargs: Any) -> None:
-        if (content.get("action") or "").lower() == "ping":
+        if not await self._enforce_ws_rate(RATE_SCOPE_WS_MESSAGE):
+            await self.close(code=4429)
+            return
+        try:
+            payload = sec_validators.validate_websocket_payload(content)
+            action = sec_validators.validate_websocket_action(payload.get("action"))
+        except ValidationError:
+            return
+        if action == "ping":
             await self.send_json({"event": "pong", "ts": _utc_now_iso(), "payload": {}})

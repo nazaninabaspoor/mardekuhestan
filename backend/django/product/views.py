@@ -1,18 +1,29 @@
-﻿"""Catalog API — public storefront + staff management."""
+﻿"""Catalog API — public storefront + staff management (hardened)."""
 
 from __future__ import annotations
 
 from rest_framework import generics, status, viewsets
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from product.constants import DEFAULT_LIST_PAGE_SIZE, MAX_LIST_PAGE_SIZE, PRODUCT_DOMAIN_META
+from product.mixins import (
+    CatalogAdminMixin,
+    CatalogDetailMixin,
+    CatalogPublicReadMixin,
+    CatalogSearchMixin,
+)
 from product.models import Category, Product, ProductImage
-from product.permissions import IsCatalogStaff
+from product.request_guards import (
+    parse_admin_list_filters,
+    parse_public_list_filters,
+    validate_category_path_slug,
+    validate_detail_slug,
+)
 from product.selectors import (
     get_active_categories,
     get_admin_categories,
@@ -24,7 +35,6 @@ from product.selectors import (
     get_store_product_by_public_uuid,
     get_store_product_by_slug,
     get_store_products,
-    resolve_domain_filter,
     sales_channel_from_request,
     search_store_products,
 )
@@ -63,15 +73,8 @@ class CatalogPagination(PageNumberPagination):
             return self.page_size
 
 
-# ---------------------------------------------------------------------------
-# Public — lightweight APIView for domain index
-# ---------------------------------------------------------------------------
-
-
-class CatalogDomainListAPIView(APIView):
+class CatalogDomainListAPIView(CatalogPublicReadMixin, APIView):
     """GET /api/products/domains/ — vertical index for storefront filters."""
-
-    permission_classes = [AllowAny]
 
     def get(self, request: Request) -> Response:
         domains = sort_domains(list(PRODUCT_DOMAIN_META.keys()))
@@ -83,20 +86,13 @@ class CatalogDomainListAPIView(APIView):
         return Response(serializer.data)
 
 
-# ---------------------------------------------------------------------------
-# Public — generics for catalog read (same style as content app)
-# ---------------------------------------------------------------------------
-
-
-class ProductListView(generics.ListAPIView):
-    permission_classes = [AllowAny]
+class ProductListView(CatalogPublicReadMixin, generics.ListAPIView):
     serializer_class = ProductListSerializer
     pagination_class = CatalogPagination
 
     def get_queryset(self):
+        filters = parse_public_list_filters(self.request)
         channel = sales_channel_from_request(self.request)
-        domain = resolve_domain_filter(self.request.query_params.get("domain"))
-        category = self.request.query_params.get("category")
         query = self.request.query_params.get("q")
         if query:
             params = CatalogSearchQuerySerializer(data={"q": query})
@@ -104,54 +100,50 @@ class ProductListView(generics.ListAPIView):
             return search_store_products(
                 params.validated_data["q"],
                 channel,
-                domain=domain,
-                category_slug=category,
+                domain=filters.domain,
+                category_slug=filters.category_slug,
             )
-        return get_store_products(
+        qs = get_store_products(
             channel,
-            domain=domain,
-            category_slug=category,
+            domain=filters.domain,
+            category_slug=filters.category_slug,
         )
+        return qs
 
 
-class ProductSearchView(generics.ListAPIView):
-    """GET /api/products/search/?q= — جستجوی اختصاصی با اعتبارسنجی سخت‌گیرانه."""
-
-    permission_classes = [AllowAny]
+class ProductSearchView(CatalogSearchMixin, generics.ListAPIView):
     serializer_class = ProductListSerializer
     pagination_class = CatalogPagination
 
     def get_queryset(self):
+        filters = parse_public_list_filters(self.request)
         params = CatalogSearchQuerySerializer(
             data={"q": self.request.query_params.get("q", "")}
         )
         params.is_valid(raise_exception=True)
         channel = sales_channel_from_request(self.request)
-        domain = resolve_domain_filter(self.request.query_params.get("domain"))
-        category = self.request.query_params.get("category")
         return search_store_products(
             params.validated_data["q"],
             channel,
-            domain=domain,
-            category_slug=category,
+            domain=filters.domain,
+            category_slug=filters.category_slug,
         )
 
 
-class ProductDetailView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+class ProductDetailView(CatalogDetailMixin, generics.RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     lookup_field = "slug"
 
     def get_object(self) -> Product:
+        slug = validate_detail_slug(self.kwargs[self.lookup_field])
         channel = sales_channel_from_request(self.request)
-        product = get_store_product_by_slug(self.kwargs[self.lookup_field], channel)
+        product = get_store_product_by_slug(slug, channel)
         if product is None:
             raise NotFound("محصول یافت نشد.")
         return product
 
 
-class ProductDetailByUUIDView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+class ProductDetailByUUIDView(CatalogDetailMixin, generics.RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     lookup_field = "public_uuid"
     lookup_url_kwarg = "public_uuid"
@@ -173,40 +165,35 @@ class ProductDetailByUUIDView(generics.RetrieveAPIView):
         return product
 
 
-class CategoryListView(generics.ListAPIView):
-    permission_classes = [AllowAny]
+class CategoryListView(CatalogPublicReadMixin, generics.ListAPIView):
     serializer_class = CategoryListSerializer
 
     def get_queryset(self):
-        domain = resolve_domain_filter(self.request.query_params.get("domain"))
-        kind = self.request.query_params.get("kind")
-        qs = get_active_categories(domain=domain)
-        if kind:
-            qs = qs.of_kind(kind)
+        filters = parse_public_list_filters(self.request)
+        qs = get_active_categories(domain=filters.domain)
+        if filters.kind:
+            qs = qs.of_kind(filters.kind)
         return qs
 
 
-class CategoryDetailView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+class CategoryDetailView(CatalogDetailMixin, generics.RetrieveAPIView):
     serializer_class = CategoryDetailSerializer
     lookup_field = "slug"
 
     def get_object(self) -> Category:
-        category = get_category_by_slug(self.kwargs[self.lookup_field])
+        slug = validate_category_path_slug(self.kwargs[self.lookup_field])
+        category = get_category_by_slug(slug)
         if category is None:
             raise NotFound("دسته یافت نشد.")
         return category
 
 
-class CategoryTreeView(generics.ListAPIView):
-    """Navigation tree — roots with nested children (depth capped in serializer)."""
-
-    permission_classes = [AllowAny]
+class CategoryTreeView(CatalogPublicReadMixin, generics.ListAPIView):
     serializer_class = CategoryTreeSerializer
 
     def get_queryset(self):
-        domain = resolve_domain_filter(self.request.query_params.get("domain"))
-        return get_category_navigation_tree(domain=domain)
+        filters = parse_public_list_filters(self.request)
+        return get_category_navigation_tree(domain=filters.domain)
 
     def get_serializer_context(self) -> dict:
         context = super().get_serializer_context()
@@ -215,24 +202,17 @@ class CategoryTreeView(generics.ListAPIView):
         return context
 
 
-# ---------------------------------------------------------------------------
-# Admin — ViewSets for CRUD (staff / product panel)
-# ---------------------------------------------------------------------------
-
-
-class ProductAdminViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsCatalogStaff]
+class ProductAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
     pagination_class = CatalogPagination
     lookup_field = "pk"
 
     def get_queryset(self):
+        filters = parse_admin_list_filters(self.request)
         qs = get_admin_products()
-        domain = resolve_domain_filter(self.request.query_params.get("domain"))
-        status_filter = self.request.query_params.get("status")
-        if domain:
-            qs = qs.for_domain(domain)
-        if status_filter:
-            qs = qs.filter(status=status_filter)
+        if filters.domain:
+            qs = qs.for_domain(filters.domain)
+        if filters.status:
+            qs = qs.filter(status=filters.status)
         return qs
 
     def get_serializer_class(self):
@@ -255,8 +235,7 @@ class ProductAdminViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class CategoryAdminViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsCatalogStaff]
+class CategoryAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
     pagination_class = CatalogPagination
     lookup_field = "pk"
 
@@ -269,8 +248,7 @@ class CategoryAdminViewSet(viewsets.ModelViewSet):
         return CategoryDetailSerializer
 
 
-class ProductVariantAdminViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsCatalogStaff]
+class ProductVariantAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
     pagination_class = CatalogPagination
 
     def get_queryset(self):
@@ -289,9 +267,9 @@ class ProductVariantAdminViewSet(viewsets.ModelViewSet):
         serializer.save(product=product)
 
 
-class ProductImageAdminViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsCatalogStaff]
-    parser_classes = viewsets.ModelViewSet.parser_classes
+class ProductImageAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
+    upload_throttle_on_create = True
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
 
     def get_queryset(self):
         product_id = self.kwargs.get("product_pk")

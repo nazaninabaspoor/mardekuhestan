@@ -355,6 +355,16 @@ class ProductImageWriteSerializer(ProductImageBaseSerializer):
     def validate_sort_order(self, value: int) -> int:
         return _run_validator(product_validators.validate_sort_order, value)
 
+    def validate_image(self, value):
+        from django.core.exceptions import ValidationError as DjangoValidationError
+
+        from sec import validators as sec_validators
+
+        try:
+            return sec_validators.validate_uploaded_image(value)
+        except DjangoValidationError as exc:
+            _raise_drf_validation(exc)
+
 
 # ---------------------------------------------------------------------------
 # Product variant

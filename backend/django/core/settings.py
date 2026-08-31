@@ -584,3 +584,24 @@ AWS_S3_ENDPOINT_URL = os.getenv("MINIO_ENDPOINT_URL", "http://127.0.0.1:9010")
 AWS_S3_REGION_NAME = os.getenv("MINIO_REGION", "us-east-1")
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
+
+# ---------------------------------------------------------------------------
+# Security — production hardening
+# ---------------------------------------------------------------------------
+
+TRUST_X_FORWARDED_FOR = env_bool("TRUST_X_FORWARDED_FOR", default=False)
+RATE_LIMIT_FAIL_CLOSED = env_bool("RATE_LIMIT_FAIL_CLOSED", default=not DEBUG)
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024  # 6 MB (تصاویر کاتالوگ)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", default=True)
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = env_bool("SECURE_HSTS_PRELOAD", default=False)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "same-origin"
+    X_FRAME_OPTIONS = "DENY"
