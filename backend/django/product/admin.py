@@ -381,6 +381,7 @@ class ProductAdmin(ModelAdmin):
     inlines = (ProductVariantInline, ProductImageInline)
     list_display = (
         "name",
+        "public_uuid",
         "domain_label",
         "status_badge",
         "visibility_badge",
@@ -399,10 +400,19 @@ class ProductAdmin(ModelAdmin):
         "storage_class",
         "pricing_strategy",
     )
-    search_fields = ("name", "slug", "subtitle", "short_description", "variants__sku")
+    search_fields = (
+        "name",
+        "slug",
+        "subtitle",
+        "short_description",
+        "public_uuid",
+        "variants__sku",
+        "variants__public_uuid",
+    )
     prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("categories",)
     readonly_fields = (
+        "public_uuid",
         "created_at",
         "updated_at",
         "catalog_readiness_panel",
@@ -431,6 +441,7 @@ class ProductAdmin(ModelAdmin):
                 "classes": ["tab"],
                 "description": "نام و نامک محصول. اگر نامک خالی بماند خودکار ساخته می‌شود.",
                 "fields": (
+                    "public_uuid",
                     ("name", "slug"),
                     "subtitle",
                     "short_description",
@@ -732,14 +743,23 @@ class ProductVariantAdmin(ModelAdmin):
     list_display = (
         "label",
         "sku",
+        "public_uuid",
         "product",
+        "mother_uuid",
         "price_display",
         "weight_display",
         "is_active",
         "sort_order",
     )
     list_filter = ("is_active", "product__domain", "product__status")
-    search_fields = ("label", "sku", "product__name", "product__slug")
+    search_fields = (
+        "label",
+        "sku",
+        "public_uuid",
+        "product__name",
+        "product__slug",
+        "product__public_uuid",
+    )
     autocomplete_fields = ("product",)
     list_editable = ("is_active", "sort_order")
     ordering = ("product__name", "sort_order", "label")
@@ -753,6 +773,8 @@ class ProductVariantAdmin(ModelAdmin):
             {
                 "fields": (
                     "product",
+                    "public_uuid",
+                    "mother_uuid",
                     ("label", "sku"),
                     ("unit_price_rial", "net_weight_grams"),
                     ("is_active", "sort_order"),
@@ -767,7 +789,11 @@ class ProductVariantAdmin(ModelAdmin):
             },
         ),
     )
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("public_uuid", "mother_uuid", "created_at", "updated_at")
+
+    @display(description="UUID مادر")
+    def mother_uuid(self, obj: ProductVariant) -> str:
+        return str(obj.product.public_uuid)
 
     @display(description="قیمت")
     def price_display(self, obj: ProductVariant) -> str:
@@ -793,7 +819,7 @@ class ProductImageAdmin(ModelAdmin):
         "created_at",
     )
     list_filter = ("role", "product__domain")
-    search_fields = ("product__name", "alt_text")
+    search_fields = ("product__name", "alt_text", "public_uuid", "product__public_uuid")
     autocomplete_fields = ("product",)
     ordering = ("product__name", "sort_order")
     list_fullwidth = True
@@ -805,6 +831,7 @@ class ProductImageAdmin(ModelAdmin):
             {
                 "fields": (
                     "product",
+                    "public_uuid",
                     ("role", "sort_order"),
                     "image",
                     "image_preview_large",
@@ -820,7 +847,7 @@ class ProductImageAdmin(ModelAdmin):
             },
         ),
     )
-    readonly_fields = ("created_at", "image_preview_large")
+    readonly_fields = ("public_uuid", "created_at", "image_preview_large")
 
     @display(description="پیش‌نمایش")
     def image_preview(self, obj: ProductImage) -> str:

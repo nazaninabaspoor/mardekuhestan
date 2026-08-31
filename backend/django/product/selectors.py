@@ -109,9 +109,7 @@ def search_store_products(
     domain: str | None = None,
     category_slug: str | None = None,
 ) -> QuerySet[Product]:
-    from product import validators as product_validators
-
-    product_validators.validate_catalog_search_query(query)
+    """query باید از validate_catalog_search_query عبور کرده باشد."""
     qs = Product.objects.search_storefront(query, channel=channel)
     if domain:
         qs = qs.for_domain(domain)
