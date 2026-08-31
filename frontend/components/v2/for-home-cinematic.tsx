@@ -22,6 +22,7 @@ import {
 import {
   homeCategoryProducts,
   homeDoors,
+  type HomeCategoryProduct,
   type HomeDoorId,
 } from "@/lib/brand";
 
@@ -67,9 +68,13 @@ export function ForHomeCinematic() {
 
   const activeDoor =
     homeDoors.find((item) => item.id === activeDoorId) ?? homeDoors[0];
-  const products = homeCategoryProducts[activeDoorId].slice(0, PRODUCT_COUNT);
+  const products = homeCategoryProducts[activeDoorId].slice(
+    0,
+    PRODUCT_COUNT,
+  ) as HomeCategoryProduct[];
   const safeIdx = productIdx % Math.max(products.length, 1);
   const active = products[safeIdx] ?? products[0];
+  const activeLead = active?.teaser ?? active?.story ?? "";
   const sideA = products[(safeIdx + 1) % products.length] ?? active;
   const sideB = products[(safeIdx + 2) % products.length] ?? active;
 
@@ -269,7 +274,7 @@ export function ForHomeCinematic() {
                   exit={{ opacity: 0 }}
                   transition={ease}
                 >
-                  {active.teaser ?? active.story}
+                  {activeLead}
                 </motion.p>
               </AnimatePresence>
               <div className="cine-actions">

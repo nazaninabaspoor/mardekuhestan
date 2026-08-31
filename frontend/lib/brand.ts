@@ -959,6 +959,8 @@ export const homeCategoryProducts = {
 
 export type HomeDoorId = keyof typeof homeCategoryProducts;
 
+export type HomeCategoryProduct = (typeof homeCategoryProducts)[HomeDoorId][number];
+
 /** دو محصول در راه — تیزر «به‌زودی» بین راه ما و مجله */
 export const upcomingDrops = {
   kicker: "به‌زودی",

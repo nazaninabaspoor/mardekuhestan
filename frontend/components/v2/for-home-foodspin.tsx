@@ -20,6 +20,7 @@ import {
 import {
   homeCategoryProducts,
   homeDoors,
+  type HomeCategoryProduct,
   type HomeDoorId,
 } from "@/lib/brand";
 
@@ -108,11 +109,15 @@ export function ForHomeFoodSpin() {
 
   const activeDoor =
     homeDoors.find((item) => item.id === activeDoorId) ?? homeDoors[0];
-  const spinItems = homeCategoryProducts[activeDoorId].slice(0, SPIN_COUNT);
+  const spinItems = homeCategoryProducts[activeDoorId].slice(
+    0,
+    SPIN_COUNT,
+  ) as HomeCategoryProduct[];
   const count = Math.max(spinItems.length, 1);
   const angle = 360 / count;
   const currentIdx = mod(absoluteIdx, count);
   const active = spinItems[currentIdx] ?? spinItems[0];
+  const activeLead = active?.teaser ?? active?.story ?? "";
   const theme = FOODSPIN_THEMES[currentIdx % FOODSPIN_THEMES.length];
 
   useEffect(() => {
@@ -271,7 +276,7 @@ export function ForHomeFoodSpin() {
                 exit={{ opacity: 0 }}
                 transition={textTransition}
               >
-                {active.teaser ?? active.story}
+                {activeLead}
               </motion.p>
               <motion.div
                 key={`cta-${active.id}`}
