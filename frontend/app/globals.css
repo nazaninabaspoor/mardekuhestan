@@ -926,6 +926,26 @@ body {
   flex: 2.2;
 }
 
+.menubar-actions > .menu-toggle {
+  flex: 0 0 auto;
+}
+
+.menubar-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--milk);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 40px;
+  white-space: nowrap;
+}
+
+.menubar-actions a:hover,
+.menubar-actions a:focus-visible {
+  color: color-mix(in srgb, var(--milk) 78%, var(--deep-cream));
+}
+
 .header-search.catalog-search {
   height: auto;
   min-height: 34px;
