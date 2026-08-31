@@ -269,7 +269,7 @@ export function ForHomeCinematic() {
                   exit={{ opacity: 0 }}
                   transition={ease}
                 >
-                  {active.teaser || active.story}
+                  {active.teaser ?? active.story}
                 </motion.p>
               </AnimatePresence>
               <div className="cine-actions">

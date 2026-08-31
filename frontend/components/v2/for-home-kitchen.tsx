@@ -32,7 +32,7 @@ const CATEGORY_ALIASES: Record<string, string> = {
 function resolveKitchenCategoryId(
   rawCat: string | null,
   productId: string | null,
-  categories: ProductCategory[],
+  categories: ReadonlyArray<ProductCategory>,
   productsByCategory: Record<string, ShowcaseProduct[]>,
 ): string | null {
   const pick = (id: string | null | undefined) =>

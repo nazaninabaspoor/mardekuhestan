@@ -271,7 +271,7 @@ export function ForHomeFoodSpin() {
                 exit={{ opacity: 0 }}
                 transition={textTransition}
               >
-                {active.teaser || active.story}
+                {active.teaser ?? active.story}
               </motion.p>
               <motion.div
                 key={`cta-${active.id}`}
