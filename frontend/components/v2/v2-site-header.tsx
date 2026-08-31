@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { CatalogSearchForm } from "@/components/catalog-search-form";
+
 const v2NavItems = [
   { id: "story", href: "/way", label: "داستان ما", icon: "book" },
   { id: "way", href: "/way", label: "راه ما", icon: "mountain" },
@@ -157,6 +159,10 @@ export function V2SiteHeader() {
             </nav>
 
             <div className="v2-menubar-actions">
+              <CatalogSearchForm
+                className="v2-header-search"
+                placeholder="جستجو…"
+              />
               <button
                 type="button"
                 className="v2-menu-toggle"

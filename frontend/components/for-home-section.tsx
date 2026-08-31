@@ -9,9 +9,21 @@ import {
   homeDoors,
   type HomeDoorId,
 } from "@/lib/brand";
+import { toneDoorKey } from "@/lib/catalog/domain-display";
+import type { ForHomeCatalogPayload } from "@/lib/catalog/for-home";
+import type { ForHomeProductItem } from "@/lib/catalog/map";
 import { ForHomeKitchen } from "@/components/v2/for-home-kitchen";
 
 const DEFAULT_DOOR: HomeDoorId = "fresh-meat";
+const EMPTY_PRODUCT: ForHomeProductItem = {
+  id: "empty",
+  name: "محصولی فعال نیست",
+  note: "به‌زودی",
+  story: "محصولات این دسته به‌زودی از مسیر سبز به خانه می‌رسند.",
+  href: "/products",
+  image: "/brand/home-meat.png",
+  alt: "مرد کوهستان",
+};
 const CAT_PAGE_SIZE = 6;
 const PRODUCT_VISIBLE = 6;
 const MARK_SHOP = "/brand/our-way-04-balance.png";
@@ -22,7 +34,7 @@ const FIGURE_CHAR = "/brand/mardekoohestan-walker1.png";
 /** مسیر موقت داستان کوتاه — بعداً به صفحهٔ واقعی وصل می‌شود */
 const STORY_PLACEHOLDER = "#product-story";
 
-type ProductItem = (typeof homeCategoryProducts)[HomeDoorId][number];
+type ProductItem = ForHomeProductItem;
 
 /** جفت رنگ برند برای هر کارت محصول: پایه / هاور و انتخاب */
 const DOOR_PRODUCT_TONES: Partial<
@@ -197,15 +209,16 @@ const V2_FALLBACK_TONES = [
 ] as const;
 
 function productTone(
-  doorId: HomeDoorId,
+  doorId: string,
   index: number,
   variant: "default" | "v2" = "default",
 ) {
+  const toneKey = toneDoorKey(doorId) as HomeDoorId;
   if (variant === "v2") {
-    const palette = V2_DOOR_PRODUCT_TONES[doorId] ?? V2_FALLBACK_TONES;
+    const palette = V2_DOOR_PRODUCT_TONES[toneKey] ?? V2_FALLBACK_TONES;
     return palette[index % palette.length] ?? V2_FALLBACK_TONES[0];
   }
-  const palette = DOOR_PRODUCT_TONES[doorId] ?? FALLBACK_TONES;
+  const palette = DOOR_PRODUCT_TONES[toneKey] ?? FALLBACK_TONES;
   return palette[index % palette.length] ?? FALLBACK_TONES[0];
 }
 
@@ -240,47 +253,64 @@ function figurePitch(product: ProductItem) {
  */
 export function ForHomeSection({
   variant = "default",
+  catalog,
 }: {
   variant?: "default" | "v2";
+  catalog?: ForHomeCatalogPayload;
 } = {}) {
   if (variant === "v2") {
     return <ForHomeKitchen />;
   }
-  return <ForHomeSectionDefault />;
+  return <ForHomeSectionDefault catalog={catalog} />;
 }
 
-function ForHomeSectionDefault() {
+function ForHomeSectionDefault({
+  catalog,
+}: {
+  catalog?: ForHomeCatalogPayload;
+}) {
+  const doors = catalog?.doors ?? homeDoors.map((door) => ({
+    id: door.id,
+    domainKey: door.id,
+    label: door.label,
+    emoji: door.emoji,
+    href: door.href,
+  }));
+  const productsByDoor =
+    catalog?.productsByDoor ??
+    (homeCategoryProducts as Record<string, ForHomeProductItem[]>);
+  const initialDoorId = doors[0]?.id ?? DEFAULT_DOOR;
   const rootRef = useRef<HTMLElement | null>(null);
   const dialogTitleId = useId();
   const [visible, setVisible] = useState(false);
-  const [activeDoorId, setActiveDoorId] = useState<HomeDoorId>(DEFAULT_DOOR);
+  const [activeDoorId, setActiveDoorId] = useState<string>(initialDoorId);
   const [activeProductId, setActiveProductId] = useState<string>(
-    homeCategoryProducts[DEFAULT_DOOR][0].id,
+    productsByDoor[initialDoorId]?.[0]?.id ?? EMPTY_PRODUCT.id,
   );
   const [storyOpen, setStoryOpen] = useState(false);
   const [tipOpen, setTipOpen] = useState(false);
   const [catPage, setCatPage] = useState(0);
   const [plateSpinning, setPlateSpinning] = useState(true);
 
-  const catPageCount = Math.ceil(homeDoors.length / CAT_PAGE_SIZE);
+  const catPageCount = Math.max(1, Math.ceil(doors.length / CAT_PAGE_SIZE));
   const visibleDoors = useMemo(
     () =>
-      homeDoors.slice(
+      doors.slice(
         catPage * CAT_PAGE_SIZE,
         catPage * CAT_PAGE_SIZE + CAT_PAGE_SIZE,
       ),
-    [catPage],
+    [catPage, doors],
   );
 
-  const activeDoor =
-    homeDoors.find((item) => item.id === activeDoorId) ?? homeDoors[0];
-  const products = homeCategoryProducts[activeDoorId];
+  const activeDoor = doors.find((item) => item.id === activeDoorId) ?? doors[0];
+  const products = productsByDoor[activeDoorId] ?? [];
   const visibleProducts = products.slice(0, PRODUCT_VISIBLE);
   const activeIndex = Math.max(
     0,
     products.findIndex((item) => item.id === activeProductId),
   );
-  const activeProduct: ProductItem = products[activeIndex] ?? products[0];
+  const activeProduct: ProductItem =
+    products[activeIndex] ?? products[0] ?? EMPTY_PRODUCT;
 
   useEffect(() => {
     setPlateSpinning(true);
@@ -288,9 +318,9 @@ function ForHomeSectionDefault() {
     return () => window.clearTimeout(timer);
   }, [activeProduct.id]);
 
-  const selectDoor = (id: HomeDoorId) => {
+  const selectDoor = (id: string) => {
     setActiveDoorId(id);
-    setActiveProductId(homeCategoryProducts[id][0].id);
+    setActiveProductId(productsByDoor[id]?.[0]?.id ?? EMPTY_PRODUCT.id);
     setStoryOpen(false);
     setTipOpen(false);
   };
@@ -306,6 +336,7 @@ function ForHomeSectionDefault() {
   };
 
   const cycleProduct = (dir: 1 | -1) => {
+    if (products.length <= 1) return;
     const next = (activeIndex + dir + products.length) % products.length;
     setActiveProductId(products[next].id);
     setStoryOpen(false);
@@ -387,6 +418,13 @@ function ForHomeSectionDefault() {
       aria-label={activeDoor.label}
       key={activeDoor.id}
     >
+      {visibleProducts.length === 0 ? (
+        <p className="for-home-products-empty">
+          {catalog?.apiReachable
+            ? "هنوز محصول فعالی در این دسته نیست — از پنل Admin یک محصول active بساز."
+            : "به‌زودی محصولات این دسته از مسیر سبز می‌رسند."}
+        </p>
+      ) : null}
       <div className="for-home-products-row">
         {visibleProducts.map((product, index) => {
           const selected = product.id === activeProduct.id;

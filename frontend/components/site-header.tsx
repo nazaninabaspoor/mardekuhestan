@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { CatalogSearchForm } from "@/components/catalog-search-form";
 import { V2SiteHeader } from "@/components/v2/v2-site-header";
 import { headerTools, navItems } from "@/lib/brand";
 
@@ -55,33 +56,7 @@ export function SiteHeader() {
                 <span className="nav-label">{tool.label}</span>
               </Link>
             ))}
-            <form className="header-search tool-quiet" action="/products" role="search">
-              <input
-                type="search"
-                name="q"
-                placeholder="گوشت، لبنیات، ماهی…"
-                autoComplete="off"
-                aria-label="جستجو در محصولات"
-              />
-              <button type="submit" aria-label="جستجو">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="6.2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  />
-                  <path
-                    d="M20 20l-3.4-3.4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  />
-                </svg>
-              </button>
-            </form>
+            <CatalogSearchForm />
             <button
               type="button"
               className="menu-toggle"
@@ -103,6 +78,7 @@ export function SiteHeader() {
         className={`mobile-panel${open ? " is-open" : ""}`}
         aria-label="منوی موبایل"
       >
+        <CatalogSearchForm className="header-search mobile-search" />
         {navItems.map((item) => (
           <Link
             key={item.href}
