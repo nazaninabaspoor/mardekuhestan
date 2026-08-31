@@ -1,3 +1,207 @@
-﻿from django.db import models
+﻿"""مدل‌های کاتالوگ محصول — مرد کوهستان."""
 
-# Domain models for 'product' will live here.
+from __future__ import annotations
+
+from django.db import models
+
+from product.constants import (
+    DEFAULT_SORT_ORDER,
+    PRODUCT_NAME_MAX_LENGTH,
+    PRODUCT_SHORT_DESCRIPTION_MAX_LENGTH,
+    PRODUCT_SLUG_MAX_LENGTH,
+    PRODUCT_SUBTITLE_MAX_LENGTH,
+    SKU_MAX_LENGTH,
+    VARIANT_LABEL_MAX_LENGTH,
+    CATEGORY_DESCRIPTION_MAX_LENGTH,
+    CATEGORY_NAME_MAX_LENGTH,
+    CATEGORY_SLUG_MAX_LENGTH,
+    CategoryKind,
+    HalalStatus,
+    PackagingType,
+    PricingStrategy,
+    ProductDomain,
+    ProductImageRole,
+    ProductStatus,
+    ProductVisibility,
+    SalesChannel,
+    StorageClass,
+    UnitOfMeasure,
+)
+from product.managers import CategoryManager, ProductManager, ProductVariantManager
+from product.utils import build_unique_slug, normalize_sku
+
+
+class Category(models.Model):
+    name = models.CharField("نام دسته", max_length=CATEGORY_NAME_MAX_LENGTH)
+    slug = models.SlugField("نامک", max_length=CATEGORY_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
+    description = models.TextField("توضیحات", max_length=CATEGORY_DESCRIPTION_MAX_LENGTH, blank=True)
+    parent = models.ForeignKey(
+        "self",
+        verbose_name="دسته والد",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
+    domain = models.CharField(
+        "دامنه",
+        max_length=32,
+        choices=ProductDomain.CHOICES,
+        blank=True,
+    )
+    kind = models.CharField(
+        "نوع",
+        max_length=20,
+        choices=CategoryKind.CHOICES,
+        default=CategoryKind.NAVIGATION,
+    )
+    sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)
+    is_active = models.BooleanField("فعال", default=True)
+    created_at = models.DateTimeField("ایجاد", auto_now_add=True)
+    updated_at = models.DateTimeField("بروزرسانی", auto_now=True)
+
+    objects = CategoryManager()
+
+    class Meta:
+        verbose_name = "دسته محصول"
+        verbose_name_plural = "دسته‌های محصول"
+        ordering = ["sort_order", "name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = build_unique_slug(Category, self.name, instance_pk=self.pk)
+        super().save(*args, **kwargs)
+
+
+class Product(models.Model):
+    name = models.CharField("نام", max_length=PRODUCT_NAME_MAX_LENGTH)
+    slug = models.SlugField("نامک", max_length=PRODUCT_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
+    subtitle = models.CharField("زیرعنوان", max_length=PRODUCT_SUBTITLE_MAX_LENGTH, blank=True)
+    short_description = models.CharField(
+        "توضیح کوتاه",
+        max_length=PRODUCT_SHORT_DESCRIPTION_MAX_LENGTH,
+        blank=True,
+    )
+    domain = models.CharField("دامنه", max_length=32, choices=ProductDomain.CHOICES)
+    status = models.CharField(
+        "وضعیت",
+        max_length=20,
+        choices=ProductStatus.CHOICES,
+        default=ProductStatus.DRAFT,
+    )
+    visibility = models.CharField(
+        "نمایش",
+        max_length=16,
+        choices=ProductVisibility.CHOICES,
+        default=ProductVisibility.PUBLIC,
+    )
+    sales_channel = models.CharField(
+        "کانال فروش",
+        max_length=16,
+        choices=SalesChannel.CHOICES,
+        default=SalesChannel.B2C,
+    )
+    unit_price_rial = models.PositiveBigIntegerField("قیمت (ریال)", null=True, blank=True)
+    pricing_strategy = models.CharField(
+        "قیمت‌گذاری",
+        max_length=12,
+        choices=PricingStrategy.CHOICES,
+        default=PricingStrategy.FIXED,
+    )
+    unit_of_measure = models.CharField(
+        "واحد",
+        max_length=12,
+        choices=UnitOfMeasure.CHOICES,
+        default=UnitOfMeasure.PIECE,
+    )
+    net_weight_grams = models.PositiveIntegerField("وزن خالص (گرم)", null=True, blank=True)
+    storage_class = models.CharField(
+        "نگهداری",
+        max_length=10,
+        choices=StorageClass.CHOICES,
+        default=StorageClass.CHILLED,
+    )
+    packaging_type = models.CharField(
+        "بسته‌بندی",
+        max_length=12,
+        choices=PackagingType.CHOICES,
+        default=PackagingType.OTHER,
+        blank=True,
+    )
+    halal_status = models.CharField(
+        "حلال",
+        max_length=16,
+        choices=HalalStatus.CHOICES,
+        default=HalalStatus.NOT_APPLICABLE,
+    )
+    allergens = models.JSONField("آلرژن‌ها", default=list, blank=True)
+    categories = models.ManyToManyField(Category, verbose_name="دسته‌ها", blank=True, related_name="products")
+    sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)
+    created_at = models.DateTimeField("ایجاد", auto_now_add=True)
+    updated_at = models.DateTimeField("بروزرسانی", auto_now=True)
+
+    objects = ProductManager()
+
+    class Meta:
+        verbose_name = "محصول"
+        verbose_name_plural = "محصولات"
+        ordering = ["sort_order", "name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = build_unique_slug(Product, self.name, instance_pk=self.pk)
+        super().save(*args, **kwargs)
+
+    def category_slugs(self) -> list[str]:
+        if not self.pk:
+            return []
+        return list(self.categories.values_list("slug", flat=True))
+
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants", verbose_name="محصول")
+    label = models.CharField("برچسب", max_length=VARIANT_LABEL_MAX_LENGTH)
+    sku = models.CharField("SKU", max_length=SKU_MAX_LENGTH, unique=True)
+    unit_price_rial = models.PositiveBigIntegerField("قیمت (ریال)", null=True, blank=True)
+    net_weight_grams = models.PositiveIntegerField("وزن (گرم)", null=True, blank=True)
+    is_active = models.BooleanField("فعال", default=True)
+    sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)
+    created_at = models.DateTimeField("ایجاد", auto_now_add=True)
+    updated_at = models.DateTimeField("بروزرسانی", auto_now=True)
+
+    objects = ProductVariantManager()
+
+    class Meta:
+        verbose_name = "واریانت"
+        verbose_name_plural = "واریانت‌ها"
+        ordering = ["sort_order", "label"]
+
+    def __str__(self) -> str:
+        return f"{self.product.name} — {self.label}"
+
+    def save(self, *args, **kwargs):
+        self.sku = normalize_sku(self.sku)
+        super().save(*args, **kwargs)
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images", verbose_name="محصول")
+    role = models.CharField("نقش", max_length=20, choices=ProductImageRole.CHOICES, default=ProductImageRole.PACKSHOT)
+    image = models.ImageField("تصویر", upload_to="products/%Y/%m/")
+    alt_text = models.CharField("متن جایگزین", max_length=220, blank=True)
+    sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)
+    created_at = models.DateTimeField("ایجاد", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "تصویر محصول"
+        verbose_name_plural = "تصاویر محصول"
+        ordering = ["sort_order", "id"]
+
+    def __str__(self) -> str:
+        return f"{self.product.name} [{self.role}]"
