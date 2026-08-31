@@ -184,6 +184,7 @@ class CategoryBaseSerializer(serializers.ModelSerializer):
         model = Category
         fields = (
             "id",
+            "public_uuid",
             "name",
             "slug",
             "description",
@@ -192,7 +193,7 @@ class CategoryBaseSerializer(serializers.ModelSerializer):
             "sort_order",
             "is_active",
         )
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "public_uuid")
 
 
 class CategoryListSerializer(
@@ -321,8 +322,8 @@ class ProductImageBaseSerializer(AbsoluteMediaUrlMixin, serializers.ModelSeriali
 
     class Meta:
         model = ProductImage
-        fields = ("id", "role", "url", "alt_text", "sort_order")
-        read_only_fields = ("id",)
+        fields = ("id", "public_uuid", "role", "url", "alt_text", "sort_order")
+        read_only_fields = ("id", "public_uuid")
 
     def get_url(self, obj: ProductImage) -> str | None:
         if not obj.image:
@@ -361,10 +362,17 @@ class ProductImageWriteSerializer(ProductImageBaseSerializer):
 
 
 class ProductVariantBaseSerializer(serializers.ModelSerializer):
+    product_public_uuid = serializers.UUIDField(
+        source="product.public_uuid",
+        read_only=True,
+    )
+
     class Meta:
         model = ProductVariant
         fields = (
             "id",
+            "public_uuid",
+            "product_public_uuid",
             "label",
             "sku",
             "unit_price_rial",
@@ -372,7 +380,7 @@ class ProductVariantBaseSerializer(serializers.ModelSerializer):
             "is_active",
             "sort_order",
         )
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "public_uuid", "product_public_uuid")
 
 
 class ProductVariantListSerializer(
@@ -445,13 +453,14 @@ class ProductBaseSerializer(serializers.ModelSerializer):
         model = Product
         fields = (
             "id",
+            "public_uuid",
             "name",
             "slug",
             "subtitle",
             "short_description",
             "domain",
         )
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "public_uuid")
 
 
 # ---------------------------------------------------------------------------
@@ -806,3 +815,12 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         if categories is not None:
             instance.categories.set(categories)
         return instance
+
+
+class CatalogSearchQuerySerializer(serializers.Serializer):
+    """اعتبارسنجی ?q= برای جستجوی فروشگاه."""
+
+    q = serializers.CharField(required=True, trim_whitespace=True)
+
+    def validate_q(self, value: str) -> str:
+        return product_validators.validate_catalog_search_query(value)

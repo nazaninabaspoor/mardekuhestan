@@ -20,7 +20,13 @@ from product.constants import (
     ProductVisibility,
 )
 from product.models import Category, Product, ProductImage, ProductVariant
-from product.utils import domain_label_fa, format_rial, format_weight_grams, normalize_allergen_list
+from product.utils import (
+    domain_label_fa,
+    format_rial,
+    format_weight_grams,
+    normalize_allergen_list,
+    normalize_sku,
+)
 
 
 RTL_TEXTAREA = UnfoldAdminTextareaWidget(
@@ -216,8 +222,9 @@ class ProductVariantInlineForm(forms.ModelForm):
         return self.cleaned_data["label"]
 
     def clean_sku(self):
-        product_validators.validate_sku(self.cleaned_data["sku"])
-        return self.cleaned_data["sku"]
+        normalized = normalize_sku(self.cleaned_data["sku"])
+        product_validators.validate_sku(normalized)
+        return normalized
 
     def clean_unit_price_rial(self):
         value = self.cleaned_data.get("unit_price_rial")
@@ -313,6 +320,7 @@ class CategoryAdmin(ModelAdmin):
     list_display = (
         "name",
         "slug",
+        "public_uuid",
         "domain_label",
         "kind",
         "parent",
@@ -320,7 +328,7 @@ class CategoryAdmin(ModelAdmin):
         "is_active",
     )
     list_filter = ("is_active", "kind", "domain")
-    search_fields = ("name", "slug", "description")
+    search_fields = ("name", "slug", "description", "public_uuid")
     prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("parent",)
     list_editable = ("sort_order", "is_active")
@@ -336,6 +344,7 @@ class CategoryAdmin(ModelAdmin):
             {
                 "description": "دسته‌های ناوبری فروشگاه و مجموعه‌های مرچندایزینگ.",
                 "fields": (
+                    "public_uuid",
                     ("name", "slug"),
                     ("parent", "domain"),
                     ("kind", "sort_order"),
@@ -352,7 +361,7 @@ class CategoryAdmin(ModelAdmin):
             },
         ),
     )
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("public_uuid", "created_at", "updated_at")
 
     @display(description="دامنه")
     def domain_label(self, obj: Category) -> str:

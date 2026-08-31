@@ -45,6 +45,7 @@ _PUBLIC_WS_EVENTS = frozenset(
 def _product_payload(product, *, extra: dict[str, Any] | None = None) -> dict[str, Any]:
     data: dict[str, Any] = {
         "id": product.pk,
+        "public_uuid": str(product.public_uuid),
         "slug": product.slug,
         "name": product.name,
         "domain": product.domain,
@@ -61,6 +62,7 @@ def _product_payload(product, *, extra: dict[str, Any] | None = None) -> dict[st
 def _category_payload(category, *, extra: dict[str, Any] | None = None) -> dict[str, Any]:
     data: dict[str, Any] = {
         "id": category.pk,
+        "public_uuid": str(category.public_uuid),
         "slug": category.slug,
         "name": category.name,
         "domain": category.domain,
@@ -75,7 +77,9 @@ def _category_payload(category, *, extra: dict[str, Any] | None = None) -> dict[
 def _variant_payload(variant) -> dict[str, Any]:
     return {
         "id": variant.pk,
+        "public_uuid": str(variant.public_uuid),
         "product_id": variant.product_id,
+        "product_public_uuid": str(variant.product.public_uuid),
         "sku": variant.sku,
         "label": variant.label,
         "unit_price_rial": variant.unit_price_rial,

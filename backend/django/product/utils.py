@@ -323,6 +323,55 @@ def clamp_page_size(requested: int | None) -> int:
     return max(1, min(int(requested), MAX_LIST_PAGE_SIZE))
 
 
+# ---------------------------------------------------------------------------
+# Catalog search helpers
+# ---------------------------------------------------------------------------
+
+
+def normalize_catalog_search_query(value: str | None) -> str:
+    """نرمال‌سازی امن عبارت جستجو — بدون کاراکتر کنترلی، فاصلهٔ اضافه حذف."""
+    text = strip_text(value)
+    text = _CONTROL_CHARS_RE.sub("", text)
+    text = " ".join(text.split())
+    if len(text) > SEARCH_QUERY_MAX_LENGTH:
+        text = text[:SEARCH_QUERY_MAX_LENGTH].rstrip()
+    return text
+
+
+def tokenize_search_query(value: str) -> list[str]:
+    """تقسیم عبارت جستجو به توکن‌های مجاز (برای فیلتر چندکلمه‌ای)."""
+    normalized = normalize_catalog_search_query(value)
+    if not normalized:
+        return []
+    tokens: list[str] = []
+    for raw in normalized.split():
+        token = raw[:SEARCH_TERM_MAX_LENGTH]
+        if token and token not in tokens:
+            tokens.append(token)
+    return tokens
+
+
+def looks_like_uuid(value: str) -> bool:
+    return bool(_UUID_RE.match(strip_text(value)))
+
+
+def parse_public_uuid(value: str) -> uuid.UUID | None:
+    """UUID معتبر برگردان — در غیر این صورت None."""
+    text = strip_text(value)
+    if not text:
+        return None
+    try:
+        return uuid.UUID(text)
+    except ValueError:
+        return None
+
+
+def looks_like_sku(value: str) -> bool:
+    """آیا رشته شبیه SKU معتبر است (پس از normalize)."""
+    normalized = normalize_sku(value)
+    return bool(normalized and _SKU_LIKE_RE.match(normalized))
+
+
 def sort_domains(domains: list[str]) -> list[str]:
     """مرتب‌سازی دامنه‌ها طبق sort_order کاتالوگ."""
     return sorted(

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from rest_framework import generics, status, viewsets
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -21,12 +21,15 @@ from product.selectors import (
     get_admin_variants,
     get_category_by_slug,
     get_category_navigation_tree,
+    get_store_product_by_public_uuid,
     get_store_product_by_slug,
     get_store_products,
     resolve_domain_filter,
     sales_channel_from_request,
+    search_store_products,
 )
 from product.serializers import (
+    CatalogSearchQuerySerializer,
     CategoryDetailSerializer,
     CategoryListSerializer,
     CategoryTreeSerializer,
@@ -94,7 +97,40 @@ class ProductListView(generics.ListAPIView):
         channel = sales_channel_from_request(self.request)
         domain = resolve_domain_filter(self.request.query_params.get("domain"))
         category = self.request.query_params.get("category")
+        query = self.request.query_params.get("q")
+        if query:
+            params = CatalogSearchQuerySerializer(data={"q": query})
+            params.is_valid(raise_exception=True)
+            return search_store_products(
+                params.validated_data["q"],
+                channel,
+                domain=domain,
+                category_slug=category,
+            )
         return get_store_products(
+            channel,
+            domain=domain,
+            category_slug=category,
+        )
+
+
+class ProductSearchView(generics.ListAPIView):
+    """GET /api/products/search/?q= — جستجوی اختصاصی با اعتبارسنجی سخت‌گیرانه."""
+
+    permission_classes = [AllowAny]
+    serializer_class = ProductListSerializer
+    pagination_class = CatalogPagination
+
+    def get_queryset(self):
+        params = CatalogSearchQuerySerializer(
+            data={"q": self.request.query_params.get("q", "")}
+        )
+        params.is_valid(raise_exception=True)
+        channel = sales_channel_from_request(self.request)
+        domain = resolve_domain_filter(self.request.query_params.get("domain"))
+        category = self.request.query_params.get("category")
+        return search_store_products(
+            params.validated_data["q"],
             channel,
             domain=domain,
             category_slug=category,
@@ -109,6 +145,29 @@ class ProductDetailView(generics.RetrieveAPIView):
     def get_object(self) -> Product:
         channel = sales_channel_from_request(self.request)
         product = get_store_product_by_slug(self.kwargs[self.lookup_field], channel)
+        if product is None:
+            raise NotFound("محصول یافت نشد.")
+        return product
+
+
+class ProductDetailByUUIDView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ProductDetailSerializer
+    lookup_field = "public_uuid"
+    lookup_url_kwarg = "public_uuid"
+
+    def get_object(self) -> Product:
+        from django.core.exceptions import ValidationError as DjangoValidationError
+
+        from product import validators as product_validators
+
+        raw = str(self.kwargs[self.lookup_url_kwarg])
+        try:
+            product_validators.validate_public_uuid(raw)
+        except DjangoValidationError as exc:
+            raise ValidationError({"public_uuid": list(exc.messages)}) from exc
+        channel = sales_channel_from_request(self.request)
+        product = get_store_product_by_public_uuid(raw, channel)
         if product is None:
             raise NotFound("محصول یافت نشد.")
         return product

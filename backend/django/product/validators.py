@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import re
+import uuid
 from collections.abc import Iterable, Sequence
 from typing import Any
 
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
-from product.utils import normalize_barcode, normalize_sku
+from product.utils import (
+    normalize_barcode,
+    normalize_catalog_search_query,
+    normalize_sku,
+    parse_public_uuid,
+    tokenize_search_query,
+)
 
 from product.constants import (
     BARCODE_MAX_LENGTH,
@@ -45,6 +52,10 @@ from product.constants import (
     SKU_PATTERN,
     SORT_ORDER_MAX,
     SORT_ORDER_MIN,
+    SEARCH_MAX_TERMS,
+    SEARCH_QUERY_MAX_LENGTH,
+    SEARCH_QUERY_MIN_LENGTH,
+    SEARCH_TERM_MAX_LENGTH,
     VARIANT_LABEL_MAX_LENGTH,
     Allergen,
     PackagingType,
@@ -572,3 +583,68 @@ def validate_product_images_have_hero(
         raise ValidationError(
             "حداقل یک تصویر باید نقش «تصویر اصلی» (hero) داشته باشد."
         )
+
+
+# ---------------------------------------------------------------------------
+# Public UUID (API / admin — UUID مادر و دختر)
+# ---------------------------------------------------------------------------
+
+
+def validate_public_uuid(value: str | uuid.UUID | None) -> uuid.UUID:
+    """اعتبارسنجی UUID عمومی — فقط فرمت استاندارد RFC 4122."""
+    if value in (None, ""):
+        raise ValidationError("شناسه UUID نمی‌تواند خالی باشد.")
+    if isinstance(value, uuid.UUID):
+        return value
+    parsed = parse_public_uuid(str(value))
+    if parsed is None:
+        raise ValidationError("شناسه UUID معتبر نیست.")
+    return parsed
+
+
+# ---------------------------------------------------------------------------
+# Catalog search (فروشگاه — ورودی کاربر)
+# ---------------------------------------------------------------------------
+
+
+def validate_catalog_search_query(value: str | None) -> str:
+    """
+    اعتبارسنجی عبارت جستجوی کاربر.
+
+    - طول مجاز
+    - بدون کاراکتر کنترلی
+    - حداکثر تعداد توکن
+    """
+    text = normalize_catalog_search_query(value)
+    if not text:
+        raise ValidationError("عبارت جستجو نمی‌تواند خالی باشد.")
+    if len(text) < SEARCH_QUERY_MIN_LENGTH:
+        raise ValidationError(
+            f"عبارت جستجو حداقل باید {SEARCH_QUERY_MIN_LENGTH} کاراکتر باشد."
+        )
+    if len(text) > SEARCH_QUERY_MAX_LENGTH:
+        raise ValidationError(
+            f"عبارت جستجو حداکثر باید {SEARCH_QUERY_MAX_LENGTH} کاراکتر باشد."
+        )
+    tokens = tokenize_search_query(text)
+    if len(tokens) > SEARCH_MAX_TERMS:
+        raise ValidationError(
+            f"حداکثر {SEARCH_MAX_TERMS} کلمه در یک جستجو مجاز است."
+        )
+    for index, token in enumerate(tokens, start=1):
+        if len(token) > SEARCH_TERM_MAX_LENGTH:
+            raise ValidationError(
+                f"کلمه {index} در جستجو حداکثر باید {SEARCH_TERM_MAX_LENGTH} کاراکتر باشد."
+            )
+    return text
+
+
+def validate_sku_lookup(value: str | None) -> str:
+    """
+    جستجوی دقیق SKU — همان قوانین validate_sku.
+
+    برای endpoint جستجو وقتی کاربر کد کامل وارد می‌کند.
+    """
+    text = normalize_sku(value)
+    validate_sku(text)
+    return text

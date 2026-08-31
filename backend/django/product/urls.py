@@ -8,9 +8,11 @@ from product.views import (
     CategoryListView,
     CategoryTreeView,
     ProductAdminViewSet,
+    ProductDetailByUUIDView,
     ProductDetailView,
     ProductImageAdminViewSet,
     ProductListView,
+    ProductSearchView,
     ProductVariantAdminViewSet,
 )
 
@@ -59,6 +61,12 @@ urlpatterns = [
     ),
     # Storefront (public)
     path("domains/", CatalogDomainListAPIView.as_view(), name="domain-list"),
+    path("search/", ProductSearchView.as_view(), name="product-search"),
+    path(
+        "by-uuid/<uuid:public_uuid>/",
+        ProductDetailByUUIDView.as_view(),
+        name="product-detail-uuid",
+    ),
     path("categories/tree/", CategoryTreeView.as_view(), name="category-tree"),
     path(
         "categories/<slug:slug>/",

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import uuid
+
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from product.constants import (
@@ -29,9 +32,26 @@ from product.constants import (
 )
 from product.managers import CategoryManager, ProductManager, ProductVariantManager
 from product.utils import build_unique_slug, normalize_sku
+from product import validators as product_validators
+from product.validators import validate_sku_format
 
 
-class Category(models.Model):
+class PublicUUIDMixin(models.Model):
+    """شناسه عمومی غیرقابل حدس — برای API و جستجو (جایگزین pk در لایه عمومی)."""
+
+    public_uuid = models.UUIDField(
+        "UUID عمومی",
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        db_index=True,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Category(PublicUUIDMixin, models.Model):
     name = models.CharField("نام دسته", max_length=CATEGORY_NAME_MAX_LENGTH)
     slug = models.SlugField("نامک", max_length=CATEGORY_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
     description = models.TextField("توضیحات", max_length=CATEGORY_DESCRIPTION_MAX_LENGTH, blank=True)
@@ -66,6 +86,10 @@ class Category(models.Model):
         verbose_name = "دسته محصول"
         verbose_name_plural = "دسته‌های محصول"
         ordering = ["sort_order", "name"]
+        indexes = [
+            models.Index(fields=["name"]),
+            models.Index(fields=["is_active", "kind"]),
+        ]
 
     def __str__(self) -> str:
         return self.name
@@ -77,7 +101,16 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField("نام", max_length=PRODUCT_NAME_MAX_LENGTH)
+    public_uuid = models.UUIDField(
+        "UUID مادر",
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        db_index=True,
+        help_text="شناسه عمومی محصول — برای API و جستجو.",
+    )
+
+    name = models.CharField("نام", max_length=PRODUCT_NAME_MAX_LENGTH, db_index=True)
     slug = models.SlugField("نامک", max_length=PRODUCT_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
     subtitle = models.CharField("زیرعنوان", max_length=PRODUCT_SUBTITLE_MAX_LENGTH, blank=True)
     short_description = models.CharField(
@@ -149,6 +182,10 @@ class Product(models.Model):
         verbose_name = "محصول"
         verbose_name_plural = "محصولات"
         ordering = ["sort_order", "name"]
+        indexes = [
+            models.Index(fields=["status", "domain"]),
+            models.Index(fields=["sort_order", "name"]),
+        ]
 
     def __str__(self) -> str:
         return self.name
@@ -165,9 +202,24 @@ class Product(models.Model):
 
 
 class ProductVariant(models.Model):
+    public_uuid = models.UUIDField(
+        "UUID دختر",
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        db_index=True,
+        help_text="شناسه عمومی واریانت — به UUID مادر (محصول) متصل است.",
+    )
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants", verbose_name="محصول")
     label = models.CharField("برچسب", max_length=VARIANT_LABEL_MAX_LENGTH)
-    sku = models.CharField("SKU", max_length=SKU_MAX_LENGTH, unique=True)
+    sku = models.CharField(
+        "SKU",
+        max_length=SKU_MAX_LENGTH,
+        unique=True,
+        db_index=True,
+        validators=[validate_sku_format],
+    )
     unit_price_rial = models.PositiveBigIntegerField("قیمت (ریال)", null=True, blank=True)
     net_weight_grams = models.PositiveIntegerField("وزن (گرم)", null=True, blank=True)
     is_active = models.BooleanField("فعال", default=True)
@@ -181,16 +233,39 @@ class ProductVariant(models.Model):
         verbose_name = "واریانت"
         verbose_name_plural = "واریانت‌ها"
         ordering = ["sort_order", "label"]
+        indexes = [
+            models.Index(fields=["product", "is_active"]),
+        ]
 
     def __str__(self) -> str:
         return f"{self.product.name} — {self.label}"
+
+    def clean(self) -> None:
+        super().clean()
+        errors: dict[str, list[str]] = {}
+        try:
+            product_validators.validate_sku(self.sku)
+        except ValidationError as exc:
+            errors.setdefault("sku", []).extend(exc.messages)
+        if self.unit_price_rial is not None:
+            try:
+                product_validators.validate_unit_price_rial(self.unit_price_rial)
+            except ValidationError as exc:
+                errors.setdefault("unit_price_rial", []).extend(exc.messages)
+        if self.net_weight_grams is not None:
+            try:
+                product_validators.validate_net_weight_grams(self.net_weight_grams)
+            except ValidationError as exc:
+                errors.setdefault("net_weight_grams", []).extend(exc.messages)
+        if errors:
+            raise ValidationError(errors)
 
     def save(self, *args, **kwargs):
         self.sku = normalize_sku(self.sku)
         super().save(*args, **kwargs)
 
 
-class ProductImage(models.Model):
+class ProductImage(PublicUUIDMixin, models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images", verbose_name="محصول")
     role = models.CharField("نقش", max_length=20, choices=ProductImageRole.CHOICES, default=ProductImageRole.PACKSHOT)
     image = models.ImageField("تصویر", upload_to="products/%Y/%m/")

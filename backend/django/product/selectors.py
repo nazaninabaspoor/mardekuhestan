@@ -92,6 +92,34 @@ def get_store_product_by_slug(
         return None
 
 
+def get_store_product_by_public_uuid(
+    public_uuid: str,
+    channel: str = SalesChannel.B2C,
+) -> Product | None:
+    try:
+        return get_store_products(channel).by_public_uuid(public_uuid).get()
+    except Product.DoesNotExist:
+        return None
+
+
+def search_store_products(
+    query: str,
+    channel: str = SalesChannel.B2C,
+    *,
+    domain: str | None = None,
+    category_slug: str | None = None,
+) -> QuerySet[Product]:
+    from product import validators as product_validators
+
+    product_validators.validate_catalog_search_query(query)
+    qs = Product.objects.search_storefront(query, channel=channel)
+    if domain:
+        qs = qs.for_domain(domain)
+    if category_slug:
+        qs = qs.for_category_slug(category_slug)
+    return qs.catalog_order()
+
+
 def get_category_by_slug(slug: str) -> Category | None:
     try:
         return Category.objects.active().get(slug=slug)
