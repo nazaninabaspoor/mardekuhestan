@@ -732,9 +732,9 @@ html.is-v2-bell-cursor textarea {
   align-items: center;
   min-height: 36px;
   margin-inline-start: 4px;
-  padding: 0 4px 0 8px;
-  background: rgb(244 240 232 / 92%);
-  border: 1px solid rgb(244 240 232 / 34%);
+  padding: 0;
+  background: transparent;
+  border: 0;
   position: relative;
   z-index: 50;
   flex: 0 1 220px;
@@ -778,22 +778,9 @@ html.is-v2-bell-cursor textarea {
   color: color-mix(in srgb, #005b48 40%, #5d686e);
 }
 
+.site-header--v2 .v2-header-search .button,
 .site-header--v2 .v2-header-search button {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 0;
-  background: #005b48;
-  color: #f4f0e8;
-  cursor: pointer;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.site-header--v2 .v2-header-search button svg {
-  width: 14px;
-  height: 14px;
+  /* glass styles live in catalog-search-box.module.css */
 }
 
 .site-header--v2 .v2-menu-toggle {

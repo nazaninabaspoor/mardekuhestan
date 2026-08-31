@@ -1,17 +1,14 @@
 import { homeCategoryProducts, type HomeDoorId } from "@/lib/brand";
-import {
-  apiKeyForBrandKey,
-  domainLabelForBrandKey,
-} from "@/lib/catalog/brand-keys";
+import { domainLabelForBrandKey } from "@/lib/catalog/brand-keys";
 import type { CatalogProductCard } from "@/lib/catalog/map";
-import { normalizeFa, searchTokens } from "@/lib/catalog/normalize-fa";
+import { matchesCatalogPrefix, normalizeFa } from "@/lib/catalog/normalize-fa";
 
 export type CatalogSearchHit = CatalogProductCard & {
   categoryId: string;
   domainLabel: string;
 };
 
-type IndexedHit = CatalogSearchHit & { blob: string };
+type IndexedHit = CatalogSearchHit;
 
 let indexCache: IndexedHit[] | null = null;
 
@@ -20,24 +17,19 @@ function buildIndex(): IndexedHit[] {
 
   const rows: IndexedHit[] = [];
   for (const brandKey of Object.keys(homeCategoryProducts) as HomeDoorId[]) {
-    const categoryId = apiKeyForBrandKey(brandKey);
     const domainLabel = domainLabelForBrandKey(brandKey);
 
     for (const item of homeCategoryProducts[brandKey]) {
-      const hit: CatalogSearchHit = {
+      rows.push({
         id: item.id,
         name: item.name,
         note: item.note,
-        href: `/products/${item.id}`,
+        href: item.href,
         image: item.image,
         alt: item.alt,
-        categoryId,
+        categoryId: brandKey,
         domainLabel,
-      };
-      const blob = normalizeFa(
-        [item.name, item.note, item.teaser, item.story, domainLabel, categoryId].join(" "),
-      );
-      rows.push({ ...hit, blob });
+      });
     }
   }
 
@@ -45,43 +37,29 @@ function buildIndex(): IndexedHit[] {
   return rows;
 }
 
-function scoreHit(needle: string, tokens: string[], row: IndexedHit): number {
-  const name = normalizeFa(row.name);
-  let score = 0;
-
-  if (name === needle) score += 200;
-  else if (name.startsWith(needle)) score += 120;
-  else if (name.includes(needle)) score += 80;
-
-  if (normalizeFa(row.note).includes(needle)) score += 40;
-  if (row.blob.includes(needle)) score += 25;
-
-  for (const token of tokens) {
-    if (name.startsWith(token)) score += 35;
-    else if (name.includes(token)) score += 20;
-    else if (row.blob.includes(token)) score += 10;
-  }
-
-  return score;
+export function filterCatalogPrefixHits(
+  hits: CatalogSearchHit[],
+  query: string,
+): CatalogSearchHit[] {
+  const needle = normalizeFa(query);
+  if (!needle) return [];
+  return hits.filter((hit) => matchesCatalogPrefix(hit.name, query));
 }
 
 export function searchStaticCatalog(query: string, limit = 8): CatalogSearchHit[] {
   const needle = normalizeFa(query);
   if (!needle) return [];
 
-  const tokens = searchTokens(query);
   const ranked = buildIndex()
-    .map((row) => ({ row, score: scoreHit(needle, tokens, row) }))
-    .filter((entry) => entry.score > 0)
-    .sort((a, b) => b.score - a.score || a.row.name.localeCompare(b.row.name, "fa"));
+    .filter((row) => matchesCatalogPrefix(row.name, query))
+    .sort((a, b) => a.name.localeCompare(b.name, "fa"));
 
   const seen = new Set<string>();
   const hits: CatalogSearchHit[] = [];
-  for (const { row } of ranked) {
+  for (const row of ranked) {
     if (seen.has(row.id)) continue;
     seen.add(row.id);
-    const { blob: _blob, ...hit } = row;
-    hits.push(hit);
+    hits.push(row);
     if (hits.length >= limit) break;
   }
   return hits;

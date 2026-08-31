@@ -2,21 +2,20 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 
 import type { CatalogSearchHit } from "@/lib/catalog/static-search";
 
+/** مسیر نمایش محصول در سکشن کاتالوگ /v2 */
+export function kitchenProductUrl(hit: CatalogSearchHit): string {
+  const cat = encodeURIComponent(hit.categoryId);
+  const product = encodeURIComponent(hit.id);
+  return `/v2?cat=${cat}&p=${product}#for-home-kitchen`;
+}
+
 export function navigateCatalogHit(
   hit: CatalogSearchHit,
   router: AppRouterInstance,
   pathname: string,
 ) {
-  const cat = encodeURIComponent(hit.categoryId);
-  const product = encodeURIComponent(hit.id);
-
-  if (pathname === "/v2" || pathname.startsWith("/v2/")) {
-    router.push(`/v2?cat=${cat}&p=${product}#for-home-kitchen`);
-    return;
-  }
-
-  if (pathname === "/") {
-    router.push(`/?cat=${cat}&p=${product}#for-home-kitchen`);
+  if (pathname === "/v2" || pathname.startsWith("/v2/") || pathname === "/") {
+    router.push(kitchenProductUrl(hit));
     return;
   }
 

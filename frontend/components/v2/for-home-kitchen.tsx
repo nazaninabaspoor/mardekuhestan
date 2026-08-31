@@ -20,6 +20,44 @@ import styles from "./for-home-kitchen.module.css";
 
 const DEFAULT_CATEGORY = productCategories[1]?.id ?? "seafood";
 
+const CATEGORY_ALIASES: Record<string, string> = {
+  agriculture: "farm",
+  farm: "agriculture",
+  ready: "ready-meal",
+  "ready-meal": "ready",
+  "ready-to-cook": "cook-ready",
+  "cook-ready": "ready-to-cook",
+};
+
+function resolveKitchenCategoryId(
+  rawCat: string | null,
+  productId: string | null,
+  categories: ProductCategory[],
+  productsByCategory: Record<string, ShowcaseProduct[]>,
+): string | null {
+  const pick = (id: string | null | undefined) =>
+    id && categories.some((category) => category.id === id) ? id : null;
+
+  const fromParam = pick(rawCat);
+  if (fromParam) return fromParam;
+
+  if (rawCat && CATEGORY_ALIASES[rawCat]) {
+    const aliased = pick(CATEGORY_ALIASES[rawCat]);
+    if (aliased) return aliased;
+  }
+
+  if (productId) {
+    for (const category of categories) {
+      const products = productsByCategory[category.id] ?? [];
+      if (products.some((item) => item.id === productId)) {
+        return category.id;
+      }
+    }
+  }
+
+  return rawCat;
+}
+
 type ForHomeKitchenProps = {
   catalog?: V2KitchenCatalogPayload;
 };
@@ -62,21 +100,40 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
   useEffect(() => {
     const cat = searchParams.get("cat");
     const productId = searchParams.get("p");
-    if (cat && categories.some((category) => category.id === cat)) {
-      setActiveCategoryId(cat);
+    const resolvedCat = resolveKitchenCategoryId(
+      cat,
+      productId,
+      categories,
+      productsByCategory,
+    );
+
+    if (resolvedCat) {
+      setActiveCategoryId(resolvedCat);
     }
     if (productId) {
       setFocusProductId(productId);
-      document.getElementById("for-home-kitchen")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [searchParams, categories, productsByCategory]);
+
+  useEffect(() => {
+    const productId = searchParams.get("p");
+    if (!productId) return;
+
+    const scrollToProduct = () => {
+      document.getElementById("for-home-kitchen")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
       window.setTimeout(() => {
         document
           .getElementById(`catalog-product-${productId}`)
           ?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 280);
-    } else if (cat) {
-      document.getElementById("for-home-kitchen")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [searchParams, categories]);
+      }, 320);
+    };
+
+    const frame = window.requestAnimationFrame(scrollToProduct);
+    return () => window.cancelAnimationFrame(frame);
+  }, [searchParams, activeCategoryId, activeProducts]);
 
   useEffect(() => {
     if (!categories.some((category) => category.id === activeCategoryId)) {

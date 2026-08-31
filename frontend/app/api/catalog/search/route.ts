@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 
 import { listProducts } from "@/lib/api/catalog";
 import { mapProductToCard } from "@/lib/catalog/map";
-import { searchStaticCatalog, type CatalogSearchHit } from "@/lib/catalog/static-search";
+import {
+  filterCatalogPrefixHits,
+  searchStaticCatalog,
+  type CatalogSearchHit,
+} from "@/lib/catalog/static-search";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -22,9 +26,10 @@ export async function GET(request: Request) {
         domainLabel: card.domainLabel ?? item.domain_label_fa,
       };
     });
+    const filtered = filterCatalogPrefixHits(apiHits, q);
     const results =
-      apiHits.length > 0
-        ? apiHits
+      filtered.length > 0
+        ? filtered
         : searchStaticCatalog(q, 8);
     return NextResponse.json({
       count: results.length,

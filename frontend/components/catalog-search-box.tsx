@@ -19,10 +19,12 @@ import {
   navigateCatalogHit,
 } from "@/lib/catalog/navigate-hit";
 import {
+  filterCatalogPrefixHits,
   mergeSearchHits,
   searchStaticCatalog,
   type CatalogSearchHit,
 } from "@/lib/catalog/static-search";
+import { matchesCatalogPrefix } from "@/lib/catalog/normalize-fa";
 
 type CatalogSearchBoxProps = {
   className?: string;
@@ -102,16 +104,16 @@ export function CatalogSearchBox({
         );
         if (!response.ok) return;
         const data = (await response.json()) as { results: CatalogSearchHit[] };
-        setResults((prev) =>
-          mergeSearchHits(
-            searchStaticCatalog(trimmed, 8),
-            data.results.map((item) => ({
-              ...item,
-              categoryId: item.categoryId ?? "fresh-meat",
-              domainLabel: item.domainLabel ?? "",
-            })),
-            8,
-          ),
+        const apiHits = filterCatalogPrefixHits(
+          data.results.map((item) => ({
+            ...item,
+            categoryId: item.categoryId ?? "fresh-meat",
+            domainLabel: item.domainLabel ?? "",
+          })),
+          trimmed,
+        );
+        setResults(
+          mergeSearchHits(searchStaticCatalog(trimmed, 8), apiHits, 8),
         );
       } catch (cause) {
         if (cause instanceof DOMException && cause.name === "AbortError") return;
@@ -211,6 +213,19 @@ export function CatalogSearchBox({
   };
 
   const showPanel = open && query.trim().length >= minChars;
+  const trimmedQuery = query.trim();
+  const highlightPrefix = (name: string) => {
+    if (!trimmedQuery || !matchesCatalogPrefix(name, trimmedQuery)) {
+      return name;
+    }
+    const visibleLen = Math.min(trimmedQuery.length, name.length);
+    return (
+      <>
+        <mark className={styles.match}>{name.slice(0, visibleLen)}</mark>
+        {name.slice(visibleLen)}
+      </>
+    );
+  };
   const viewportWidth = mounted ? window.innerWidth : 360;
   const panelWidth = Math.min(340, viewportWidth - 16);
   const panelStyle =
@@ -230,7 +245,7 @@ export function CatalogSearchBox({
   const panel =
     showPanel && panelStyle ? (
       <div
-        className={styles.panel}
+        className={`${styles.panel} ${styles[`panel--${variant}`]}`}
         style={panelStyle}
         data-catalog-search-panel
         role="presentation"
@@ -249,7 +264,7 @@ export function CatalogSearchBox({
                     <Image src={hit.image} alt="" width={40} height={40} sizes="40px" />
                   </span>
                   <span className={styles.copy}>
-                    <span className={styles.name}>{hit.name}</span>
+                    <span className={styles.name}>{highlightPrefix(hit.name)}</span>
                     <span className={styles.meta}>
                       {hit.domainLabel}
                       {hit.note ? ` · ${hit.note}` : ""}
@@ -277,7 +292,7 @@ export function CatalogSearchBox({
     <>
       <div
         ref={rootRef}
-        className={`${styles.root} catalog-search catalog-search--${variant} ${className}`.trim()}
+        className={`${styles.root} ${styles[`root--${variant}`]} catalog-search catalog-search--${variant} ${className}`.trim()}
       >
         <input
           ref={inputRef}

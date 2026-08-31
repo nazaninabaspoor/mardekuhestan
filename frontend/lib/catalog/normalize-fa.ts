@@ -16,3 +16,10 @@ export function searchTokens(query: string): string[] {
   if (!normalized) return [];
   return normalized.split(" ").filter((token) => token.length > 0);
 }
+
+/** فقط نام‌هایی که با عبارت جستجو شروع می‌شوند (نه حرف دوم به بعد) */
+export function matchesCatalogPrefix(name: string, query: string): boolean {
+  const needle = normalizeFa(query);
+  if (!needle) return false;
+  return normalizeFa(name).startsWith(needle);
+}
