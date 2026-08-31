@@ -56,7 +56,7 @@ export function SiteHeader() {
                 <span className="nav-label">{tool.label}</span>
               </Link>
             ))}
-            <CatalogSearchBox />
+            <CatalogSearchBox className="header-search" />
             <button
               type="button"
               className="menu-toggle"

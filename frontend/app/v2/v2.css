@@ -778,11 +778,6 @@ html.is-v2-bell-cursor textarea {
   color: color-mix(in srgb, #005b48 40%, #5d686e);
 }
 
-.site-header--v2 .v2-header-search .button,
-.site-header--v2 .v2-header-search button {
-  /* glass styles live in catalog-search-box.module.css */
-}
-
 .site-header--v2 .v2-menu-toggle {
   display: none;
   flex-direction: column;
