@@ -752,13 +752,26 @@ html.is-v2-bell-cursor textarea {
 }
 
 .site-header--v2 .v2-header-search input {
-  width: 132px;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
   border: 0;
   background: transparent;
   color: #1d1d1b;
   font: inherit;
   font-size: 12px;
   outline: none;
+  pointer-events: auto;
+  cursor: text;
+}
+
+.site-header--v2 .catalog-search--v2 {
+  flex: 0 1 240px;
+  min-width: 168px;
+}
+
+.site-header--v2 .catalog-search--v2 .input {
+  width: 100%;
 }
 
 .site-header--v2 .v2-header-search input::placeholder {
@@ -774,6 +787,8 @@ html.is-v2-bell-cursor textarea {
   background: #005b48;
   color: #f4f0e8;
   cursor: pointer;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .site-header--v2 .v2-header-search button svg {

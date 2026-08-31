@@ -5,6 +5,11 @@
 .products { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(118px, 1fr); gap: clamp(.45rem, 1.1vw, 1.15rem); overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; scroll-snap-type: x proximity; direction: rtl; }
 .products::-webkit-scrollbar { display: none; }
 .item { min-width: 0; scroll-snap-align: center; }
+.highlighted .plate {
+  filter: drop-shadow(0 0 12px rgb(103 215 187 / 55%)) drop-shadow(0 10px 12px rgb(0 0 0 / 46%));
+  transform: scale(1.06);
+}
+.highlighted strong { color: #67d7bb; }
 .link { display: grid; justify-items: center; gap: .25rem; color: #ede5d4; text-decoration: none; outline: none; }
 .plate { position: relative; display: block; width: clamp(82px, 6.5vw, 108px); aspect-ratio: 1.45; overflow: visible; border-radius: 50%; filter: drop-shadow(0 10px 10px rgb(0 0 0 / 40%)); transition: filter .25s ease, transform .25s ease; }
 .plate::after { content: ""; position: absolute; z-index: -1; left: 5%; right: 5%; bottom: -4px; height: 32%; border: 1px solid rgb(190 151 75 / 32%); border-radius: 50%; background: radial-gradient(ellipse, #26372e 0%, #0b1711 72%); box-shadow: 0 8px 14px rgb(0 0 0 / 38%); }
