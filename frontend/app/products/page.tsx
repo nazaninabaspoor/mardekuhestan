@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import type { CatalogDomain, CatalogProductListItem } from "@/lib/api/catalog.types";
+import type { CatalogDomain } from "@/lib/api/catalog.types";
 import { CatalogProductCard } from "@/components/catalog-product-card";
 import {
   listDomains,

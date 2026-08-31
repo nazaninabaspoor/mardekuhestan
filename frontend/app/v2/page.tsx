@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ForHomeSection } from "@/components/for-home-section";
+import { ForHomeKitchenContainer } from "@/components/v2/for-home-kitchen-container";
 import { V2CatalogFlipbook } from "@/components/v2/v2-catalog-flipbook";
 import { V2ComingSoonSection } from "@/components/v2/v2-coming-soon";
 import { V2HeroSection } from "@/components/v2/v2-hero-section";
@@ -26,7 +26,7 @@ export default function HomeV2Page() {
       <V2PageEffects />
       <main className="home-main home-v2">
         <V2HeroSection />
-        <ForHomeSection variant="v2" />
+        <ForHomeKitchenContainer />
         <V2ComingSoonSection />
         <V2MagazineNotebook />
         <V2CatalogFlipbook />

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
-import { CatalogSearchForm } from "@/components/catalog-search-form";
+import { CatalogSearchBox } from "@/components/catalog-search-box";
 import { V2SiteHeader } from "@/components/v2/v2-site-header";
 import { headerTools, navItems } from "@/lib/brand";
 
@@ -56,7 +56,7 @@ export function SiteHeader() {
                 <span className="nav-label">{tool.label}</span>
               </Link>
             ))}
-            <CatalogSearchForm />
+            <CatalogSearchBox />
             <button
               type="button"
               className="menu-toggle"
@@ -78,7 +78,7 @@ export function SiteHeader() {
         className={`mobile-panel${open ? " is-open" : ""}`}
         aria-label="منوی موبایل"
       >
-        <CatalogSearchForm className="header-search mobile-search" />
+        <CatalogSearchBox className="header-search mobile-search" variant="default" />
         {navItems.map((item) => (
           <Link
             key={item.href}

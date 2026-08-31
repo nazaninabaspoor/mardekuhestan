@@ -278,7 +278,7 @@ function ForHomeSectionDefault({
   }));
   const productsByDoor =
     catalog?.productsByDoor ??
-    (homeCategoryProducts as Record<string, ForHomeProductItem[]>);
+    (homeCategoryProducts as unknown as Record<string, ForHomeProductItem[]>);
   const initialDoorId = doors[0]?.id ?? DEFAULT_DOOR;
   const rootRef = useRef<HTMLElement | null>(null);
   const dialogTitleId = useId();

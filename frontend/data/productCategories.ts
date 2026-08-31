@@ -1,9 +1,4 @@
-export type ProductCategoryId =
-  | "fresh-meat"
-  | "seafood"
-  | "dairy"
-  | "ready-meal"
-  | "farm";
+export type ProductCategoryId = string;
 
 export type ProductCategory = {
   id: ProductCategoryId;

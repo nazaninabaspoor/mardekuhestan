@@ -28,6 +28,7 @@
 .qualitySeal strong { font-size: .68rem; line-height: 1.55; }
 .qualitySeal span { color: #d4ad60; font-size: .61rem; line-height: 1.45; }
 .balanceSpace { grid-column: 3; }
+.emptyCatalog { margin: 1.25rem auto 0; max-width: 36rem; padding: .85rem 1rem; border-radius: 12px; background: rgb(244 240 232 / 8%); color: rgb(244 239 229 / 82%); font-size: .88rem; font-weight: 650; line-height: 1.7; text-align: center; }
 .visible .copy, .visible .header { animation: revealSection .7s cubic-bezier(.22,1,.36,1) both; }
 @keyframes revealSection { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 1200px) { .composition { grid-template-columns: minmax(250px, 1fr) minmax(460px, 560px) minmax(230px, 1fr); } .copy { width: 320px; } .copy h3 { font-size: clamp(2.5rem, 4.2vw, 3.7rem); } .header { top: 34px; right: clamp(32px, 5vw, 70px); width: min(520px, 48vw); } .tabs { top: 8rem; } .qualitySeal { right: -1%; width: 96px; height: 96px; } }

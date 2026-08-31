@@ -23,6 +23,8 @@ export type CatalogProductCard = {
   image: string;
   alt: string;
   price?: string;
+  categoryId?: string;
+  domainLabel?: string;
 };
 
 export type ForHomeProductItem = CatalogProductCard & {
@@ -64,6 +66,8 @@ export function mapProductToCard(
     image,
     alt: product.hero_image?.alt_text || product.name,
     price: product.unit_price_display || undefined,
+    categoryId: product.domain_frontend_key,
+    domainLabel: product.domain_label_fa,
   };
 }
 

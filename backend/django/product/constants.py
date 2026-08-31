@@ -72,7 +72,7 @@ DEFAULT_LIST_PAGE_SIZE: Final[int] = 24
 MAX_LIST_PAGE_SIZE: Final[int] = 100
 
 # جستجوی کاربر در فروشگاه
-SEARCH_QUERY_MIN_LENGTH: Final[int] = 2
+SEARCH_QUERY_MIN_LENGTH: Final[int] = 1
 SEARCH_QUERY_MAX_LENGTH: Final[int] = 120
 SEARCH_MAX_TERMS: Final[int] = 8
 SEARCH_TERM_MAX_LENGTH: Final[int] = 48
