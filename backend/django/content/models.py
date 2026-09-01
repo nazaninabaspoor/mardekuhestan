@@ -282,9 +282,9 @@ class Article(models.Model):
         related_name="articles",
     )
     editor_notes = models.TextField(
-        "یادداشت داخلی تیم",
+        "یادداشت برای همکار",
         blank=True,
-        help_text="فقط برای تیم محتوا/سئو؛ در سایت نمایش داده نمی‌شود",
+        help_text="فقط تیم می‌بیند؛ روی سایت نمی‌آید",
     )
 
     objects = ArticleManager()
