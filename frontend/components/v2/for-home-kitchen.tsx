@@ -7,6 +7,8 @@ import { ProductCards } from "@/components/product-showcase/ProductCards";
 import { ProductInfo } from "@/components/product-showcase/ProductInfo";
 import { ProductStage } from "@/components/product-showcase/ProductStage";
 import { ProductTabs } from "@/components/product-showcase/ProductTabs";
+import { ProductDetailModal } from "@/components/product-detail/product-detail-modal";
+import { getProductDetail, type ProductDetailData } from "@/lib/catalog/product-details";
 import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
 import {
   productCategories,
@@ -141,6 +143,8 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
   const [focusProductId, setFocusProductId] = useState<string | null>(null);
   const [focusTick, setFocusTick] = useState(0);
   const [pinnedProduct, setPinnedProduct] = useState<ShowcaseProduct | null>(null);
+  const [detailProduct, setDetailProduct] = useState<ProductDetailData | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const focusTimerRef = useRef<number | null>(null);
 
   const categories = catalog?.categories ?? productCategories;
@@ -321,6 +325,18 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
     void playCategoryBell();
   };
 
+  const openProductDetail = (prod?: ShowcaseProduct | null) => {
+    const target = prod || heroProduct;
+    const detail = getProductDetail(
+      target?.id || activeCategoryId,
+      activeCategoryId,
+      target?.name || activeCategory?.headline,
+      target?.image || activeCategory?.heroImage,
+    );
+    setDetailProduct(detail);
+    setIsDetailOpen(true);
+  };
+
   if (!activeCategory) return null;
 
   return (
@@ -356,14 +372,8 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
             <ProductInfo
               category={activeCategory}
               productName={focusProductId ? heroProduct?.name : null}
-              onViewProduct={() =>
-                router.push(heroProduct?.href ?? `/products?cat=${activeCategoryId}`)
-              }
-              onPlayVideo={(category) => {
-                if (category.video) {
-                  window.open(category.video, "_blank", "noopener,noreferrer");
-                }
-              }}
+              onViewProduct={() => openProductDetail()}
+              onPlayVideo={() => openProductDetail()}
             />
           </div>
 
@@ -387,6 +397,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
             title={`انواع ${activeCategory.title}`}
             products={activeProducts as ReadonlyArray<ShowcaseProduct>}
             highlightId={focusProductId}
+            onProductClick={(p) => openProductDetail(p)}
           />
         ) : (
           <p className={styles.emptyCatalog}>
@@ -396,6 +407,12 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
           </p>
         )}
       </div>
+
+      <ProductDetailModal
+        isOpen={isDetailOpen}
+        product={detailProduct}
+        onClose={() => setIsDetailOpen(false)}
+      />
     </section>
   );
 }

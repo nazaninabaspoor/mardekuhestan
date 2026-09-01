@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 
 import styles from "./ProductCards.module.css";
 
@@ -17,10 +16,22 @@ export type ShowcaseProduct = {
 type ProductCardProps = {
   product: ShowcaseProduct;
   highlighted?: boolean;
+  onClick?: (product: ShowcaseProduct) => void;
 };
 
-export function ProductCard({ product, highlighted = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  highlighted = false,
+  onClick,
+}: ProductCardProps) {
   const reduceMotion = useReducedMotion();
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick(product);
+    }
+  };
 
   return (
     <motion.div
@@ -29,12 +40,17 @@ export function ProductCard({ product, highlighted = false }: ProductCardProps) 
       whileHover={reduceMotion ? undefined : { y: -4 }}
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Link href={product.href} className={styles.link}>
+      <a
+        href={product.href}
+        className={styles.link}
+        onClick={handleClick}
+        aria-label={`مشاهده شناسنامه و جزئیات ${product.name}`}
+      >
         <span className={styles.plate}>
           <Image src={product.image} alt={product.alt} fill sizes="150px" />
         </span>
         <strong>{product.name}</strong>
-      </Link>
+      </a>
     </motion.div>
   );
 }
