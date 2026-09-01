@@ -1,4 +1,5 @@
-import { apiFetch } from "@/lib/api/client";
+import { apiFetch, ApiError } from "@/lib/api/client";
+import { setAccessToken } from "@/lib/api/access-token";
 
 export type AuthUser = {
   id: number;
@@ -27,7 +28,7 @@ export function registerAccount(input: {
   name: string;
   phone?: string;
 }) {
-  return apiFetch<AuthPayload>("/api/auth/register/", {
+  const payload = await apiFetch<AuthPayload>("/api/auth/register/", {
     ...authInit,
     method: "POST",
     body: JSON.stringify({
@@ -38,6 +39,8 @@ export function registerAccount(input: {
       phone: input.phone ?? "",
     }),
   });
+  setAccessToken(payload.access);
+  return payload;
 }
 
 export function loginAccount(email: string, password: string) {

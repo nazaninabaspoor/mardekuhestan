@@ -1,4 +1,5 @@
 import { CATALOG_REVALIDATE_SECONDS, getApiBaseUrl } from "@/lib/api/config";
+import { getAccessToken } from "@/lib/api/access-token";
 
 export class ApiError extends Error {
   constructor(
@@ -41,10 +42,12 @@ export async function apiFetch<T>(
   const { searchParams, revalidate = CATALOG_REVALIDATE_SECONDS, ...init } =
     options;
 
-  const headers: HeadersInit = {
-    Accept: "application/json",
-    ...(init.headers ?? {}),
-  };
+  const headers = new Headers(init.headers);
+  headers.set("Accept", "application/json");
+  const token = getAccessToken();
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
 
   const response = await fetch(buildUrl(path, searchParams), {
     ...init,
