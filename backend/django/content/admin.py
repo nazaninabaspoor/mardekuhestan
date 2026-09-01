@@ -259,10 +259,10 @@ class ArticleAdmin(ModelAdmin):
             },
         ),
         (
-            "هوش مصنوعی",
+            "پاسخ‌های اینترنتی",
             {
                 "classes": ["tab"],
-                "description": "برای GEO: خلاصه قابل استناد، حقایق، موجودیت‌ها و سوالات متداول را با کلیدهای فارسی بنویسید.",
+                "description": "خلاصه، نکته‌ها و سوال‌وجواب را ساده بنویسید تا اگر کسی در اینترنت پرسید، جواب درست باشد.",
                 "fields": (
                     "geo_summary",
                     "geo_key_facts",
@@ -277,7 +277,7 @@ class ArticleAdmin(ModelAdmin):
             "آمادگی",
             {
                 "classes": ["tab"],
-                "description": "قبل از انتشار این چک‌لیست را مرور کنید. تعداد کلمات آزاد است.",
+                "description": "قبل از انتشار این فهرست را نگاه کنید.",
                 "fields": (
                     ("word_count", "reading_time_minutes"),
                     "readiness_panel",
@@ -329,9 +329,9 @@ class ArticleAdmin(ModelAdmin):
     )
     def readiness_badge(self, obj: Article):
         checks = seo_readiness_checklist(obj)
-        return "آماده" if checks["آماده برای انتشار"] else "نیاز به تکمیل"
+        return "آماده" if checks["آماده برای انتشار"] else "چند مورد مانده"
 
-    @admin.display(description="چک‌لیست سئو و هوش مصنوعی")
+    @admin.display(description="فهرست آمادگی")
     def readiness_panel(self, obj: Article):
         if not obj.pk:
             return format_html(
