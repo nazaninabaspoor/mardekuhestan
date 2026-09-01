@@ -23,6 +23,7 @@ class RegisterSerializer(IdentityLockedSerializer):
     phone = serializers.CharField(required=False, allow_blank=True, default="")
 
     def validate(self, attrs):
+        attrs = super().validate(attrs)
         if attrs["password"] != attrs["password_repeat"]:
             raise serializers.ValidationError(
                 {"password_repeat": "دو رمز یکی نیستند."}
@@ -36,6 +37,7 @@ class LoginSerializer(IdentityLockedSerializer):
     password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
+        attrs = super().validate(attrs)
         ident = (attrs.get("email") or attrs.get("username") or "").strip()
         if not ident:
             raise serializers.ValidationError({"email": "ایمیل را بنویسید."})
@@ -47,12 +49,13 @@ class RefreshSerializer(serializers.Serializer):
     refresh = serializers.CharField(required=False, allow_blank=True, default="")
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(IdentityLockedSerializer):
     current_password = serializers.CharField(write_only=True)
     new_password = serializers.CharField(write_only=True, min_length=PASSWORD_MIN_LENGTH)
     new_password_repeat = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
+        attrs = super().validate(attrs)
         if attrs["new_password"] != attrs["new_password_repeat"]:
             raise serializers.ValidationError(
                 {"new_password_repeat": "دو رمز یکی نیستند."}
@@ -60,7 +63,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         return attrs
 
 
-class ProfileUpdateSerializer(serializers.Serializer):
+class ProfileUpdateSerializer(IdentityLockedSerializer):
     name = serializers.CharField(max_length=DISPLAY_NAME_MAX_LENGTH, required=False)
     phone = serializers.CharField(required=False, allow_blank=True)
 

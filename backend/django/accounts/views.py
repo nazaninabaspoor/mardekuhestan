@@ -11,6 +11,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.constants import REFRESH_COOKIE_NAME
+from accounts.permissions import IsCustomerOrStaff
 from accounts.serializers import (
     ChangePasswordSerializer,
     LoginSerializer,
@@ -30,6 +31,7 @@ from accounts.services import (
     update_profile,
 )
 from accounts.utils import clear_auth_cookies, set_auth_cookies
+from sec.ownership import acting_user, reject_foreign_identity
 from sec.throttling import AuthLoginThrottle, AuthRefreshThrottle, AuthRegisterThrottle
 
 
