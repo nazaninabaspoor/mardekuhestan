@@ -8,6 +8,8 @@ import importlib.util
 import os
 from pathlib import Path
 
+from django.templatetags.static import static
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -113,7 +115,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -203,13 +205,13 @@ CKEDITOR_5_CUSTOM_CSS = "content/admin/ckeditor_content.css"
 CKEDITOR_5_USER_LANGUAGE = False
 
 _CK_COLOR_PALETTE = [
-    {"color": "hsl(4, 90%, 58%)", "label": "قرمز"},
-    {"color": "hsl(340, 82%, 52%)", "label": "صورتی"},
-    {"color": "hsl(291, 64%, 42%)", "label": "بنفش"},
-    {"color": "hsl(142, 52%, 36%)", "label": "سبز مرد کوهستان"},
-    {"color": "hsl(207, 90%, 54%)", "label": "آبی"},
-    {"color": "hsl(29, 90%, 50%)", "label": "نارنجی"},
-    {"color": "hsl(0, 0%, 0%)", "label": "مشکی"},
+    {"color": "hsl(165, 100%, 18%)", "label": "سبز جنگلی"},
+    {"color": "hsl(165, 100%, 16%)", "label": "سبز تیره"},
+    {"color": "hsl(40, 33%, 93%)", "label": "کرم"},
+    {"color": "hsl(11, 56%, 36%)", "label": "خاکی"},
+    {"color": "hsl(219, 59%, 30%)", "label": "سرمه‌ای"},
+    {"color": "hsl(28, 79%, 42%)", "label": "کهربایی"},
+    {"color": "hsl(0, 0%, 11%)", "label": "جوهر"},
     {"color": "hsl(0, 0%, 30%)", "label": "خاکستری"},
 ]
 
@@ -411,119 +413,216 @@ CKEDITOR_5_CONFIGS = {
 }
 
 
-def _content_panel_permission(request):
-    user = request.user
-    if not user.is_authenticated or not user.is_staff:
-        return False
-    if user.is_superuser:
-        return True
-    from content.constants import CONTENT_PANEL_GROUPS
-
-    return user.groups.filter(name__in=CONTENT_PANEL_GROUPS).exists()
-
-
-_STUDIO_COLORS = {
+_MK_COLORS = {
     "primary": {
-        "50": "#f3faf3",
-        "100": "#e3f5e4",
-        "200": "#c8eacb",
-        "300": "#9dd7a4",
-        "400": "#6abc74",
-        "500": "#3f9d4d",
-        "600": "#2f7f3c",
-        "700": "#276533",
-        "800": "#22512b",
-        "900": "#1d4325",
-        "950": "#0c2412",
+        "50": "#eef6f4",
+        "100": "#d5ebe4",
+        "200": "#abd7c9",
+        "300": "#75b8a5",
+        "400": "#3d927a",
+        "500": "#005B48",
+        "600": "#005040",
+        "700": "#003d32",
+        "800": "#002e26",
+        "900": "#001f1a",
+        "950": "#001411",
     },
 }
 
-# ادمین فنی سیستم
+_MK_STYLES = [
+    lambda request: static("admin/mk-admin.css") + "?v=brand-1",
+]
+
+# پنل اصلی فروشگاه
 UNFOLD = {
-    "SITE_TITLE": "ادمین فنی | مرد کوهستان",
-    "SITE_HEADER": "ادمین فنی مرد کوهستان",
-    "SITE_SUBHEADER": "پنل مدیریت سیستم، سفارش، انبار و زیرساخت",
-    "SITE_SYMBOL": "settings",
+    "SITE_TITLE": "مدیریت مرد کوهستان",
+    "SITE_HEADER": "مرد کوهستان",
+    "SITE_SUBHEADER": "خانهٔ مدیریت فروشگاه",
+    "SITE_URL": "/",
+    "SITE_SYMBOL": "spa",
+    "SITE_LOGO": lambda request: static("admin/brand/logo-full.svg"),
+    "THEME": "light",
+    "BORDER_RADIUS": "10px",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": False,
-    "COLORS": _STUDIO_COLORS,
+    "ENVIRONMENT": "core.admin_ui.environment_callback",
+    "DASHBOARD_CALLBACK": "core.admin_ui.admin_dashboard_callback",
+    "STYLES": _MK_STYLES,
+    "COLORS": _MK_COLORS,
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": True,
-        "navigation": [],
+        "navigation": [
+            {
+                "title": "خانه",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "شروع کار",
+                        "icon": "home",
+                        "link": reverse_lazy("admin:index"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+            {
+                "title": "فروشگاه",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "محصول‌ها",
+                        "icon": "inventory_2",
+                        "link": reverse_lazy("admin:product_product_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "دسته‌ها",
+                        "icon": "category",
+                        "link": reverse_lazy("admin:product_category_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "نوع و اندازه",
+                        "icon": "tune",
+                        "link": reverse_lazy("admin:product_productvariant_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "عکس محصول",
+                        "icon": "photo_library",
+                        "link": reverse_lazy("admin:product_productimage_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+            {
+                "title": "نوشته‌ها",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "مجله",
+                        "icon": "menu_book",
+                        "link": "/studio/",
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+            {
+                "title": "افراد",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "کاربران",
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "گروه‌ها",
+                        "icon": "admin_panel_settings",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+        ],
     },
 }
 
-# استودیو اختصاصی محتوا / سئو
+# پنل مجله و نوشته‌ها
 UNFOLD_STUDIO = {
-    "SITE_TITLE": "استودیو محتوا و سئو | مرد کوهستان",
-    "SITE_HEADER": "استودیو محتوا و سئو",
-    "SITE_SUBHEADER": "میز کار مرتب برای نویسندگان و کارشناسان سئو",
+    "SITE_TITLE": "مجله مرد کوهستان",
+    "SITE_HEADER": "مجله مرد کوهستان",
+    "SITE_SUBHEADER": "نوشتن و گذاشتن مقاله روی سایت",
+    "SITE_URL": "/",
     "SITE_SYMBOL": "edit_note",
+    "SITE_LOGO": lambda request: static("admin/brand/logo-full.svg"),
+    "THEME": "light",
+    "BORDER_RADIUS": "10px",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": False,
+    "ENVIRONMENT": "core.admin_ui.environment_callback",
+    "DASHBOARD_CALLBACK": "core.admin_ui.studio_dashboard_callback",
     "STYLES": [
-        lambda request: "/static/content/admin/seo_studio.css?v=datetime-fix-4",
+        *_MK_STYLES,
+        lambda request: static("content/admin/seo_studio.css") + "?v=brand-1",
     ],
-    "COLORS": _STUDIO_COLORS,
+    "COLORS": _MK_COLORS,
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
         "navigation": [
             {
-                "title": "نوشتن و انتشار",
+                "title": "خانه",
                 "separator": True,
                 "collapsible": False,
                 "items": [
                     {
-                        "title": "مقالات",
-                        "icon": "article",
-                        "link": "/studio/content/article/",
-                        "permission": _content_panel_permission,
+                        "title": "شروع کار",
+                        "icon": "home",
+                        "link": "/studio/",
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                 ],
             },
             {
-                "title": "ساختار محتوا",
+                "title": "نوشتن",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "مقاله‌ها",
+                        "icon": "article",
+                        "link": "/studio/content/article/",
+                        "permission": "core.admin_ui.content_panel_ok",
+                    },
+                ],
+            },
+            {
+                "title": "مرتب‌سازی موضوع",
                 "separator": True,
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "ستون‌های محتوا",
+                        "title": "موضوع‌های اصلی",
                         "icon": "account_tree",
                         "link": "/studio/content/contentpillar/",
-                        "permission": _content_panel_permission,
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                     {
-                        "title": "خوشه‌های موضوعی",
+                        "title": "زیرموضوع‌ها",
                         "icon": "hub",
                         "link": "/studio/content/topiccluster/",
-                        "permission": _content_panel_permission,
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                     {
-                        "title": "دسته‌بندی‌ها",
+                        "title": "دسته‌بندی مجله",
                         "icon": "category",
                         "link": "/studio/content/category/",
-                        "permission": _content_panel_permission,
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                     {
                         "title": "برچسب‌ها",
                         "icon": "sell",
                         "link": "/studio/content/tag/",
-                        "permission": _content_panel_permission,
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                 ],
             },
             {
-                "title": "فنی سئو",
+                "title": "آدرس صفحات",
                 "separator": True,
                 "collapsible": True,
                 "items": [
                     {
-                        "title": "ریدایرکت‌ها",
+                        "title": "آدرس‌های قدیمی",
                         "icon": "alt_route",
                         "link": "/studio/content/redirectrule/",
-                        "permission": _content_panel_permission,
+                        "permission": "core.admin_ui.content_panel_ok",
                     },
                 ],
             },

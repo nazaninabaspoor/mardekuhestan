@@ -4,7 +4,7 @@
 class ContentConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "content"
-    verbose_name = "استودیو محتوا و سئو"
+    verbose_name = "مجله و نوشته‌ها"
 
     def ready(self):
         # ثبت مدل‌ها روی پنل استودیو

@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+  <section class="mk-welcome">
+    <p class="mk-welcome__kicker">این راه سبز است</p>
+    <h1 class="mk-welcome__title">{{ mk_welcome_title|default:title }}</h1>
+    {% if mk_welcome_lead %}
+      <p class="mk-welcome__lead">{{ mk_welcome_lead }}</p>
+    {% endif %}
+    {% if mk_quick_links %}
+      <div class="mk-quick">
+        {% for item in mk_quick_links %}
+          <a class="mk-quick__card" href="{{ item.url }}">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.hint }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+  {% include "unfold/helpers/dashboard_default.html" %}
+{% endblock %}

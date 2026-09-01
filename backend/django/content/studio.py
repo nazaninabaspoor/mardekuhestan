@@ -1,4 +1,4 @@
-"""پنل اختصاصی استودیو محتوا و سئو (جدا از ادمین فنی سیستم)."""
+"""پنل مجله و نوشته‌های مرد کوهستان (جدا از پنل فروشگاه)."""
 
 from unfold.sites import UnfoldAdminSite
 
@@ -7,9 +7,9 @@ from content.constants import CONTENT_PANEL_GROUPS
 
 class ContentStudioAdminSite(UnfoldAdminSite):
     settings_name = "UNFOLD_STUDIO"
-    site_header = "استودیو محتوا و سئو مرد کوهستان"
-    site_title = "استودیو محتوا و سئو"
-    index_title = "میز کار تولید محتوا و بهینه‌سازی"
+    site_header = "مجله مرد کوهستان"
+    site_title = "مجله مرد کوهستان"
+    index_title = "میز کار نوشته‌ها"
     site_url = "/"
     enable_nav_sidebar = True
 

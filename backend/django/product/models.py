@@ -53,7 +53,7 @@ class PublicUUIDMixin(models.Model):
 
 class Category(PublicUUIDMixin, models.Model):
     name = models.CharField("نام دسته", max_length=CATEGORY_NAME_MAX_LENGTH)
-    slug = models.SlugField("نامک", max_length=CATEGORY_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=CATEGORY_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
     description = models.TextField("توضیحات", max_length=CATEGORY_DESCRIPTION_MAX_LENGTH, blank=True)
     parent = models.ForeignKey(
         "self",
@@ -64,7 +64,7 @@ class Category(PublicUUIDMixin, models.Model):
         related_name="children",
     )
     domain = models.CharField(
-        "دامنه",
+        "گروه محصول",
         max_length=32,
         choices=ProductDomain.CHOICES,
         blank=True,
@@ -102,23 +102,23 @@ class Category(PublicUUIDMixin, models.Model):
 
 class Product(models.Model):
     public_uuid = models.UUIDField(
-        "UUID مادر",
+        "شناسه محصول",
         default=uuid.uuid4,
         editable=False,
         unique=True,
         db_index=True,
-        help_text="شناسه عمومی محصول — برای API و جستجو.",
+        help_text="شناسه محصول روی سایت و در جستجو.",
     )
 
     name = models.CharField("نام", max_length=PRODUCT_NAME_MAX_LENGTH, db_index=True)
-    slug = models.SlugField("نامک", max_length=PRODUCT_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=PRODUCT_SLUG_MAX_LENGTH, unique=True, allow_unicode=True)
     subtitle = models.CharField("زیرعنوان", max_length=PRODUCT_SUBTITLE_MAX_LENGTH, blank=True)
     short_description = models.CharField(
         "توضیح کوتاه",
         max_length=PRODUCT_SHORT_DESCRIPTION_MAX_LENGTH,
         blank=True,
     )
-    domain = models.CharField("دامنه", max_length=32, choices=ProductDomain.CHOICES)
+    domain = models.CharField("گروه محصول", max_length=32, choices=ProductDomain.CHOICES)
     status = models.CharField(
         "وضعیت",
         max_length=20,
@@ -132,7 +132,7 @@ class Product(models.Model):
         default=ProductVisibility.PUBLIC,
     )
     sales_channel = models.CharField(
-        "کانال فروش",
+        "محل فروش",
         max_length=16,
         choices=SalesChannel.CHOICES,
         default=SalesChannel.B2C,
@@ -170,7 +170,7 @@ class Product(models.Model):
         choices=HalalStatus.CHOICES,
         default=HalalStatus.NOT_APPLICABLE,
     )
-    allergens = models.JSONField("آلرژن‌ها", default=list, blank=True)
+    allergens = models.JSONField("مواد حساسیت‌زا", default=list, blank=True)
     categories = models.ManyToManyField(Category, verbose_name="دسته‌ها", blank=True, related_name="products")
     sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)
     created_at = models.DateTimeField("ایجاد", auto_now_add=True)
@@ -203,18 +203,18 @@ class Product(models.Model):
 
 class ProductVariant(models.Model):
     public_uuid = models.UUIDField(
-        "UUID دختر",
+        "شناسه این نوع",
         default=uuid.uuid4,
         editable=False,
         unique=True,
         db_index=True,
-        help_text="شناسه عمومی واریانت — به UUID مادر (محصول) متصل است.",
+        help_text="شناسه همین نوع/اندازه؛ به محصول اصلی وصل است.",
     )
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants", verbose_name="محصول")
     label = models.CharField("برچسب", max_length=VARIANT_LABEL_MAX_LENGTH)
     sku = models.CharField(
-        "SKU",
+        "کد کالا",
         max_length=SKU_MAX_LENGTH,
         unique=True,
         db_index=True,
@@ -230,8 +230,8 @@ class ProductVariant(models.Model):
     objects = ProductVariantManager()
 
     class Meta:
-        verbose_name = "واریانت"
-        verbose_name_plural = "واریانت‌ها"
+        verbose_name = "نوع و اندازه"
+        verbose_name_plural = "نوع و اندازه‌ها"
         ordering = ["sort_order", "label"]
         indexes = [
             models.Index(fields=["product", "is_active"]),
