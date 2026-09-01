@@ -266,6 +266,12 @@ class ProductVariantAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
             raise NotFound("محصول یافت نشد.")
         serializer.save(product=product)
 
+    def get_object(self):
+        obj = super().get_object()
+        if int(obj.product_id) != int(self.kwargs["product_pk"]):
+            raise NotFound("پیدا نشد.")
+        return obj
+
 
 class ProductImageAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
     upload_throttle_on_create = True

@@ -112,3 +112,51 @@ class AccountAuthTests(APITestCase):
         self.client.cookies[REFRESH_COOKIE_NAME] = first_refresh
         reuse = self.client.post("/api/auth/token/refresh/", format="json")
         self.assertEqual(reuse.status_code, 401)
+
+
+@override_settings(CACHES=_CACHE)
+class AccountOwnershipTests(APITestCase):
+    """مال دیگران را نه با شماره در بدنه می‌شود گرفت، نه با مسیر مدیریت کاتالوگ."""
+
+    password = "Sabz-Rah-1405!"
+
+    def _register(self, email: str, name: str):
+        return self.client.post(
+            "/api/auth/register/",
+            {
+                "email": email,
+                "password": self.password,
+                "password_repeat": self.password,
+                "name": name,
+            },
+            format="json",
+        )
+
+    def test_cannot_change_someone_else_profile_via_body_id(self):
+        self._register("one@example.com", "نفر یک")
+        user_one = User.objects.get(email="one@example.com")
+        self.client.post("/api/auth/logout/", format="json")
+
+        self._register("two@example.com", "نفر دو")
+        victim_id = user_one.pk
+
+        patched = self.client.patch(
+            "/api/auth/me/",
+            {"user_id": victim_id, "id": victim_id, "name": "دزدیده"},
+            format="json",
+        )
+        self.assertEqual(patched.status_code, 403)
+
+        user_one.refresh_from_db()
+        self.assertNotEqual(user_one.first_name, "دزدیده")
+
+        me = self.client.get("/api/auth/me/")
+        self.assertEqual(me.status_code, 200)
+        self.assertEqual(me.data["email"], "two@example.com")
+        self.assertEqual(me.data["name"], "نفر دو")
+        self.assertNotEqual(me.data["id"], victim_id)
+
+    def test_customer_cannot_open_staff_catalog(self):
+        self._register("shopper@example.com", "خریدار")
+        response = self.client.get("/api/products/manage/products/")
+        self.assertEqual(response.status_code, 403)
