@@ -36,8 +36,8 @@ class TopicClusterInline(TabularInline):
     show_change_link = True
     tab = True
     hide_title = True
-    verbose_name = "خوشه"
-    verbose_name_plural = "خوشه‌های این ستون"
+    verbose_name = "زیرموضوع"
+    verbose_name_plural = "زیرموضوع‌های این موضوع"
 
 
 @admin.register(Category, site=content_studio)
@@ -55,7 +55,7 @@ class CategoryAdmin(ModelAdmin):
             "اطلاعات دسته",
             {
                 "fields": ("name", "slug", "parent", "description", "is_active"),
-                "description": "دسته‌بندی‌ها برای نظم مقالات و فیلتر سایت استفاده می‌شوند.",
+                "description": "دسته‌ها کمک می‌کنند مقاله در مجله پیدا شود.",
             },
         ),
     )
@@ -73,7 +73,7 @@ class TagAdmin(ModelAdmin):
             "برچسب",
             {
                 "fields": ("name", "slug"),
-                "description": "برچسب‌ها برای اتصال موضوعی مقالات هستند.",
+                "description": "برچسب یعنی موضوع کوچک روی مقاله، مثل «عسل» یا «راه سبز».",
             },
         ),
     )
@@ -92,7 +92,7 @@ class ContentPillarAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "ستون محتوا",
+            "موضوع اصلی",
             {
                 "fields": (
                     "title",
@@ -101,7 +101,7 @@ class ContentPillarAdmin(ModelAdmin):
                     "description",
                     "is_active",
                 ),
-                "description": "هر ستون محتوا یک موضوع اصلی برند است؛ خوشه‌ها را زیر همین ستون بسازید.",
+                "description": "موضوع بزرگ مجله را اینجا می‌گذارید. زیرموضوع‌ها را زیر همین موضوع بسازید.",
             },
         ),
     )
@@ -119,7 +119,7 @@ class TopicClusterAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "خوشه موضوعی",
+            "زیرموضوع",
             {
                 "fields": (
                     "pillar",
@@ -129,7 +129,7 @@ class TopicClusterAdmin(ModelAdmin):
                     "description",
                     "is_active",
                 ),
-                "description": "خوشه زیر یک ستون محتوا تعریف می‌شود و مقاله را به استراتژی سئو وصل می‌کند.",
+                "description": "زیرموضوع زیر یک موضوع اصلی می‌نشیند و مقاله‌ها را مرتب می‌کند.",
             },
         ),
     )
@@ -145,7 +145,7 @@ class RedirectRuleAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "ریدایرکت",
+            "آدرس قدیمی",
             {
                 "fields": (
                     "from_path",
@@ -154,7 +154,7 @@ class RedirectRuleAdmin(ModelAdmin):
                     "is_active",
                     "note",
                 ),
-                "description": "برای حفظ سئو هنگام تغییر آدرس مقاله از ریدایرکت ۳۰۱ استفاده کنید.",
+                "description": "اگر آدرس مقاله عوض شد، بازدیدکننده را از آدرس قدیمی به آدرس جدید بفرستید. «برای همیشه» معمولاً انتخاب درست است.",
             },
         ),
     )
@@ -208,10 +208,10 @@ class ArticleAdmin(ModelAdmin):
 
     fieldsets = (
         (
-            "محتوا",
+            "نوشته",
             {
                 "classes": ["tab"],
-                "description": "عنوان، متن و وضعیت انتشار را اینجا بنویسید. نامک اگر خالی بماند خودکار ساخته می‌شود.",
+                "description": "عنوان و متن را بنویسید. اگر آدرس صفحه خالی بماند، خودش ساخته می‌شود.",
                 "fields": (
                     ("title", "slug"),
                     "excerpt",
@@ -223,10 +223,10 @@ class ArticleAdmin(ModelAdmin):
             },
         ),
         (
-            "ساختار",
+            "مرتب‌سازی",
             {
                 "classes": ["tab"],
-                "description": "دسته، برچسب و اتصال به ستون/خوشه محتوا را مشخص کنید تا استراتژی سئو منظم بماند.",
+                "description": "دسته و برچسب را بگذارید و اگر این نوشته زیر یک موضوع اصلی است، همان را وصل کنید.",
                 "fields": (
                     "categories",
                     "tags",
@@ -236,10 +236,10 @@ class ArticleAdmin(ModelAdmin):
             },
         ),
         (
-            "سئو",
+            "گوگل و جستجو",
             {
                 "classes": ["tab"],
-                "description": "کلمه کلیدی و متا را کامل کنید. تعداد کلمات کلیدی فرعی محدود نیست.",
+                "description": "کلمهٔ جستجو و عنوان و توضیح گوگل را پر کنید تا مقاله راحت‌تر پیدا شود.",
                 "fields": (
                     "focus_keyword",
                     "secondary_keywords",
@@ -254,7 +254,7 @@ class ArticleAdmin(ModelAdmin):
             "شبکه اجتماعی",
             {
                 "classes": ["tab"],
-                "description": "اگر خالی بماند، از عنوان و توضیحات سئو استفاده می‌شود.",
+                "description": "اگر خالی بماند، از عنوان و توضیح گوگل استفاده می‌شود.",
                 "fields": ("og_title", "og_description", "og_image"),
             },
         ),

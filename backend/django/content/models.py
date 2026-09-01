@@ -291,7 +291,7 @@ class Article(models.Model):
 
     class Meta:
         verbose_name = "مقاله"
-        verbose_name_plural = "مقالات"
+        verbose_name_plural = "مقاله‌ها"
         ordering = ["-published_at", "-created_at"]
         indexes = [
             models.Index(fields=["status", "published_at"]),
@@ -315,12 +315,12 @@ class Article(models.Model):
 
 
 class RedirectRule(models.Model):
-    from_path = models.CharField("مسیر مبدأ", max_length=255, unique=True, help_text="مثال: /old-article/")
-    to_path = models.CharField("مسیر مقصد", max_length=255, help_text="مثال: /articles/new-slug/")
+    from_path = models.CharField("آدرس قدیمی", max_length=255, unique=True, help_text="مثال: /old-article/")
+    to_path = models.CharField("آدرس جدید", max_length=255, help_text="مثال: /articles/new-slug/")
     status_code = models.PositiveSmallIntegerField(
-        "کد وضعیت",
+        "نوع هدایت",
         default=301,
-        choices=((301, "۳۰۱ دائمی"), (302, "۳۰۲ موقت")),
+        choices=((301, "برای همیشه"), (302, "موقت")),
     )
     is_active = models.BooleanField("فعال", default=True)
     note = models.CharField("یادداشت", max_length=255, blank=True)
@@ -328,8 +328,8 @@ class RedirectRule(models.Model):
 
     class Meta:
         ordering = ["from_path"]
-        verbose_name = "ریدایرکت"
-        verbose_name_plural = "ریدایرکت‌ها"
+        verbose_name = "آدرس قدیمی"
+        verbose_name_plural = "آدرس‌های قدیمی"
 
     def __str__(self) -> str:
         return f"{self.from_path} → {self.to_path}"
