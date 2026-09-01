@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/products", destination: "/#for-home-kitchen", permanent: false },
-      { source: "/products/:slug", destination: "/#for-home-kitchen", permanent: false },
       { source: "/way", destination: "/#coming-soon", permanent: false },
       { source: "/chain", destination: "/#v2-catalogs", permanent: false },
       { source: "/magazine", destination: "/#v2-magazine", permanent: false },
@@ -15,9 +14,9 @@ const nextConfig: NextConfig = {
       { source: "/contact", destination: "/", permanent: false },
       { source: "/stores", destination: "/", permanent: false },
       { source: "/cart", destination: "/", permanent: false },
-      { source: "/account", destination: "/", permanent: false },
+      { source: "/account", destination: "/profile", permanent: false },
       { source: "/wishlist", destination: "/", permanent: false },
-      { source: "/rahyaar", destination: "/", permanent: false },
+      { source: "/rahyaar", destination: "/profile?tab=ai-nutrition", permanent: false },
       { source: "/playground", destination: "/", permanent: false },
       { source: "/preview", destination: "/", permanent: false },
       { source: "/demo/:path*", destination: "/", permanent: false },
