@@ -294,6 +294,12 @@ class ProductImageAdminViewSet(CatalogAdminMixin, viewsets.ModelViewSet):
             raise NotFound("محصول یافت نشد.")
         serializer.save(product=product)
 
+    def get_object(self):
+        obj = super().get_object()
+        if int(obj.product_id) != int(self.kwargs["product_pk"]):
+            raise NotFound("پیدا نشد.")
+        return obj
+
     def destroy(self, request: Request, *args, **kwargs) -> Response:
         instance = self.get_object()
         self.perform_destroy(instance)
