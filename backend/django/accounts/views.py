@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
@@ -192,17 +192,20 @@ class RefreshView(APIView):
 
 
 class MeView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsCustomerOrStaff]
 
-    def get(self, request):
-        return Response(UserMeSerializer().to_representation(request.user))
+    def get(self, request, *args, **kwargs):
+        user = acting_user(request)
+        return Response(UserMeSerializer().to_representation(user))
 
-    def patch(self, request):
+    def patch(self, request, *args, **kwargs):
+        reject_foreign_identity(request.data)
         ser = ProfileUpdateSerializer(data=request.data, partial=True)
         ser.is_valid(raise_exception=True)
+        user = acting_user(request)
         try:
             user = update_profile(
-                request.user,
+                user,
                 display_name=ser.validated_data.get("name"),
                 phone=ser.validated_data.get("phone"),
             )
@@ -212,16 +215,18 @@ class MeView(APIView):
 
 
 class ChangePasswordView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsCustomerOrStaff]
     throttle_classes = [AuthLoginThrottle]
     throttle_scope = "auth_login"
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+        reject_foreign_identity(request.data)
         ser = ChangePasswordSerializer(data=request.data)
         ser.is_valid(raise_exception=True)
+        user = acting_user(request)
         try:
             change_password(
-                request.user,
+                user,
                 current_password=ser.validated_data["current_password"],
                 new_password=ser.validated_data["new_password"],
             )
@@ -230,7 +235,7 @@ class ChangePasswordView(APIView):
         except DjangoValidationError as exc:
             return _django_validation_response(exc)
 
-        access, refresh = issue_tokens(request.user)
+        access, refresh = issue_tokens(user)
         body = {"detail": "رمز عوض شد.", "access": access}
         response = Response(body)
         set_auth_cookies(response, access=access, refresh=refresh)
@@ -238,11 +243,12 @@ class ChangePasswordView(APIView):
 
 
 class LogoutAllView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsCustomerOrStaff]
 
-    def post(self, request):
-        blacklist_all_refresh_tokens(request.user)
-        access, refresh = issue_tokens(request.user)
+    def post(self, request, *args, **kwargs):
+        user = acting_user(request)
+        blacklist_all_refresh_tokens(user)
+        access, refresh = issue_tokens(user)
         body = {"detail": "از بقیه دستگاه‌ها خارج شدید.", "access": access}
         response = Response(body)
         set_auth_cookies(response, access=access, refresh=refresh)
