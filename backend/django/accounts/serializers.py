@@ -6,9 +6,16 @@ from rest_framework import serializers
 
 from accounts.constants import DISPLAY_NAME_MAX_LENGTH, PASSWORD_MIN_LENGTH
 from accounts.selectors import get_or_create_profile
+from sec.ownership import reject_foreign_identity
 
 
-class RegisterSerializer(serializers.Serializer):
+class IdentityLockedSerializer(serializers.Serializer):
+    def validate(self, attrs):
+        reject_foreign_identity(getattr(self, "initial_data", None))
+        return attrs
+
+
+class RegisterSerializer(IdentityLockedSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, min_length=PASSWORD_MIN_LENGTH)
     password_repeat = serializers.CharField(write_only=True)
@@ -23,7 +30,7 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(IdentityLockedSerializer):
     email = serializers.CharField(required=False, allow_blank=True, default="")
     username = serializers.CharField(required=False, allow_blank=True, default="")
     password = serializers.CharField(write_only=True)
