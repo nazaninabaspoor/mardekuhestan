@@ -41,12 +41,14 @@ export async function apiFetch<T>(
   const { searchParams, revalidate = CATALOG_REVALIDATE_SECONDS, ...init } =
     options;
 
+  const headers: HeadersInit = {
+    Accept: "application/json",
+    ...(init.headers ?? {}),
+  };
+
   const response = await fetch(buildUrl(path, searchParams), {
     ...init,
-    headers: {
-      Accept: "application/json",
-      ...(init.headers ?? {}),
-    },
+    headers,
     next: revalidate === false ? { revalidate: 0 } : { revalidate },
   });
 

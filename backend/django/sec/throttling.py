@@ -56,3 +56,22 @@ class CatalogAdminWriteThrottle(SecRedisThrottle):
 
 class CatalogUploadThrottle(SecRedisThrottle):
     scope = "catalog_upload"
+
+
+class AuthIpThrottle(SecRedisThrottle):
+    """ورود/ثبت‌نام — همیشه روی IP، نه روی کاربر."""
+
+    def get_ident(self, request, view) -> str:
+        return get_client_identifier(request)
+
+
+class AuthLoginThrottle(AuthIpThrottle):
+    scope = "auth_login"
+
+
+class AuthRegisterThrottle(AuthIpThrottle):
+    scope = "auth_register"
+
+
+class AuthRefreshThrottle(AuthIpThrottle):
+    scope = "auth_refresh"

@@ -62,6 +62,7 @@ def validate_account_password(password: str, *, user=None) -> str:
 
 def validate_phone(value: str) -> str:
     phone = (value or "").strip().replace(" ", "")
+    phone = phone.translate(str.maketrans("۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩", "01234567890123456789"))
     if not phone:
         return ""
     if len(phone) > PHONE_MAX_LENGTH:

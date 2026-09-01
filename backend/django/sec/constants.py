@@ -16,6 +16,9 @@ RATE_SCOPE_CATALOG_ADMIN_WRITE: Final[str] = "catalog_admin_write"
 RATE_SCOPE_CATALOG_UPLOAD: Final[str] = "catalog_upload"
 RATE_SCOPE_WS_CONNECT: Final[str] = "ws_catalog_connect"
 RATE_SCOPE_WS_MESSAGE: Final[str] = "ws_catalog_message"
+RATE_SCOPE_AUTH_LOGIN: Final[str] = "auth_login"
+RATE_SCOPE_AUTH_REGISTER: Final[str] = "auth_register"
+RATE_SCOPE_AUTH_REFRESH: Final[str] = "auth_refresh"
 
 RATE_LIMITS: Final[dict[str, tuple[int, int]]] = {
     # فروشگاه عمومی
@@ -29,6 +32,9 @@ RATE_LIMITS: Final[dict[str, tuple[int, int]]] = {
     # WebSocket
     RATE_SCOPE_WS_CONNECT: (20, 60),
     RATE_SCOPE_WS_MESSAGE: (60, 60),
+    RATE_SCOPE_AUTH_LOGIN: (8, 60),
+    RATE_SCOPE_AUTH_REGISTER: (5, 3600),
+    RATE_SCOPE_AUTH_REFRESH: (30, 60),
 }
 
 RATE_LIMIT_CACHE_PREFIX: Final[str] = "sec:rl:"
