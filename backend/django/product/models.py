@@ -40,7 +40,7 @@ class PublicUUIDMixin(models.Model):
     """شناسه عمومی غیرقابل حدس — برای API و جستجو (جایگزین pk در لایه عمومی)."""
 
     public_uuid = models.UUIDField(
-        "UUID عمومی",
+        "شناسه",
         default=uuid.uuid4,
         editable=False,
         unique=True,

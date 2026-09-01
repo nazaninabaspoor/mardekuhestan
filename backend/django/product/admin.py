@@ -283,8 +283,8 @@ class ProductVariantInline(TabularInline):
     show_change_link = True
     tab = True
     hide_title = True
-    verbose_name = "واریانت"
-    verbose_name_plural = "واریانت‌های محصول"
+    verbose_name = "نوع و اندازه"
+    verbose_name_plural = "نوع و اندازه‌های این محصول"
 
 
 class ProductImageInline(TabularInline):
@@ -342,7 +342,7 @@ class CategoryAdmin(ModelAdmin):
         (
             "دسته‌بندی",
             {
-                "description": "دسته‌های ناوبری فروشگاه و مجموعه‌های مرچندایزینگ.",
+                "description": "دسته‌هایی که در منوی فروشگاه یا مجموعه‌های ویژه می‌آیند.",
                 "fields": (
                     "public_uuid",
                     ("name", "slug"),
@@ -354,7 +354,7 @@ class CategoryAdmin(ModelAdmin):
             },
         ),
         (
-            "زمان‌بندی",
+            "زمان ساخت",
             {
                 "classes": ["collapse"],
                 "fields": (("created_at", "updated_at"),),
@@ -363,7 +363,7 @@ class CategoryAdmin(ModelAdmin):
     )
     readonly_fields = ("public_uuid", "created_at", "updated_at")
 
-    @display(description="دامنه")
+    @display(description="گروه محصول")
     def domain_label(self, obj: Category) -> str:
         if not obj.domain:
             return "—"
@@ -436,10 +436,10 @@ class ProductAdmin(ModelAdmin):
 
     fieldsets = (
         (
-            "شناسه و معرفی",
+            "نام و معرفی",
             {
                 "classes": ["tab"],
-                "description": "نام و نامک محصول. اگر نامک خالی بماند خودکار ساخته می‌شود.",
+                "description": "نام محصول را بنویسید. اگر آدرس صفحه خالی بماند، خودش ساخته می‌شود.",
                 "fields": (
                     "public_uuid",
                     ("name", "slug"),
@@ -528,7 +528,7 @@ class ProductAdmin(ModelAdmin):
             kwargs["queryset"] = Category.objects.active().catalog_order()
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
-    @display(description="دامنه")
+    @display(description="گروه محصول")
     def domain_label(self, obj: Product) -> str:
         return domain_label_fa(obj.domain)
 
@@ -782,7 +782,7 @@ class ProductVariantAdmin(ModelAdmin):
             },
         ),
         (
-            "زمان‌بندی",
+            "زمان ساخت",
             {
                 "classes": ["collapse"],
                 "fields": (("created_at", "updated_at"),),
@@ -840,7 +840,7 @@ class ProductImageAdmin(ModelAdmin):
             },
         ),
         (
-            "زمان‌بندی",
+            "زمان ساخت",
             {
                 "classes": ["collapse"],
                 "fields": ("created_at",),

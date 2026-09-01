@@ -256,7 +256,7 @@ class SalesChannel:
     CHOICES = (
         (B2C, "خرده‌فروشی"),
         (B2B, "عمده‌فروشی"),
-        (B2G, "فروش سازمانی و بین‌المللی"),
+        (B2G, "فروش سازمانی"),
         (ALL_THREE, "هر سه"),
     )
 
@@ -415,10 +415,10 @@ class CategoryKind:
     PROMOTION = "promotion"
 
     CHOICES = (
-        (NAVIGATION, "ناوبری فروشگاه"),
+        (NAVIGATION, "منوی فروشگاه"),
         (COLLECTION, "مجموعه"),
         (SEASONAL, "فصلی"),
-        (PROMOTION, "پروموشن"),
+        (PROMOTION, "پیشنهاد ویژه"),
     )
 
 
