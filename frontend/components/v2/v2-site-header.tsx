@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { CatalogSearchBox } from "@/components/catalog-search-box";
+import { AuthHeaderButton } from "@/components/auth-header-button";
+import { AuthModal } from "@/components/auth-modal";
 
 const v2NavItems = [
   { id: "story", href: "/#v2-magazine", label: "داستان ما", icon: "book" },
@@ -156,11 +158,14 @@ export function V2SiteHeader() {
 
             <div className="v2-menubar-spacer" aria-hidden="true" />
 
-            <CatalogSearchBox
-              className="v2-header-search"
-              variant="v2"
-              placeholder="جستجو در راه سبز…"
-            />
+            <div className="v2-menubar-actions">
+              <CatalogSearchBox
+                className="v2-header-search"
+                variant="v2"
+                placeholder="جستجو در راه سبز…"
+              />
+              <AuthHeaderButton />
+            </div>
 
             <button
               type="button"
@@ -184,6 +189,13 @@ export function V2SiteHeader() {
         aria-label="منوی موبایل"
       >
         <div className="shell">
+          <div className="v2-mobile-auth-wrapper">
+            <AuthHeaderButton
+              variant="mobile"
+              onItemClick={() => setOpen(false)}
+            />
+          </div>
+
           <CatalogSearchBox
             className="v2-header-search v2-header-search--mobile"
             variant="v2"
@@ -202,6 +214,8 @@ export function V2SiteHeader() {
           ))}
         </div>
       </nav>
+
+      <AuthModal />
     </header>
   );
 }
