@@ -99,6 +99,40 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   }
 }
 
+export async function updateProfile(data: {
+  name?: string;
+  phone?: string;
+}): Promise<AuthUser> {
+  return await apiFetch<AuthUser>("/api/auth/me/", {
+    ...authInit,
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function changePassword(data: {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordRepeat: string;
+}): Promise<{ detail: string; access?: string }> {
+  const res = await apiFetch<{ detail: string; access?: string }>(
+    "/api/auth/password/",
+    {
+      ...authInit,
+      method: "POST",
+      body: JSON.stringify({
+        current_password: data.currentPassword,
+        new_password: data.newPassword,
+        new_password_repeat: data.newPasswordRepeat,
+      }),
+    },
+  );
+  if (res.access) {
+    setAccessToken(res.access);
+  }
+  return res;
+}
+
 export function authErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     const body = error.body;
