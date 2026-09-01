@@ -604,18 +604,18 @@ class ProductAdmin(ModelAdmin):
         except ValidationError:
             publishable_ok = False
 
-        checks.append(("وضعیت قابل انتشار", publishable_ok))
-        checks.append(("قیمت مشخص", obj.unit_price_rial is not None))
+        checks.append(("وضعیت برای نمایش روی سایت", publishable_ok))
+        checks.append(("قیمت مشخص است", obj.unit_price_rial is not None))
         checks.append(
             (
-                "نمایش در کانال B2C",
+                "برای خرید خانگی دیده می‌شود",
                 obj.visibility
                 in {ProductVisibility.PUBLIC, ProductVisibility.B2C_ONLY},
             )
         )
         has_hero = obj.images.filter(role=ProductImageRole.HERO).exists()
-        checks.append(("تصویر hero", has_hero))
-        checks.append(("حداقل یک تصویر", obj.images.exists()))
+        checks.append(("عکس اصلی دارد", has_hero))
+        checks.append(("حداقل یک عکس", obj.images.exists()))
         checks.append(("حداقل یک دسته", obj.categories.exists()))
 
         try:
@@ -623,40 +623,42 @@ class ProductAdmin(ModelAdmin):
                 pricing_strategy=obj.pricing_strategy,
                 unit_of_measure=obj.unit_of_measure,
             )
-            checks.append(("سازگاری قیمت/واحد", True))
+            checks.append(("قیمت و واحد با هم جورند", True))
         except ValidationError:
-            checks.append(("سازگاری قیمت/واحد", False))
+            checks.append(("قیمت و واحد با هم جورند", False))
 
         try:
             product_validators.validate_storage_for_domain(
                 domain=obj.domain,
                 storage_class=obj.storage_class,
             )
-            checks.append(("نگهداری متناسب دامنه", True))
+            checks.append(("نگهداری مناسب این گروه محصول", True))
         except ValidationError:
-            checks.append(("نگهداری متناسب دامنه", False))
+            checks.append(("نگهداری مناسب این گروه محصول", False))
 
         items = []
         for label, ok in checks:
-            css = "color:#2f7f3c;" if ok else "color:#b45309;"
+            css = "mk-checklist__value--yes" if ok else "mk-checklist__value--no"
             state = "بله" if ok else "خیر"
             items.append(
-                f'<li style="display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0;">'
-                f"<span>{label}</span>"
-                f'<strong style="{css}">{state}</strong>'
+                f'<li class="mk-checklist__item">'
+                f'<span class="mk-checklist__label">{label}</span>'
+                f'<span class="mk-checklist__value {css}">{state}</span>'
                 f"</li>"
             )
 
         ready = all(ok for _, ok in checks)
         summary = (
-            "محصول برای نمایش در فروشگاه آماده است."
+            "این محصول برای نمایش در فروشگاه آماده است."
             if ready
-            else "چند مورد برای انتشار کامل باقی مانده است."
+            else "چند مورد مانده تا محصول روی سایت درست دیده شود."
         )
+        summary_class = "is-ready" if ready else "is-pending"
         return format_html(
-            '<ul style="list-style:none;margin:0;padding:0;">{}</ul>'
-            '<p style="margin-top:.75rem;font-weight:600;">{}</p>',
+            '<ul class="mk-checklist">{}</ul>'
+            '<div class="mk-checklist__summary {}">{}</div>',
             mark_safe("".join(items)),
+            summary_class,
             summary,
         )
 
