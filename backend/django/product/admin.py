@@ -451,10 +451,10 @@ class ProductAdmin(ModelAdmin):
             },
         ),
         (
-            "انتشار و کانال",
+            "وضعیت نمایش",
             {
                 "classes": ["tab"],
-                "description": "وضعیت انتشار و کانال‌های فروش.",
+                "description": "محصول کی روی سایت دیده شود و برای چه کسی.",
                 "fields": (
                     ("status", "visibility"),
                     "sales_channel",
@@ -465,7 +465,7 @@ class ProductAdmin(ModelAdmin):
             "قیمت و واحد",
             {
                 "classes": ["tab"],
-                "description": "قیمت پایه به ریال. برای قیمت وزنی، واحد باید گرم یا کیلوگرم باشد.",
+                "description": "قیمت به ریال. اگر قیمت بر اساس وزن است، واحد را گرم یا کیلوگرم بگذارید.",
                 "fields": (
                     ("unit_price_rial", "pricing_strategy"),
                     ("unit_of_measure", "net_weight_grams"),
@@ -476,7 +476,7 @@ class ProductAdmin(ModelAdmin):
             "نگهداری و برچسب",
             {
                 "classes": ["tab"],
-                "description": "کلاس نگهداری، بسته‌بندی، حلال و آلرژن‌ها.",
+                "description": "چطور نگه دارید، چه بسته‌بندی‌ای دارد، حلال است یا نه، و چه چیزی ممکن است حساسیت بدهد.",
                 "fields": (
                     ("storage_class", "packaging_type"),
                     "halal_status",
@@ -488,12 +488,12 @@ class ProductAdmin(ModelAdmin):
             "گالری",
             {
                 "classes": ["tab"],
-                "description": "حداقل یک تصویر با نقش «تصویر اصلی» برای انتشار لازم است.",
+                "description": "حداقل یک عکس با نقش «تصویر اصلی» لازم است تا محصول روی سایت برود.",
                 "fields": ("hero_preview",),
             },
         ),
         (
-            "آمادگی کاتالوگ",
+            "آمادگی فروشگاه",
             {
                 "classes": ["tab"],
                 "fields": (
@@ -560,7 +560,7 @@ class ProductAdmin(ModelAdmin):
             return "—"
         return format_weight_grams(obj.net_weight_grams)
 
-    @display(description="واریانت")
+    @display(description="نوع و اندازه")
     def variant_count(self, obj: Product) -> int:
         return getattr(obj, "_variant_count", obj.variants.count())
 
@@ -571,7 +571,7 @@ class ProductAdmin(ModelAdmin):
     @admin.display(description="تصویر اصلی")
     def hero_preview(self, obj: Product) -> str:
         if not obj.pk:
-            return "بعد از ذخیره، تصاویر را در تب «گالری تصاویر» اضافه کنید."
+            return "بعد از ذخیره، عکس‌ها را در تب گالری بگذارید."
         hero = obj.images.filter(role=ProductImageRole.HERO).first()
         if hero is None:
             hero = obj.images.first()
