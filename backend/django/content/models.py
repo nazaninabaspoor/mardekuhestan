@@ -39,7 +39,7 @@ def _unique_slug(model_cls, title: str, *, instance_pk=None, field: str = "slug"
 
 class Category(models.Model):
     name = models.CharField("نام دسته", max_length=120)
-    slug = models.SlugField("نامک", max_length=140, unique=True, blank=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=140, unique=True, blank=True, allow_unicode=True)
     description = models.TextField("توضیحات", blank=True)
     parent = models.ForeignKey(
         "self",
@@ -68,7 +68,7 @@ class Category(models.Model):
 
 class Tag(models.Model):
     name = models.CharField("نام برچسب", max_length=80, unique=True)
-    slug = models.SlugField("نامک", max_length=100, unique=True, blank=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=100, unique=True, blank=True, allow_unicode=True)
 
     class Meta:
         verbose_name = "برچسب"
@@ -85,18 +85,18 @@ class Tag(models.Model):
 
 
 class ContentPillar(models.Model):
-    title = models.CharField("عنوان ستون محتوا", max_length=180)
-    slug = models.SlugField("نامک", max_length=200, unique=True, blank=True, allow_unicode=True)
-    description = models.TextField("توضیحات استراتژی", blank=True)
-    primary_keyword = models.CharField("کلمه کلیدی اصلی", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
+    title = models.CharField("نام موضوع اصلی", max_length=180)
+    slug = models.SlugField("آدرس صفحه", max_length=200, unique=True, blank=True, allow_unicode=True)
+    description = models.TextField("توضیح این موضوع", blank=True)
+    primary_keyword = models.CharField("کلمهٔ اصلی که مردم جستجو می‌کنند", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
     is_active = models.BooleanField("فعال", default=True)
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
     updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True)
 
     class Meta:
         ordering = ["title"]
-        verbose_name = "ستون محتوا"
-        verbose_name_plural = "ستون‌های محتوا"
+        verbose_name = "موضوع اصلی"
+        verbose_name_plural = "موضوع‌های اصلی"
 
     def __str__(self) -> str:
         return self.title
@@ -110,12 +110,12 @@ class ContentPillar(models.Model):
 class TopicCluster(models.Model):
     pillar = models.ForeignKey(
         ContentPillar,
-        verbose_name="ستون محتوا",
+        verbose_name="موضوع اصلی",
         on_delete=models.CASCADE,
         related_name="clusters",
     )
-    title = models.CharField("عنوان خوشه", max_length=180)
-    slug = models.SlugField("نامک", max_length=200, blank=True, allow_unicode=True)
+    title = models.CharField("نام زیرموضوع", max_length=180)
+    slug = models.SlugField("آدرس صفحه", max_length=200, blank=True, allow_unicode=True)
     description = models.TextField("توضیحات", blank=True)
     target_keyword = models.CharField("کلمه کلیدی هدف", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
     is_active = models.BooleanField("فعال", default=True)
@@ -162,7 +162,7 @@ class Article(models.Model):
     tags = models.ManyToManyField(Tag, verbose_name="برچسب‌ها", blank=True, related_name="articles")
     pillar = models.ForeignKey(
         ContentPillar,
-        verbose_name="ستون محتوا",
+        verbose_name="موضوع اصلی",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -771,7 +771,7 @@ class ProductVariantAdmin(ModelAdmin):
 
     fieldsets = (
         (
-            "واریانت",
+            "نوع و اندازه",
             {
                 "fields": (
                     "product",
@@ -793,7 +793,7 @@ class ProductVariantAdmin(ModelAdmin):
     )
     readonly_fields = ("public_uuid", "mother_uuid", "created_at", "updated_at")
 
-    @display(description="UUID مادر")
+    @display(description="شناسه محصول")
     def mother_uuid(self, obj: ProductVariant) -> str:
         return str(obj.product.public_uuid)
 

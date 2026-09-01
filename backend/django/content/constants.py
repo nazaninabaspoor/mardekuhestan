@@ -37,10 +37,10 @@ class SearchIntent:
     TRANSACTIONAL = "transactional"
 
     CHOICES = (
-        (INFORMATIONAL, "آگاهی‌بخش"),
-        (NAVIGATIONAL, "هدایتی"),
-        (COMMERCIAL, "تجاری"),
-        (TRANSACTIONAL, "تراکنشی"),
+        (INFORMATIONAL, "می‌خواهد بداند"),
+        (NAVIGATIONAL, "دنبال یک صفحه مشخص است"),
+        (COMMERCIAL, "می‌خواهد مقایسه کند"),
+        (TRANSACTIONAL, "می‌خواهد بخرد"),
     )
 
 
@@ -51,8 +51,8 @@ class ContentRole:
     STANDALONE = "standalone"
 
     CHOICES = (
-        (PILLAR, "صفحه ستون محتوا"),
-        (CLUSTER, "مقاله خوشه‌ای"),
-        (SUPPORTING, "محتوای پشتیبان"),
-        (STANDALONE, "مستقل"),
+        (PILLAR, "موضوع اصلی"),
+        (CLUSTER, "زیرموضوع"),
+        (SUPPORTING, "نوشته کمکی"),
+        (STANDALONE, "نوشته جدا"),
     )
