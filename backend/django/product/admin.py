@@ -582,7 +582,7 @@ class ProductAdmin(ModelAdmin):
                 hero.alt_text or obj.name,
             )
         return format_html(
-            '<p style="opacity:.7;">هنوز تصویری بارگذاری نشده — حداقل یک hero لازم است.</p>'
+            '<p class="mk-empty-hint">هنوز عکسی نگذاشته‌اید — حداقل یک تصویر اصلی لازم است.</p>'
         )
 
     @admin.display(description="چک‌لیست آمادگی فروشگاه")
