@@ -440,7 +440,10 @@ UNFOLD = {
     "SITE_SUBHEADER": "خانهٔ مدیریت فروشگاه",
     "SITE_URL": "/",
     "SITE_SYMBOL": "spa",
-    "SITE_LOGO": lambda request: static("admin/brand/logo-full.svg"),
+    "SITE_LOGO": {
+        "light": lambda request: static("admin/brand/logo-full.svg"),
+        "dark": lambda request: static("admin/brand/logo-full.svg"),
+    },
     "THEME": "light",
     "BORDER_RADIUS": "10px",
     "SHOW_HISTORY": True,
@@ -540,7 +543,10 @@ UNFOLD_STUDIO = {
     "SITE_SUBHEADER": "نوشتن و گذاشتن مقاله روی سایت",
     "SITE_URL": "/",
     "SITE_SYMBOL": "edit_note",
-    "SITE_LOGO": lambda request: static("admin/brand/logo-full.svg"),
+    "SITE_LOGO": {
+        "light": lambda request: static("admin/brand/logo-full.svg"),
+        "dark": lambda request: static("admin/brand/logo-full.svg"),
+    },
     "THEME": "light",
     "BORDER_RADIUS": "10px",
     "SHOW_HISTORY": True,

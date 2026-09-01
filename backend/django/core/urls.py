@@ -7,6 +7,10 @@ from django.urls import include, path
 from content.sitemaps import ArticleSitemap
 from content.studio import content_studio
 
+admin.site.site_header = "مرد کوهستان"
+admin.site.site_title = "مدیریت مرد کوهستان"
+admin.site.index_title = "خانه مدیریت"
+
 sitemaps = {
     "articles": ArticleSitemap,
 }

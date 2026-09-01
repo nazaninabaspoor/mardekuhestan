@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 
 
 def staff_ok(request) -> bool:
@@ -23,6 +23,13 @@ def content_panel_ok(request) -> bool:
 
 def environment_callback(request):
     return ["این راه سبز است", "success"]
+
+
+def _url(name: str, fallback: str) -> str:
+    try:
+        return reverse(name)
+    except NoReverseMatch:
+        return fallback
 
 
 def _count(qs) -> int:
@@ -49,22 +56,22 @@ def admin_dashboard_callback(request, context):
             ),
             "mk_quick_links": [
                 {
-                    "url": reverse("admin:product_product_changelist"),
+                    "url": _url("admin:product_product_changelist", "/admin/product/product/"),
                     "title": "محصول‌ها",
                     "hint": f"{product_n} محصول در فهرست",
                 },
                 {
-                    "url": reverse("admin:product_category_changelist"),
+                    "url": _url("admin:product_category_changelist", "/admin/product/category/"),
                     "title": "دسته‌ها",
                     "hint": f"{category_n} دسته",
                 },
                 {
-                    "url": reverse("admin:product_productvariant_changelist"),
+                    "url": _url("admin:product_productvariant_changelist", "/admin/product/productvariant/"),
                     "title": "نوع و اندازه",
                     "hint": f"{variant_n} ردیف",
                 },
                 {
-                    "url": reverse("admin:product_productimage_changelist"),
+                    "url": _url("admin:product_productimage_changelist", "/admin/product/productimage/"),
                     "title": "عکس محصول",
                     "hint": f"{image_n} عکس",
                 },
@@ -96,32 +103,32 @@ def studio_dashboard_callback(request, context):
             ),
             "mk_quick_links": [
                 {
-                    "url": reverse("content_studio:content_article_changelist"),
+                    "url": _url("content_studio:content_article_changelist", "/studio/content/article/"),
                     "title": "مقاله‌ها",
                     "hint": f"{_count(Article.objects.all())} نوشته",
                 },
                 {
-                    "url": reverse("content_studio:content_contentpillar_changelist"),
+                    "url": _url("content_studio:content_contentpillar_changelist", "/studio/content/contentpillar/"),
                     "title": "موضوع‌های اصلی",
                     "hint": f"{_count(ContentPillar.objects.all())} موضوع",
                 },
                 {
-                    "url": reverse("content_studio:content_topiccluster_changelist"),
+                    "url": _url("content_studio:content_topiccluster_changelist", "/studio/content/topiccluster/"),
                     "title": "زیرموضوع‌ها",
                     "hint": f"{_count(TopicCluster.objects.all())} زیرموضوع",
                 },
                 {
-                    "url": reverse("content_studio:content_category_changelist"),
+                    "url": _url("content_studio:content_category_changelist", "/studio/content/category/"),
                     "title": "دسته‌بندی مجله",
                     "hint": f"{_count(Category.objects.all())} دسته",
                 },
                 {
-                    "url": reverse("content_studio:content_tag_changelist"),
+                    "url": _url("content_studio:content_tag_changelist", "/studio/content/tag/"),
                     "title": "برچسب‌ها",
                     "hint": f"{_count(Tag.objects.all())} برچسب",
                 },
                 {
-                    "url": reverse("content_studio:content_redirectrule_changelist"),
+                    "url": _url("content_studio:content_redirectrule_changelist", "/studio/content/redirectrule/"),
                     "title": "آدرس‌های قدیمی",
                     "hint": f"{_count(RedirectRule.objects.all())} هدایت",
                 },

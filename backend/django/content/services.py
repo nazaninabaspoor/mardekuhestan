@@ -179,42 +179,42 @@ def unpublish_article(article):
 def seo_readiness_checklist(article) -> dict:
     checks = {
         "عنوان مقاله": bool((article.title or "").strip()),
-        "نامک آدرس": bool((article.slug or "").strip()),
-        "عنوان سئو": bool((article.seo_title or "").strip()),
-        "توضیحات سئو": bool((article.seo_description or "").strip()),
-        "کلمه کلیدی اصلی": bool((article.focus_keyword or "").strip()),
-        "کلمات کلیدی فرعی": bool(article.secondary_keywords),
+        "آدرس صفحه": bool((article.slug or "").strip()),
+        "عنوان در گوگل": bool((article.seo_title or "").strip()),
+        "توضیح در گوگل": bool((article.seo_description or "").strip()),
+        "کلمهٔ اصلی جستجو": bool((article.focus_keyword or "").strip()),
+        "کلمه‌های نزدیک": bool(article.secondary_keywords),
         "خلاصه کوتاه": bool((article.excerpt or "").strip()),
-        "متن اصلی": bool(strip_html(article.body or "")),
-        "خلاصه برای هوش مصنوعی": bool((article.geo_summary or "").strip()),
-        "سوالات متداول برای هوش مصنوعی": bool(article.geo_faq),
-        "تصویر شاخص": bool(article.cover_image),
-        "تصویر شبکه‌های اجتماعی": bool(article.og_image or article.cover_image),
+        "متن مقاله": bool(strip_html(article.body or "")),
+        "خلاصه برای پاسخ‌های اینترنتی": bool((article.geo_summary or "").strip()),
+        "سوال و جواب": bool(article.geo_faq),
+        "عکس بالای مقاله": bool(article.cover_image),
+        "عکس شبکه‌های اجتماعی": bool(article.og_image or article.cover_image),
         "دسته‌بندی": bool(article.pk and article.categories.exists()),
-        "اتصال به ستون محتوا یا مستقل بودن": bool(
+        "موضوع اصلی وصل است یا نوشته جداست": bool(
             article.content_role == "standalone"
             or article.pillar_id
             or article.content_role == "pillar"
         ),
-        "اتصال خوشه در صورت نیاز": not (
+        "زیرموضوع در صورت نیاز وصل است": not (
             article.content_role == "cluster" and not article.cluster_id
         ),
-        "اجازه ایندکس فعال است": bool(article.robots_index),
-        "متن نوشته شده (تعداد کلمات آزاد است)": (article.word_count or 0) > 0,
+        "در گوگل نشان داده می‌شود": bool(article.robots_index),
+        "متن نوشته شده است": (article.word_count or 0) > 0,
     }
     checks["آماده برای انتشار"] = all(
         [
             checks["عنوان مقاله"],
-            checks["عنوان سئو"],
-            checks["توضیحات سئو"],
-            checks["کلمه کلیدی اصلی"],
-            checks["متن اصلی"],
-            checks["خلاصه برای هوش مصنوعی"],
-            checks["سوالات متداول برای هوش مصنوعی"],
+            checks["عنوان در گوگل"],
+            checks["توضیح در گوگل"],
+            checks["کلمهٔ اصلی جستجو"],
+            checks["متن مقاله"],
+            checks["خلاصه برای پاسخ‌های اینترنتی"],
+            checks["سوال و جواب"],
             checks["دسته‌بندی"],
-            checks["اتصال به ستون محتوا یا مستقل بودن"],
-            checks["اتصال خوشه در صورت نیاز"],
-            checks["متن نوشته شده (تعداد کلمات آزاد است)"],
+            checks["موضوع اصلی وصل است یا نوشته جداست"],
+            checks["زیرموضوع در صورت نیاز وصل است"],
+            checks["متن نوشته شده است"],
         ]
     )
     return checks

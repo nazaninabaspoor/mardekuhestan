@@ -324,7 +324,7 @@ class ArticleAdmin(ModelAdmin):
         description="آمادگی",
         label={
             "آماده": "success",
-            "نیاز به تکمیل": "warning",
+            "چند مورد مانده": "warning",
         },
     )
     def readiness_badge(self, obj: Article):
@@ -335,7 +335,7 @@ class ArticleAdmin(ModelAdmin):
     def readiness_panel(self, obj: Article):
         if not obj.pk:
             return format_html(
-                '<p class="mk-empty-hint">بعد از اولین ذخیره، چک‌لیست آمادگی اینجا نمایش داده می‌شود.</p>'
+                '<p class="mk-empty-hint">بعد از اولین ذخیره، فهرست آمادگی اینجا دیده می‌شود.</p>'
             )
 
         checks = seo_readiness_checklist(obj)
