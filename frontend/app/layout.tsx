@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { BrandTeaser } from "@/components/brand-teaser";
+import { AuthProvider } from "@/lib/auth-context";
 
 import "./globals.css";
 import "./v2/v2.css";
@@ -52,15 +53,17 @@ export default function RootLayout({
         />
       </head>
       <body className={mardeKuhestan.className}>
-        <BrandTeaser />
-        <a className="skip-link btn-accent" href="#hero-title">
-          رفتن به محتوای اصلی
-        </a>
-        <div className="site-canvas">
-          <SiteHeader />
-          {children}
-          <SiteFooter />
-        </div>
+        <AuthProvider>
+          <BrandTeaser />
+          <a className="skip-link btn-accent" href="#hero-title">
+            رفتن به محتوای اصلی
+          </a>
+          <div className="site-canvas">
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
