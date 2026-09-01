@@ -18,11 +18,11 @@
 
 :root {
   --seo-font: "MardeKuhestan", Tahoma, "Segoe UI", sans-serif;
-  --studio-surface: #f7faf7;
-  --studio-border: #d7e6d9;
-  --studio-ok: #2f7f3c;
-  --studio-warn: #b45309;
-  --studio-muted: #5b6b5e;
+  --studio-surface: #f4f0e8;
+  --studio-border: rgba(0, 91, 72, 0.16);
+  --studio-ok: #005b48;
+  --studio-warn: #903828;
+  --studio-muted: #5d686e;
 }
 
 /* فونت برند فقط روی متن؛ آیکون‌های Unfold دست‌نخورده بمانند */

@@ -20,14 +20,14 @@ def _faq_answer(item: dict) -> str:
 def validate_seo_title(value: str) -> None:
     if value and len(value) > SEO_TITLE_MAX_LENGTH:
         raise ValidationError(
-            f"عنوان سئو حداکثر باید {SEO_TITLE_MAX_LENGTH} کاراکتر باشد."
+            f"عنوان در گوگل حداکثر باید {SEO_TITLE_MAX_LENGTH} حرف باشد."
         )
 
 
 def validate_seo_description(value: str) -> None:
     if value and len(value) > SEO_DESCRIPTION_MAX_LENGTH:
         raise ValidationError(
-            f"توضیحات سئو حداکثر باید {SEO_DESCRIPTION_MAX_LENGTH} کاراکتر باشد."
+            f"توضیح در گوگل حداکثر باید {SEO_DESCRIPTION_MAX_LENGTH} حرف باشد."
         )
 
 
