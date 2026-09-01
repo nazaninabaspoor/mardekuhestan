@@ -13,6 +13,7 @@ import {
   loginAccount,
   logoutAccount,
   registerAccount,
+  updateProfile,
 } from "@/lib/api/auth";
 
 type AuthModalTab = "login" | "register";
@@ -36,6 +37,7 @@ interface AuthContextType {
   }) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  updateUserProfile: (data: { name?: string; phone?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -99,6 +101,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const updateUserProfile = useCallback(
+    async (data: { name?: string; phone?: string }) => {
+      const updated = await updateProfile(data);
+      setUser(updated);
+    },
+    [],
+  );
+
   const logout = useCallback(async () => {
     await logoutAccount();
     setUser(null);
@@ -119,6 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         logout,
         refreshUser,
+        updateUserProfile,
       }}
     >
       {children}
