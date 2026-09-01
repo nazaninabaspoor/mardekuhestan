@@ -64,3 +64,17 @@ redis-data/
 .cache/
 tmp/
 temp/
+
+# Local dumps — not part of the app
+_preview-ui/
+tatus
+/*.pdf
+postman/.postman/
+postman/postman/
+postman/
+frontend/public/brand/#*
+frontend/public/brand/Camping *
+frontend/public/brand/Pin on *
+frontend/public/brand/bell.png
+frontend/public/brand/bell.png.jpeg
+frontend/public/brand/orginalfooter_prev.png

@@ -1,36 +1,17 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { ForHomeKitchenContainer } from "@/components/v2/for-home-kitchen-container";
-import { V2CatalogFlipbook } from "@/components/v2/v2-catalog-flipbook";
-import { V2ComingSoonSection } from "@/components/v2/v2-coming-soon";
-import { V2HeroSection } from "@/components/v2/v2-hero-section";
-import { V2MagazineNotebook } from "@/components/v2/v2-magazine-notebook";
-import { V2PageEffects } from "@/components/v2/v2-page-effects";
+type SearchParams = Record<string, string | string[] | undefined>;
 
-import "./v2.css";
-
-export const metadata: Metadata = {
-  title: "مرد کوهستان | نسخهٔ آزمایشی کارفرما",
-  description:
-    "نسخهٔ جدا از صفحهٔ اصلی برای آزمایش تغییرات — صفحهٔ اصلی دست‌نخورده می‌ماند.",
-  robots: { index: false, follow: false },
-};
-
-/**
- * Exact structural clone of `/` for employer experiments.
- * Leave `app/page.tsx` alone — change this route only.
- */
-export default function HomeV2Page() {
-  return (
-    <>
-      <V2PageEffects />
-      <main className="home-main home-v2">
-        <V2HeroSection />
-        <ForHomeKitchenContainer />
-        <V2ComingSoonSection />
-        <V2MagazineNotebook />
-        <V2CatalogFlipbook />
-      </main>
-    </>
-  );
+export default async function V2RedirectPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === "string") query.set(key, value);
+  }
+  const suffix = query.toString();
+  redirect(suffix ? `/?${suffix}` : "/");
 }

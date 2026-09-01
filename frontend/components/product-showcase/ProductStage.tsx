@@ -17,7 +17,7 @@ export function ProductStage({ category }: ProductStageProps) {
       <div className={styles.productGroup}>
         <AnimatePresence mode="wait">
           <motion.div
-            key={category.id}
+            key={`${category.id}:${category.heroImage}`}
             className={styles.plate}
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

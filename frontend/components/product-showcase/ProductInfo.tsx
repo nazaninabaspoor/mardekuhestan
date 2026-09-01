@@ -8,18 +8,25 @@ import styles from "./ProductInfo.module.css";
 
 type ProductInfoProps = {
   category: ProductCategory;
+  productName?: string | null;
   onViewProduct?: (category: ProductCategory) => void;
   onPlayVideo?: (category: ProductCategory) => void;
 };
 
-export function ProductInfo({ category, onViewProduct, onPlayVideo }: ProductInfoProps) {
+export function ProductInfo({
+  category,
+  productName = null,
+  onViewProduct,
+  onPlayVideo,
+}: ProductInfoProps) {
   const reduceMotion = useReducedMotion();
+  const headline = productName?.trim() || category.headline;
 
   return (
     <div className={styles.root}>
       <AnimatePresence mode="wait">
         <motion.div
-          key={category.id}
+          key={`${category.id}:${headline}`}
           initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -14, y: 4 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 10, y: -2 }}
@@ -31,7 +38,7 @@ export function ProductInfo({ category, onViewProduct, onPlayVideo }: ProductInf
             <span className={styles.eyebrowLine} aria-hidden="true" />
           </p>
 
-          <h3>{category.headline}</h3>
+          <h3>{headline}</h3>
           <p className={styles.description}>{category.description}</p>
 
           <div className={styles.actions}>

@@ -48,7 +48,11 @@ export function V2HeroSection() {
             <video
               key="product-ambient"
               className="landing-v2-video landing-v2-video--product-ambient"
-              autoPlay muted loop playsInline preload="auto"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
               aria-hidden="true"
             >
               <source src={active.src} type="video/mp4" />
@@ -58,7 +62,11 @@ export function V2HeroSection() {
             <video
               key={`previous-${previous.id}`}
               className={`landing-v2-video${previous.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? " is-leaving" : ""}`}
-              autoPlay muted loop playsInline preload="auto"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
               aria-hidden="true"
             >
               <source src={previous.src} type="video/mp4" />
@@ -68,7 +76,12 @@ export function V2HeroSection() {
             key={active.id}
             ref={activeVideoRef}
             className={`landing-v2-video${active.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? (previous ? " is-entering" : "") : " is-waiting"}`}
-            autoPlay muted loop playsInline preload="auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={active.poster}
             onLoadedData={() => setVideoReady(true)}
             onCanPlay={() => setVideoReady(true)}
             onPlaying={() => setVideoReady(true)}
@@ -83,7 +96,7 @@ export function V2HeroSection() {
           <div className="landing-v2-copy">
             <h1 id="hero-title">این راه سبز است</h1>
             <p className="landing-v2-lead">از مزرعه تا سفره؛ مسیری که با اعتماد ساخته می‌شود.</p>
-            <Link href="/chain" className="landing-v2-cta">
+            <Link href="/#coming-soon" className="landing-v2-cta">
               <span key={active.id} className="landing-v2-cta-label">
                 {active.ctaLabel}
               </span>
@@ -103,7 +116,7 @@ export function V2HeroSection() {
                   aria-pressed={selected}
                   onClick={() => selectVideo(video)}
                 >
-                  <video autoPlay muted loop playsInline preload="auto" poster={video.poster} aria-hidden="true">
+                  <video muted loop playsInline preload="none" poster={video.poster} aria-hidden="true">
                     <source src={video.src} type="video/mp4" />
                   </video>
                   <span className="landing-v2-preview-shade" />

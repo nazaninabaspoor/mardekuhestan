@@ -7,10 +7,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CatalogSearchBox } from "@/components/catalog-search-box";
 
 const v2NavItems = [
-  { id: "story", href: "/way", label: "داستان ما", icon: "book" },
-  { id: "way", href: "/way", label: "راه ما", icon: "mountain" },
-  { id: "chain", href: "/chain", label: "مسیر غذا", icon: "path" },
-  { id: "products", href: "/products", label: "محصولات", icon: "olive" },
+  { id: "story", href: "/#v2-magazine", label: "داستان ما", icon: "book" },
+  { id: "way", href: "/#coming-soon", label: "راه ما", icon: "mountain" },
+  { id: "chain", href: "/#v2-catalogs", label: "مسیر غذا", icon: "path" },
+  { id: "products", href: "/#for-home-kitchen", label: "محصولات", icon: "olive" },
 ] as const;
 
 function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
@@ -28,9 +28,6 @@ function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
   );
 }
 
-/**
- * Shop header for /v2 — brand ribbon + white plate, logo on the right (RTL).
- */
 export function V2SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -47,6 +44,7 @@ export function V2SiteHeader() {
   useLayoutEffect(() => {
     const logo = logoImageRef.current;
     if (!logo) return;
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       logo.style.opacity = "1";
       setLogoReady(true);
@@ -61,6 +59,12 @@ export function V2SiteHeader() {
       if (cancelled || !logo.isConnected) return;
 
       const rect = logo.getBoundingClientRect();
+      if (rect.width < 8 || rect.height < 8) {
+        logo.style.opacity = "1";
+        setLogoReady(true);
+        return;
+      }
+
       const offsetX = window.innerWidth / 2 - (rect.left + rect.width / 2);
       const offsetY = window.innerHeight * 0.48 - (rect.top + rect.height / 2);
       const introTransform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.05)`;
@@ -109,7 +113,7 @@ export function V2SiteHeader() {
       }).catch(() => undefined);
     };
 
-    if (logo.complete) run();
+    if (logo.complete && logo.naturalWidth > 0) run();
     else logo.addEventListener("load", run, { once: true });
 
     return () => {
@@ -126,57 +130,50 @@ export function V2SiteHeader() {
       <div className="v2-header-body">
         <div className="shell v2-header-plate">
           <div className="v2-menubar">
-            <Link
-              href="/v2"
-              className="v2-logo"
-              aria-label="مرد کوهستان، بازگشت به خانه"
-            >
-              <Image
-                src="/brand/orginal-clear.png"
-                alt=""
-                width={88}
-                height={88}
-                priority
-                className="v2-logo-img"
-                ref={logoImageRef}
-                style={{ opacity: logoReady ? 1 : 0 }}
-              />
-            </Link>
+            <div className="v2-brand-cluster">
+              <Link href="/" className="v2-logo" aria-label="مرد کوهستان، بازگشت به خانه">
+                <Image
+                  src="/brand/orginal-clear.png"
+                  alt=""
+                  width={88}
+                  height={88}
+                  priority
+                  className="v2-logo-img"
+                  ref={logoImageRef}
+                  style={{ opacity: logoReady ? 1 : 0 }}
+                />
+              </Link>
 
-            <nav className="v2-primary-nav" aria-label="منوی اصلی">
-              {v2NavItems.map((item) => {
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className="v2-nav-link"
-                  >
+              <nav className="v2-primary-nav" aria-label="منوی اصلی">
+                {v2NavItems.map((item) => (
+                  <Link key={item.id} href={item.href} className="v2-nav-link">
                     <V2NavIcon icon={item.icon} />
                     <span className="v2-nav-label">{item.label}</span>
                   </Link>
-                );
-              })}
-            </nav>
-
-            <div className="v2-menubar-actions">
-              <CatalogSearchBox
-                className="v2-header-search"
-                variant="v2"
-                placeholder="جستجو…"
-              />
-              <button
-                type="button"
-                className="v2-menu-toggle"
-                aria-expanded={open}
-                aria-controls="v2-mobile-menu"
-                aria-label={open ? "بستن منو" : "باز کردن منو"}
-                onClick={() => setOpen((value) => !value)}
-              >
-                <span />
-                <span />
-                <span />
-              </button>
+                ))}
+              </nav>
             </div>
+
+            <div className="v2-menubar-spacer" aria-hidden="true" />
+
+            <CatalogSearchBox
+              className="v2-header-search"
+              variant="v2"
+              placeholder="جستجو در راه سبز…"
+            />
+
+            <button
+              type="button"
+              className="v2-menu-toggle"
+              aria-expanded={open}
+              aria-controls="v2-mobile-menu"
+              aria-label={open ? "بستن منو" : "باز کردن منو"}
+              onClick={() => setOpen((value) => !value)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
       </div>
@@ -187,19 +184,22 @@ export function V2SiteHeader() {
         aria-label="منوی موبایل"
       >
         <div className="shell">
-          {v2NavItems.map((item) => {
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                className="v2-nav-link"
-                onClick={() => setOpen(false)}
-              >
-                <V2NavIcon icon={item.icon} />
-                <span className="v2-nav-label">{item.label}</span>
-              </Link>
-            );
-          })}
+          <CatalogSearchBox
+            className="v2-header-search v2-header-search--mobile"
+            variant="v2"
+            placeholder="جستجو در راه سبز…"
+          />
+          {v2NavItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="v2-nav-link"
+              onClick={() => setOpen(false)}
+            >
+              <V2NavIcon icon={item.icon} />
+              <span className="v2-nav-label">{item.label}</span>
+            </Link>
+          ))}
         </div>
       </nav>
     </header>

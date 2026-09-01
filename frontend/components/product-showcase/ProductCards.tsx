@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { ProductCard, type ShowcaseProduct } from "./ProductCard";
 import styles from "./ProductCards.module.css";
@@ -16,6 +16,13 @@ export function ProductCards({ title, products = [], highlightId = null }: Produ
   const scroll = (direction: -1 | 1) => {
     trackRef.current?.scrollBy({ left: direction * 360, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (!highlightId) return;
+    const card = document.getElementById(`catalog-product-${highlightId}`);
+    if (!card) return;
+    card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [highlightId, products]);
 
   return (
     <section className={styles.rail} aria-label={title}>

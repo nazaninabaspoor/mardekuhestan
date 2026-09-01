@@ -117,7 +117,7 @@ export function ForHomeFoodSpin() {
   const angle = 360 / count;
   const currentIdx = mod(absoluteIdx, count);
   const active = spinItems[currentIdx] ?? spinItems[0];
-  const activeLead = active?.teaser ?? active?.story ?? "";
+  const activeLead = active?.teaser ?? "";
   const theme = FOODSPIN_THEMES[currentIdx % FOODSPIN_THEMES.length];
 
   useEffect(() => {

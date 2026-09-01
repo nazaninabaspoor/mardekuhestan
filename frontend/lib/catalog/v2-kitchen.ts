@@ -22,7 +22,7 @@ const V2_STATIC_KEY_MAP: Record<string, string> = {
   agriculture: "farm",
 };
 
-const FOR_KITCHEN_PAGE_SIZE = 12;
+const FOR_KITCHEN_PAGE_SIZE = 60;
 
 function staticProductsForApiKey(frontendKey: string): ShowcaseProduct[] {
   return brandCategoryItems(frontendKey).map((item) => ({

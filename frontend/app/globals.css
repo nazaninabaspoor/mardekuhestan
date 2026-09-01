@@ -7140,12 +7140,15 @@ html.is-logo-intro-play .site-canvas {
 }
 
 html.is-logo-intro-pending .logo-badge,
-html.is-logo-intro-play .logo-badge {
+html.is-logo-intro-play .logo-badge,
+html.is-logo-intro-pending .v2-logo-img,
+html.is-logo-intro-play .v2-logo-img {
   opacity: 0;
   pointer-events: none;
 }
 
-html.is-logo-intro-done .logo-badge {
+html.is-logo-intro-done .logo-badge,
+html.is-logo-intro-done .v2-logo-img {
   opacity: 1;
 }
 

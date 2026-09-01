@@ -139,7 +139,11 @@ export function CatalogSearchBox({
     };
   }, [query, runLocalSearch, runApiSearch]);
 
+  const pathnameRef = useRef(pathname);
+
   useEffect(() => {
+    if (pathnameRef.current === pathname) return;
+    pathnameRef.current = pathname;
     close();
     setQuery("");
     setResults([]);
@@ -178,7 +182,11 @@ export function CatalogSearchBox({
   const selectResult = (hit: CatalogSearchHit) => {
     close();
     setQuery("");
+    setResults([]);
     navigateCatalogHit(hit, router, pathname);
+    window.setTimeout(() => {
+      inputRef.current?.blur();
+    }, 0);
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -227,15 +235,18 @@ export function CatalogSearchBox({
     );
   };
   const viewportWidth = mounted ? window.innerWidth : 360;
-  const panelWidth = Math.min(340, viewportWidth - 16);
+  const panelWidth = Math.min(
+    Math.max(panelRect?.width ?? 340, 280),
+    viewportWidth - 16,
+  );
   const panelStyle =
     panelRect && mounted
       ? {
           position: "fixed" as const,
-          top: panelRect.bottom + 8,
+          top: panelRect.bottom + 10,
           left: Math.max(
             8,
-            Math.min(panelRect.right - panelWidth, viewportWidth - panelWidth - 8),
+            Math.min(panelRect.left, viewportWidth - panelWidth - 8),
           ),
           width: panelWidth,
           zIndex: 10000,
@@ -293,10 +304,14 @@ export function CatalogSearchBox({
       <div
         ref={rootRef}
         className={`${styles.root} ${styles[`root--${variant}`]} catalog-search catalog-search--${variant} ${className}`.trim()}
+        onPointerDown={() => {
+          inputRef.current?.focus();
+          updatePanelRect();
+        }}
       >
         <input
           ref={inputRef}
-          type="search"
+          type="text"
           className={`${styles.input} ${inputClassName}`.trim()}
           value={query}
           placeholder={placeholder}
@@ -318,7 +333,13 @@ export function CatalogSearchBox({
           }}
           onKeyDown={onKeyDown}
         />
-        <button type="button" className={styles.button} aria-label="جستجو" onClick={goToResultsPage}>
+        <button
+          type="button"
+          className={styles.button}
+          aria-label="جستجو"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={goToResultsPage}
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
             <path d="M20 20l-3.4-3.4" fill="none" stroke="currentColor" strokeWidth="1.6" />

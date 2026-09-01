@@ -74,7 +74,7 @@ export function ForHomeCinematic() {
   ) as HomeCategoryProduct[];
   const safeIdx = productIdx % Math.max(products.length, 1);
   const active = products[safeIdx] ?? products[0];
-  const activeLead = active?.teaser ?? active?.story ?? "";
+  const activeLead = active?.teaser ?? "";
   const sideA = products[(safeIdx + 1) % products.length] ?? active;
   const sideB = products[(safeIdx + 2) % products.length] ?? active;
 

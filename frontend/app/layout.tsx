@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-import { ContourField } from "@/components/brand-marks";
-import { BrandTeaser } from "@/components/brand-teaser";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { BrandTeaser } from "@/components/brand-teaser";
 
 import "./globals.css";
+import "./v2/v2.css";
+
 const mardeKuhestan = localFont({
   src: [
     {
@@ -39,14 +40,14 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
-      className={mardeKuhestan.variable}
+      className={`${mardeKuhestan.variable} is-home-v2`}
       suppressHydrationWarning
     >
       <head>
         <link rel="preload" as="image" href="/brand/orginal-clear.png" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=location.pathname;if(p==="/"||p===""||p==="/playground"||p==="/playground/"){document.documentElement.classList.add("is-logo-intro-pending");}if(p==="/v2"||p==="/v2/"){var h=document.documentElement;h.classList.add("is-home-v2","is-v2-hero-locked");if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",p+(location.search||""));var z=function(){h.scrollTop=0;if(document.body)document.body.scrollTop=0;window.scrollTo(0,0);};z();requestAnimationFrame(z);window.addEventListener("load",z,{once:true});}}catch(e){}})();`,
+            __html: `(function(){try{var h=document.documentElement;h.classList.add("is-home-v2","is-logo-intro-done");if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}})();`,
           }}
         />
       </head>
@@ -56,7 +57,6 @@ export default function RootLayout({
           رفتن به محتوای اصلی
         </a>
         <div className="site-canvas">
-          <ContourField className="site-contour" />
           <SiteHeader />
           {children}
           <SiteFooter />
