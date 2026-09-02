@@ -128,13 +128,14 @@ function InteractiveCard({
   const isActive = offset === 0;
   const isAdjacent = Math.abs(offset) === 1;
 
-  // 3D Motion Physics — compact deck sitting on console table
-  const translateX = offset * 168;
-  const translateZ = isActive ? 28 : isAdjacent ? -72 : -160;
-  const rotateY = offset * -28;
-  const rotateX = isActive ? -3 : isAdjacent ? -7 : -12;
-  const scale = isActive ? 1 : isAdjacent ? 0.84 : 0.68;
-  const opacity = isActive ? 1 : isAdjacent ? 0.72 : 0.28;
+  // 3D Motion Physics — compact deck seated on console table
+  const translateX = offset * 148;
+  const translateY = isActive ? 0 : isAdjacent ? 4 : 10;
+  const translateZ = isActive ? 36 : isAdjacent ? -80 : -170;
+  const rotateY = offset * -26;
+  const rotateX = isActive ? -12 : isAdjacent ? -16 : -22;
+  const scale = isActive ? 1 : isAdjacent ? 0.82 : 0.66;
+  const opacity = isActive ? 1 : isAdjacent ? 0.7 : 0.26;
   const zIndex = 30 - Math.abs(offset) * 10;
 
   // Interactive 3D tilt for active card
@@ -178,8 +179,8 @@ function InteractiveCard({
       }}
       whileHover={
         isActive
-          ? { scale: 1.11, transition: { duration: 0.25 } }
-          : { opacity: 0.95, scale: scale * 1.04, transition: { duration: 0.25 } }
+          ? { scale: 1.04, y: -6, transition: { duration: 0.25 } }
+          : { opacity: 0.9, scale: scale * 1.03, transition: { duration: 0.25 } }
       }
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}

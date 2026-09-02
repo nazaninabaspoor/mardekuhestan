@@ -10735,16 +10735,17 @@ html.is-v2-bell-cursor textarea {
 
 .profile-coverflow-wallpaper-img {
   object-fit: cover;
-  object-position: center 58%;
-  transform: scale(1.01);
+  object-position: center 62%;
 }
 
 .profile-coverflow-wallpaper-vignette {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 72%, transparent 28%, rgba(0, 10, 8, 0.42) 100%),
-    linear-gradient(180deg, rgba(0, 14, 11, 0.08) 0%, transparent 30%, rgba(0, 8, 6, 0.28) 100%);
+    radial-gradient(ellipse at 18% 55%, rgba(190, 101, 22, 0.07) 0%, transparent 40%),
+    radial-gradient(ellipse at 78% 30%, rgba(134, 194, 235, 0.05) 0%, transparent 46%),
+    radial-gradient(ellipse at 50% 78%, transparent 34%, rgba(0, 8, 6, 0.45) 100%),
+    linear-gradient(180deg, rgba(0, 12, 10, 0.1) 0%, transparent 28%, rgba(0, 6, 5, 0.22) 100%);
   pointer-events: none;
 }
 
