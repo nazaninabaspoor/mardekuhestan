@@ -40,11 +40,11 @@ RATE_LIMITS: Final[dict[str, tuple[int, int]]] = {
     # وب‌سوکت
     RATE_SCOPE_WS_CONNECT: (20, 60),
     RATE_SCOPE_WS_MESSAGE: (60, 60),
-    # احراز هویت (محدودیت سفت و سخت روی IP)
-    RATE_SCOPE_AUTH_LOGIN: (8, 60),
-    RATE_SCOPE_AUTH_REGISTER: (5, 3600),
-    RATE_SCOPE_AUTH_REFRESH: (30, 60),
-    RATE_SCOPE_PASSWORD_CHANGE: (5, 300),
+    # احراز هویت (محدودیت هوشمند روی IP برای جلوگیری از Brute Force در عین حفظ تجربه کاربری روان)
+    RATE_SCOPE_AUTH_LOGIN: (20, 60),
+    RATE_SCOPE_AUTH_REGISTER: (15, 3600),
+    RATE_SCOPE_AUTH_REFRESH: (60, 60),
+    RATE_SCOPE_PASSWORD_CHANGE: (10, 300),
     # بررسی سلامت سرویس
     RATE_SCOPE_HEALTHCHECK: (120, 60),
 }

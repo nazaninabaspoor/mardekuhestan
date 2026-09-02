@@ -17,12 +17,16 @@ def get_user_by_email(email: str) -> User | None:
         return None
     return (
         User.objects.filter(email__iexact=normalized)
+        .select_related("customer_profile")
         .order_by("id")
         .first()
     )
 
 
 def get_or_create_profile(user) -> CustomerProfile:
+    # اگر پروفایل قبلاً در select_related واکشی شده باشد بدون کوئری دیتابیس برگردان
+    if hasattr(user, "customer_profile"):
+        return user.customer_profile
     profile, _created = CustomerProfile.objects.get_or_create(user=user)
     return profile
 

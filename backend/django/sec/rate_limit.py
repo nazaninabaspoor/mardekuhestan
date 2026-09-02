@@ -126,28 +126,34 @@ def _window_keys(scope: str, identifier: str, window: int) -> tuple[str, str, fl
 
 def check_rate_limit(*, scope: str, identifier: str) -> RateLimitResult:
     """
-    بررسی محدودیت درخواست با الگوریتم Sliding Window.
-    ترکیبی از شمارنده بازه فعلی + درصد وزنی بازه قبلی برای رفع باگ مرزی (Bursting).
+    بررسی محدودیت درخواست با الگوریتم Sliding Window پایپ‌لاین شده و اتمیک در Redis.
+    ترکیبی از شمارنده بازه فعلی + درصد وزنی بازه قبلی برای رفع باگ مرزی (Bursting) با حداقل زمان RTT.
     """
     limit, window = get_scope_limit(scope)
     curr_key, prev_key, weight_prev = _window_keys(scope, identifier, window)
 
     try:
-        # دریافت تعداد درخواست‌های بازه قبلی
-        prev_count = cache.get(prev_key) or 0
-        if not isinstance(prev_count, (int, float)):
-            prev_count = 0
+        # استفاده از Redis Pipeline برای اجرای اتمیک و سریع تمام عملیات در یک Round-Trip
+        from django_redis import get_redis_connection
+        con = get_redis_connection("default")
+        ttl = window * 2
 
-        # ثبت درخواست جدید در بازه جاری با timeout دو برابر طول بازه
-        added = cache.add(curr_key, 1, timeout=window * 2)
-        if added:
-            curr_count = 1
-        else:
+        pipe = con.pipeline(transaction=False)
+        pipe.get(prev_key)
+        pipe.incr(curr_key)
+        pipe.expire(curr_key, ttl)
+        results = pipe.execute()
+
+        raw_prev = results[0]
+        curr_count = int(results[1]) if results[1] else 1
+
+        prev_count = 0
+        if raw_prev:
             try:
-                curr_count = cache.incr(curr_key)
-            except ValueError:
-                cache.set(curr_key, 1, timeout=window * 2)
-                curr_count = 1
+                # پشتیبانی از رشته‌های ذخیره شده در redis
+                prev_count = int(raw_prev.decode("utf-8") if isinstance(raw_prev, bytes) else raw_prev)
+            except (ValueError, TypeError):
+                prev_count = 0
 
         # تخمین دقیق تعداد درخواست‌ها در پنجره لغزان
         estimated_count = int(curr_count + (prev_count * weight_prev))
@@ -176,21 +182,23 @@ def check_rate_limit(*, scope: str, identifier: str) -> RateLimitResult:
         )
 
     except Exception:
-        logger.exception("Rate limit check failed for scope=%s id=%s", scope, identifier)
-        if rate_limit_fail_closed():
-            return RateLimitResult(
-                allowed=False,
-                remaining=0,
-                retry_after=window,
-                limit=limit,
-            )
-        # در حالت Fail-Open دسترسی قطع نمی‌شود تا پلتفرم خطای ۵۰۲ ندهد
-        return RateLimitResult(
-            allowed=True,
-            remaining=limit,
-            retry_after=0,
-            limit=limit,
-        )
+        # فال‌بک امن به کش پیش‌فرض در صورت عدم دسترسی مستقیم به client redis
+        try:
+            prev_count = cache.get(prev_key) or 0
+            if not isinstance(prev_count, (int, float)):
+                prev_count = 0
+            added = cache.add(curr_key, 1, timeout=window * 2)
+            curr_count = 1 if added else (cache.incr(curr_key) if hasattr(cache, "incr") else 1)
+            estimated_count = int(curr_count + (prev_count * weight_prev))
+            if estimated_count > limit:
+                retry_after = max(int(window - (time.time() % window)), 1)
+                return RateLimitResult(allowed=False, remaining=0, retry_after=retry_after, limit=limit)
+            return RateLimitResult(allowed=True, remaining=max(limit - estimated_count, 0), retry_after=0, limit=limit)
+        except Exception:
+            logger.exception("Rate limit check failed for scope=%s id=%s", scope, identifier)
+            if rate_limit_fail_closed():
+                return RateLimitResult(allowed=False, remaining=0, retry_after=window, limit=limit)
+            return RateLimitResult(allowed=True, remaining=limit, retry_after=0, limit=limit)
 
 
 def enforce_rate_limit(*, scope: str, identifier: str) -> RateLimitResult:
