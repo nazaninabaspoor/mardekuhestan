@@ -10591,13 +10591,17 @@ html.is-profile-scene .site-header--v2 .v2-claim {
   background: rgb(0 91 72 / 48%);
 }
 
+html.is-profile-scene .site-header--v2.is-scrolled .v2-header-body {
+  background: rgb(0 26 20 / 55%);
+}
+
 html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   display: none;
 }
 
 .profile-page-wrapper {
   --profile-header-h: 122px;
-  --table-rest: 27vh;
+  --table-rest: 31vh;
   position: relative;
   z-index: 1;
   min-height: 100dvh;
@@ -10610,7 +10614,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 @media (max-width: 640px) {
   .profile-page-wrapper {
     --profile-header-h: 98px;
-    --table-rest: 22vh;
+    --table-rest: 24vh;
   }
 }
 

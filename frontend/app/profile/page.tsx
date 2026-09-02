@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useState, useRef, useCallback } from "react";
+import React, { Suspense, useEffect, useLayoutEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -248,7 +248,7 @@ function ProfileSceneBackdrop() {
         alt=""
         fill
         sizes="100vw"
-        quality={90}
+        quality={92}
         priority
         className="profile-scene-wallpaper-img"
       />
@@ -337,7 +337,7 @@ function ProfileContent() {
     workspaceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [openedTab]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     root.classList.add("is-profile-scene");
     return () => {
