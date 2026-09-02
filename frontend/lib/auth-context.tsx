@@ -110,8 +110,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
-    await logoutAccount();
     setUser(null);
+    try {
+      await logoutAccount();
+    } catch {
+      // ignore
+    }
   }, []);
 
   return (

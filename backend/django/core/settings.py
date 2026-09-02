@@ -709,11 +709,11 @@ CACHES = {
             "CONNECTION_POOL_KWARGS": {
                 "max_connections": int(os.getenv("REDIS_MAX_CONNECTIONS", "100")),
                 "retry_on_timeout": True,
-                "socket_timeout": 5,
-                "socket_connect_timeout": 5,
+                "socket_timeout": 1,
+                "socket_connect_timeout": 1,
             },
-            "SOCKET_TIMEOUT": 5,
-            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 1,
+            "SOCKET_CONNECT_TIMEOUT": 1,
             "IGNORE_EXCEPTIONS": True,
         },
     }
