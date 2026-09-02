@@ -166,6 +166,17 @@ export function AuthHeaderButton({
           </Link>
 
           <Link
+            href="/profile?tab=subscription"
+            className="auth-mobile-link"
+            onClick={() => onItemClick?.()}
+          >
+            <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" strokeWidth="2" fill="none">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+            </svg>
+            <span>اشتراک هفتگی سبد تازه</span>
+          </Link>
+
+          <Link
             href="/profile?tab=orders"
             className="auth-mobile-link"
             onClick={() => onItemClick?.()}
@@ -337,11 +348,29 @@ export function AuthHeaderButton({
               </div>
               <div className="auth-item-text">
                 <strong>کیف پول و باشگاه وفاداری</strong>
-                <small>مدیریت موجودی، تخفیف‌ها، اشتراک تازه</small>
+                <small>مدیریت موجودی، تخفیف‌ها و شارژ</small>
               </div>
             </Link>
 
-            {/* 4. Orders & Traceability */}
+            {/* 4. Weekly Fresh Subscription */}
+            <Link
+              href="/profile?tab=subscription"
+              className="auth-dropdown-item"
+              role="menuitem"
+              onClick={() => setDropdownOpen(false)}
+            >
+              <div className="auth-item-icon">
+                <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" strokeWidth="2" fill="none">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                </svg>
+              </div>
+              <div className="auth-item-text">
+                <strong>اشتراک هفتگی سبد تازه</strong>
+                <small>تحویل منظم پروتئین و لبنیات با زنجیره سرد</small>
+              </div>
+            </Link>
+
+            {/* 5. Orders & Traceability */}
             <Link
               href="/profile?tab=orders"
               className="auth-dropdown-item"

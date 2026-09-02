@@ -1,13 +1,77 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { authErrorMessage, changePassword } from "@/lib/api/auth";
 
-type ActiveTab = "personal" | "ai-nutrition" | "wallet" | "orders";
+type ActiveTab = "personal" | "ai-nutrition" | "wallet" | "subscription" | "orders";
+
+interface CoverflowItem {
+  id: ActiveTab;
+  title: string;
+  subtitle: string;
+  badge: string;
+  badgeIcon: string;
+  image: string;
+  actionText: string;
+  statsText: string;
+}
+
+const COVERFLOW_ITEMS: CoverflowItem[] = [
+  {
+    id: "personal",
+    title: "اطلاعات فردی و امنیت",
+    subtitle: "مدیریت حساب کاربری، رمز عبور و امنیت ورود",
+    badge: "امنیت و حساب",
+    badgeIcon: "🛡️",
+    image: "/brand/profile/card-profile-security.png",
+    actionText: "مشاهده و ویرایش مشخصات",
+    statsText: "احراز شده و فعال",
+  },
+  {
+    id: "ai-nutrition",
+    title: "دستیار هوش مصنوعی تغذیه",
+    subtitle: "مشاوره تخصصی رژیم ارگانیک، ارزش غذایی و دستور پخت اصیل",
+    badge: "ویژه همسفران",
+    badgeIcon: "✨",
+    image: "/brand/profile/card-profile-ai.png",
+    actionText: "گفتگو با دستیار هوشمند",
+    statsText: "آنلاین و پاسخگو",
+  },
+  {
+    id: "wallet",
+    title: "کیف پول و باشگاه سبز",
+    subtitle: "مدیریت اعتبار نقدی، کوپن‌های تخفیف و امتیازات کوهستان",
+    badge: "باشگاه وفاداری",
+    badgeIcon: "🌱",
+    image: "/brand/profile/card-profile-wallet.png",
+    actionText: "شارژ و مدیریت اعتبار",
+    statsText: "۵۰,۰۰۰ تومان اعتبار",
+  },
+  {
+    id: "subscription",
+    title: "اشتراک هفتگی سبد تازه",
+    subtitle: "ارسال دوره‌ای محصولات تازه ارگانیک با زنجیره سرد",
+    badge: "سرویس ویژه",
+    badgeIcon: "📦",
+    image: "/brand/profile/card-profile-subscription.png",
+    actionText: "تنظیم و انتخاب سبد",
+    statsText: "تخفیف دائمی ۱۰٪",
+  },
+  {
+    id: "orders",
+    title: "سفارش‌ها و شناسنامه مرتع",
+    subtitle: "پیگیری لحظه‌ای و اصالت‌سنجی مبدا تولید مزرعه و مرتع",
+    badge: "ردیابی ارگانیک",
+    badgeIcon: "🏔️",
+    image: "/brand/profile/card-profile-orders.png",
+    actionText: "مشاهده سوابق و شناسنامه",
+    statsText: "۱ سفارش تحویل شده",
+  },
+];
 
 // Pre-defined suggestions for the AI Nutrition Assistant
 const AI_PROMPTS = [
@@ -60,7 +124,7 @@ function ProfileContent() {
   const [walletMsg, setWalletMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (tabParam && ["personal", "ai-nutrition", "wallet", "orders"].includes(tabParam)) {
+    if (tabParam && ["personal", "ai-nutrition", "wallet", "subscription", "orders"].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
@@ -215,142 +279,189 @@ function ProfileContent() {
 
   const displayName = user.name || user.email.split("@")[0] || "همسفر گرامی";
 
+  // Coverflow Carousel index calculation
+  const currentIdx = COVERFLOW_ITEMS.findIndex((item) => item.id === activeTab);
+  const selectedIndex = currentIdx >= 0 ? currentIdx : 0;
+
+  const handlePrevCard = () => {
+    const nextIdx = (selectedIndex - 1 + COVERFLOW_ITEMS.length) % COVERFLOW_ITEMS.length;
+    handleTabChange(COVERFLOW_ITEMS[nextIdx].id);
+  };
+
+  const handleNextCard = () => {
+    const nextIdx = (selectedIndex + 1) % COVERFLOW_ITEMS.length;
+    handleTabChange(COVERFLOW_ITEMS[nextIdx].id);
+  };
+
   return (
     <div className="profile-page-wrapper">
       <div className="shell">
-        {/* Pinterest-style Scenic Hero Card */}
-        <div className="profile-scenic-card">
-          <div className="profile-scenic-bg-wrap">
-            <Image
-              src="/brand/profile-club-banner.png"
-              alt="باشگاه راه سبز مرد کوهستان"
-              fill
-              priority
-              sizes="(max-width: 1280px) 100vw, 1280px"
-              className="profile-scenic-img"
-            />
-            <div className="profile-scenic-overlay" />
+        {/* Floating Atmospheric Top Navigation Bar */}
+        <div className="profile-top-bar">
+          <div className="profile-bar-user">
+            <div className="profile-bar-avatar">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <div className="profile-bar-info">
+              <h1>
+                {displayName}
+                <span className="profile-bar-vip">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                    <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />
+                  </svg>
+                  همسفر باشگاه راه سبز
+                </span>
+              </h1>
+              <p className="profile-bar-email">{user.email}</p>
+            </div>
           </div>
 
-          <div className="profile-scenic-inner">
-            <div className="profile-hero-user-cluster">
-              <div className="profile-avatar-super-wrap">
-                <div className="profile-avatar-luxury">
-                  {displayName.charAt(0).toUpperCase()}
-                </div>
-                <div className="profile-avatar-glow" aria-hidden="true" />
-              </div>
-
-              <div className="profile-hero-user-text">
-                <div className="profile-hero-title-line">
-                  <h1>{displayName}</h1>
-                  <span className="profile-luxury-badge">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                      <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />
-                    </svg>
-                    همسفر باشگاه راه سبز
-                  </span>
-                </div>
-                <div className="profile-hero-email-line">
-                  <span>{user.email}</span>
-                  <span className="profile-verified-dot">احراز هویت شده</span>
-                </div>
-              </div>
+          <div className="profile-bar-stats">
+            <div className="profile-bar-stat-pill">
+              <span className="profile-bar-stat-lbl">اعتبار کیف پول:</span>
+              <strong className="profile-bar-stat-val">{walletBalance.toLocaleString("fa-IR")} تومان</strong>
             </div>
-
-            <div className="profile-metrics-deck">
-              <div className="profile-metric-chip">
-                <div className="profile-metric-icon">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <line x1="2" y1="10" x2="22" y2="10" />
-                  </svg>
-                </div>
-                <div className="profile-metric-data">
-                  <span className="profile-metric-lbl">اعتبار سبز کیف پول</span>
-                  <strong className="profile-metric-num">
-                    {walletBalance.toLocaleString("fa-IR")} <small>تومان</small>
-                  </strong>
-                </div>
-              </div>
-
-              <div className="profile-metric-chip">
-                <div className="profile-metric-icon">
-                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </div>
-                <div className="profile-metric-data">
-                  <span className="profile-metric-lbl">امتیاز کوهستان</span>
-                  <strong className="profile-metric-num">
-                    {greenPoints.toLocaleString("fa-IR")} <small>امتیاز</small>
-                  </strong>
-                </div>
-              </div>
+            <div className="profile-bar-stat-pill">
+              <span className="profile-bar-stat-lbl">امتیاز سبز:</span>
+              <strong className="profile-bar-stat-val">{greenPoints} امتیاز</strong>
             </div>
           </div>
         </div>
 
-        {/* Modern Minimal Tabs Deck */}
-        <div className="profile-tabs-deck" role="tablist">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "personal"}
-            className={`profile-tab-btn ${activeTab === "personal" ? "is-active" : ""}`}
-            onClick={() => handleTabChange("personal")}
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <span>اطلاعات فردی و امنیت</span>
-          </button>
+        {/* 3D Cinematic Perspective Coverflow Section */}
+        <div className="profile-coverflow-section">
+          <div className="profile-coverflow-header">
+            <span className="profile-coverflow-kicker">Marde Koohestan • Member Club Experience</span>
+            <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
+            <p className="profile-coverflow-sub">برای جابجایی بین بخش‌ها روی کارت‌ها کلیک کنید یا از کلیدهای ناوبری استفاده نمایید</p>
+          </div>
 
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "ai-nutrition"}
-            className={`profile-tab-btn profile-tab-btn--sparkle ${activeTab === "ai-nutrition" ? "is-active" : ""}`}
-            onClick={() => handleTabChange("ai-nutrition")}
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z" />
-            </svg>
-            <span>دستیار هوش مصنوعی تغذیه</span>
-            <span className="profile-tag-pill">ویژه</span>
-          </button>
+          <div className="profile-coverflow-stage">
+            {/* Prev Navigation Arrow */}
+            <button
+              type="button"
+              className="coverflow-nav-btn is-prev"
+              onClick={handlePrevCard}
+              aria-label="بخش قبلی"
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2.5" fill="none">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
 
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "wallet"}
-            className={`profile-tab-btn ${activeTab === "wallet" ? "is-active" : ""}`}
-            onClick={() => handleTabChange("wallet")}
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-              <rect width="20" height="14" x="2" y="5" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" />
-            </svg>
-            <span>کیف پول و امتیاز سبز</span>
-          </button>
+            {/* 3D Perspective Card Deck */}
+            <div className="profile-coverflow-track">
+              {COVERFLOW_ITEMS.map((item, idx) => {
+                const total = COVERFLOW_ITEMS.length;
+                let offset = idx - selectedIndex;
+                if (offset > total / 2) offset -= total;
+                if (offset < -total / 2) offset += total;
 
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === "orders"}
-            className={`profile-tab-btn ${activeTab === "orders" ? "is-active" : ""}`}
-            onClick={() => handleTabChange("orders")}
-          >
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-              <path d="m7.5 4.27 9 5.15" />
-              <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-              <path d="m3.3 7 8.7 5 8.7-5" />
-              <path d="M12 22V12" />
-            </svg>
-            <span>سفارش‌ها و شناسنامه مرتع</span>
-          </button>
+                const isActive = offset === 0;
+                const isAdjacent = Math.abs(offset) === 1;
+                const isOuter = Math.abs(offset) >= 2;
+
+                // 3D Matrix Math for smooth cinematic perspective
+                const translateX = offset * 210;
+                const translateZ = isActive ? 120 : isAdjacent ? -60 : -180;
+                const rotateY = offset * -32;
+                const scale = isActive ? 1.08 : isAdjacent ? 0.9 : 0.78;
+                const opacity = isActive ? 1 : isAdjacent ? 0.75 : 0.35;
+                const zIndex = 30 - Math.abs(offset) * 10;
+
+                const transformStyle = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+
+                return (
+                  <div
+                    key={item.id}
+                    className={`coverflow-card ${isActive ? "is-active" : ""}`}
+                    style={{
+                      transform: transformStyle,
+                      zIndex,
+                      opacity,
+                    }}
+                    onClick={() => handleTabChange(item.id)}
+                  >
+                    <div className="coverflow-card-bg-wrap">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 768px) 260px, 320px"
+                        className="coverflow-card-img"
+                        priority={isActive || isAdjacent}
+                      />
+                      <div className="coverflow-card-overlay" />
+                    </div>
+
+                    <div className="coverflow-card-content">
+                      <div className="coverflow-card-top">
+                        <span className="coverflow-card-badge">
+                          <span>{item.badgeIcon}</span>
+                          <span>{item.badge}</span>
+                        </span>
+                        <span className="profile-bar-stat-lbl">{item.statsText}</span>
+                      </div>
+
+                      <div className="coverflow-card-bottom">
+                        <h3 className="coverflow-card-title">{item.title}</h3>
+                        <p className="coverflow-card-subtitle">{item.subtitle}</p>
+                        <div className="coverflow-card-action">
+                          <span>{item.actionText}</span>
+                          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none">
+                            <polyline points="15 18 9 12 15 6" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Next Navigation Arrow */}
+            <button
+              type="button"
+              className="coverflow-nav-btn is-next"
+              onClick={handleNextCard}
+              aria-label="بخش بعدی"
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2.5" fill="none">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Indicator Pills / Quick Jump Switcher */}
+          <div className="coverflow-indicators">
+            {COVERFLOW_ITEMS.map((item, idx) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`coverflow-indicator-btn ${activeTab === item.id ? "is-active" : ""}`}
+                onClick={() => handleTabChange(item.id)}
+              >
+                <span className="coverflow-indicator-dot" />
+                <span>{item.title}</span>
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* Active Tab Interactive Workspace */}
+        <div className="profile-workspace-section">
+          <div className="profile-workspace-header">
+            <div className="profile-workspace-title-wrap">
+              <h2>
+                <span>{COVERFLOW_ITEMS[selectedIndex]?.badgeIcon}</span>
+                <span>{COVERFLOW_ITEMS[selectedIndex]?.title}</span>
+              </h2>
+              <p>{COVERFLOW_ITEMS[selectedIndex]?.subtitle}</p>
+            </div>
+            <span className="profile-workspace-badge">
+              {COVERFLOW_ITEMS[selectedIndex]?.badge}
+            </span>
+          </div>
 
         {/* Tab 1: Personal Info & Security */}
         {activeTab === "personal" && (
@@ -696,7 +807,7 @@ function ProfileContent() {
               </div>
             </div>
 
-            {/* Weekly Fresh Subscription Box */}
+            {/* Weekly Fresh Subscription Box Preview */}
             <div className="profile-card profile-card--full">
               <div className="profile-subscription-box">
                 <div className="profile-sub-content">
@@ -713,17 +824,17 @@ function ProfileContent() {
                   <button
                     type="button"
                     className="profile-btn-primary"
-                    onClick={() => alert("سرویس اشتراک هفتگی به زودی برای منطقه شما فعال می‌گردد.")}
+                    onClick={() => handleTabChange("subscription")}
                   >
                     تنظیم و فعال‌سازی سبد هفتگی
                   </button>
                 </div>
                 <div className="profile-sub-image-wrap">
                   <Image
-                    src="/brand/home-meat.png"
+                    src="/brand/profile/card-profile-subscription.png"
                     alt="سبد تازه مرد کوهستان"
                     width={220}
-                    height={220}
+                    height={280}
                     className="profile-sub-img"
                   />
                 </div>
@@ -732,7 +843,60 @@ function ProfileContent() {
           </div>
         )}
 
-        {/* Tab 4: Orders & Farm Traceability */}
+        {/* Tab 4: Subscription Configuration */}
+        {activeTab === "subscription" && (
+          <div className="profile-tab-pane">
+            <div className="profile-card profile-card--full">
+              <div className="profile-card-header">
+                <h3>پیکربندی و انتخاب بسته اشتراک هفتگی مرتع</h3>
+                <p>بسته مورد نظر خود را برای تحویل منظم هفتگی با تخفیف دائمی و زنجیره سرد سفارشی‌سازی کنید.</p>
+              </div>
+
+              <div className="profile-sub-configurator">
+                <div className="profile-sub-plan-card is-selected">
+                  <span className="profile-address-badge">محبوب‌ترین انتخاب</span>
+                  <h4>سبد پروتئین ارگانیک خانوادگی</h4>
+                  <p>شامل ۲ کیلو راسته بره مرتعی، ۱.۵ کیلو فیله مرغ بدون آنتی‌بیوتیک، ۲ بسته کره سنتی و عسل کوهستان</p>
+                  <div className="profile-sub-plan-price">
+                    ۱,۴۵۰,۰۰۰ تومان <small>/ هر هفته</small>
+                  </div>
+                </div>
+
+                <div className="profile-sub-plan-card">
+                  <h4>سبد سلامت و ورزش (High Protein)</h4>
+                  <p>ماهی قزل‌آلای تازه آب سرد، فیله مرغ ارگانیک، روغن حیوانی سنتی و گیاهان معطر کوهی</p>
+                  <div className="profile-sub-plan-price">
+                    ۱,۱۸۰,۰۰۰ تومان <small>/ هر هفته</small>
+                  </div>
+                </div>
+
+                <div className="profile-sub-plan-card">
+                  <h4>سبد صبحانه و لبنیات اصیل ییلاقی</h4>
+                  <p>کره حیوانی مرتع، پنیر کهنه کوهپایه، عسل آویشن وحشی و تخم‌مرغ محلی تازه مزرعه</p>
+                  <div className="profile-sub-plan-price">
+                    ۷۸۰,۰۰۰ تومان <small>/ هر هفته</small>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", paddingTop: "20px", borderTop: "1px solid rgba(0, 91, 72, 0.1)" }}>
+                <div>
+                  <strong style={{ color: "#005b48", fontSize: "15px" }}>روز تحویل پیشنهادی: هر هفته دوشنبه‌ها (زنجیره سرد)</strong>
+                  <span style={{ display: "block", fontSize: "12px", color: "#5d686e" }}>امکان تعلیق یا لغو بدون هزینه در هر زمان</span>
+                </div>
+                <button
+                  type="button"
+                  className="profile-btn-primary"
+                  onClick={() => alert("سفارش اشتراک هفتگی با موفقیت ثبت اولیه شد. کارشناسان مرد کوهستان جهت تایید نهایی زمان ارسال با شما تماس می‌گیرند.")}
+                >
+                  تایید و شروع اشتراک با ۱۰٪ تخفیف
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Orders & Farm Traceability */}
         {activeTab === "orders" && (
           <div className="profile-tab-pane">
             <div className="profile-card profile-card--full">
@@ -780,6 +944,7 @@ function ProfileContent() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
