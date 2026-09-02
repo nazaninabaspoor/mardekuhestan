@@ -128,20 +128,20 @@ function InteractiveCard({
   const isActive = offset === 0;
   const isAdjacent = Math.abs(offset) === 1;
 
-  // Standing objects on the island — same table plane, center closest to camera
-  const translateX = offset * 168;
-  const translateY = isActive ? 6 : isAdjacent ? -8 : -22;
-  const translateZ = isActive ? 52 : isAdjacent ? -56 : -140;
-  const rotateY = offset * -22;
-  const rotateX = isActive ? -8 : isAdjacent ? -10 : -13;
-  const scale = isActive ? 1 : isAdjacent ? 0.86 : 0.7;
-  const opacity = isActive ? 1 : isAdjacent ? 0.78 : 0.32;
+  // Mantel of standing frames — one table plane, mild fan, center nearest
+  const translateX = offset * 158;
+  const translateY = isActive ? 4 : isAdjacent ? -10 : -22;
+  const translateZ = isActive ? 28 : isAdjacent ? -36 : -96;
+  const rotateY = offset * -11;
+  const rotateX = isActive ? -16 : isAdjacent ? -17 : -18;
+  const scale = isActive ? 1 : isAdjacent ? 0.84 : 0.7;
+  const opacity = isActive ? 1 : isAdjacent ? 0.94 : 0.55;
   const zIndex = 30 - Math.abs(offset) * 10;
 
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
-  const tiltRotateX = useTransform(cardY, [-150, 150], [2.4, -2.4]);
-  const tiltRotateY = useTransform(cardX, [-150, 150], [-3.2, 3.2]);
+  const tiltRotateX = useTransform(cardY, [-150, 150], [1.2, -1.2]);
+  const tiltRotateY = useTransform(cardX, [-150, 150], [-1.6, 1.6]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isActive) return;
@@ -178,63 +178,58 @@ function InteractiveCard({
       }}
       whileHover={
         isActive
-          ? { scale: 1.025, transition: { duration: 0.28 } }
-          : { opacity: 0.92, scale: scale * 1.02, transition: { duration: 0.28 } }
+          ? { scale: 1.015, transition: { duration: 0.3 } }
+          : { opacity: 1, scale: scale * 1.02, transition: { duration: 0.3 } }
       }
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onSelect}
+      role="button"
+      aria-label={item.title}
     >
       <span className="coverflow-slot-shadow" aria-hidden="true" />
+      <span className="frame-easel" aria-hidden="true">
+        <span className="frame-easel-leg is-left" />
+        <span className="frame-easel-leg is-right" />
+        <span className="frame-easel-bar" />
+      </span>
       <motion.div
         className={`coverflow-card ${isActive ? "is-active" : ""}`}
         style={isActive ? { rotateX: tiltRotateX, rotateY: tiltRotateY } : undefined}
       >
-      <div className="coverflow-card-bg-wrap">
-        <Image
-          src={item.image}
-          alt=""
-          fill
-          sizes="(max-width: 768px) 300px, 380px"
-          quality={92}
-          className="coverflow-card-img"
-          style={{ objectPosition: item.scenePosition ?? "center" }}
-          priority={isActive || isAdjacent}
-        />
-        <div className="coverflow-card-figure" aria-hidden="true">
-          <Image
-            src={item.figure}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 240px, 300px"
-            quality={92}
-            className="coverflow-card-figure-img"
-            priority={isActive}
-          />
-        </div>
-        <div className="coverflow-card-overlay" />
-      </div>
-
-      <div className="coverflow-card-content">
-        <div className="coverflow-card-top">
-          <span className="coverflow-card-badge">
-            <span>{item.badgeIcon}</span>
-            <span>{item.badge}</span>
-          </span>
-          <span className="profile-bar-stat-lbl">{item.statsText}</span>
-        </div>
-
-        <div className="coverflow-card-bottom">
-          <h3 className="coverflow-card-title">{item.title}</h3>
-          <p className="coverflow-card-subtitle">{item.subtitle}</p>
-          <div className="coverflow-card-action">
-            <span>{item.actionText}</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
+        <div className="frame-wood">
+          <div className="frame-mat">
+            <div className="coverflow-card-bg-wrap">
+              <Image
+                src={item.image}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 280px, 340px"
+                quality={92}
+                className="coverflow-card-img"
+                style={{ objectPosition: item.scenePosition ?? "center" }}
+                priority={isActive || isAdjacent}
+              />
+              <div className="coverflow-card-figure" aria-hidden="true">
+                <Image
+                  src={item.figure}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 220px, 280px"
+                  quality={92}
+                  className="coverflow-card-figure-img"
+                  priority={isActive}
+                />
+              </div>
+              <div className="coverflow-card-overlay" />
+            </div>
+          </div>
+          <div className="frame-plate">
+            <span className="frame-plate-kicker">{item.badge}</span>
+            <strong className="frame-plate-title">{item.title}</strong>
+            <span className="frame-plate-action">{item.actionText}</span>
           </div>
         </div>
-      </div>
       </motion.div>
     </motion.div>
   );
@@ -244,7 +239,7 @@ function ProfileSceneBackdrop() {
   return (
     <div className="profile-scene-wallpaper" aria-hidden="true">
       <Image
-        src="/brand/profile/profile-kitchen-island-stage.png"
+        src="/brand/profile/profile-kitchen-frame-stage.png"
         alt=""
         fill
         sizes="100vw"
