@@ -128,21 +128,20 @@ function InteractiveCard({
   const isActive = offset === 0;
   const isAdjacent = Math.abs(offset) === 1;
 
-  // 3D Motion Physics — compact deck seated on console table
-  const translateX = offset * 148;
-  const translateY = isActive ? 0 : isAdjacent ? 4 : 10;
-  const translateZ = isActive ? 36 : isAdjacent ? -80 : -170;
-  const rotateY = offset * -26;
-  const rotateX = isActive ? -12 : isAdjacent ? -16 : -22;
-  const scale = isActive ? 1 : isAdjacent ? 0.82 : 0.66;
-  const opacity = isActive ? 1 : isAdjacent ? 0.7 : 0.26;
+  // Standing objects on the island — same table plane, center closest to camera
+  const translateX = offset * 168;
+  const translateY = isActive ? 6 : isAdjacent ? -8 : -22;
+  const translateZ = isActive ? 52 : isAdjacent ? -56 : -140;
+  const rotateY = offset * -22;
+  const rotateX = isActive ? -8 : isAdjacent ? -10 : -13;
+  const scale = isActive ? 1 : isAdjacent ? 0.86 : 0.7;
+  const opacity = isActive ? 1 : isAdjacent ? 0.78 : 0.32;
   const zIndex = 30 - Math.abs(offset) * 10;
 
-  // Interactive 3D tilt for active card
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
-  const tiltRotateX = useTransform(cardY, [-150, 150], [8, -8]);
-  const tiltRotateY = useTransform(cardX, [-150, 150], [-8, 8]);
+  const tiltRotateX = useTransform(cardY, [-150, 150], [2.4, -2.4]);
+  const tiltRotateY = useTransform(cardX, [-150, 150], [-3.2, 3.2]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isActive) return;
@@ -160,7 +159,7 @@ function InteractiveCard({
 
   return (
     <motion.div
-      className={`coverflow-card ${isActive ? "is-active" : ""}`}
+      className={`coverflow-slot ${isActive ? "is-active" : ""}`}
       style={{ zIndex }}
       animate={{
         x: translateX,
@@ -174,18 +173,23 @@ function InteractiveCard({
       transition={{
         type: "spring",
         stiffness: 240,
-        damping: 26,
-        mass: 0.9,
+        damping: 28,
+        mass: 0.95,
       }}
       whileHover={
         isActive
-          ? { scale: 1.04, y: -6, transition: { duration: 0.25 } }
-          : { opacity: 0.9, scale: scale * 1.03, transition: { duration: 0.25 } }
+          ? { scale: 1.025, transition: { duration: 0.28 } }
+          : { opacity: 0.92, scale: scale * 1.02, transition: { duration: 0.28 } }
       }
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onSelect}
     >
+      <span className="coverflow-slot-shadow" aria-hidden="true" />
+      <motion.div
+        className={`coverflow-card ${isActive ? "is-active" : ""}`}
+        style={isActive ? { rotateX: tiltRotateX, rotateY: tiltRotateY } : undefined}
+      >
       <div className="coverflow-card-bg-wrap">
         <Image
           src={item.image}
@@ -231,7 +235,26 @@ function InteractiveCard({
           </div>
         </div>
       </div>
+      </motion.div>
     </motion.div>
+  );
+}
+
+function ProfileSceneBackdrop() {
+  return (
+    <div className="profile-scene-wallpaper" aria-hidden="true">
+      <Image
+        src="/brand/profile/profile-kitchen-island-stage.png"
+        alt=""
+        fill
+        sizes="100vw"
+        quality={90}
+        priority
+        className="profile-scene-wallpaper-img"
+      />
+      <span className="profile-scene-vignette" />
+      <span className="profile-scene-grain" />
+    </div>
   );
 }
 
@@ -289,6 +312,8 @@ function ProfileContent() {
     }
   }, [user]);
 
+  const displayName = name.trim() || user?.name || "کاربر کوهستان";
+
   const handleFocusChange = useCallback(
     (tab: ActiveTab) => {
       setFocusedTab(tab);
@@ -310,6 +335,19 @@ function ProfileContent() {
   useEffect(() => {
     if (!openedTab || !workspaceRef.current) return;
     workspaceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [openedTab]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("is-profile-scene");
+    return () => {
+      root.classList.remove("is-profile-scene");
+      root.classList.remove("is-profile-workspace");
+    };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("is-profile-workspace", openedTab !== null);
   }, [openedTab]);
 
   const currentIdx = COVERFLOW_ITEMS.findIndex((item) => item.id === focusedTab);
@@ -446,33 +484,39 @@ function ProfileContent() {
 
   if (isLoading) {
     return (
-      <div className="profile-loading-screen">
-        <div className="profile-loading-spinner" />
-        <p>در حال فراخوانی اطلاعات همسفر سبز…</p>
+      <div className="profile-page-wrapper">
+        <ProfileSceneBackdrop />
+        <div className="profile-loading-screen">
+          <div className="profile-loading-spinner" />
+          <p>در حال فراخوانی اطلاعات همسفر سبز…</p>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="profile-guest-card shell">
-        <div className="profile-guest-inner">
-          <Image
-            src="/brand/orginal-clear.png"
-            alt="مرد کوهستان"
-            width={72}
-            height={72}
-            className="profile-guest-logo"
-          />
-          <h2>ورود به باشگاه راه سبز</h2>
-          <p>برای مشاهده پنل اختصاصی، اطلاعات فردی، دستیار هوشمند و کیف پول، لطفاً وارد حساب خود شوید.</p>
-          <button
-            type="button"
-            className="profile-btn-primary"
-            onClick={openLoginModal}
-          >
-            ورود / عضویت در خانواده مرد کوهستان
-          </button>
+      <div className="profile-page-wrapper">
+        <ProfileSceneBackdrop />
+        <div className="profile-guest-card">
+          <div className="profile-guest-inner">
+            <Image
+              src="/brand/orginal-clear.png"
+              alt="مرد کوهستان"
+              width={72}
+              height={72}
+              className="profile-guest-logo"
+            />
+            <h2>ورود به باشگاه راه سبز</h2>
+            <p>برای مشاهده پنل اختصاصی، اطلاعات فردی، دستیار هوشمند و کیف پول، لطفاً وارد حساب خود شوید.</p>
+            <button
+              type="button"
+              className="profile-btn-primary"
+              onClick={openLoginModal}
+            >
+              ورود / عضویت در خانواده مرد کوهستان
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -480,43 +524,17 @@ function ProfileContent() {
 
   return (
     <div className="profile-page-wrapper">
-      <div className="shell">
-        {/* 3D Cinematic Perspective Coverflow Section */}
-        <div className="profile-coverflow-section">
-          <div className="profile-coverflow-header">
-            <div className="profile-coverflow-kicker">
-              <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
-              <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
-              <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
-            </div>
-            <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
-            <p className="profile-coverflow-sub">روی کارت وسط کلیک کنید · با فلش‌ها جابه‌جا شوید</p>
+      <section className="profile-scene">
+        <ProfileSceneBackdrop />
+
+        <div className="profile-scene-stage">
+          <div className="profile-scene-kicker">
+            <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
+            <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
+            <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
           </div>
 
-          <div className="profile-coverflow-theater">
-            <div className="profile-coverflow-wallpaper" aria-hidden="true">
-              <Image
-                src="/brand/profile/profile-lounge-wallpaper.png"
-                alt=""
-                fill
-                sizes="(max-width: 768px) 100vw, 1240px"
-                quality={92}
-                priority
-                className="profile-coverflow-wallpaper-img"
-              />
-              <span className="profile-coverflow-wallpaper-vignette" />
-              <span className="profile-coverflow-wallpaper-glow profile-coverflow-wallpaper-glow--fire" />
-              <span className="profile-coverflow-wallpaper-glow profile-coverflow-wallpaper-glow--window" />
-              <span className="profile-coverflow-wallpaper-grain" />
-            </div>
-
-            <div className="profile-coverflow-console-wrap">
-              <span className="profile-coverflow-desk-plate" aria-hidden="true" />
-              <span className="profile-coverflow-console-rim" aria-hidden="true" />
-              <span className="profile-coverflow-console-shine" aria-hidden="true" />
-
-              <div className="profile-coverflow-stage">
-            {/* Prev Navigation Arrow */}
+          <div className="profile-coverflow-stage">
             <button
               type="button"
               className="coverflow-nav-btn is-prev"
@@ -528,12 +546,11 @@ function ProfileContent() {
               </svg>
             </button>
 
-            {/* 3D Perspective Card Deck with Touch & Gesture Handling */}
             <motion.div
               className="profile-coverflow-track"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
+              dragElastic={0.18}
               onDragEnd={(_, info) => {
                 if (info.offset.x > 50 || info.velocity.x > 300) {
                   handlePrevCard();
@@ -553,7 +570,6 @@ function ProfileContent() {
               ))}
             </motion.div>
 
-            {/* Next Navigation Arrow */}
             <button
               type="button"
               className="coverflow-nav-btn is-next"
@@ -564,13 +580,12 @@ function ProfileContent() {
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-              </div>
-            </div>
           </div>
         </div>
+      </section>
 
-        {/* Active Tab Interactive Workspace — only after card click */}
-        {openedTab !== null && (
+      {openedTab !== null && (
+      <div className="shell profile-workspace-shell">
         <motion.div
           className="profile-workspace-section"
           ref={workspaceRef}
@@ -1098,8 +1113,8 @@ function ProfileContent() {
                 </motion.div>
               </AnimatePresence>
         </motion.div>
-        )}
       </div>
+        )}
     </div>
   );
 }
