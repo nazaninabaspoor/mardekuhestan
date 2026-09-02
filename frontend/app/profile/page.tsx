@@ -217,66 +217,101 @@ function ProfileContent() {
 
   return (
     <div className="profile-page-wrapper">
-      <div className="profile-hero-banner">
-        <div className="shell profile-hero-inner">
-          <div className="profile-hero-user">
-            <div className="profile-hero-avatar">
-              {displayName.charAt(0).toUpperCase()}
-              <span className="profile-hero-avatar-ring" />
-            </div>
-            <div className="profile-hero-meta">
-              <div className="profile-hero-name-row">
-                <h1>{displayName}</h1>
-                <span className="profile-badge-vip">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" /></svg>
-                  همسفر باشگاه راه سبز
-                </span>
-              </div>
-              <p className="profile-hero-email">{user.email}</p>
-            </div>
+      <div className="shell">
+        {/* Pinterest-style Scenic Hero Card */}
+        <div className="profile-scenic-card">
+          <div className="profile-scenic-bg-wrap">
+            <Image
+              src="/brand/profile-club-banner.png"
+              alt="باشگاه راه سبز مرد کوهستان"
+              fill
+              priority
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="profile-scenic-img"
+            />
+            <div className="profile-scenic-overlay" />
           </div>
 
-          <div className="profile-hero-summary-cards">
-            <div className="profile-sum-card">
-              <span className="profile-sum-label">اعتبار سبز</span>
-              <strong className="profile-sum-val">{walletBalance.toLocaleString("fa-IR")} <small>تومان</small></strong>
+          <div className="profile-scenic-inner">
+            <div className="profile-hero-user-cluster">
+              <div className="profile-avatar-super-wrap">
+                <div className="profile-avatar-luxury">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
+                <div className="profile-avatar-glow" aria-hidden="true" />
+              </div>
+
+              <div className="profile-hero-user-text">
+                <div className="profile-hero-title-line">
+                  <h1>{displayName}</h1>
+                  <span className="profile-luxury-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                      <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />
+                    </svg>
+                    همسفر باشگاه راه سبز
+                  </span>
+                </div>
+                <div className="profile-hero-email-line">
+                  <span>{user.email}</span>
+                  <span className="profile-verified-dot">احراز هویت شده</span>
+                </div>
+              </div>
             </div>
-            <div className="profile-sum-card">
-              <span className="profile-sum-label">امتیاز کوهستان</span>
-              <strong className="profile-sum-val">{greenPoints.toLocaleString("fa-IR")} <small>امتیاز</small></strong>
-            </div>
-            <div className="profile-sum-card">
-              <span className="profile-sum-label">وضعیت سلامت حساب</span>
-              <span className="profile-sum-status">
-                <span className="profile-status-dot" /> ایمن و احرازشده
-              </span>
+
+            <div className="profile-metrics-deck">
+              <div className="profile-metric-chip">
+                <div className="profile-metric-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                </div>
+                <div className="profile-metric-data">
+                  <span className="profile-metric-lbl">اعتبار سبز کیف پول</span>
+                  <strong className="profile-metric-num">
+                    {walletBalance.toLocaleString("fa-IR")} <small>تومان</small>
+                  </strong>
+                </div>
+              </div>
+
+              <div className="profile-metric-chip">
+                <div className="profile-metric-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <div className="profile-metric-data">
+                  <span className="profile-metric-lbl">امتیاز کوهستان</span>
+                  <strong className="profile-metric-num">
+                    {greenPoints.toLocaleString("fa-IR")} <small>امتیاز</small>
+                  </strong>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="shell profile-main-container">
-        {/* Navigation Tabs */}
-        <div className="profile-tabs-nav" role="tablist">
+        {/* Modern Minimal Tabs Deck */}
+        <div className="profile-tabs-deck" role="tablist">
           <button
             type="button"
             role="tab"
             aria-selected={activeTab === "personal"}
-            className={`profile-tab-item ${activeTab === "personal" ? "is-active" : ""}`}
+            className={`profile-tab-btn ${activeTab === "personal" ? "is-active" : ""}`}
             onClick={() => handleTabChange("personal")}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
-            <span>اطلاعات شخصی و امنیت</span>
+            <span>اطلاعات فردی و امنیت</span>
           </button>
 
           <button
             type="button"
             role="tab"
             aria-selected={activeTab === "ai-nutrition"}
-            className={`profile-tab-item profile-tab-item--ai ${activeTab === "ai-nutrition" ? "is-active" : ""}`}
+            className={`profile-tab-btn profile-tab-btn--sparkle ${activeTab === "ai-nutrition" ? "is-active" : ""}`}
             onClick={() => handleTabChange("ai-nutrition")}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
@@ -290,7 +325,7 @@ function ProfileContent() {
             type="button"
             role="tab"
             aria-selected={activeTab === "wallet"}
-            className={`profile-tab-item ${activeTab === "wallet" ? "is-active" : ""}`}
+            className={`profile-tab-btn ${activeTab === "wallet" ? "is-active" : ""}`}
             onClick={() => handleTabChange("wallet")}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
@@ -304,7 +339,7 @@ function ProfileContent() {
             type="button"
             role="tab"
             aria-selected={activeTab === "orders"}
-            className={`profile-tab-item ${activeTab === "orders" ? "is-active" : ""}`}
+            className={`profile-tab-btn ${activeTab === "orders" ? "is-active" : ""}`}
             onClick={() => handleTabChange("orders")}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
@@ -320,7 +355,7 @@ function ProfileContent() {
         {/* Tab 1: Personal Info & Security */}
         {activeTab === "personal" && (
           <div className="profile-tab-pane">
-            <div className="profile-grid-2col">
+            <div className="profile-grid-deck">
               {/* Profile Details Form */}
               <div className="profile-card">
                 <div className="profile-card-header">
@@ -578,7 +613,7 @@ function ProfileContent() {
         {/* Tab 3: Green Way Wallet & Loyalty */}
         {activeTab === "wallet" && (
           <div className="profile-tab-pane">
-            <div className="profile-grid-2col">
+            <div className="profile-grid-deck">
               {/* Wallet Balance & Recharge */}
               <div className="profile-card">
                 <div className="profile-card-header">
