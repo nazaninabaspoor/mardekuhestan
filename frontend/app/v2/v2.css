@@ -10624,6 +10624,8 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   position: fixed;
   inset: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
@@ -10658,6 +10660,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   flex-direction: column;
   padding-top: var(--profile-header-h);
   box-sizing: border-box;
+  user-select: none;
 }
 
 .profile-scene-kicker {
@@ -10774,6 +10777,8 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   cursor: pointer;
   will-change: transform, opacity;
   bottom: 0;
+  overflow: visible;
+  -webkit-box-reflect: below 10px linear-gradient(transparent 48%, rgba(0, 0, 0, 0.22));
 }
 
 .coverflow-slot-shadow {
@@ -10803,7 +10808,6 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
     0 12px 28px rgba(0, 0, 0, 0.42),
     0 28px 54px rgba(0, 0, 0, 0.28);
   transform-style: preserve-3d;
-  -webkit-box-reflect: below 1px linear-gradient(transparent 62%, rgba(0, 0, 0, 0.16));
 }
 
 .coverflow-card.is-active {
@@ -10813,6 +10817,50 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
     0 1px 3px rgba(0, 0, 0, 0.6),
     0 16px 34px rgba(0, 0, 0, 0.48),
     0 0 28px rgba(212, 163, 89, 0.1);
+}
+
+.profile-page-wrapper .profile-guest-card {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  padding: calc(var(--profile-header-h) + 32px) 20px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-page-wrapper .profile-guest-inner {
+  background: rgba(8, 22, 18, 0.74);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(212, 163, 89, 0.28);
+  box-shadow: 0 24px 64px rgba(0, 8, 6, 0.4);
+}
+
+.profile-page-wrapper .profile-guest-inner h2 {
+  color: #F4F0E8;
+}
+
+.profile-page-wrapper .profile-guest-inner p {
+  color: rgba(244, 240, 232, 0.78);
+}
+
+.profile-page-wrapper .profile-loading-screen {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  padding-top: var(--profile-header-h);
+  color: #F4F0E8;
+}
+
+.profile-page-wrapper .profile-loading-spinner {
+  border-color: rgba(244, 240, 232, 0.2);
+  border-top-color: #D4A359;
+}
+
+.coverflow-card .profile-bar-stat-lbl {
+  color: rgba(244, 240, 232, 0.82);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
 }
 
 /* Atmospheric Top Bar - Dark Green Luxury Glass Header */
@@ -10932,329 +10980,6 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   font-size: 13.5px;
   font-weight: 900;
   color: #D4A359;
-}
-
-/* ==========================================================================
-   3D PERSPECTIVE COVERFLOW STAGE (FLUID MOTION & RELAXED PHYSICS)
-   ========================================================================== */
-
-.profile-coverflow-section {
-  position: relative;
-  padding: 20px 0 36px;
-  user-select: none;
-}
-
-.profile-coverflow-theater {
-  position: relative;
-  width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  border-radius: clamp(20px, 2.5vw, 32px);
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  min-height: clamp(460px, 54vw, 680px);
-  box-shadow:
-    0 48px 120px rgba(0, 0, 0, 0.58),
-    0 0 0 1px rgba(212, 163, 89, 0.14),
-    inset 0 1px 0 rgba(244, 240, 232, 0.07);
-  isolation: isolate;
-}
-
-.profile-coverflow-wallpaper-img {
-  object-fit: cover;
-  object-position: center 62%;
-}
-
-.profile-coverflow-wallpaper-vignette {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 18% 55%, rgba(190, 101, 22, 0.07) 0%, transparent 40%),
-    radial-gradient(ellipse at 78% 30%, rgba(134, 194, 235, 0.05) 0%, transparent 46%),
-    radial-gradient(ellipse at 50% 78%, transparent 34%, rgba(0, 8, 6, 0.45) 100%),
-    linear-gradient(180deg, rgba(0, 12, 10, 0.1) 0%, transparent 28%, rgba(0, 6, 5, 0.22) 100%);
-  pointer-events: none;
-}
-
-.profile-coverflow-wallpaper-glow {
-  position: absolute;
-  pointer-events: none;
-  filter: blur(48px);
-}
-
-.profile-coverflow-wallpaper-glow--fire {
-  left: 6%;
-  bottom: 14%;
-  width: 30%;
-  height: 48%;
-  background: radial-gradient(circle, rgba(190, 101, 22, 0.28) 0%, transparent 72%);
-  animation: profile-fire-breathe 7s ease-in-out infinite alternate;
-}
-
-.profile-coverflow-wallpaper-glow--window {
-  right: 10%;
-  top: 6%;
-  width: 42%;
-  height: 58%;
-  background: radial-gradient(circle, rgba(134, 194, 235, 0.14) 0%, transparent 74%);
-}
-
-.profile-coverflow-wallpaper-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events: none;
-}
-
-@keyframes profile-fire-breathe {
-  from { opacity: 0.65; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1.04); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .profile-coverflow-wallpaper-glow--fire {
-    animation: none;
-  }
-}
-
-.profile-coverflow-console-wrap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 34%;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.profile-coverflow-desk-plate {
-  position: absolute;
-  left: 10.5%;
-  right: 10.5%;
-  bottom: 0;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(20, 12, 8, 0.08) 35%,
-    rgba(12, 8, 5, 0.22) 100%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.profile-coverflow-console-wrap > .profile-coverflow-stage {
-  pointer-events: auto;
-  z-index: 1;
-}
-
-.profile-coverflow-console-rim {
-  position: absolute;
-  left: 10.5%;
-  right: 10.5%;
-  top: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(212, 163, 89, 0.35) 15%,
-    rgba(244, 220, 170, 0.75) 50%,
-    rgba(212, 163, 89, 0.35) 85%,
-    transparent
-  );
-  box-shadow: 0 0 14px rgba(212, 163, 89, 0.28);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.profile-coverflow-console-shine {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 0;
-  top: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(244, 240, 232, 0.025) 50%,
-    rgba(0, 0, 0, 0.14) 100%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.profile-coverflow-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.profile-coverflow-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 12px;
-  padding: 0;
-  background: none;
-  border: none;
-}
-
-.profile-coverflow-kicker-en {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(212, 163, 89, 0.72);
-}
-
-.profile-coverflow-kicker-sep {
-  width: 28px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(212, 163, 89, 0.65) 20%,
-    rgba(212, 163, 89, 0.65) 80%,
-    transparent
-  );
-  flex-shrink: 0;
-}
-
-.profile-coverflow-kicker-fa {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: rgba(244, 240, 232, 0.88);
-}
-
-.profile-coverflow-title {
-  font-size: clamp(22px, 2.8vw, 32px);
-  font-weight: 900;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-}
-
-.profile-coverflow-sub {
-  font-size: 13.5px;
-  color: rgba(244, 240, 232, 0.75);
-  margin: 6px 0 0;
-}
-
-/* 3D Stage — cards anchored to desk surface in wallpaper */
-.profile-coverflow-stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  perspective: 1200px;
-  perspective-origin: 50% 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  touch-action: pan-y;
-  padding-bottom: clamp(10px, 2.2%, 22px);
-}
-
-/* Navigation Arrow Buttons */
-.coverflow-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 60;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: rgba(0, 20, 16, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(212, 163, 89, 0.4);
-  color: #D4A359;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 15, 12, 0.55);
-  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.coverflow-nav-btn:hover {
-  background: #005B48;
-  border-color: #D4A359;
-  color: #FFFFFF;
-  transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 12px 32px rgba(0, 91, 72, 0.5);
-}
-
-.coverflow-nav-btn.is-prev {
-  right: 20px;
-}
-
-.coverflow-nav-btn.is-next {
-  left: 20px;
-}
-
-/* 3D Track & Card Items */
-.profile-coverflow-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  transform-style: preserve-3d;
-  cursor: grab;
-  padding-bottom: 2%;
-}
-
-.profile-coverflow-track:active {
-  cursor: grabbing;
-}
-
-.coverflow-card {
-  position: absolute;
-  width: clamp(190px, 16.5vw, 248px);
-  height: clamp(268px, 23vw, 340px);
-  border-radius: 22px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #002B22;
-  will-change: transform, opacity;
-  border: 1.5px solid rgba(212, 163, 89, 0.28);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.75),
-    0 10px 24px rgba(0, 0, 0, 0.55),
-    0 24px 48px rgba(0, 0, 0, 0.35);
-  transform-style: preserve-3d;
-  transform-origin: center bottom;
-  bottom: 0;
-}
-
-.coverflow-card.is-active {
-  border-color: rgba(212, 163, 89, 0.55);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.8),
-    0 14px 32px rgba(0, 0, 0, 0.62),
-    0 0 32px rgba(212, 163, 89, 0.12);
-}
-
-.coverflow-card.is-active::after {
-  content: "";
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: -6px;
-  height: 8px;
-  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55) 0%, transparent 72%);
-  filter: blur(4px);
-  z-index: -1;
-  pointer-events: none;
 }
 
 .coverflow-card-bg-wrap {
@@ -11472,15 +11197,26 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
    INTERACTIVE WORKSPACE & DETAIL SECTION
    ========================================================================== */
 
+.profile-workspace-shell {
+  position: relative;
+  z-index: 2;
+  margin-top: -6vh;
+  padding-bottom: 72px;
+}
+
 .profile-workspace-section {
   position: relative;
-  margin-top: 36px;
-  background: #FFFFFF;
+  margin-top: 0;
+  background: rgba(244, 240, 232, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 28px;
   padding: 36px clamp(20px, 3.5vw, 40px);
   color: #1D1D1B;
-  box-shadow: 0 12px 40px rgba(0, 36, 28, 0.06);
-  border: 1px solid rgba(0, 91, 72, 0.12);
+  box-shadow:
+    0 24px 64px rgba(0, 10, 8, 0.28),
+    0 0 0 1px rgba(212, 163, 89, 0.16);
+  border: 1px solid rgba(244, 240, 232, 0.55);
   min-height: 220px;
 }
 
@@ -11620,29 +11356,18 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 @media (max-width: 768px) {
-  .profile-coverflow-theater {
-    min-height: clamp(320px, 82vw, 400px);
-    border-radius: 18px;
-  }
-  .profile-coverflow-console-wrap {
-    height: 38%;
-  }
-  .coverflow-card {
+  .coverflow-slot {
     width: 168px;
     height: 238px;
-    border-radius: 18px;
+    -webkit-box-reflect: none;
+  }
+  .coverflow-card {
+    border-radius: 16px;
   }
   .coverflow-nav-btn {
     width: 40px;
     height: 40px;
-  }
-  .profile-coverflow-console-rim {
-    left: 6%;
-    right: 6%;
-  }
-  .profile-coverflow-desk-plate {
-    left: 6%;
-    right: 6%;
+    bottom: calc(var(--table-rest) + 34%);
   }
 }
 
@@ -12455,29 +12180,18 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 @media (max-width: 768px) {
-  .profile-coverflow-theater {
-    min-height: clamp(320px, 82vw, 400px);
-    border-radius: 18px;
-  }
-  .profile-coverflow-console-wrap {
-    height: 38%;
-  }
-  .coverflow-card {
+  .coverflow-slot {
     width: 168px;
     height: 238px;
-    border-radius: 18px;
+    -webkit-box-reflect: none;
+  }
+  .coverflow-card {
+    border-radius: 16px;
   }
   .coverflow-nav-btn {
     width: 40px;
     height: 40px;
-  }
-  .profile-coverflow-console-rim {
-    left: 6%;
-    right: 6%;
-  }
-  .profile-coverflow-desk-plate {
-    left: 6%;
-    right: 6%;
+    bottom: calc(var(--table-rest) + 34%);
   }
 }
 
