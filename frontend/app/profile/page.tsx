@@ -16,7 +16,11 @@ interface CoverflowItem {
   subtitle: string;
   badge: string;
   badgeIcon: string;
+  /** Cinematic scene — no text in image */
   image: string;
+  /** Mountain Man figure overlay */
+  figure: string;
+  scenePosition?: string;
   actionText: string;
   statsText: string;
   gradient: string;
@@ -29,7 +33,9 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مدیریت حساب کاربری، رمز عبور و امنیت ورود",
     badge: "امنیت و حساب",
     badgeIcon: "🛡️",
-    image: "/brand/profile/card-profile-security.png",
+    image: "/brand/v2/bookcase-green-mountains.png",
+    figure: "/brand/v2/mountain-man-cutout.png",
+    scenePosition: "center 35%",
     actionText: "مشاهده و ویرایش مشخصات",
     statsText: "احراز شده و فعال",
     gradient: "from-[#005B48]/90 via-[#003B2E]/90 to-[#00221A]/95",
@@ -40,7 +46,9 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مشاوره تخصصی رژیم ارگانیک، ارزش غذایی و طبخ اصیل",
     badge: "ویژه همسفران",
     badgeIcon: "✨",
-    image: "/brand/profile/card-profile-ai.png",
+    image: "/brand/v2/v2-soon-mountain-stage.png",
+    figure: "/brand/v2/mountain-man-sitting.png",
+    scenePosition: "center 40%",
     actionText: "گفتگو با دستیار هوشمند",
     statsText: "آنلاین و پاسخگو",
     gradient: "from-[#005B48]/90 via-[#004234]/90 to-[#001D16]/95",
@@ -51,7 +59,9 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مدیریت اعتبار نقدی، کوپن‌های تخفیف و امتیازات کوهستان",
     badge: "باشگاه وفاداری",
     badgeIcon: "🌱",
-    image: "/brand/profile/card-profile-wallet.png",
+    image: "/brand/our-way-03-quality.png",
+    figure: "/brand/v2/mountain-man-cutout.png",
+    scenePosition: "center center",
     actionText: "شارژ و مدیریت اعتبار",
     statsText: "۵۰,۰۰۰ تومان اعتبار",
     gradient: "from-[#005B48]/90 via-[#403010]/90 to-[#221A08]/95",
@@ -62,7 +72,9 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "ارسال دوره‌ای محصولات تازه ارگانیک با زنجیره سرد",
     badge: "سرویس ویژه",
     badgeIcon: "📦",
-    image: "/brand/profile/card-profile-subscription.png",
+    image: "/brand/v2/v2-soon-product-stage.png",
+    figure: "/brand/mardekoohestan-walker1.png",
+    scenePosition: "center 45%",
     actionText: "تنظیم و انتخاب سبد",
     statsText: "تخفیف دائمی ۱۰٪",
     gradient: "from-[#005B48]/90 via-[#003D30]/90 to-[#001F18]/95",
@@ -73,7 +85,9 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "پیگیری لحظه‌ای و اصالت‌سنجی مبدا تولید مزرعه و مرتع",
     badge: "ردیابی ارگانیک",
     badgeIcon: "🏔️",
-    image: "/brand/profile/card-profile-orders.png",
+    image: "/brand/our-way-05-ahead.png",
+    figure: "/brand/v2/mountain-man-cutout.png",
+    scenePosition: "center 30%",
     actionText: "مشاهده سوابق و شناسنامه",
     statsText: "۱ سفارش تحویل شده",
     gradient: "from-[#005B48]/90 via-[#1A3830]/90 to-[#0B1E1A]/95",
@@ -114,12 +128,13 @@ function InteractiveCard({
   const isActive = offset === 0;
   const isAdjacent = Math.abs(offset) === 1;
 
-  // 3D Motion Physics & Positions
-  const translateX = offset * 230;
-  const translateZ = isActive ? 140 : isAdjacent ? -40 : -180;
-  const rotateY = offset * -32;
-  const scale = isActive ? 1.08 : isAdjacent ? 0.9 : 0.76;
-  const opacity = isActive ? 1 : isAdjacent ? 0.8 : 0.35;
+  // 3D Motion Physics — compact deck sitting on console table
+  const translateX = offset * 168;
+  const translateZ = isActive ? 28 : isAdjacent ? -72 : -160;
+  const rotateY = offset * -28;
+  const rotateX = isActive ? -3 : isAdjacent ? -7 : -12;
+  const scale = isActive ? 1 : isAdjacent ? 0.84 : 0.68;
+  const opacity = isActive ? 1 : isAdjacent ? 0.72 : 0.28;
   const zIndex = 30 - Math.abs(offset) * 10;
 
   // Interactive 3D tilt for active card
@@ -145,14 +160,13 @@ function InteractiveCard({
   return (
     <motion.div
       className={`coverflow-card ${isActive ? "is-active" : ""}`}
-      style={{
-        zIndex,
-        rotateX: isActive ? tiltRotateX : 0,
-      }}
+      style={{ zIndex }}
       animate={{
         x: translateX,
+        y: translateY,
         z: translateZ,
         rotateY: rotateY,
+        rotateX: rotateX,
         scale: scale,
         opacity: opacity,
       }}
@@ -174,12 +188,25 @@ function InteractiveCard({
       <div className="coverflow-card-bg-wrap">
         <Image
           src={item.image}
-          alt={item.title}
+          alt=""
           fill
-          sizes="(max-width: 768px) 260px, 340px"
+          sizes="(max-width: 768px) 300px, 380px"
+          quality={92}
           className="coverflow-card-img"
+          style={{ objectPosition: item.scenePosition ?? "center" }}
           priority={isActive || isAdjacent}
         />
+        <div className="coverflow-card-figure" aria-hidden="true">
+          <Image
+            src={item.figure}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 240px, 300px"
+            quality={92}
+            className="coverflow-card-figure-img"
+            priority={isActive}
+          />
+        </div>
         <div className="coverflow-card-overlay" />
       </div>
 
@@ -213,7 +240,10 @@ function ProfileContent() {
   const router = useRouter();
 
   const tabParam = (searchParams.get("tab") as ActiveTab) || "personal";
-  const [activeTab, setActiveTab] = useState<ActiveTab>("personal");
+  /** Carousel focus — arrows, drag, URL */
+  const [focusedTab, setFocusedTab] = useState<ActiveTab>("personal");
+  /** Workspace content — only after explicit card click */
+  const [openedTab, setOpenedTab] = useState<ActiveTab | null>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
 
   // Edit profile form state
@@ -247,7 +277,7 @@ function ProfileContent() {
 
   useEffect(() => {
     if (tabParam && ["personal", "ai-nutrition", "wallet", "subscription", "orders"].includes(tabParam)) {
-      setActiveTab(tabParam);
+      setFocusedTab(tabParam);
     }
   }, [tabParam]);
 
@@ -258,28 +288,43 @@ function ProfileContent() {
     }
   }, [user]);
 
-  const handleTabChange = useCallback(
-    (tab: ActiveTab, shouldScroll = false) => {
-      setActiveTab(tab);
+  const handleFocusChange = useCallback(
+    (tab: ActiveTab) => {
+      setFocusedTab(tab);
+      setOpenedTab(null);
       router.replace(`/profile?tab=${tab}`, { scroll: false });
-      if (shouldScroll && workspaceRef.current) {
-        workspaceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
     },
     [router]
   );
 
-  const currentIdx = COVERFLOW_ITEMS.findIndex((item) => item.id === activeTab);
+  const handleCardOpen = useCallback(
+    (tab: ActiveTab) => {
+      setFocusedTab(tab);
+      setOpenedTab(tab);
+      router.replace(`/profile?tab=${tab}`, { scroll: false });
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    if (!openedTab || !workspaceRef.current) return;
+    workspaceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [openedTab]);
+
+  const currentIdx = COVERFLOW_ITEMS.findIndex((item) => item.id === focusedTab);
   const selectedIndex = currentIdx >= 0 ? currentIdx : 0;
+  const openedIdx = openedTab
+    ? COVERFLOW_ITEMS.findIndex((item) => item.id === openedTab)
+    : -1;
 
   const handlePrevCard = () => {
     const nextIdx = (selectedIndex - 1 + COVERFLOW_ITEMS.length) % COVERFLOW_ITEMS.length;
-    handleTabChange(COVERFLOW_ITEMS[nextIdx].id);
+    handleFocusChange(COVERFLOW_ITEMS[nextIdx].id);
   };
 
   const handleNextCard = () => {
     const nextIdx = (selectedIndex + 1) % COVERFLOW_ITEMS.length;
-    handleTabChange(COVERFLOW_ITEMS[nextIdx].id);
+    handleFocusChange(COVERFLOW_ITEMS[nextIdx].id);
   };
 
   // Keyboard navigation
@@ -432,58 +477,44 @@ function ProfileContent() {
     );
   }
 
-  const displayName = user.name || user.email.split("@")[0] || "همسفر گرامی";
-
   return (
     <div className="profile-page-wrapper">
       <div className="shell">
-        {/* Floating Atmospheric Top Navigation Bar */}
-        <motion.div
-          className="profile-top-bar"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="profile-bar-user">
-            <div className="profile-bar-avatar">
-              {displayName.charAt(0).toUpperCase()}
-              <span className="profile-bar-avatar-badge" title="احراز هویت شده" />
-            </div>
-            <div className="profile-bar-info">
-              <h1>
-                {displayName}
-                <span className="profile-bar-vip">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-                    <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />
-                  </svg>
-                  همسفر باشگاه راه سبز
-                </span>
-              </h1>
-              <p className="profile-bar-email">{user.email}</p>
-            </div>
-          </div>
-
-          <div className="profile-bar-stats">
-            <div className="profile-bar-stat-pill">
-              <span className="profile-bar-stat-lbl">اعتبار کیف پول:</span>
-              <strong className="profile-bar-stat-val">{walletBalance.toLocaleString("fa-IR")} تومان</strong>
-            </div>
-            <div className="profile-bar-stat-pill">
-              <span className="profile-bar-stat-lbl">امتیاز سبز:</span>
-              <strong className="profile-bar-stat-val">{greenPoints} امتیاز</strong>
-            </div>
-          </div>
-        </motion.div>
-
         {/* 3D Cinematic Perspective Coverflow Section */}
         <div className="profile-coverflow-section">
           <div className="profile-coverflow-header">
-            <span className="profile-coverflow-kicker">Marde Koohestan • Member Club Experience</span>
+            <div className="profile-coverflow-kicker">
+              <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
+              <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
+              <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
+            </div>
             <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
-            <p className="profile-coverflow-sub">روی کارت‌ها کلیک کنید، با فلش‌ها جابجا شوید یا کارت‌ها را با ماوس/لمس بکشید</p>
+            <p className="profile-coverflow-sub">روی کارت وسط کلیک کنید · با فلش‌ها جابه‌جا شوید</p>
           </div>
 
-          <div className="profile-coverflow-stage">
+          <div className="profile-coverflow-theater">
+            <div className="profile-coverflow-wallpaper" aria-hidden="true">
+              <Image
+                src="/brand/profile/profile-lounge-wallpaper.png"
+                alt=""
+                fill
+                sizes="(max-width: 768px) 100vw, 1240px"
+                quality={92}
+                priority
+                className="profile-coverflow-wallpaper-img"
+              />
+              <span className="profile-coverflow-wallpaper-vignette" />
+              <span className="profile-coverflow-wallpaper-glow profile-coverflow-wallpaper-glow--fire" />
+              <span className="profile-coverflow-wallpaper-glow profile-coverflow-wallpaper-glow--window" />
+              <span className="profile-coverflow-wallpaper-grain" />
+            </div>
+
+            <div className="profile-coverflow-console-wrap">
+              <span className="profile-coverflow-desk-plate" aria-hidden="true" />
+              <span className="profile-coverflow-console-rim" aria-hidden="true" />
+              <span className="profile-coverflow-console-shine" aria-hidden="true" />
+
+              <div className="profile-coverflow-stage">
             {/* Prev Navigation Arrow */}
             <button
               type="button"
@@ -516,7 +547,7 @@ function ProfileContent() {
                   item={item}
                   index={idx}
                   selectedIndex={selectedIndex}
-                  onSelect={() => handleTabChange(item.id, true)}
+                  onSelect={() => handleCardOpen(item.id)}
                 />
               ))}
             </motion.div>
@@ -532,37 +563,13 @@ function ProfileContent() {
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-          </div>
-
-          {/* Indicator Pills with Smooth Animated Active Capsule */}
-          <div className="coverflow-indicators" role="tablist">
-            {COVERFLOW_ITEMS.map((item) => {
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  className={`coverflow-indicator-btn ${isActive ? "is-active" : ""}`}
-                  onClick={() => handleTabChange(item.id, false)}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeCoverflowPill"
-                      className="coverflow-active-pill"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                  <span className="coverflow-indicator-dot" />
-                  <span>{item.title}</span>
-                </button>
-              );
-            })}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Active Tab Interactive Workspace */}
+        {/* Active Tab Interactive Workspace — only after card click */}
+        {openedTab !== null && (
         <motion.div
           className="profile-workspace-section"
           ref={workspaceRef}
@@ -570,29 +577,29 @@ function ProfileContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="profile-workspace-header">
-            <div className="profile-workspace-title-wrap">
-              <h2>
-                <span>{COVERFLOW_ITEMS[selectedIndex]?.badgeIcon}</span>
-                <span>{COVERFLOW_ITEMS[selectedIndex]?.title}</span>
-              </h2>
-              <p>{COVERFLOW_ITEMS[selectedIndex]?.subtitle}</p>
-            </div>
-            <span className="profile-workspace-badge">
-              {COVERFLOW_ITEMS[selectedIndex]?.badge}
-            </span>
-          </div>
+              <div className="profile-workspace-header">
+                <div className="profile-workspace-title-wrap">
+                  <h2>
+                    <span>{COVERFLOW_ITEMS[openedIdx]?.badgeIcon}</span>
+                    <span>{COVERFLOW_ITEMS[openedIdx]?.title}</span>
+                  </h2>
+                  <p>{COVERFLOW_ITEMS[openedIdx]?.subtitle}</p>
+                </div>
+                <span className="profile-workspace-badge">
+                  {COVERFLOW_ITEMS[openedIdx]?.badge}
+                </span>
+              </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 18, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -14, scale: 0.99 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Tab 1: Personal Info & Security */}
-              {activeTab === "personal" && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={openedTab}
+                  initial={{ opacity: 0, y: 18, scale: 0.99 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -14, scale: 0.99 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {/* Tab 1: Personal Info & Security */}
+                  {openedTab === "personal" && (
                 <div className="profile-tab-pane">
                   <div className="profile-grid-deck">
                     {/* Profile Details Form */}
@@ -764,7 +771,7 @@ function ProfileContent() {
               )}
 
               {/* Tab 2: AI Mountain Nutrition Assistant */}
-              {activeTab === "ai-nutrition" && (
+                  {openedTab === "ai-nutrition" && (
                 <div className="profile-tab-pane">
                   <div className="profile-ai-hero">
                     <h2>مشاور هوشمند رژیم غذایی و آشپزی ارگانیک مرد کوهستان</h2>
@@ -854,7 +861,7 @@ function ProfileContent() {
               )}
 
               {/* Tab 3: Green Way Wallet & Loyalty */}
-              {activeTab === "wallet" && (
+                  {openedTab === "wallet" && (
                 <div className="profile-tab-pane">
                   <div className="profile-grid-deck">
                     {/* Wallet Balance & Recharge */}
@@ -956,7 +963,7 @@ function ProfileContent() {
                         <button
                           type="button"
                           className="profile-btn-primary"
-                          onClick={() => handleTabChange("subscription", true)}
+                          onClick={() => handleCardOpen("subscription")}
                         >
                           تنظیم و فعال‌سازی سبد هفتگی
                         </button>
@@ -976,7 +983,7 @@ function ProfileContent() {
               )}
 
               {/* Tab 4: Subscription Configuration */}
-              {activeTab === "subscription" && (
+                  {openedTab === "subscription" && (
                 <div className="profile-tab-pane">
                   <div className="profile-card profile-card--full">
                     <div className="profile-card-header">
@@ -1038,7 +1045,7 @@ function ProfileContent() {
               )}
 
               {/* Tab 5: Orders & Farm Traceability */}
-              {activeTab === "orders" && (
+                  {openedTab === "orders" && (
                 <div className="profile-tab-pane">
                   <div className="profile-card profile-card--full">
                     <div className="profile-card-header">
@@ -1087,9 +1094,10 @@ function ProfileContent() {
                   </div>
                 </div>
               )}
-            </motion.div>
-          </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
         </motion.div>
+        )}
       </div>
     </div>
   );
