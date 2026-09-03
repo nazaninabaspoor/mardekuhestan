@@ -6,7 +6,7 @@ import { loadV2KitchenCatalog } from "@/lib/catalog/v2-kitchen";
 export async function ForHomeKitchenContainer() {
   const catalog = await loadV2KitchenCatalog();
   return (
-    <Suspense fallback={<ForHomeKitchen catalog={catalog} />}>
+    <Suspense fallback={<div aria-hidden="true" style={{ minHeight: "70vh" }} />}>
       <ForHomeKitchen catalog={catalog} />
     </Suspense>
   );

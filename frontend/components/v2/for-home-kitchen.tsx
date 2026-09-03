@@ -7,9 +7,7 @@ import { ProductCards } from "@/components/product-showcase/ProductCards";
 import { ProductInfo } from "@/components/product-showcase/ProductInfo";
 import { ProductStage } from "@/components/product-showcase/ProductStage";
 import { ProductTabs } from "@/components/product-showcase/ProductTabs";
-import { ProductDetailModal } from "@/components/product-detail/product-detail-modal";
 import { KitchenCompanion } from "@/components/v2/kitchen-companion";
-import { getProductDetail, type ProductDetailData } from "@/lib/catalog/product-details";
 import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
 import {
   productCategories,
@@ -146,8 +144,6 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
   const [focusProductId, setFocusProductId] = useState<string | null>(null);
   const [focusTick, setFocusTick] = useState(0);
   const [pinnedProduct, setPinnedProduct] = useState<ShowcaseProduct | null>(null);
-  const [detailProduct, setDetailProduct] = useState<ProductDetailData | null>(null);
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [companion, setCompanion] = useState<KitchenCompanionSeed | null>(null);
   const focusTimerRef = useRef<number | null>(null);
 
@@ -160,7 +156,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
         (homeCategoryProducts[category.id as HomeDoorId] ?? []).map((item) => ({
           id: item.id,
           name: item.name,
-          href: item.href,
+          href: `/products/${item.id}`,
           image: item.image,
           alt: item.alt,
         })),
@@ -331,14 +327,8 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
 
   const openProductDetail = (prod?: ShowcaseProduct | null) => {
     const target = prod || heroProduct;
-    const detail = getProductDetail(
-      target?.id || activeCategoryId,
-      activeCategoryId,
-      target?.name || activeCategory?.headline,
-      target?.image || activeCategory?.heroImage,
-    );
-    setDetailProduct(detail);
-    setIsDetailOpen(true);
+    const href = target?.href || `/products/${target?.id || activeCategoryId}`;
+    router.push(href);
   };
 
   const openCompanion = (product: { id: string; name: string; image?: string | null }) => {
@@ -348,7 +338,6 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
       image: product.image,
       categoryId: activeCategoryId,
     });
-    setIsDetailOpen(false);
     void trackProductInsight({
       event_type: "add_to_cart",
       product_key: product.id,
@@ -472,12 +461,6 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
         )}
       </div>
 
-      <ProductDetailModal
-        isOpen={isDetailOpen}
-        product={detailProduct}
-        onClose={() => setIsDetailOpen(false)}
-        onAddedToCart={openCompanion}
-      />
     </section>
   );
 }

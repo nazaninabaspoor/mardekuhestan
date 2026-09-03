@@ -1,3 +1,5 @@
+import { homeCategoryProducts } from "@/lib/brand";
+
 export type ProductDetailData = {
   id: string;
   name: string;
@@ -239,4 +241,30 @@ export function getProductDetail(
     portionOptions: preset.portionOptions || ["۵۰۰ گرم", "۱ کیلوگرم", "۲ کیلوگرم"],
     cutOptions: preset.cutOptions || ["برش استاندارد", "برش سفارشی"],
   };
+}
+
+type StaticProductSummary = {
+  id: string;
+  name: string;
+  image: string;
+};
+
+/** Resolve a homepage card to its own detail data instead of category defaults. */
+export function getStaticProductDetail(id: string): ProductDetailData {
+  for (const [categoryId, products] of Object.entries(homeCategoryProducts)) {
+    const product = (products as ReadonlyArray<StaticProductSummary>).find(
+      (item) => item.id === id,
+    );
+
+    if (product) {
+      return getProductDetail(
+        product.id,
+        categoryId,
+        product.name,
+        product.image,
+      );
+    }
+  }
+
+  return getProductDetail(id);
 }

@@ -41,7 +41,7 @@ function staticKitchenPayload(): V2KitchenCatalogPayload {
     productsByCategory[category.id] = items.map((item) => ({
       id: item.id,
       name: item.name,
-      href: item.href,
+      href: `/products/${item.id}`,
       image: item.image,
       alt: item.alt,
     }));
