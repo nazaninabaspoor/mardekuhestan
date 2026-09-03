@@ -176,9 +176,9 @@
 .mk-speech {
   position: absolute;
   z-index: 2;
-  top: 27%;
-  left: 56%;
-  width: min(248px, 34%);
+  top: 13%;
+  left: 63%;
+  width: min(236px, 32%);
   pointer-events: none;
 }
 
@@ -188,7 +188,7 @@
   text-align: center;
   background: rgba(244, 240, 232, 0.94);
   border: 1px solid rgba(0, 91, 72, 0.28);
-  border-radius: 22px 22px 22px 8px;
+  border-radius: 20px;
   box-shadow: 0 10px 24px rgba(0, 18, 14, 0.16);
 }
 
@@ -200,18 +200,18 @@
 }
 
 .mk-speech-puff.is-mid {
-  width: 12px;
-  height: 12px;
-  bottom: -10px;
-  left: 18%;
+  width: 11px;
+  height: 11px;
+  bottom: -12px;
+  left: 14%;
   right: auto;
 }
 
 .mk-speech-puff.is-tip {
   width: 7px;
   height: 7px;
-  bottom: -22px;
-  left: 10%;
+  bottom: -26px;
+  left: 6%;
   right: auto;
 }
 
@@ -359,9 +359,9 @@
   }
 
   .mk-speech {
-    top: 24%;
-    left: 50%;
-    width: min(210px, 48%);
+    top: 12%;
+    left: 52%;
+    width: min(200px, 44%);
   }
 
   .mk-chat-brand strong {
