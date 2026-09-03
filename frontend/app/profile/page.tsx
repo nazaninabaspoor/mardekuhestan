@@ -822,14 +822,12 @@ function ProfileContent() {
                         <Image
                           src="/brand/orginal-clear.png"
                           alt="مرد کوهستان"
-                          width={40}
-                          height={40}
+                          width={32}
+                          height={32}
                           className="mk-chat-logo"
                         />
-                        <div>
-                          <strong>دستیار تغذیه مرد کوهستان</strong>
-                          <span>آنلاین · مشاور رژیم و طبخ مرتع</span>
-                        </div>
+                        <strong>دستیار تغذیه</strong>
+                        <span className="mk-chat-live">آنلاین</span>
                       </div>
                       <div className="mk-chat-actions">
                         <button
@@ -851,6 +849,18 @@ function ProfileContent() {
                         </button>
                       </div>
                     </header>
+                    {!hasUserAiMessage && (
+                      <aside className="mk-speech" aria-label="گفتگوی دستیار">
+                        <div className="mk-speech-cloud">
+                          <h2>خب، از کجا کمکت کنیم؟</h2>
+                          <p className="mk-chat-said">
+                            گوشت مرتع، یه شام درست، یا برنامهٔ روزانه‌ت. بگو دلت چی می‌خواد؛ راه سبز بازه.
+                          </p>
+                        </div>
+                        <span className="mk-speech-puff is-mid" aria-hidden="true" />
+                        <span className="mk-speech-puff is-tip" aria-hidden="true" />
+                      </aside>
+                    )}
                     {hasUserAiMessage && (
                       <div className="mk-chat-thread" ref={aiThreadRef}>
                         <div className="mk-chat-feed">
@@ -901,24 +911,17 @@ function ProfileContent() {
 
                   <div className="mk-chat-dock">
                     {!hasUserAiMessage && (
-                      <div className="mk-chat-welcome">
-                        <p className="mk-chat-speakers">مرد کوهستان و دستیار هوشمند</p>
-                        <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
-                        <p className="mk-chat-said">
-                          از گوشت مرتع تا برنامه روزانه و طبخ اصیل، با هم راه سبز را نشانتان می‌دهیم.
-                        </p>
-                        <div className="mk-chat-starters">
-                          {AI_PROMPTS.map((prompt, idx) => (
-                            <button
-                              key={idx}
-                              type="button"
-                              className="mk-chat-starter"
-                              onClick={() => handleSendAiMessage(prompt)}
-                            >
-                              {prompt}
-                            </button>
-                          ))}
-                        </div>
+                      <div className="mk-chat-starters">
+                        {AI_PROMPTS.map((prompt, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            className="mk-chat-starter"
+                            onClick={() => handleSendAiMessage(prompt)}
+                          >
+                            {prompt}
+                          </button>
+                        ))}
                       </div>
                     )}
                     <form
