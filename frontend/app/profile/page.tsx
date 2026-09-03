@@ -857,12 +857,14 @@ function ProfileContent() {
 
                             {/* Cream Parchment Document Sheet */}
                             <div className="mk-shenasnameh-page">
-                              {/* Background Guilloche Security Art */}
+                              {/* Background Security Border Guilloche */}
                               <svg className="mk-shenasnameh-guilloche" viewBox="0 0 500 580" aria-hidden="true">
-                                <rect x="8" y="8" width="484" height="564" rx="4" fill="none" stroke="#005B48" strokeWidth="0.8" opacity="0.18" />
-                                <rect x="14" y="14" width="472" height="552" rx="3" fill="none" stroke="#D4A359" strokeWidth="0.6" strokeDasharray="5 3" opacity="0.35" />
-                                <circle cx="250" cy="270" r="120" fill="none" stroke="#005B48" strokeWidth="0.8" opacity="0.1" />
-                                <polygon points="250,180 180,310 320,310" fill="none" stroke="#D4A359" strokeWidth="0.9" opacity="0.2" />
+                                <rect x="8" y="8" width="484" height="564" rx="4" fill="none" stroke="#005B48" strokeWidth="0.8" opacity="0.22" />
+                                <rect x="14" y="14" width="472" height="552" rx="3" fill="none" stroke="#D4A359" strokeWidth="0.6" strokeDasharray="5 3" opacity="0.38" />
+                                <circle cx="20" cy="20" r="10" fill="none" stroke="#D4A359" strokeWidth="0.8" opacity="0.4" />
+                                <circle cx="480" cy="20" r="10" fill="none" stroke="#D4A359" strokeWidth="0.8" opacity="0.4" />
+                                <circle cx="20" cy="560" r="10" fill="none" stroke="#D4A359" strokeWidth="0.8" opacity="0.4" />
+                                <circle cx="480" cy="560" r="10" fill="none" stroke="#D4A359" strokeWidth="0.8" opacity="0.4" />
                               </svg>
 
                               {/* Official Document Header */}
@@ -1017,22 +1019,122 @@ function ProfileContent() {
                                 </div>
                               </div>
 
+                              {/* Dedicated Official Seal & Certificate Centerpiece */}
+                              <div className="mk-shenasnameh-centerpiece">
+                                <div className="mk-shenasnameh-centerpiece-bg" aria-hidden="true">
+                                  <svg viewBox="0 0 460 115" className="mk-shenasnameh-center-guilloche">
+                                    <line x1="12" y1="57" x2="160" y2="57" stroke="#D4A359" strokeWidth="1" strokeDasharray="4 2" opacity="0.6" />
+                                    <line x1="300" y1="57" x2="448" y2="57" stroke="#D4A359" strokeWidth="1" strokeDasharray="4 2" opacity="0.6" />
+                                    <circle cx="230" cy="57" r="52" fill="none" stroke="#D4A359" strokeWidth="1.4" strokeDasharray="5 3" opacity="0.75" />
+                                    <circle cx="230" cy="57" r="44" fill="none" stroke="#005B48" strokeWidth="1.2" opacity="0.8" />
+                                    <path id="center-seal-arc-top" d="M 188 57 A 42 42 0 1 1 272 57" fill="none" />
+                                    <path id="center-seal-arc-bot" d="M 272 57 A 42 42 0 1 1 188 57" fill="none" />
+                                    <text fill="#005B48" fontSize="5.4" fontWeight="900" letterSpacing="0.08em">
+                                      <textPath href="#center-seal-arc-top" startOffset="50%" textAnchor="middle">
+                                        باشگاه مشتریان و سلامت مرد کوهستان
+                                      </textPath>
+                                    </text>
+                                    <text fill="#8A652E" fontSize="5.1" fontWeight="900" letterSpacing="0.08em">
+                                      <textPath href="#center-seal-arc-bot" startOffset="50%" textAnchor="middle">
+                                        THIS WAY IS GREEN · این راه سبز است
+                                      </textPath>
+                                    </text>
+                                  </svg>
+                                </div>
+
+                                <div className="mk-shenasnameh-center-content">
+                                  {/* Right Pillar: Cold Chain */}
+                                  <div className="mk-shenasnameh-pillar is-right">
+                                    <div className="mk-pillar-icon">
+                                      <svg viewBox="0 0 24 24" width="16" height="16" stroke="#005B48" strokeWidth="2.2" fill="none">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                      </svg>
+                                    </div>
+                                    <div className="mk-pillar-info">
+                                      <strong>پروتئین پاک و مرتعی</strong>
+                                      <span>زنجیره سرد ۲.۴°C اختصاصی</span>
+                                    </div>
+                                  </div>
+
+                                  {/* Prominent Center Seal Emblem */}
+                                  <div className="mk-shenasnameh-main-seal">
+                                    <div className="mk-main-seal-halo" />
+                                    <div className="mk-main-seal-disc">
+                                      <Image
+                                        src="/brand/orginal-clear.png"
+                                        alt="مهر رسمی مرد کوهستان"
+                                        width={62}
+                                        height={62}
+                                        priority
+                                        className="mk-main-seal-img"
+                                      />
+                                    </div>
+                                    <span className="mk-main-seal-tag">نشان اصالت مرتع</span>
+                                  </div>
+
+                                  {/* Left Pillar: Membership Credential */}
+                                  <div className="mk-shenasnameh-pillar is-left">
+                                    <div className="mk-pillar-icon">
+                                      <svg viewBox="0 0 24 24" width="16" height="16" stroke="#005B48" strokeWidth="2.2" fill="none">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                      </svg>
+                                    </div>
+                                    <div className="mk-pillar-info">
+                                      <strong>شناسه معتبر همسفر</strong>
+                                      <span dir="ltr">MK-94021-IR</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
                               {/* Signature & Security Seal Footer */}
                               <div className="mk-shenasnameh-foot">
-                                <div className="mk-shenasnameh-sign-box">
-                                  <label htmlFor="shenas-sign">
-                                    <em>امضای رسمی دارنده شناسنامه</em>
-                                    <input
-                                      id="shenas-sign"
-                                      type="text"
-                                      value={signatureText}
-                                      onChange={(e) => setSignatureText(e.target.value)}
-                                      placeholder="نام امضاکننده"
-                                      className="mk-shenasnameh-sign-input"
-                                    />
-                                  </label>
-                                  <div className="mk-shenasnameh-sign-preview">
-                                    <em>{signatureText || displayName}</em>
+                                <div className="mk-shenasnameh-sign-card">
+                                  <div className="mk-shenasnameh-sign-header">
+                                    <div className="mk-shenasnameh-sign-title">
+                                      <svg viewBox="0 0 24 24" width="11" height="11" stroke="#005B48" strokeWidth="2.4" fill="none">
+                                        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                                        <path d="M2 2l7.586 7.586" />
+                                      </svg>
+                                      <span>امضای رسمی صاحب سند</span>
+                                    </div>
+                                    <span className="mk-shenasnameh-sign-badge">ثبت دیجیتال</span>
+                                  </div>
+
+                                  <div className="mk-shenasnameh-sign-stage">
+                                    <div className="mk-shenasnameh-sign-text-wrap">
+                                      <input
+                                        id="shenas-sign"
+                                        type="text"
+                                        value={signatureText}
+                                        onChange={(e) => setSignatureText(e.target.value)}
+                                        placeholder="نام امضاکننده"
+                                        className="mk-shenasnameh-sign-input"
+                                      />
+                                      <span className="mk-shenasnameh-sign-name">{signatureText || displayName}</span>
+                                      {/* Calligraphic Flourish Underline */}
+                                      <svg className="mk-shenasnameh-sign-flourish" viewBox="0 0 170 30" fill="none" aria-hidden="true">
+                                        <path
+                                          d="M 4 20 C 35 28, 75 8, 115 22 C 142 30, 162 16, 156 6 C 150 -3, 128 4, 136 18 C 142 26, 162 26, 168 22"
+                                          stroke="#903828"
+                                          strokeWidth="2.2"
+                                          strokeLinecap="round"
+                                          fill="none"
+                                          opacity="0.88"
+                                        />
+                                      </svg>
+                                    </div>
+
+                                    <div className="mk-shenasnameh-sign-stamp" aria-hidden="true">
+                                      <svg viewBox="0 0 40 40" width="30" height="30">
+                                        <circle cx="20" cy="20" r="18" fill="none" stroke="#903828" strokeWidth="1.2" strokeDasharray="3 2" />
+                                        <circle cx="20" cy="20" r="15" fill="none" stroke="#903828" strokeWidth="0.7" />
+                                        <text x="20" y="23" fill="#903828" fontSize="6.5" fontWeight="900" textAnchor="middle">
+                                          مُهر امضا
+                                        </text>
+                                      </svg>
+                                    </div>
                                   </div>
                                 </div>
 
