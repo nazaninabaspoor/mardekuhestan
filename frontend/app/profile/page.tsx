@@ -123,6 +123,11 @@ function toMrz(text: string, length = 44) {
   return `${cleaned}${"<".repeat(length)}`.slice(0, length);
 }
 
+function passportNo(email: string) {
+  const core = email.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 7).padEnd(7, "X");
+  return `MK${core}`;
+}
+
 function LedgerSecretField({
   id,
   label,
@@ -693,17 +698,6 @@ function ProfileContent() {
                   {/* Tab 1: Personal Info & Security */}
                   {openedTab === "personal" && (
                 <div className="mk-ledger">
-                  <div className="mk-ledger-stage">
-                    <Image
-                      src="/brand/profile/personal-ledger-desk.png"
-                      alt="میز چوبی کلبه، گذرنامه چرمی و قفل برنجی"
-                      fill
-                      sizes="100vw"
-                      quality={92}
-                      priority
-                      className="mk-ledger-scene-img"
-                    />
-                    <span className="mk-ledger-veil" aria-hidden="true" />
                     <header className="mk-ledger-topbar">
                       <div className="mk-ledger-brand">
                         <Image
@@ -720,29 +714,37 @@ function ProfileContent() {
                         بستن
                       </button>
                     </header>
-                  </div>
 
                   <div className="mk-ledger-scroll">
                     <div className="mk-ledger-desk">
                       <form className="mk-pass" onSubmit={handleProfileSubmit} aria-labelledby="pass-title">
                         <div className="mk-pass-spine" aria-hidden="true">
-                          <span>MARDE KOOHESTAN</span>
+                          <span>PASSPORT</span>
                         </div>
                         <div className="mk-pass-page">
-                          <header className="mk-pass-band">
+                          <svg className="mk-pass-watermark" viewBox="0 0 240 140" aria-hidden="true">
+                            <polygon points="120,16 28,124 212,124" fill="none" stroke="#005b48" strokeWidth="1.1" />
+                            <polygon points="120,40 58,124 182,124" fill="none" stroke="#005b48" strokeWidth="0.7" />
+                            <circle cx="120" cy="78" r="34" fill="none" stroke="#d4a359" strokeWidth="0.5" />
+                          </svg>
+                          <span className="mk-pass-laminate" aria-hidden="true" />
+
+                          <header className="mk-pass-head">
+                            <span className="mk-pass-head-en">MARDE KOOHESTAN</span>
                             <Image
                               src="/brand/orginal-clear.png"
                               alt=""
-                              width={40}
-                              height={40}
+                              width={44}
+                              height={44}
                               className="mk-pass-crest"
                             />
-                            <div className="mk-pass-issuer">
-                              <strong id="pass-title">مرد کوهستان</strong>
-                              <span>TRAVEL DOCUMENT · سند همسفر</span>
-                            </div>
-                            <span className="mk-pass-code">MK</span>
+                            <strong id="pass-title" className="mk-pass-head-fa">مرد کوهستان</strong>
+                            <span className="mk-pass-head-doc">PASSPORT · گذرنامهٔ همسفر</span>
                           </header>
+
+                          <p className="mk-pass-micro" aria-hidden="true">
+                            این راه سبز است · THIS WAY IS GREEN · این راه سبز است · THIS WAY IS GREEN · این راه سبز است · THIS WAY IS GREEN
+                          </p>
 
                           {profileSuccessMsg && (
                             <div className="mk-pass-alert is-ok" role="status">{profileSuccessMsg}</div>
@@ -751,15 +753,37 @@ function ProfileContent() {
                             <div className="mk-pass-alert is-bad" role="alert">{profileErrorMsg}</div>
                           )}
 
-                          <div className="mk-pass-body">
-                            <div className="mk-pass-photo">
-                              <span>{userInitial}</span>
-                              <small>همسفر</small>
+                          <div className="mk-pass-codes">
+                            <div>
+                              <span>Type / نوع</span>
+                              <b>P</b>
                             </div>
+                            <div>
+                              <span>Code / کد</span>
+                              <b>MKN</b>
+                            </div>
+                            <div>
+                              <span>No. / شماره</span>
+                              <b dir="ltr">{passportNo(user.email)}</b>
+                            </div>
+                          </div>
+
+                          <div className="mk-pass-viz">
+                            <div className="mk-pass-photo-col">
+                              <div className="mk-pass-photo">
+                                <span className="mk-pass-foil" aria-hidden="true" />
+                                <strong>{userInitial}</strong>
+                                <small>همسفر</small>
+                              </div>
+                              <div className="mk-pass-ghost" aria-hidden="true">{userInitial}</div>
+                            </div>
+
                             <div className="mk-pass-data">
-                              <p className="mk-pass-holder">{displayName}</p>
                               <div className="mk-pass-row">
-                                <label htmlFor="prof-name">نام / Name</label>
+                                <label htmlFor="prof-name">
+                                  <em>Name</em>
+                                  نام
+                                </label>
                                 <input
                                   id="prof-name"
                                   type="text"
@@ -770,8 +794,18 @@ function ProfileContent() {
                                   required
                                 />
                               </div>
+                              <div className="mk-pass-row is-print">
+                                <span>
+                                  <em>Nationality</em>
+                                  تابعیت
+                                </span>
+                                <b>همسفر راه سبز</b>
+                              </div>
                               <div className="mk-pass-row">
-                                <label htmlFor="prof-email">شناسه ورود / ID</label>
+                                <label htmlFor="prof-email">
+                                  <em>Personal No. / ID</em>
+                                  شناسه ورود
+                                </label>
                                 <input
                                   id="prof-email"
                                   type="email"
@@ -781,7 +815,10 @@ function ProfileContent() {
                                 />
                               </div>
                               <div className="mk-pass-row">
-                                <label htmlFor="prof-phone">تلفن / Tel</label>
+                                <label htmlFor="prof-phone">
+                                  <em>Tel</em>
+                                  تلفن
+                                </label>
                                 <input
                                   id="prof-phone"
                                   type="tel"
@@ -792,16 +829,40 @@ function ProfileContent() {
                                   autoComplete="tel"
                                 />
                               </div>
+                              <div className="mk-pass-pair">
+                                <div className="mk-pass-row is-print">
+                                  <span>
+                                    <em>Authority</em>
+                                    صادرکننده
+                                  </span>
+                                  <b>باشگاه راه سبز</b>
+                                </div>
+                                <div className="mk-pass-row is-print">
+                                  <span>
+                                    <em>Status</em>
+                                    وضعیت
+                                  </span>
+                                  <b>احراز شده</b>
+                                </div>
+                              </div>
                             </div>
+                          </div>
+
+                          <div className="mk-pass-sign">
+                            <span>
+                              <em>Signature of holder</em>
+                              امضای دارنده
+                            </span>
+                            <em className="mk-pass-sign-mark">{displayName}</em>
                           </div>
 
                           <div className="mk-pass-mrz" aria-hidden="true">
                             <span>{toMrz("P<MKNKOUHESTAN<<GREEN<WAY")}</span>
-                            <span>{toMrz(`ID<${user.email}`)}</span>
+                            <span>{toMrz(`${passportNo(user.email)}<${user.email}`)}</span>
                           </div>
 
                           <button type="submit" disabled={isUpdatingProfile} className="mk-pass-save">
-                            {isUpdatingProfile ? "در حال ثبت…" : "ثبت سند"}
+                            {isUpdatingProfile ? "ثبت…" : "مهر ثبت"}
                           </button>
                         </div>
                       </form>
@@ -813,18 +874,18 @@ function ProfileContent() {
                         <span className="mk-safe-bolt is-bl" aria-hidden="true" />
 
                         <header className="mk-safe-head">
-                          <span className="mk-safe-kicker">VAULT</span>
-                          <h3 id="safe-title">گاوصندوق</h3>
-                        </header>
-
-                        <div className="mk-safe-cavity">
+                          <div>
+                            <span className="mk-safe-kicker">VAULT</span>
+                            <h3 id="safe-title">گاوصندوق</h3>
+                          </div>
                           <div className="mk-safe-dial" aria-hidden="true">
                             <span className="mk-safe-dial-ring" />
                             <span className="mk-safe-dial-ring is-mid" />
                             <span className="mk-safe-dial-core" />
                           </div>
+                        </header>
 
-                          <div className="mk-safe-tray">
+                        <div className="mk-safe-cavity">
                             {passSuccessMsg && (
                               <div className="mk-safe-alert is-ok" role="status">{passSuccessMsg}</div>
                             )}
@@ -871,45 +932,49 @@ function ProfileContent() {
                             <button type="submit" disabled={isChangingPass} className="mk-safe-turn">
                               {isChangingPass ? "در حال قفل…" : "قفل تازه"}
                             </button>
-                          </div>
                         </div>
                       </form>
                     </div>
 
-                    <section className="mk-mail" aria-labelledby="folio-mail-title">
-                      <div className="mk-mail-head">
-                        <span className="mk-folio-kicker">پاکت‌های تحویل</span>
-                        <h3 id="folio-mail-title">زنجیره سرد به این نشانی‌ها می‌رسد.</h3>
+                    <section className="mk-street" aria-labelledby="folio-mail-title">
+                      <div className="mk-street-head">
+                        <span>پاکت‌های تحویل</span>
+                        <h3 id="folio-mail-title">زنجیره سرد روی این خیابان می‌رسد.</h3>
                       </div>
 
-                      <div className="mk-mail-grid">
-                        <article className="mk-envelope is-sealed">
-                          <span className="mk-envelope-stamp">نشانی اصلی منزل</span>
+                      <div className="mk-street-view">
+                        <Image
+                          src="/brand/profile/personal-delivery-street.png"
+                          alt="خیابان واقعی روستا: خانه، دفتر و در باغ"
+                          fill
+                          sizes="100vw"
+                          quality={92}
+                          className="mk-street-img"
+                        />
+
+                        <article className="mk-street-spot is-home">
+                          <span className="mk-street-tag">منزل</span>
                           <h4>تهران، زعفرانیه</h4>
                           <p>خیابان آصف، خیابان کمالی، کوچه بنفشه، پلاک ۱۲، واحد ۳</p>
-                          <span className="mk-envelope-hand">تحویل‌گیرنده: {displayName}</span>
+                          <small>{displayName}</small>
                         </article>
 
-                        <article className="mk-envelope">
-                          <span className="mk-envelope-stamp is-work">دفتر کار</span>
+                        <article className="mk-street-spot is-office">
+                          <span className="mk-street-tag is-work">دفتر</span>
                           <h4>تهران، فرمانیه</h4>
                           <p>بلوار اندرزگو، خیابان سلیمی شمالی، ساختمان اداری نگین، طبقه ۴</p>
-                          <span className="mk-envelope-hand">تحویل‌گیرنده: {displayName}</span>
+                          <small>{displayName}</small>
                         </article>
 
-                        <div className="mk-envelope mk-envelope--add">
-                          <button
-                            type="button"
-                            className="mk-envelope-add"
-                            onClick={() => alert("فرم افزودن نشانی جدید به زودی فعال می‌شود.")}
-                          >
-                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-                              <line x1="12" y1="5" x2="12" y2="19" />
-                              <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                            پاکت تازه
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          className="mk-street-spot is-add"
+                          onClick={() => alert("فرم افزودن نشانی جدید به زودی فعال می‌شود.")}
+                        >
+                          <span className="mk-street-tag">در باغ</span>
+                          <strong>نشانی تازه</strong>
+                          <p>قطعهٔ خالی کنار جاده؛ اینجا می‌توان ایستگاه جدید گذاشت.</p>
+                        </button>
                       </div>
                     </section>
                   </div>
