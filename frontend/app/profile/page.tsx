@@ -42,7 +42,7 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مشاوره تخصصی رژیم ارگانیک، ارزش غذایی و طبخ اصیل",
     badge: "ویژه همسفران",
     badgeIcon: "✨",
-    image: "/brand/profile/print-ai-nutrition-v2.png",
+    image: "/brand/profile/print-ai-mind-morning.png",
     scenePosition: "center",
     actionText: "گفتگو با دستیار هوشمند",
     statsText: "آنلاین و پاسخگو",
@@ -121,13 +121,13 @@ function InteractiveCard({
   const isAdjacent = Math.abs(offset) === 1;
   const isFar = Math.abs(offset) >= 2;
 
-  // Same table plane for every frame — fan stays, nothing fades like UI chrome
-  const translateX = offset * 158;
-  const translateY = isActive ? 2 : isAdjacent ? -6 : -12;
-  const translateZ = isActive ? 24 : isAdjacent ? -28 : -64;
-  const rotateY = offset * -10;
-  const rotateX = -15;
-  const scale = isActive ? 1 : isAdjacent ? 0.88 : 0.78;
+  // Standing frames on one table — all solid, none faded
+  const translateX = offset * 152;
+  const translateY = isActive ? 0 : isAdjacent ? -4 : -8;
+  const translateZ = isActive ? 20 : isAdjacent ? -18 : -42;
+  const rotateY = offset * -8;
+  const rotateX = -12;
+  const scale = isActive ? 1 : isAdjacent ? 0.92 : 0.84;
   const zIndex = 30 - Math.abs(offset) * 10;
 
   const cardX = useMotionValue(0);
@@ -160,7 +160,6 @@ function InteractiveCard({
         rotateY: rotateY,
         rotateX: rotateX,
         scale: scale,
-        filter: isActive ? "brightness(1)" : isAdjacent ? "brightness(0.97)" : "brightness(0.94)",
       }}
       transition={{
         type: "spring",
@@ -181,11 +180,6 @@ function InteractiveCard({
     >
       <span className="coverflow-slot-shadow is-pool" aria-hidden="true" />
       <span className="coverflow-slot-shadow is-contact" aria-hidden="true" />
-      <span className="frame-easel" aria-hidden="true">
-        <span className="frame-easel-leg is-left" />
-        <span className="frame-easel-leg is-right" />
-        <span className="frame-easel-bar" />
-      </span>
       <motion.div
         className={`coverflow-card ${isActive ? "is-active" : ""}`}
         style={isActive ? { rotateX: tiltRotateX, rotateY: tiltRotateY } : undefined}
@@ -210,6 +204,7 @@ function InteractiveCard({
             <strong className="frame-plate-title">{item.title}</strong>
             <span className="frame-plate-action">{item.actionText}</span>
           </div>
+          <span className="frame-foot" aria-hidden="true" />
         </div>
       </motion.div>
     </motion.div>
@@ -220,7 +215,7 @@ function ProfileSceneBackdrop() {
   return (
     <div className="profile-scene-wallpaper" aria-hidden="true">
       <Image
-        src="/brand/profile/profile-kitchen-frame-stage.png"
+        src="/brand/profile/profile-kitchen-dawn.png"
         alt=""
         fill
         sizes="100vw"

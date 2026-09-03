@@ -10578,7 +10578,7 @@ html.is-v2-bell-cursor textarea {
 html.is-profile-scene,
 html.is-profile-scene body,
 html.is-profile-scene .site-canvas {
-  background: #0a120f !important;
+  background: #dce8e2 !important;
 }
 
 html.is-profile-scene .site-header--v2 .v2-header-body {
@@ -10642,8 +10642,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(0, 10, 8, 0.28) 0%, transparent 18%, transparent 58%, rgba(0, 8, 6, 0.35) 100%),
-    radial-gradient(ellipse at 50% 72%, transparent 28%, rgba(0, 8, 6, 0.28) 100%);
+    linear-gradient(180deg, rgba(244, 240, 232, 0.12) 0%, transparent 22%, transparent 62%, rgba(20, 14, 10, 0.12) 100%);
   pointer-events: none;
 }
 
@@ -10803,9 +10802,10 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   transform-style: preserve-3d;
   transform-origin: center bottom;
   cursor: pointer;
-  will-change: transform, opacity;
+  will-change: transform;
   bottom: 18px;
   overflow: visible;
+  opacity: 1;
 }
 
 .coverflow-slot-shadow {
@@ -10816,23 +10816,23 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 .coverflow-slot-shadow.is-contact {
-  left: 6%;
-  right: 6%;
-  bottom: -4px;
-  height: 18px;
-  background: radial-gradient(ellipse at center, rgba(6, 3, 1, 0.72) 0%, rgba(6, 3, 1, 0.28) 48%, transparent 74%);
-  filter: blur(4px);
-  transform: rotateX(86deg) scaleY(1.55);
+  left: 4%;
+  right: 4%;
+  bottom: -2px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(20, 12, 8, 0.55) 0%, rgba(20, 12, 8, 0.22) 50%, transparent 76%);
+  filter: blur(5px);
+  transform: rotateX(88deg) scaleY(1.7);
 }
 
 .coverflow-slot-shadow.is-pool {
-  left: -12%;
-  right: -12%;
-  bottom: -10px;
-  height: 34px;
-  background: radial-gradient(ellipse at center, rgba(8, 4, 2, 0.38) 0%, transparent 72%);
-  filter: blur(11px);
-  transform: rotateX(86deg) scaleY(1.9);
+  left: -10%;
+  right: -10%;
+  bottom: -8px;
+  height: 32px;
+  background: radial-gradient(ellipse at center, rgba(24, 14, 8, 0.28) 0%, transparent 72%);
+  filter: blur(10px);
+  transform: rotateX(88deg) scaleY(2);
 }
 
 .coverflow-slot.is-adjacent .coverflow-slot-shadow.is-contact,
@@ -10859,12 +10859,18 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 .frame-easel {
+  display: none;
+}
+
+.frame-foot {
   position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: -16px;
-  height: 28px;
-  z-index: 1;
+  left: 8%;
+  right: 8%;
+  bottom: -7px;
+  height: 9px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #4a2e1c 0%, #2a1810 100%);
+  box-shadow: 0 2px 0 rgba(12, 6, 4, 0.45);
   pointer-events: none;
 }
 
