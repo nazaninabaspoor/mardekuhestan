@@ -597,7 +597,7 @@ function ProfileContent() {
           style={{
             ["--desk-print" as string]: `url(${
               openedTab === "ai-nutrition"
-                ? "/brand/profile/ai-misho-companions.png"
+                ? "/brand/profile/ai-mist-companions.png"
                 : openedItem.image
             })`,
           }}
@@ -806,6 +806,19 @@ function ProfileContent() {
 
               {openedTab === "ai-nutrition" && (
                 <div className="mk-chat">
+                  <div className="mk-chat-scene" aria-hidden="true">
+                    <Image
+                      src="/brand/profile/ai-mist-companions.png"
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      quality={90}
+                      priority
+                      className="mk-chat-scene-img"
+                    />
+                    <span className="mk-chat-scene-wash" />
+                    <span className="mk-chat-scene-grain" />
+                  </div>
                   <header className="mk-chat-topbar">
                     <div className="mk-chat-brand">
                       <Image
@@ -844,16 +857,7 @@ function ProfileContent() {
                   <div className="mk-chat-thread" ref={aiThreadRef}>
                     {!hasUserAiMessage ? (
                       <div className="mk-chat-welcome">
-                        <div className="mk-chat-hero">
-                          <Image
-                            src="/brand/profile/ai-misho-companions.png"
-                            alt="مرد کوهستان و دستیار هوشمند در کوه‌های میشو"
-                            fill
-                            sizes="(max-width: 800px) 92vw, 720px"
-                            priority
-                            className="mk-chat-hero-img"
-                          />
-                        </div>
+                        <span className="mk-chat-kicker">این راه سبز است</span>
                         <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
                         <p>
                           ما اینجاییم؛ مرد کوهستان و دستیار تغذیه مرتع. از گوشت مرتع تا برنامه روزانه و طبخ اصیل، بپرسید تا با هم راه سبز را نشانتان بدهیم.
@@ -866,7 +870,10 @@ function ProfileContent() {
                               className="mk-chat-starter"
                               onClick={() => handleSendAiMessage(prompt)}
                             >
-                              {prompt}
+                              <span className="mk-chat-starter-n">
+                                {["۰۱", "۰۲", "۰۳", "۰۴"][idx]}
+                              </span>
+                              <span className="mk-chat-starter-t">{prompt}</span>
                             </button>
                           ))}
                         </div>
