@@ -973,7 +973,7 @@ function ProfileContent() {
                         >
                           <span className="mk-street-tag">در باغ</span>
                           <strong>نشانی تازه</strong>
-                          <p>قطعهٔ خالی کنار جاده؛ اینجا می‌توان ایستگاه جدید گذاشت.</p>
+                          <p>قطعهٔ خالی کنار در باغ.</p>
                         </button>
                       </div>
                     </section>
