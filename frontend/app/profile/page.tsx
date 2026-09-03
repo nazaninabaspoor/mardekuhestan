@@ -111,6 +111,57 @@ function AiMessageBody({ text }: { text: string }) {
   );
 }
 
+function folioLockWord(password: string) {
+  if (!password) return "";
+  if (password.length < 10) return "هنوز شل است";
+  if (password.length < 14) return "محکم شد";
+  return "قفل سفت است";
+}
+
+function LedgerSecretField({
+  id,
+  label,
+  value,
+  onChange,
+  placeholder,
+  autoComplete,
+  required,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoComplete?: string;
+  required?: boolean;
+}) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="mk-folio-field">
+      <label htmlFor={id}>{label}</label>
+      <div className="mk-folio-secret">
+        <input
+          id={id}
+          type={visible ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          required={required}
+        />
+        <button
+          type="button"
+          className="mk-folio-peek"
+          onClick={() => setVisible((open) => !open)}
+          aria-label={visible ? "پنهان کردن رمز" : "نمایش رمز"}
+        >
+          {visible ? "پنهان" : "نمایش"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function InteractiveCard({
   item,
   index,
@@ -391,7 +442,7 @@ function ProfileContent() {
         name: name.trim(),
         phone: phone.trim(),
       });
-      setProfileSuccessMsg("اطلاعات فردی شما با موفقیت ذخیره و به‌روز شد.");
+      setProfileSuccessMsg("روی شناسنامه نشست.");
     } catch (err) {
       setProfileErrorMsg(authErrorMessage(err));
     } finally {
@@ -405,11 +456,11 @@ function ProfileContent() {
     setPassSuccessMsg(null);
 
     if (newPassword.length < 10) {
-      setPassErrorMsg("رمز عبور جدید باید حداقل ۱۰ نویسه باشد.");
+      setPassErrorMsg("هنوز شل است. حداقل ده نویسه.");
       return;
     }
     if (newPassword !== newPasswordRepeat) {
-      setPassErrorMsg("دو رمز عبور جدید وارد شده یکسان نیستند.");
+      setPassErrorMsg("دو رمز یکی نیستند.");
       return;
     }
 
@@ -420,7 +471,7 @@ function ProfileContent() {
         newPassword,
         newPasswordRepeat,
       });
-      setPassSuccessMsg("رمز عبور شما با موفقیت تغییر کرد.");
+      setPassSuccessMsg("قفل عوض شد.");
       setCurrentPassword("");
       setNewPassword("");
       setNewPasswordRepeat("");
@@ -598,6 +649,8 @@ function ProfileContent() {
             ["--desk-print" as string]: `url(${
               openedTab === "ai-nutrition"
                 ? "/brand/profile/ai-mist-companions.png"
+                : openedTab === "personal"
+                ? "/brand/profile/personal-ledger-desk.png"
                 : openedItem.image
             })`,
           }}
@@ -605,7 +658,7 @@ function ProfileContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-              {openedTab !== "ai-nutrition" && (
+              {openedTab !== "ai-nutrition" && openedTab !== "personal" && (
                 <header className="desk-pane-header">
                   <div className="desk-pane-header-main">
                     <div className="desk-pane-thumb">
@@ -634,172 +687,216 @@ function ProfileContent() {
                 >
                   {/* Tab 1: Personal Info & Security */}
                   {openedTab === "personal" && (
-                <div className="profile-tab-pane">
-                  <div className="profile-grid-deck">
-                    {/* Profile Details Form */}
-                    <div className="profile-card ledger-sheet">
-                      <div className="profile-card-header">
-                        <h3>مشخصات فردی و تماس</h3>
-                        <p>اطلاعاتی که برای ارسال سفارش و شناسنامه مشتری استفاده می‌شود.</p>
+                <div className="mk-ledger">
+                  <div className="mk-ledger-stage">
+                    <Image
+                      src="/brand/profile/personal-ledger-desk.png"
+                      alt="میز چوبی کلبه، گذرنامه چرمی و قفل برنجی"
+                      fill
+                      sizes="100vw"
+                      quality={92}
+                      priority
+                      className="mk-ledger-scene-img"
+                    />
+                    <span className="mk-ledger-veil" aria-hidden="true" />
+                    <header className="mk-ledger-topbar">
+                      <div className="mk-ledger-brand">
+                        <Image
+                          src="/brand/orginal-clear.png"
+                          alt="مرد کوهستان"
+                          width={32}
+                          height={32}
+                          className="mk-ledger-logo"
+                        />
+                        <strong>امنیت و حساب</strong>
+                        <span className="mk-ledger-live">احراز شده</span>
                       </div>
-
-                      {profileSuccessMsg && (
-                        <div className="profile-alert profile-alert--success">
-                          <span>{profileSuccessMsg}</span>
-                        </div>
-                      )}
-                      {profileErrorMsg && (
-                        <div className="profile-alert profile-alert--error">
-                          <span>{profileErrorMsg}</span>
-                        </div>
-                      )}
-
-                      <form onSubmit={handleProfileSubmit} className="profile-form">
-                        <div className="profile-field">
-                          <label htmlFor="prof-name">نام و نام خانوادگی</label>
-                          <input
-                            id="prof-name"
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="مثال: کامران کوهستانی"
-                            required
-                          />
-                        </div>
-
-                        <div className="profile-field">
-                          <label htmlFor="prof-email">ایمیل (شناسه ورود)</label>
-                          <input
-                            id="prof-email"
-                            type="email"
-                            dir="ltr"
-                            value={user.email}
-                            disabled
-                            className="is-disabled"
-                          />
-                          <small className="profile-field-hint">ایمیل قابل تغییر نیست و به عنوان شناسه امنیتی یکتا ثبت شده است.</small>
-                        </div>
-
-                        <div className="profile-field">
-                          <label htmlFor="prof-phone">شماره موبایل</label>
-                          <input
-                            id="prof-phone"
-                            type="tel"
-                            dir="ltr"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            placeholder="۰۹۱۲۱۲۳۴۵۶۷"
-                          />
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={isUpdatingProfile}
-                          className="profile-btn-primary"
-                        >
-                          {isUpdatingProfile ? "در حال ذخیره…" : "ذخیره تغییرات مشخصات"}
-                        </button>
-                      </form>
-                    </div>
-
-                    {/* Change Password Form */}
-                    <div className="profile-card ledger-lock-card">
-                      <div className="profile-card-header">
-                        <h3>تغییر رمز عبور</h3>
-                        <p>برای حفظ امنیت حساب، رمز عبور قوی با حداقل ۱۰ کاراکتر انتخاب کنید.</p>
-                      </div>
-
-                      {passSuccessMsg && (
-                        <div className="profile-alert profile-alert--success">
-                          <span>{passSuccessMsg}</span>
-                        </div>
-                      )}
-                      {passErrorMsg && (
-                        <div className="profile-alert profile-alert--error">
-                          <span>{passErrorMsg}</span>
-                        </div>
-                      )}
-
-                      <form onSubmit={handleChangePasswordSubmit} className="profile-form">
-                        <div className="profile-field">
-                          <label htmlFor="prof-cur-pass">رمز عبور فعلی</label>
-                          <input
-                            id="prof-cur-pass"
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            placeholder="••••••••"
-                            required
-                          />
-                        </div>
-
-                        <div className="profile-field">
-                          <label htmlFor="prof-new-pass">رمز عبور جدید</label>
-                          <input
-                            id="prof-new-pass"
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="حداقل ۱۰ کاراکتر"
-                            required
-                          />
-                        </div>
-
-                        <div className="profile-field">
-                          <label htmlFor="prof-new-pass-rep">تکرار رمز عبور جدید</label>
-                          <input
-                            id="prof-new-pass-rep"
-                            type="password"
-                            value={newPasswordRepeat}
-                            onChange={(e) => setNewPasswordRepeat(e.target.value)}
-                            placeholder="تکرار رمز عبور جدید"
-                            required
-                          />
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={isChangingPass}
-                          className="profile-btn-secondary"
-                        >
-                          {isChangingPass ? "در حال تغییر رمز…" : "تغییر کلمه عبور"}
-                        </button>
-                      </form>
-                    </div>
+                      <button type="button" className="mk-ledger-close" onClick={handleCloseWorkspace}>
+                        بستن
+                      </button>
+                    </header>
                   </div>
 
-                  {/* Delivery Addresses */}
-                  <div className="profile-card profile-card--full">
-                    <div className="profile-card-header">
-                      <h3>نشانی‌های تحویل سفارش (زنجیره سرد)</h3>
-                      <p>آدرس‌های منتخب شما برای ارسال اکسپرس در دمای کنترل‌شده یخچال.</p>
+                  <div className="mk-ledger-scroll">
+                    <div className="mk-ledger-spread">
+                      <section className="mk-folio mk-folio--id" aria-labelledby="folio-id-title">
+                        <div className="mk-folio-head">
+                          <span className="mk-seal" aria-hidden="true">
+                            {userInitial}
+                          </span>
+                          <div>
+                            <span className="mk-folio-kicker">شناسنامه همسفر</span>
+                            <h3 id="folio-id-title">اسمت اینجاست؛ روی بسته‌ها همین می‌آید.</h3>
+                            <p className="mk-folio-said">
+                              ایمیل قفل است. همان کلیدی است که باهاش وارد می‌شوی.
+                            </p>
+                          </div>
+                        </div>
+
+                        {profileSuccessMsg && (
+                          <div className="mk-folio-alert is-ok" role="status">
+                            {profileSuccessMsg}
+                          </div>
+                        )}
+                        {profileErrorMsg && (
+                          <div className="mk-folio-alert is-bad" role="alert">
+                            {profileErrorMsg}
+                          </div>
+                        )}
+
+                        <form onSubmit={handleProfileSubmit} className="mk-folio-form">
+                          <div className="mk-folio-field">
+                            <label htmlFor="prof-name">نام و نام خانوادگی</label>
+                            <input
+                              id="prof-name"
+                              type="text"
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              placeholder="مثال: کامران کوهستانی"
+                              autoComplete="name"
+                              required
+                            />
+                          </div>
+
+                          <div className="mk-folio-field">
+                            <label htmlFor="prof-email">ایمیل ورود</label>
+                            <input
+                              id="prof-email"
+                              type="email"
+                              dir="ltr"
+                              value={user.email}
+                              disabled
+                              className="is-locked"
+                            />
+                            <small className="mk-folio-hint">این شناسه عوض نمی‌شود.</small>
+                          </div>
+
+                          <div className="mk-folio-field">
+                            <label htmlFor="prof-phone">شماره موبایل</label>
+                            <input
+                              id="prof-phone"
+                              type="tel"
+                              dir="ltr"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder="۰۹۱۲۱۲۳۴۵۶۷"
+                              autoComplete="tel"
+                            />
+                          </div>
+
+                          <button type="submit" disabled={isUpdatingProfile} className="mk-folio-save">
+                            {isUpdatingProfile ? "در حال ثبت…" : "ثبت روی شناسنامه"}
+                          </button>
+                        </form>
+                      </section>
+
+                      <section className="mk-folio mk-folio--lock" aria-labelledby="folio-lock-title">
+                        <div className="mk-folio-head">
+                          <span className="mk-seal mk-seal--brass" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8">
+                              <rect x="5" y="11" width="14" height="10" rx="2" />
+                              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                            </svg>
+                          </span>
+                          <div>
+                            <span className="mk-folio-kicker">قفل حساب</span>
+                            <h3 id="folio-lock-title">رمز را خودت نگه دار.</h3>
+                            <p className="mk-folio-said">
+                              حداقل ده نویسه. نمایش بده اگر می‌خواهی درست ببینی؛ ما ذخیرهٔ شل قبول نمی‌کنیم.
+                            </p>
+                          </div>
+                        </div>
+
+                        {passSuccessMsg && (
+                          <div className="mk-folio-alert is-ok" role="status">
+                            {passSuccessMsg}
+                          </div>
+                        )}
+                        {passErrorMsg && (
+                          <div className="mk-folio-alert is-bad" role="alert">
+                            {passErrorMsg}
+                          </div>
+                        )}
+
+                        <form onSubmit={handleChangePasswordSubmit} className="mk-folio-form">
+                          <LedgerSecretField
+                            id="prof-cur-pass"
+                            label="رمز فعلی"
+                            value={currentPassword}
+                            onChange={setCurrentPassword}
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                            required
+                          />
+                          <LedgerSecretField
+                            id="prof-new-pass"
+                            label="رمز تازه"
+                            value={newPassword}
+                            onChange={setNewPassword}
+                            placeholder="حداقل ۱۰ نویسه"
+                            autoComplete="new-password"
+                            required
+                          />
+                          {newPassword ? (
+                            <p className={`mk-folio-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
+                              {folioLockWord(newPassword)}
+                            </p>
+                          ) : null}
+                          <LedgerSecretField
+                            id="prof-new-pass-rep"
+                            label="یک‌بار دیگر"
+                            value={newPasswordRepeat}
+                            onChange={setNewPasswordRepeat}
+                            placeholder="تکرار رمز تازه"
+                            autoComplete="new-password"
+                            required
+                          />
+                          <button type="submit" disabled={isChangingPass} className="mk-folio-lock-btn">
+                            {isChangingPass ? "در حال عوض کردن قفل…" : "عوض کردن قفل"}
+                          </button>
+                        </form>
+                      </section>
                     </div>
 
-                    <div className="profile-addresses-list">
-                      <div className="profile-address-box is-default">
-                        <span className="profile-address-badge">نشانی اصلی منزل</span>
-                        <h4>تهران، زعفرانیه</h4>
-                        <p>خیابان آصف، خیابان کمالی، کوچه بنفشه، پلاک ۱۲، واحد ۳</p>
-                        <span className="profile-address-phone">تحویل‌گیرنده: {displayName} (۰۹۱۲۱۲۳۴۵۶۷)</span>
+                    <section className="mk-mail" aria-labelledby="folio-mail-title">
+                      <div className="mk-mail-head">
+                        <span className="mk-folio-kicker">پاکت‌های تحویل</span>
+                        <h3 id="folio-mail-title">زنجیره سرد فقط به این نشانی‌ها می‌رسد.</h3>
+                        <p className="mk-folio-said">
+                          پاکت مهرخورده همان خانه است. بقیه را اگر خواستی اضافه کن.
+                        </p>
                       </div>
 
-                      <div className="profile-address-box">
-                        <span className="profile-address-badge" style={{ background: "#903828" }}>دفتر کار</span>
-                        <h4>تهران، فرمانیه</h4>
-                        <p>بلوار اندرزگو، خیابان سلیمی شمالی، ساختمان اداری نگین، طبقه ۴</p>
-                        <span className="profile-address-phone">تحویل‌گیرنده: {displayName}</span>
-                      </div>
+                      <div className="mk-mail-grid">
+                        <article className="mk-envelope is-sealed">
+                          <span className="mk-envelope-stamp">نشانی اصلی منزل</span>
+                          <h4>تهران، زعفرانیه</h4>
+                          <p>خیابان آصف، خیابان کمالی، کوچه بنفشه، پلاک ۱۲، واحد ۳</p>
+                          <span className="mk-envelope-hand">تحویل‌گیرنده: {displayName}</span>
+                        </article>
 
-                      <div className="profile-address-box profile-address-box--add">
-                        <button type="button" className="profile-btn-add-addr" onClick={() => alert("فرم افزودن نشانی جدید به زودی فعال می‌شود.")}>
-                          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                          </svg>
-                          افزودن نشانی جدید
-                        </button>
+                        <article className="mk-envelope">
+                          <span className="mk-envelope-stamp is-work">دفتر کار</span>
+                          <h4>تهران، فرمانیه</h4>
+                          <p>بلوار اندرزگو، خیابان سلیمی شمالی، ساختمان اداری نگین، طبقه ۴</p>
+                          <span className="mk-envelope-hand">تحویل‌گیرنده: {displayName}</span>
+                        </article>
+
+                        <div className="mk-envelope mk-envelope--add">
+                          <button
+                            type="button"
+                            className="mk-envelope-add"
+                            onClick={() => alert("فرم افزودن نشانی جدید به زودی فعال می‌شود.")}
+                          >
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
+                              <line x1="12" y1="5" x2="12" y2="19" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            پاکت تازه
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    </section>
                   </div>
                 </div>
               )}

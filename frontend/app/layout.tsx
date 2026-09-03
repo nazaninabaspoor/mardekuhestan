@@ -10,6 +10,7 @@ import "./globals.css";
 import "./v2/v2.css";
 import "./profile/workspace.css";
 import "./profile/workspace-ai.css";
+import "./profile/workspace-personal.css";
 
 const mardeKuhestan = localFont({
   src: [
