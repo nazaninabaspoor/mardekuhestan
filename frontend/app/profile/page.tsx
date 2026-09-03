@@ -180,6 +180,12 @@ function InteractiveCard({
     >
       <span className="coverflow-slot-shadow is-pool" aria-hidden="true" />
       <span className="coverflow-slot-shadow is-contact" aria-hidden="true" />
+      <span className="frame-easel" aria-hidden="true">
+        <span className="frame-easel-leg is-left" />
+        <span className="frame-easel-leg is-right" />
+        <span className="frame-easel-leg is-back" />
+        <span className="frame-easel-bar" />
+      </span>
       <motion.div
         className={`coverflow-card ${isActive ? "is-active" : ""}`}
         style={isActive ? { rotateX: tiltRotateX, rotateY: tiltRotateY } : undefined}
