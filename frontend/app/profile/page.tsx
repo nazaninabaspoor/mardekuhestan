@@ -113,9 +113,14 @@ function AiMessageBody({ text }: { text: string }) {
 
 function folioLockWord(password: string) {
   if (!password) return "";
-  if (password.length < 10) return "هنوز شل است";
-  if (password.length < 14) return "محکم شد";
-  return "قفل سفت است";
+  if (password.length < 10) return "شل";
+  if (password.length < 14) return "محکم";
+  return "سفت";
+}
+
+function toMrz(text: string, length = 44) {
+  const cleaned = text.replace(/@/g, "<").replace(/[^a-zA-Z0-9]+/g, "<").toUpperCase();
+  return `${cleaned}${"<".repeat(length)}`.slice(0, length);
 }
 
 function LedgerSecretField({
@@ -137,9 +142,9 @@ function LedgerSecretField({
 }) {
   const [visible, setVisible] = useState(false);
   return (
-    <div className="mk-folio-field">
+    <div className="mk-safe-field">
       <label htmlFor={id}>{label}</label>
-      <div className="mk-folio-secret">
+      <div className="mk-safe-secret">
         <input
           id={id}
           type={visible ? "text" : "password"}
@@ -151,7 +156,7 @@ function LedgerSecretField({
         />
         <button
           type="button"
-          className="mk-folio-peek"
+          className="mk-safe-peek"
           onClick={() => setVisible((open) => !open)}
           aria-label={visible ? "پنهان کردن رمز" : "نمایش رمز"}
         >
@@ -718,153 +723,163 @@ function ProfileContent() {
                   </div>
 
                   <div className="mk-ledger-scroll">
-                    <div className="mk-ledger-spread">
-                      <section className="mk-folio mk-folio--id" aria-labelledby="folio-id-title">
-                        <div className="mk-folio-head">
-                          <span className="mk-seal" aria-hidden="true">
-                            {userInitial}
-                          </span>
-                          <div>
-                            <span className="mk-folio-kicker">شناسنامه همسفر</span>
-                            <h3 id="folio-id-title">اسمت اینجاست؛ روی بسته‌ها همین می‌آید.</h3>
-                            <p className="mk-folio-said">
-                              ایمیل قفل است. همان کلیدی است که باهاش وارد می‌شوی.
-                            </p>
-                          </div>
+                    <div className="mk-ledger-desk">
+                      <form className="mk-pass" onSubmit={handleProfileSubmit} aria-labelledby="pass-title">
+                        <div className="mk-pass-spine" aria-hidden="true">
+                          <span>MARDE KOOHESTAN</span>
                         </div>
+                        <div className="mk-pass-page">
+                          <header className="mk-pass-band">
+                            <Image
+                              src="/brand/orginal-clear.png"
+                              alt=""
+                              width={40}
+                              height={40}
+                              className="mk-pass-crest"
+                            />
+                            <div className="mk-pass-issuer">
+                              <strong id="pass-title">مرد کوهستان</strong>
+                              <span>TRAVEL DOCUMENT · سند همسفر</span>
+                            </div>
+                            <span className="mk-pass-code">MK</span>
+                          </header>
 
-                        {profileSuccessMsg && (
-                          <div className="mk-folio-alert is-ok" role="status">
-                            {profileSuccessMsg}
-                          </div>
-                        )}
-                        {profileErrorMsg && (
-                          <div className="mk-folio-alert is-bad" role="alert">
-                            {profileErrorMsg}
-                          </div>
-                        )}
+                          {profileSuccessMsg && (
+                            <div className="mk-pass-alert is-ok" role="status">{profileSuccessMsg}</div>
+                          )}
+                          {profileErrorMsg && (
+                            <div className="mk-pass-alert is-bad" role="alert">{profileErrorMsg}</div>
+                          )}
 
-                        <form onSubmit={handleProfileSubmit} className="mk-folio-form">
-                          <div className="mk-folio-field">
-                            <label htmlFor="prof-name">نام و نام خانوادگی</label>
-                            <input
-                              id="prof-name"
-                              type="text"
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
-                              placeholder="مثال: کامران کوهستانی"
-                              autoComplete="name"
+                          <div className="mk-pass-body">
+                            <div className="mk-pass-photo">
+                              <span>{userInitial}</span>
+                              <small>همسفر</small>
+                            </div>
+                            <div className="mk-pass-data">
+                              <p className="mk-pass-holder">{displayName}</p>
+                              <div className="mk-pass-row">
+                                <label htmlFor="prof-name">نام / Name</label>
+                                <input
+                                  id="prof-name"
+                                  type="text"
+                                  value={name}
+                                  onChange={(e) => setName(e.target.value)}
+                                  placeholder="نام روی سند"
+                                  autoComplete="name"
+                                  required
+                                />
+                              </div>
+                              <div className="mk-pass-row">
+                                <label htmlFor="prof-email">شناسه ورود / ID</label>
+                                <input
+                                  id="prof-email"
+                                  type="email"
+                                  dir="ltr"
+                                  value={user.email}
+                                  disabled
+                                />
+                              </div>
+                              <div className="mk-pass-row">
+                                <label htmlFor="prof-phone">تلفن / Tel</label>
+                                <input
+                                  id="prof-phone"
+                                  type="tel"
+                                  dir="ltr"
+                                  value={phone}
+                                  onChange={(e) => setPhone(e.target.value)}
+                                  placeholder="۰۹۱۲۱۲۳۴۵۶۷"
+                                  autoComplete="tel"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mk-pass-mrz" aria-hidden="true">
+                            <span>{toMrz("P<MKNKOUHESTAN<<GREEN<WAY")}</span>
+                            <span>{toMrz(`ID<${user.email}`)}</span>
+                          </div>
+
+                          <button type="submit" disabled={isUpdatingProfile} className="mk-pass-save">
+                            {isUpdatingProfile ? "در حال ثبت…" : "ثبت سند"}
+                          </button>
+                        </div>
+                      </form>
+
+                      <form className="mk-safe" onSubmit={handleChangePasswordSubmit} aria-labelledby="safe-title">
+                        <span className="mk-safe-bolt is-tr" aria-hidden="true" />
+                        <span className="mk-safe-bolt is-tl" aria-hidden="true" />
+                        <span className="mk-safe-bolt is-br" aria-hidden="true" />
+                        <span className="mk-safe-bolt is-bl" aria-hidden="true" />
+
+                        <header className="mk-safe-head">
+                          <span className="mk-safe-kicker">VAULT</span>
+                          <h3 id="safe-title">گاوصندوق</h3>
+                        </header>
+
+                        <div className="mk-safe-cavity">
+                          <div className="mk-safe-dial" aria-hidden="true">
+                            <span className="mk-safe-dial-ring" />
+                            <span className="mk-safe-dial-ring is-mid" />
+                            <span className="mk-safe-dial-core" />
+                          </div>
+
+                          <div className="mk-safe-tray">
+                            {passSuccessMsg && (
+                              <div className="mk-safe-alert is-ok" role="status">{passSuccessMsg}</div>
+                            )}
+                            {passErrorMsg && (
+                              <div className="mk-safe-alert is-bad" role="alert">{passErrorMsg}</div>
+                            )}
+
+                            <p className="mk-safe-group">کلید فعلی</p>
+                            <LedgerSecretField
+                              id="prof-cur-pass"
+                              label="رمز فعلی"
+                              value={currentPassword}
+                              onChange={setCurrentPassword}
+                              placeholder="••••••••"
+                              autoComplete="current-password"
                               required
                             />
-                          </div>
 
-                          <div className="mk-folio-field">
-                            <label htmlFor="prof-email">ایمیل ورود</label>
-                            <input
-                              id="prof-email"
-                              type="email"
-                              dir="ltr"
-                              value={user.email}
-                              disabled
-                              className="is-locked"
+                            <p className="mk-safe-group">ترکیب تازه</p>
+                            <LedgerSecretField
+                              id="prof-new-pass"
+                              label="رمز تازه"
+                              value={newPassword}
+                              onChange={setNewPassword}
+                              placeholder="حداقل ۱۰ نویسه"
+                              autoComplete="new-password"
+                              required
                             />
-                            <small className="mk-folio-hint">این شناسه عوض نمی‌شود.</small>
-                          </div>
-
-                          <div className="mk-folio-field">
-                            <label htmlFor="prof-phone">شماره موبایل</label>
-                            <input
-                              id="prof-phone"
-                              type="tel"
-                              dir="ltr"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                              placeholder="۰۹۱۲۱۲۳۴۵۶۷"
-                              autoComplete="tel"
+                            {newPassword ? (
+                              <p className={`mk-safe-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
+                                {folioLockWord(newPassword)}
+                              </p>
+                            ) : null}
+                            <LedgerSecretField
+                              id="prof-new-pass-rep"
+                              label="تکرار"
+                              value={newPasswordRepeat}
+                              onChange={setNewPasswordRepeat}
+                              placeholder="تکرار رمز تازه"
+                              autoComplete="new-password"
+                              required
                             />
-                          </div>
 
-                          <button type="submit" disabled={isUpdatingProfile} className="mk-folio-save">
-                            {isUpdatingProfile ? "در حال ثبت…" : "ثبت روی شناسنامه"}
-                          </button>
-                        </form>
-                      </section>
-
-                      <section className="mk-folio mk-folio--lock" aria-labelledby="folio-lock-title">
-                        <div className="mk-folio-head">
-                          <span className="mk-seal mk-seal--brass" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8">
-                              <rect x="5" y="11" width="14" height="10" rx="2" />
-                              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-                            </svg>
-                          </span>
-                          <div>
-                            <span className="mk-folio-kicker">قفل حساب</span>
-                            <h3 id="folio-lock-title">رمز را خودت نگه دار.</h3>
-                            <p className="mk-folio-said">
-                              حداقل ده نویسه. نمایش بده اگر می‌خواهی درست ببینی؛ ما ذخیرهٔ شل قبول نمی‌کنیم.
-                            </p>
+                            <button type="submit" disabled={isChangingPass} className="mk-safe-turn">
+                              {isChangingPass ? "در حال قفل…" : "قفل تازه"}
+                            </button>
                           </div>
                         </div>
-
-                        {passSuccessMsg && (
-                          <div className="mk-folio-alert is-ok" role="status">
-                            {passSuccessMsg}
-                          </div>
-                        )}
-                        {passErrorMsg && (
-                          <div className="mk-folio-alert is-bad" role="alert">
-                            {passErrorMsg}
-                          </div>
-                        )}
-
-                        <form onSubmit={handleChangePasswordSubmit} className="mk-folio-form">
-                          <LedgerSecretField
-                            id="prof-cur-pass"
-                            label="رمز فعلی"
-                            value={currentPassword}
-                            onChange={setCurrentPassword}
-                            placeholder="••••••••"
-                            autoComplete="current-password"
-                            required
-                          />
-                          <LedgerSecretField
-                            id="prof-new-pass"
-                            label="رمز تازه"
-                            value={newPassword}
-                            onChange={setNewPassword}
-                            placeholder="حداقل ۱۰ نویسه"
-                            autoComplete="new-password"
-                            required
-                          />
-                          {newPassword ? (
-                            <p className={`mk-folio-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
-                              {folioLockWord(newPassword)}
-                            </p>
-                          ) : null}
-                          <LedgerSecretField
-                            id="prof-new-pass-rep"
-                            label="یک‌بار دیگر"
-                            value={newPasswordRepeat}
-                            onChange={setNewPasswordRepeat}
-                            placeholder="تکرار رمز تازه"
-                            autoComplete="new-password"
-                            required
-                          />
-                          <button type="submit" disabled={isChangingPass} className="mk-folio-lock-btn">
-                            {isChangingPass ? "در حال عوض کردن قفل…" : "عوض کردن قفل"}
-                          </button>
-                        </form>
-                      </section>
+                      </form>
                     </div>
 
                     <section className="mk-mail" aria-labelledby="folio-mail-title">
                       <div className="mk-mail-head">
                         <span className="mk-folio-kicker">پاکت‌های تحویل</span>
-                        <h3 id="folio-mail-title">زنجیره سرد فقط به این نشانی‌ها می‌رسد.</h3>
-                        <p className="mk-folio-said">
-                          پاکت مهرخورده همان خانه است. بقیه را اگر خواستی اضافه کن.
-                        </p>
+                        <h3 id="folio-mail-title">زنجیره سرد به این نشانی‌ها می‌رسد.</h3>
                       </div>
 
                       <div className="mk-mail-grid">
