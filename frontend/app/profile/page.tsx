@@ -96,7 +96,7 @@ const AI_PROMPTS = [
 const INITIAL_AI_MESSAGES = [
   {
     sender: "assistant",
-    text: "درود بر شما همسفر گرامی مرد کوهستان. من دستیار تغذیه، سلامت و طبخ ارگانیک مرد کوهستان هستم. از خواص گوشت مرتع تا برنامه غذایی روزانه، همراه شما هستم.",
+    text: "درود. ما اینجاییم؛ مرد کوهستان و دستیار تغذیه مرتع. از خواص گوشت مرتع تا برنامه روزانه و طبخ اصیل، بگویید چه کمکی از دست‌مان برمی‌آید.",
     time: "همین حالا",
   },
 ];
@@ -594,7 +594,13 @@ function ProfileContent() {
           className="profile-workspace-section"
           data-theme={openedTab}
           ref={workspaceRef}
-          style={{ ["--desk-print" as string]: `url(${openedItem.image})` }}
+          style={{
+            ["--desk-print" as string]: `url(${
+              openedTab === "ai-nutrition"
+                ? "/brand/profile/ai-misho-companions.png"
+                : openedItem.image
+            })`,
+          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
@@ -827,7 +833,7 @@ function ProfileContent() {
                       </button>
                       <button
                         type="button"
-                        className="desk-pane-close is-on-dark"
+                        className="desk-pane-close"
                         onClick={handleCloseWorkspace}
                       >
                         بستن
@@ -838,16 +844,19 @@ function ProfileContent() {
                   <div className="mk-chat-thread" ref={aiThreadRef}>
                     {!hasUserAiMessage ? (
                       <div className="mk-chat-welcome">
-                        <Image
-                          src="/brand/orginal-clear.png"
-                          alt="مرد کوهستان"
-                          width={96}
-                          height={96}
-                          className="mk-chat-welcome-logo"
-                        />
-                        <h2>چطور می‌توانم کمکتان کنم؟</h2>
+                        <div className="mk-chat-hero">
+                          <Image
+                            src="/brand/profile/ai-misho-companions.png"
+                            alt="مرد کوهستان و دستیار هوشمند در کوه‌های میشو"
+                            fill
+                            sizes="(max-width: 800px) 92vw, 720px"
+                            priority
+                            className="mk-chat-hero-img"
+                          />
+                        </div>
+                        <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
                         <p>
-                          مشاور سلامت، تغذیه ارگانیک و طبخ اصیل مرد کوهستان. از گوشت مرتع تا برنامه روزانه، همین‌جا بپرسید.
+                          ما اینجاییم؛ مرد کوهستان و دستیار تغذیه مرتع. از گوشت مرتع تا برنامه روزانه و طبخ اصیل، بپرسید تا با هم راه سبز را نشانتان بدهیم.
                         </p>
                         <div className="mk-chat-starters">
                           {AI_PROMPTS.map((prompt, idx) => (
