@@ -805,7 +805,7 @@ function ProfileContent() {
               )}
 
               {openedTab === "ai-nutrition" && (
-                <div className="mk-chat">
+                <div className={`mk-chat${hasUserAiMessage ? " is-chatting" : ""}`}>
                   <div className="mk-chat-stage">
                     <Image
                       src="/brand/profile/ai-mist-companions.png"
@@ -909,7 +909,7 @@ function ProfileContent() {
                     )}
                   </div>
 
-                  <div className="mk-chat-dock">
+                  <div className={`mk-chat-dock${hasUserAiMessage ? " is-chatting" : ""}`}>
                     {!hasUserAiMessage && (
                       <div className="mk-chat-starters">
                         {AI_PROMPTS.map((prompt, idx) => (
