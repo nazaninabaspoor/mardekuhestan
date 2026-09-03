@@ -806,62 +806,105 @@ function ProfileContent() {
 
               {openedTab === "ai-nutrition" && (
                 <div className="mk-chat">
-                  <div className="mk-chat-scene" aria-hidden="true">
+                  <div className="mk-chat-stage">
                     <Image
                       src="/brand/profile/ai-mist-companions.png"
-                      alt=""
+                      alt="مرد کوهستان و دستیار هوشمند در مه کوهستان"
                       fill
                       sizes="100vw"
-                      quality={90}
+                      quality={92}
                       priority
                       className="mk-chat-scene-img"
                     />
-                    <span className="mk-chat-scene-wash" />
-                    <span className="mk-chat-scene-grain" />
-                  </div>
-                  <header className="mk-chat-topbar">
-                    <div className="mk-chat-brand">
-                      <Image
-                        src="/brand/orginal-clear.png"
-                        alt="مرد کوهستان"
-                        width={44}
-                        height={44}
-                        className="mk-chat-logo"
-                      />
-                      <div>
-                        <strong>دستیار تغذیه مرد کوهستان</strong>
-                        <span>آنلاین · مشاور رژیم و طبخ مرتع</span>
+                    <span className="mk-chat-scene-veil" aria-hidden="true" />
+                    <header className="mk-chat-topbar">
+                      <div className="mk-chat-brand">
+                        <Image
+                          src="/brand/orginal-clear.png"
+                          alt="مرد کوهستان"
+                          width={40}
+                          height={40}
+                          className="mk-chat-logo"
+                        />
+                        <div>
+                          <strong>دستیار تغذیه مرد کوهستان</strong>
+                          <span>آنلاین · مشاور رژیم و طبخ مرتع</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mk-chat-actions">
-                      <button
-                        type="button"
-                        className="mk-chat-new"
-                        onClick={() => {
-                          setAiMessages(INITIAL_AI_MESSAGES);
-                          setAiInput("");
-                        }}
-                      >
-                        گفتگوی تازه
-                      </button>
-                      <button
-                        type="button"
-                        className="desk-pane-close"
-                        onClick={handleCloseWorkspace}
-                      >
-                        بستن
-                      </button>
-                    </div>
-                  </header>
+                      <div className="mk-chat-actions">
+                        <button
+                          type="button"
+                          className="mk-chat-new"
+                          onClick={() => {
+                            setAiMessages(INITIAL_AI_MESSAGES);
+                            setAiInput("");
+                          }}
+                        >
+                          گفتگوی تازه
+                        </button>
+                        <button
+                          type="button"
+                          className="mk-chat-close"
+                          onClick={handleCloseWorkspace}
+                        >
+                          بستن
+                        </button>
+                      </div>
+                    </header>
+                    {hasUserAiMessage && (
+                      <div className="mk-chat-thread" ref={aiThreadRef}>
+                        <div className="mk-chat-feed">
+                          {aiMessages.map((msg, idx) => (
+                            <div
+                              key={idx}
+                              className={`mk-chat-row ${msg.sender === "user" ? "is-user" : "is-assistant"}`}
+                            >
+                              {msg.sender === "assistant" ? (
+                                <Image
+                                  src="/brand/orginal-clear.png"
+                                  alt=""
+                                  width={36}
+                                  height={36}
+                                  className="mk-chat-avatar"
+                                />
+                              ) : (
+                                <span className="mk-chat-user-mark" aria-hidden="true">
+                                  {userInitial}
+                                </span>
+                              )}
+                              <div className="mk-chat-bubble">
+                                <AiMessageBody text={msg.text} />
+                                <span className="mk-chat-time">{msg.time}</span>
+                              </div>
+                            </div>
+                          ))}
+                          {aiTyping && (
+                            <div className="mk-chat-row is-assistant">
+                              <Image
+                                src="/brand/orginal-clear.png"
+                                alt=""
+                                width={36}
+                                height={36}
+                                className="mk-chat-avatar"
+                              />
+                              <div className="mk-chat-typing" aria-label="در حال نوشتن">
+                                <span />
+                                <span />
+                                <span />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                  <div className="mk-chat-thread" ref={aiThreadRef}>
-                    {!hasUserAiMessage ? (
+                  <div className="mk-chat-plate">
+                    {!hasUserAiMessage && (
                       <div className="mk-chat-welcome">
                         <span className="mk-chat-kicker">این راه سبز است</span>
                         <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
-                        <p>
-                          ما اینجاییم؛ مرد کوهستان و دستیار تغذیه مرتع. از گوشت مرتع تا برنامه روزانه و طبخ اصیل، بپرسید تا با هم راه سبز را نشانتان بدهیم.
-                        </p>
+                        <p>از گوشت مرتع تا برنامه روزانه و طبخ اصیل، با هم راه سبز را نشانتان می‌دهیم.</p>
                         <div className="mk-chat-starters">
                           {AI_PROMPTS.map((prompt, idx) => (
                             <button
@@ -878,80 +921,35 @@ function ProfileContent() {
                           ))}
                         </div>
                       </div>
-                    ) : (
-                      <div className="mk-chat-feed">
-                        {aiMessages.map((msg, idx) => (
-                          <div
-                            key={idx}
-                            className={`mk-chat-row ${msg.sender === "user" ? "is-user" : "is-assistant"}`}
-                          >
-                            {msg.sender === "assistant" ? (
-                              <Image
-                                src="/brand/orginal-clear.png"
-                                alt=""
-                                width={36}
-                                height={36}
-                                className="mk-chat-avatar"
-                              />
-                            ) : (
-                              <span className="mk-chat-user-mark" aria-hidden="true">
-                                {userInitial}
-                              </span>
-                            )}
-                            <div className="mk-chat-bubble">
-                              <AiMessageBody text={msg.text} />
-                              <span className="mk-chat-time">{msg.time}</span>
-                            </div>
-                          </div>
-                        ))}
-                        {aiTyping && (
-                          <div className="mk-chat-row is-assistant">
-                            <Image
-                              src="/brand/orginal-clear.png"
-                              alt=""
-                              width={36}
-                              height={36}
-                              className="mk-chat-avatar"
-                            />
-                            <div className="mk-chat-typing" aria-label="در حال نوشتن">
-                              <span />
-                              <span />
-                              <span />
-                            </div>
-                          </div>
-                        )}
-                      </div>
                     )}
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSendAiMessage();
+                      }}
+                      className="mk-chat-composer"
+                    >
+                      <div className="mk-chat-composer-inner">
+                        <input
+                          type="text"
+                          placeholder="از خواص گوشت مرتع، ماهی آب‌سرد، رژیم یا روش طبخ بپرسید…"
+                          value={aiInput}
+                          onChange={(e) => setAiInput(e.target.value)}
+                        />
+                        <button
+                          type="submit"
+                          disabled={aiTyping || !aiInput.trim()}
+                          className="mk-chat-send"
+                          aria-label="ارسال پیام"
+                        >
+                          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                          </svg>
+                        </button>
+                      </div>
+                    </form>
                   </div>
-
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleSendAiMessage();
-                    }}
-                    className="mk-chat-composer"
-                  >
-                    <div className="mk-chat-composer-inner">
-                      <input
-                        type="text"
-                        placeholder="از خواص گوشت مرتع، ماهی آب‌سرد، رژیم یا روش طبخ بپرسید…"
-                        value={aiInput}
-                        onChange={(e) => setAiInput(e.target.value)}
-                      />
-                      <button
-                        type="submit"
-                        disabled={aiTyping || !aiInput.trim()}
-                        className="mk-chat-send"
-                        aria-label="ارسال پیام"
-                      >
-                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-                          <line x1="22" y1="2" x2="11" y2="13" />
-                          <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                        </svg>
-                      </button>
-                    </div>
-                    <span className="mk-chat-footnote">پاسخ‌ها بر اساس محصولات و مراتع مرد کوهستان است.</span>
-                  </form>
                 </div>
               )}
 

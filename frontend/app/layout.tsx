@@ -9,6 +9,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 import "./v2/v2.css";
 import "./profile/workspace.css";
+import "./profile/workspace-ai.css";
 
 const mardeKuhestan = localFont({
   src: [
