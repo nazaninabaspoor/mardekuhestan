@@ -16,10 +16,7 @@ interface CoverflowItem {
   subtitle: string;
   badge: string;
   badgeIcon: string;
-  /** Cinematic scene — no text in image */
   image: string;
-  /** Mountain Man figure overlay */
-  figure: string;
   scenePosition?: string;
   actionText: string;
   statsText: string;
@@ -33,9 +30,8 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مدیریت حساب کاربری، رمز عبور و امنیت ورود",
     badge: "امنیت و حساب",
     badgeIcon: "🛡️",
-    image: "/brand/v2/bookcase-green-mountains.png",
-    figure: "/brand/v2/mountain-man-cutout.png",
-    scenePosition: "center 35%",
+    image: "/brand/profile/print-personal-security.png",
+    scenePosition: "center",
     actionText: "مشاهده و ویرایش مشخصات",
     statsText: "احراز شده و فعال",
     gradient: "from-[#005B48]/90 via-[#003B2E]/90 to-[#00221A]/95",
@@ -46,9 +42,8 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مشاوره تخصصی رژیم ارگانیک، ارزش غذایی و طبخ اصیل",
     badge: "ویژه همسفران",
     badgeIcon: "✨",
-    image: "/brand/v2/v2-soon-mountain-stage.png",
-    figure: "/brand/v2/mountain-man-sitting.png",
-    scenePosition: "center 40%",
+    image: "/brand/profile/print-ai-nutrition-v2.png",
+    scenePosition: "center",
     actionText: "گفتگو با دستیار هوشمند",
     statsText: "آنلاین و پاسخگو",
     gradient: "from-[#005B48]/90 via-[#004234]/90 to-[#001D16]/95",
@@ -59,9 +54,8 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "مدیریت اعتبار نقدی، کوپن‌های تخفیف و امتیازات کوهستان",
     badge: "باشگاه وفاداری",
     badgeIcon: "🌱",
-    image: "/brand/our-way-03-quality.png",
-    figure: "/brand/v2/mountain-man-cutout.png",
-    scenePosition: "center center",
+    image: "/brand/profile/print-wallet-club.png",
+    scenePosition: "center",
     actionText: "شارژ و مدیریت اعتبار",
     statsText: "۵۰,۰۰۰ تومان اعتبار",
     gradient: "from-[#005B48]/90 via-[#403010]/90 to-[#221A08]/95",
@@ -72,9 +66,8 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "ارسال دوره‌ای محصولات تازه ارگانیک با زنجیره سرد",
     badge: "سرویس ویژه",
     badgeIcon: "📦",
-    image: "/brand/v2/v2-soon-product-stage.png",
-    figure: "/brand/mardekoohestan-walker1.png",
-    scenePosition: "center 45%",
+    image: "/brand/profile/print-subscription-basket.png",
+    scenePosition: "center",
     actionText: "تنظیم و انتخاب سبد",
     statsText: "تخفیف دائمی ۱۰٪",
     gradient: "from-[#005B48]/90 via-[#003D30]/90 to-[#001F18]/95",
@@ -85,9 +78,8 @@ const COVERFLOW_ITEMS: CoverflowItem[] = [
     subtitle: "پیگیری لحظه‌ای و اصالت‌سنجی مبدا تولید مزرعه و مرتع",
     badge: "ردیابی ارگانیک",
     badgeIcon: "🏔️",
-    image: "/brand/our-way-05-ahead.png",
-    figure: "/brand/v2/mountain-man-cutout.png",
-    scenePosition: "center 30%",
+    image: "/brand/profile/print-orders-passport.png",
+    scenePosition: "center",
     actionText: "مشاهده سوابق و شناسنامه",
     statsText: "۱ سفارش تحویل شده",
     gradient: "from-[#005B48]/90 via-[#1A3830]/90 to-[#0B1E1A]/95",
@@ -127,15 +119,15 @@ function InteractiveCard({
 
   const isActive = offset === 0;
   const isAdjacent = Math.abs(offset) === 1;
+  const isFar = Math.abs(offset) >= 2;
 
-  // Mantel of standing frames — one table plane, mild fan, center nearest
+  // Same table plane for every frame — fan stays, nothing fades like UI chrome
   const translateX = offset * 158;
-  const translateY = isActive ? 4 : isAdjacent ? -10 : -22;
-  const translateZ = isActive ? 28 : isAdjacent ? -36 : -96;
-  const rotateY = offset * -11;
-  const rotateX = isActive ? -16 : isAdjacent ? -17 : -18;
-  const scale = isActive ? 1 : isAdjacent ? 0.84 : 0.7;
-  const opacity = isActive ? 1 : isAdjacent ? 0.94 : 0.55;
+  const translateY = isActive ? 2 : isAdjacent ? -6 : -12;
+  const translateZ = isActive ? 24 : isAdjacent ? -28 : -64;
+  const rotateY = offset * -10;
+  const rotateX = -15;
+  const scale = isActive ? 1 : isAdjacent ? 0.88 : 0.78;
   const zIndex = 30 - Math.abs(offset) * 10;
 
   const cardX = useMotionValue(0);
@@ -159,7 +151,7 @@ function InteractiveCard({
 
   return (
     <motion.div
-      className={`coverflow-slot ${isActive ? "is-active" : ""}`}
+      className={`coverflow-slot ${isActive ? "is-active" : ""} ${isAdjacent ? "is-adjacent" : ""} ${isFar ? "is-far" : ""}`}
       style={{ zIndex }}
       animate={{
         x: translateX,
@@ -168,7 +160,7 @@ function InteractiveCard({
         rotateY: rotateY,
         rotateX: rotateX,
         scale: scale,
-        opacity: opacity,
+        filter: isActive ? "brightness(1)" : isAdjacent ? "brightness(0.97)" : "brightness(0.94)",
       }}
       transition={{
         type: "spring",
@@ -179,7 +171,7 @@ function InteractiveCard({
       whileHover={
         isActive
           ? { scale: 1.015, transition: { duration: 0.3 } }
-          : { opacity: 1, scale: scale * 1.02, transition: { duration: 0.3 } }
+          : { scale: scale * 1.02, transition: { duration: 0.3 } }
       }
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -187,7 +179,8 @@ function InteractiveCard({
       role="button"
       aria-label={item.title}
     >
-      <span className="coverflow-slot-shadow" aria-hidden="true" />
+      <span className="coverflow-slot-shadow is-pool" aria-hidden="true" />
+      <span className="coverflow-slot-shadow is-contact" aria-hidden="true" />
       <span className="frame-easel" aria-hidden="true">
         <span className="frame-easel-leg is-left" />
         <span className="frame-easel-leg is-right" />
@@ -210,18 +203,6 @@ function InteractiveCard({
                 style={{ objectPosition: item.scenePosition ?? "center" }}
                 priority={isActive || isAdjacent}
               />
-              <div className="coverflow-card-figure" aria-hidden="true">
-                <Image
-                  src={item.figure}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 220px, 280px"
-                  quality={92}
-                  className="coverflow-card-figure-img"
-                  priority={isActive}
-                />
-              </div>
-              <div className="coverflow-card-overlay" />
             </div>
           </div>
           <div className="frame-plate">
@@ -528,6 +509,10 @@ function ProfileContent() {
             <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
             <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
           </div>
+          <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
+          <p className="profile-coverflow-sub">
+            حساب، تغذیه، اعتبار و مسیر سفارش روی یک میز. قاب وسط را باز کنید · با فلش‌ها میان خدمات جابه‌جا شوید.
+          </p>
 
           <div className="profile-coverflow-stage">
             <button

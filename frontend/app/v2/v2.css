@@ -10672,7 +10672,31 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding: 18px 16px 0;
+  padding: 14px 16px 0;
+  pointer-events: none;
+}
+
+.profile-coverflow-title {
+  margin: 8px 16px 0;
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.profile-coverflow-sub {
+  margin: 6px auto 0;
+  max-width: 42ch;
+  padding: 0 20px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.75;
+  color: rgba(244, 240, 232, 0.86);
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
 
@@ -10786,16 +10810,52 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 
 .coverflow-slot-shadow {
   position: absolute;
-  left: -4%;
-  right: -4%;
-  bottom: -6px;
-  height: 28px;
-  background: radial-gradient(ellipse at center, rgba(8, 4, 2, 0.62) 0%, rgba(8, 4, 2, 0.22) 42%, transparent 74%);
-  filter: blur(5px);
   pointer-events: none;
   z-index: 0;
-  transform: rotateX(82deg) scaleY(1.35);
   transform-origin: center bottom;
+}
+
+.coverflow-slot-shadow.is-contact {
+  left: 6%;
+  right: 6%;
+  bottom: -4px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(6, 3, 1, 0.72) 0%, rgba(6, 3, 1, 0.28) 48%, transparent 74%);
+  filter: blur(4px);
+  transform: rotateX(86deg) scaleY(1.55);
+}
+
+.coverflow-slot-shadow.is-pool {
+  left: -12%;
+  right: -12%;
+  bottom: -10px;
+  height: 34px;
+  background: radial-gradient(ellipse at center, rgba(8, 4, 2, 0.38) 0%, transparent 72%);
+  filter: blur(11px);
+  transform: rotateX(86deg) scaleY(1.9);
+}
+
+.coverflow-slot.is-adjacent .coverflow-slot-shadow.is-contact,
+.coverflow-slot.is-far .coverflow-slot-shadow.is-contact {
+  opacity: 0.92;
+}
+
+.coverflow-slot.is-far .frame-wood {
+  box-shadow:
+    inset 0 1px 0 rgba(212, 163, 89, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    2px 0 0 rgba(18, 10, 6, 0.55),
+    0 3px 0 rgba(12, 6, 4, 0.4),
+    0 10px 22px rgba(0, 0, 0, 0.32);
+}
+
+.coverflow-slot.is-adjacent .frame-wood {
+  box-shadow:
+    inset 0 1px 0 rgba(212, 163, 89, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    2px 0 0 rgba(18, 10, 6, 0.55),
+    0 3px 0 rgba(12, 6, 4, 0.4),
+    0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .frame-easel {
@@ -10892,6 +10952,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   box-sizing: border-box;
   background: #ede6d6;
   box-shadow: inset 0 0 0 1px rgba(90, 58, 38, 0.18);
+  overflow: hidden;
 }
 
 .frame-plate {
@@ -11116,7 +11177,8 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 
 .coverflow-card-img {
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
+  pointer-events: none;
 }
 
 .coverflow-card-figure {
