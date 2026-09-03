@@ -198,8 +198,7 @@
    PERSONAL — leather ledger / brass lock / wax seal
    -------------------------------------------------------------------------- */
 .profile-workspace-section[data-theme="personal"] {
-  background:
-    linear-gradient(180deg, rgba(244, 240, 232, 0.97), rgba(236, 228, 214, 0.94));
+  background: transparent;
 }
 
 .ledger-sheet {

@@ -10630,12 +10630,33 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   z-index: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   pointer-events: none;
+}
+
+.profile-scene-wallpaper-inner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: filter, transform;
 }
 
 .profile-scene-wallpaper-img {
   object-fit: cover;
   object-position: center 58%;
+}
+
+.profile-scene-glass-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(0, 91, 72, 0.35) 0%, rgba(14, 20, 17, 0.78) 55%, rgba(6, 9, 8, 0.94) 100%);
+  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
 }
 
 .profile-scene-vignette {

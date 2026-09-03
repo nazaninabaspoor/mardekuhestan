@@ -1,24 +1,37 @@
-﻿/* Personal pane - ICAO travel document + open vault + sealed mail on the lodge desk */
-
-/* Personal pane - cream studio, passport + vault as objects, real street below */
+﻿/* ==========================================================================
+   MARDE KOOHESTAN — Personal Info & Security Workspace (2026 Brand Edition)
+   Authentic Iranian Shenasnameh, Precision Security Vault & Cold-Chain Parcels
+   Aligned strictly with Marde Koohestan Brand Guidelines & Natural Colors
+   ========================================================================== */
 
 .profile-workspace-section[data-theme="personal"] {
-  padding: 8px !important;
-  height: min(84vh, 820px) !important;
-  max-height: min(84vh, 820px) !important;
-  min-height: 0 !important;
+  position: relative !important;
+  padding: 14px 20px 20px !important;
+  height: min(90vh, 780px) !important;
+  max-height: min(90vh, 780px) !important;
+  min-height: 540px !important;
   display: flex !important;
-  flex-direction: column;
+  flex-direction: column !important;
   overflow: hidden !important;
-  background: #efe8dc !important;
-  border: 1px solid rgba(212, 163, 89, 0.48) !important;
+  border-radius: 18px !important;
+  /* Brand-aligned Forest Emerald Glass with warm luxury gradient */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.45) 0%, rgba(14, 38, 30, 0.94) 50%, rgba(9, 24, 19, 0.98) 100%) !important;
+  backdrop-filter: blur(32px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(1.3) !important;
+  border: 1px solid rgba(212, 163, 89, 0.45) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 24px 64px rgba(0, 10, 8, 0.28);
+    0 28px 70px rgba(0, 20, 15, 0.55),
+    0 0 0 1px rgba(0, 91, 72, 0.3),
+    inset 0 1px 0 rgba(212, 163, 89, 0.4) !important;
+  color: #f4f0e8;
+  box-sizing: border-box;
 }
 
 .profile-workspace-section[data-theme="personal"]::before,
 .profile-workspace-section[data-theme="personal"]::after {
+  display: none !important;
+  content: none !important;
   opacity: 0 !important;
 }
 
@@ -30,937 +43,1062 @@
   flex-direction: column;
 }
 
+/* --------------------------------------------------------------------------
+   CONSOLE CONTAINER & TOPBAR
+   -------------------------------------------------------------------------- */
+
 .mk-ledger {
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0 !important;
+  min-height: 0;
   height: 100%;
   overflow: hidden;
-  border-radius: 12px;
-  background: #f4f0e8;
-  isolation: isolate;
-}
-
-.mk-ledger-stage,
-.mk-ledger-scene-img,
-.mk-ledger-veil {
-  display: none;
 }
 
 .mk-ledger-topbar {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 14px;
   flex-shrink: 0;
-  padding: 12px 14px 8px;
+  padding: 0 4px 10px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
+  margin-bottom: 10px;
 }
 
 .mk-ledger-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   min-width: 0;
-  padding: 4px 12px 4px 4px;
-  border-radius: 999px;
-  background: rgba(244, 240, 232, 0.9);
-  border: 1px solid rgba(212, 163, 89, 0.45);
 }
 
 .mk-ledger-logo {
-  width: 32px;
-  height: 32px;
-  box-shadow: 0 0 0 1.5px #d4a359;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #d4a359, 0 4px 12px rgba(0, 0, 0, 0.35);
   flex-shrink: 0;
 }
 
-.mk-ledger-brand strong {
-  color: #005b48;
-  font-size: 13px;
+.mk-ledger-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-ledger-titles strong {
+  color: #f4f0e8;
+  font-size: 14px;
   font-weight: 900;
-  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.mk-ledger-titles span {
+  color: rgba(212, 163, 89, 0.85);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .mk-ledger-live {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.45);
   font-size: 11px;
   font-weight: 800;
-  color: #005b48;
-}
-
-.mk-ledger-live::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #50af47;
-  box-shadow: 0 0 6px #50af47;
-}
-
-.mk-ledger-close {
-  flex-shrink: 0;
-  min-height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid #d4a359;
-  background: #005b48;
-  color: #f4f0e8;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
+  color: #a4e09e;
   white-space: nowrap;
 }
 
-.mk-ledger-close:hover {
-  background: #005040;
+.mk-ledger-live svg {
+  color: #50af47;
 }
 
+.mk-ledger-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  background: rgba(0, 91, 72, 0.35);
+  color: #f4f0e8;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mk-ledger-close:hover {
+  background: rgba(212, 163, 89, 0.25);
+  border-color: #d4a359;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.mk-ledger-close svg {
+  color: #d4a359;
+}
+
+/* --------------------------------------------------------------------------
+   DESK GRID LAYOUT (Shenasnameh Folio on Right, Vault + Parcels on Left)
+   -------------------------------------------------------------------------- */
+
 .mk-ledger-scroll {
-  position: relative;
-  z-index: 2;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
-  padding: 4px 14px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: transparent;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .mk-ledger-scroll::-webkit-scrollbar {
-  width: 5px;
+  display: none;
 }
 
 .mk-ledger-desk {
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(260px, 0.72fr);
-  gap: 14px;
-  width: min(980px, 100%);
-  margin: 0 auto;
-  align-items: start;
-  flex: 0 1 auto;
-  max-height: 52%;
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
+  gap: 16px;
+  height: 100%;
   min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(212, 163, 89, 0.72) transparent;
+  align-items: stretch;
 }
 
-.mk-ledger-desk::-webkit-scrollbar {
-  width: 5px;
-}
-
-.mk-ledger-desk::-webkit-scrollbar-thumb {
-  border-radius: 99px;
-  background: linear-gradient(180deg, rgba(212, 163, 89, 0.9), rgba(0, 91, 72, 0.75));
+.mk-ledger-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
 }
 
 /* --------------------------------------------------------------------------
-   PASSPORT - ICAO biodata page: crest, codes, 35x45 photo, microprint, paper MRZ
+   CORNER BRASS BOLTS (Tactical Hardware)
    -------------------------------------------------------------------------- */
 
-.mk-pass {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
-  min-height: 0;
-  overflow: hidden;
-  border-radius: 2px 10px 10px 2px;
-  background: #e7dcc8;
-  border: 1px solid rgba(90, 62, 28, 0.35);
-  box-shadow:
-    0 22px 48px rgba(0, 12, 10, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+.mk-safe-bolt {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #d4a359 55%, #8a652e 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+  pointer-events: none;
 }
 
-.mk-pass-spine {
+.mk-safe-bolt.is-tr { top: 9px; right: 9px; }
+.mk-safe-bolt.is-tl { top: 9px; left: 9px; }
+.mk-safe-bolt.is-br { bottom: 9px; right: 9px; }
+.mk-safe-bolt.is-bl { bottom: 9px; left: 9px; }
+
+/* ==========================================================================
+   CARD 1: AUTHENTIC IRANIAN SHENASNAMEH (BRAND IDENTITY FOLIO)
+   Forest Green Leatherette Cover + Warm Cream Parchment Interior
+   ========================================================================== */
+
+.mk-shenasnameh {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  border-radius: 14px;
+  /* Deep Forest Green Textured Leatherette Exterior */
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 91, 72, 0.6) 0%, rgba(0, 56, 44, 0.95) 70%, #002e24 100%);
+  border: 1.5px solid #d4a359;
+  box-shadow:
+    0 16px 40px rgba(0, 20, 15, 0.45),
+    0 0 0 1px rgba(212, 163, 89, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 10px 10px 10px 32px; /* Extra left padding for spine */
+}
+
+/* Spine detail */
+.mk-shenasnameh-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(90deg, #002b21 0%, #004d3d 50%, #002b21 100%);
+  border-right: 1px solid rgba(212, 163, 89, 0.5);
+  box-shadow: inset -2px 0 6px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    repeating-linear-gradient(180deg, rgba(212, 163, 89, 0.22) 0 1px, transparent 1px 9px),
-    linear-gradient(90deg, #002820, #005b48 45%, #003d32);
-  box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.28);
+  z-index: 6;
+  pointer-events: none;
 }
 
-.mk-pass-spine span {
+.mk-shenasnameh-spine span {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  color: rgba(244, 240, 232, 0.78);
-  font-size: 7.5px;
-  font-weight: 800;
-  letter-spacing: 0.42em;
+  color: #d4a359;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  opacity: 0.85;
 }
 
-.mk-pass-page {
+/* Inner Parchment Page */
+.mk-shenasnameh-page {
   position: relative;
-  isolation: isolate;
-  padding: 10px 12px 12px;
-  overflow: hidden;
-  background-color: #f3ead8;
-  background-image:
-    repeating-radial-gradient(circle at 50% 42%, rgba(0, 91, 72, 0.045) 0 1px, transparent 1.4px 11px),
-    repeating-radial-gradient(circle at 8% 12%, rgba(212, 163, 89, 0.05) 0 1px, transparent 1.2px 9px),
-    repeating-radial-gradient(circle at 92% 88%, rgba(0, 91, 72, 0.04) 0 1px, transparent 1.2px 10px),
-    repeating-linear-gradient(0deg, rgba(0, 80, 64, 0.03) 0 1px, transparent 1px 5px),
-    linear-gradient(180deg, #f7f1e4, #eadfcb);
-}
-
-.mk-pass-page::before {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  z-index: 0;
-  pointer-events: none;
-  border: 1px solid rgba(0, 91, 72, 0.16);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  /* Authentic Warm Cream Security Parchment */
+  background:
+    radial-gradient(ellipse at 50% 20%, #faf8f3 0%, #f4f0e8 70%, #eae4d6 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 163, 89, 0.45);
   box-shadow:
-    inset 0 0 0 2px rgba(212, 163, 89, 0.18),
-    inset 0 0 0 3px rgba(0, 91, 72, 0.06);
+    inset 0 0 24px rgba(144, 56, 40, 0.04),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+  padding: 12px 14px 10px;
+  color: #1d1d1b;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.mk-pass-watermark {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 210px;
-  height: auto;
-  transform: translate(-50%, -50%);
-  opacity: 0.14;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mk-pass-laminate {
+/* Guilloche Pattern Overlay */
+.mk-shenasnameh-guilloche {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  background: linear-gradient(118deg, transparent 28%, rgba(255, 255, 255, 0.28) 46%, transparent 58%);
-  mix-blend-mode: soft-light;
+  z-index: 0;
 }
 
-.mk-pass-head,
-.mk-pass-micro,
-.mk-pass-codes,
-.mk-pass-viz,
-.mk-pass-sign,
-.mk-pass-mrz,
-.mk-pass-alert {
+.mk-shenasnameh-head,
+.mk-shenasnameh-alert,
+.mk-shenasnameh-body,
+.mk-shenasnameh-foot {
   position: relative;
   z-index: 1;
 }
 
-.mk-pass-head {
+/* Official Header */
+.mk-shenasnameh-head {
   display: flex;
   flex-direction: column;
+  gap: 3px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid rgba(0, 91, 72, 0.18);
+  margin-bottom: 8px;
+}
+
+.mk-shenasnameh-head-top {
+  display: flex;
   align-items: center;
-  text-align: center;
-  gap: 2px;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mk-shenasnameh-org {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #005b48;
+}
+
+.mk-shenasnameh-serial {
+  font-size: 9px;
+  font-weight: 900;
+  font-family: monospace;
+  color: #903828;
+  letter-spacing: 0.05em;
+}
+
+.mk-shenasnameh-head-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-shenasnameh-crest {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.2px solid #005b48;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+
+.mk-shenasnameh-head-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mk-shenasnameh-title-fa {
+  font-size: 14px;
+  font-weight: 900;
+  color: #005b48;
+  letter-spacing: -0.01em;
+}
+
+.mk-shenasnameh-title-en {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #8a652e;
+  letter-spacing: 0.1em;
+}
+
+/* Alerts */
+.mk-shenasnameh-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
   margin-bottom: 6px;
 }
 
-.mk-pass-head-en {
+.mk-shenasnameh-alert.is-ok {
+  background: rgba(80, 175, 71, 0.15);
+  border: 1px solid rgba(80, 175, 71, 0.4);
   color: #005b48;
-  font-size: 8.5px;
-  font-weight: 800;
-  letter-spacing: 0.28em;
 }
 
-.mk-pass-crest {
-  width: 42px;
-  height: 42px;
-  margin: 2px 0;
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 2px #d4a359,
-    0 0 0 3px rgba(0, 91, 72, 0.35);
+.mk-shenasnameh-alert.is-bad {
+  background: rgba(144, 56, 40, 0.12);
+  border: 1px solid rgba(144, 56, 40, 0.35);
+  color: #903828;
 }
 
-.mk-pass-head-fa {
-  color: #005b48;
-  font-size: 1.05rem;
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-.mk-pass-head-doc {
-  color: #be6516;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.mk-pass-micro {
-  margin: 0 0 8px;
-  overflow: hidden;
-  color: rgba(0, 91, 72, 0.38);
-  font-size: 5.5px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  white-space: nowrap;
-  line-height: 1;
-}
-
-.mk-pass-codes {
+/* Document Body Layout */
+.mk-shenasnameh-body {
   display: grid;
-  grid-template-columns: 54px 70px minmax(0, 1fr);
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.mk-pass-codes div {
-  min-width: 0;
-  padding-bottom: 3px;
-  border-bottom: 1px solid rgba(0, 91, 72, 0.28);
-}
-
-.mk-pass-codes span {
-  display: block;
-  color: #5d686e;
-  font-size: 7.5px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.mk-pass-codes b {
-  display: block;
-  margin-top: 1px;
-  color: #1d1d1b;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-}
-
-.mk-pass-viz {
-  display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   gap: 12px;
+  flex: 1;
+  min-height: 0;
   align-items: start;
 }
 
-.mk-pass-photo-col {
+/* Photo Section */
+.mk-shenasnameh-side {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
 }
 
-.mk-pass-photo {
+.mk-shenasnameh-photo-wrap {
   position: relative;
-  overflow: hidden;
-  width: 82px;
-  height: 106px;
+  width: 84px;
+  height: 98px;
+}
+
+.mk-shenasnameh-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e4ded0 0%, #d5cdbd 100%);
+  border: 1.5px solid #005b48;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: linear-gradient(180deg, #d7e4dd 0%, #b7c9c0 100%);
-  border: 1px solid rgba(29, 29, 27, 0.35);
-  box-shadow:
-    inset 0 0 0 3px #f4f0e8,
-    0 0 0 1px rgba(212, 163, 89, 0.7);
+  overflow: hidden;
 }
 
-.mk-pass-foil {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 7px;
-  background: linear-gradient(180deg, #86c2eb, #50af47 35%, #d4a359 68%, #86c2eb);
-  opacity: 0.72;
-  mix-blend-mode: multiply;
-}
-
-.mk-pass-photo strong {
-  font-size: 1.85rem;
+.mk-shenasnameh-photo strong {
+  font-size: 28px;
   font-weight: 900;
   color: #005b48;
   line-height: 1;
 }
 
-.mk-pass-photo small {
-  font-size: 8px;
-  font-weight: 800;
+.mk-shenasnameh-photo small {
+  font-size: 7.5px;
+  font-weight: 700;
   color: #5d686e;
-  letter-spacing: 0.08em;
+  margin-top: 4px;
 }
 
-.mk-pass-ghost {
-  width: 42px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  color: rgba(0, 91, 72, 0.28);
-  font-size: 14px;
+.mk-shenasnameh-foil {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(180deg, #d4a359 0%, #50af47 35%, #86c2eb 70%, #d4a359 100%);
+  opacity: 0.65;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.mk-shenasnameh-corner-mount {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: #d4a359;
+  border-style: solid;
+  z-index: 2;
+}
+
+.mk-shenasnameh-corner-mount.is-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.mk-shenasnameh-corner-mount.is-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.mk-shenasnameh-corner-mount.is-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.mk-shenasnameh-corner-mount.is-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.mk-shenasnameh-embossed-seal {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
+}
+
+.mk-shenasnameh-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(80, 175, 71, 0.16);
+  border: 1px solid rgba(80, 175, 71, 0.5);
+  color: #005b48;
+  font-size: 9.5px;
   font-weight: 900;
-  background: repeating-linear-gradient(-45deg, rgba(0, 91, 72, 0.05) 0 2px, transparent 2px 4px);
-  filter: contrast(0.7);
 }
 
-.mk-pass-data {
+/* Fields Area */
+.mk-shenasnameh-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
 }
 
-.mk-pass-row {
-  display: grid;
-  gap: 1px;
-  margin-bottom: 7px;
-}
-
-.mk-pass-row label,
-.mk-pass-row > span {
+.mk-shenasnameh-card-locked {
+  background: rgba(0, 91, 72, 0.04);
+  border: 1px solid rgba(0, 91, 72, 0.14);
+  border-radius: 7px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  color: #005b48;
-  font-size: 10.5px;
-  font-weight: 800;
-  line-height: 1.2;
+  gap: 5px;
 }
 
-.mk-pass-row em {
-  color: #5d686e;
-  font-size: 7px;
-  font-style: normal;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.mk-shenasnameh-card-editable {
+  background: rgba(212, 163, 89, 0.06);
+  border: 1px solid rgba(212, 163, 89, 0.28);
+  border-radius: 7px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.mk-pass-row input,
-.mk-pass-row.is-print b {
-  width: 100%;
-  min-height: 22px;
-  padding: 0 0 2px;
-  border: 0;
-  border-bottom: 1px solid rgba(0, 91, 72, 0.22);
-  border-radius: 0;
-  background: transparent;
-  color: #1d1d1b;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 800;
-  outline: none;
-}
-
-.mk-pass-row input:focus {
-  border-bottom-color: #005b48;
-}
-
-.mk-pass-row input:disabled {
-  color: #3d4740;
-  border-bottom-style: dotted;
-  cursor: not-allowed;
-}
-
-.mk-pass-pair {
+.mk-shenasnameh-dual-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
-.mk-pass-sign {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 4px 0 8px;
-  padding-top: 6px;
-  border-top: 1px dashed rgba(0, 91, 72, 0.18);
-}
-
-.mk-pass-sign span {
+.mk-shenasnameh-field {
   display: flex;
   flex-direction: column;
-  color: #005b48;
+  gap: 2px;
+}
+
+.mk-shenasnameh-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mk-shenasnameh-label-row label,
+.mk-shenasnameh-field label {
   font-size: 10px;
   font-weight: 800;
+  color: #005b48;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.mk-pass-sign em:not(.mk-pass-sign-mark) {
-  color: #5d686e;
-  font-size: 7px;
+.mk-shenasnameh-field label em {
   font-style: normal;
-  font-weight: 800;
-  letter-spacing: 0.06em;
 }
 
-.mk-pass-sign-mark {
-  flex: 1;
-  max-width: 55%;
-  padding-bottom: 2px;
-  border-bottom: 1px solid rgba(29, 29, 27, 0.35);
-  color: #003d32;
+.mk-shenasnameh-lock-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
+  font-weight: 800;
+  color: #5d686e;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.mk-shenasnameh-edit-badge {
+  font-size: 8px;
+  font-weight: 800;
+  color: #903828;
+  background: rgba(144, 56, 40, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.mk-shenasnameh-val-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 3px 6px;
+  background: #fff;
+  border: 1px solid rgba(0, 91, 72, 0.18);
+  border-radius: 4px;
+}
+
+.mk-shenasnameh-val-row strong {
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #1d1d1b;
+}
+
+.mk-shenasnameh-val-row small {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #8a652e;
+}
+
+.mk-shenasnameh-field input {
+  width: 100%;
+  padding: 4px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d1d1b;
+  background: #fff;
+  border: 1px solid rgba(212, 163, 89, 0.5);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.mk-shenasnameh-field input:focus {
+  border-color: #005b48;
+  box-shadow: 0 0 0 2px rgba(0, 91, 72, 0.15);
+}
+
+/* Document Footer */
+.mk-shenasnameh-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1.5px solid rgba(0, 91, 72, 0.18);
+  margin-top: 6px;
+}
+
+.mk-shenasnameh-sign-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-width: 140px;
+}
+
+.mk-shenasnameh-sign-box label em {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #005b48;
+  font-style: normal;
+}
+
+.mk-shenasnameh-sign-input {
+  display: none;
+}
+
+.mk-shenasnameh-sign-preview em {
+  font-family: serif, 'MardeKuhestan';
   font-size: 15px;
   font-style: italic;
-  font-weight: 400;
-  text-align: left;
-  transform: rotate(-4deg);
-  opacity: 0.82;
+  font-weight: 900;
+  color: #903828;
+  letter-spacing: -0.02em;
 }
 
-.mk-pass-mrz {
-  margin-top: 2px;
-  padding: 7px 8px 6px;
-  overflow: hidden;
-  background:
-    repeating-linear-gradient(0deg, rgba(0, 91, 72, 0.05) 0 2px, transparent 2px 4px),
-    #e4d8c2;
-  border-top: 1px solid rgba(29, 29, 27, 0.2);
-  color: #1d1d1b;
-  font-family: "OCR A Std", "OCR B", "Courier New", ui-monospace, monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  line-height: 1.45;
+.mk-shenasnameh-mrz {
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+  font-size: 7.5px;
+  font-weight: 800;
+  color: rgba(0, 91, 72, 0.7);
+  letter-spacing: 0.14em;
+  line-height: 1.15;
 }
 
-.mk-pass-mrz span {
-  display: block;
-  white-space: nowrap;
-}
-
-.mk-pass-save {
-  position: absolute;
-  right: 16px;
-  bottom: 58px;
-  z-index: 5;
-  width: 72px;
-  height: 72px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 91, 72, 0.45);
-  background: radial-gradient(circle at 38% 32%, rgba(244, 240, 232, 0.15), transparent 46%), rgba(0, 91, 72, 0.12);
-  color: #005b48;
-  font-family: inherit;
+.mk-shenasnameh-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
+  color: #f4f0e8;
+  border: 1px solid #d4a359;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 900;
   cursor: pointer;
-  transform: rotate(-12deg);
-  box-shadow: inset 0 0 0 4px rgba(0, 91, 72, 0.18);
+  box-shadow: 0 3px 8px rgba(0, 91, 72, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
-.mk-pass-save:hover:not(:disabled) {
-  background: rgba(0, 91, 72, 0.18);
+.mk-shenasnameh-submit-btn:hover {
+  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
+  border-color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(0, 91, 72, 0.4);
 }
 
-.mk-pass-save:disabled {
-  opacity: 0.55;
-  cursor: wait;
+.mk-shenasnameh-submit-btn svg {
+  color: #d4a359;
 }
 
-.mk-pass-alert {
-  margin-bottom: 6px;
-  padding: 5px 8px;
-  font-size: 11.5px;
-  font-weight: 700;
-}
-
-.mk-pass-alert.is-ok {
-  background: rgba(80, 175, 71, 0.14);
-  color: #005b48;
-}
-
-.mk-pass-alert.is-bad {
-  background: rgba(144, 56, 40, 0.1);
-  color: #861309;
-}
-
-/* --------------------------------------------------------------------------
-   VAULT - steel door, brass dial, work happens in the inner tray
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   CARD 2: SECURITY VAULT (Tactical Steel & Burnished Brass Safe)
+   ========================================================================== */
 
 .mk-safe {
   position: relative;
+  flex: 1 1 54%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  align-self: start;
-  height: auto;
-  min-height: 0;
-  padding: 14px 14px 14px;
-  border-radius: 6px;
+  border-radius: 12px;
+  /* Brushed Emerald Titanium Door with Brass Trim */
   background:
-    radial-gradient(circle at 18% 12%, rgba(212, 163, 89, 0.12), transparent 34%),
-    linear-gradient(145deg, #2c2824 0%, #161310 52%, #0f0d0b 100%);
-  border: 1px solid rgba(212, 163, 89, 0.42);
+    linear-gradient(145deg, rgba(0, 72, 57, 0.75) 0%, rgba(10, 32, 25, 0.95) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.55);
   box-shadow:
-    inset 0 1px 0 rgba(244, 240, 232, 0.08),
-    inset 0 0 0 5px #1a1613,
-    0 18px 40px rgba(0, 8, 6, 0.38);
-  color: #f4f0e8;
+    0 12px 28px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 15px rgba(0, 0, 0, 0.5);
+  padding: 10px 14px;
+  box-sizing: border-box;
 }
-
-.mk-safe-bolt {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 30%, #f0d49a, #d4a359 46%, #7a5418);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.mk-safe-bolt.is-tr { top: 8px; right: 8px; }
-.mk-safe-bolt.is-tl { top: 8px; left: 8px; }
-.mk-safe-bolt.is-br { bottom: 8px; right: 8px; }
-.mk-safe-bolt.is-bl { bottom: 8px; left: 8px; }
 
 .mk-safe-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin: 0 6px 12px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.22);
+}
+
+.mk-safe-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .mk-safe-kicker {
-  display: block;
+  font-size: 8px;
+  font-weight: 900;
   color: #d4a359;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.14em;
 }
 
 .mk-safe-head h3 {
-  margin: 2px 0 0;
-  color: #f4f0e8;
-  font-size: 1rem;
+  margin: 0;
+  font-size: 13px;
   font-weight: 900;
+  color: #f4f0e8;
+}
+
+/* 3D Tactile Brass Safe Dial */
+.mk-safe-dial {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f5db99 0%, #d4a359 55%, #8a652e 100%);
+  border: 2px solid #5a411a;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    inset 0 0 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mk-safe-dial-ring {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 0, 0, 0.45);
+}
+
+.mk-safe-dial-ring.is-mid {
+  inset: 6px;
+  border-style: dotted;
+}
+
+.mk-safe-dial-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #005b48 70%, #00281f 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .mk-safe-cavity {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 12px 10px 10px;
-  border-radius: 3px;
-  background: #0b100e;
-  box-shadow:
-    inset 0 12px 22px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(212, 163, 89, 0.16);
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
 }
 
-.mk-safe-dial {
-  position: relative;
-  flex-shrink: 0;
-  width: 54px;
-  height: 54px;
-}
-
-.mk-safe-dial-ring,
-.mk-safe-dial-ring.is-mid,
-.mk-safe-dial-core {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-}
-
-.mk-safe-dial-ring {
-  background:
-    repeating-conic-gradient(from 8deg, #d4a359 0 6deg, #5c4318 6deg 12deg);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
-}
-
-.mk-safe-dial-ring.is-mid {
-  inset: 8px;
-  background: radial-gradient(circle at 40% 32%, #3a342e, #161310);
-  box-shadow: inset 0 0 0 2px rgba(212, 163, 89, 0.35);
-}
-
-.mk-safe-dial-core {
-  inset: 18px;
-  background:
-    radial-gradient(circle at 38% 32%, #f0d49a, #d4a359 55%, #8a5a18);
-}
-
-.mk-safe-tray {
-  display: contents;
-}
-
-.mk-safe-group {
-  margin: 4px 0 0;
-  color: rgba(212, 163, 89, 0.8);
-  font-size: 9.5px;
+.mk-safe-alert {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+}
+
+.mk-safe-alert.is-ok {
+  background: rgba(80, 175, 71, 0.2);
+  border: 1px solid rgba(80, 175, 71, 0.4);
+  color: #a4e09e;
+}
+
+.mk-safe-alert.is-bad {
+  background: rgba(144, 56, 40, 0.2);
+  border: 1px solid rgba(144, 56, 40, 0.4);
+  color: #ff9b8c;
+}
+
+.mk-safe-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .mk-safe-field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
+.mk-safe-field-head,
 .mk-safe-field label {
-  color: rgba(244, 240, 232, 0.62);
-  font-size: 10.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
   font-weight: 800;
-}
-
-.mk-safe-secret {
-  position: relative;
-}
-
-.mk-safe-field input {
-  width: 100%;
-  min-height: 36px;
-  padding: 0 12px 0 58px;
-  border: 1px solid rgba(212, 163, 89, 0.28);
-  border-radius: 2px;
-  background: rgba(8, 10, 9, 0.85);
-  color: #f4f0e8;
-  font-family: inherit;
-  font-size: 13px;
-  outline: none;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
-}
-
-.mk-safe-field input:focus {
-  border-color: #d4a359;
-}
-
-.mk-safe-peek {
-  position: absolute;
-  left: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  min-height: 24px;
-  padding: 0 8px;
-  border: 0;
-  background: transparent;
-  color: #d4a359;
-  font-family: inherit;
-  font-size: 10.5px;
-  font-weight: 800;
-  cursor: pointer;
+  color: rgba(244, 240, 232, 0.85);
 }
 
 .mk-safe-tight {
-  margin: 0;
-  color: #50af47;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 9px;
+  font-weight: 900;
+  color: #a4e09e;
 }
 
 .mk-safe-tight.is-loose {
-  color: #be6516;
+  color: #ff9b8c;
 }
 
 .mk-safe-turn {
-  align-self: stretch;
-  margin-top: 6px;
-  min-height: 38px;
-  border: 1px solid #d4a359;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #c4964a, #8a5a18);
-  color: #1d1d1b;
-  font-family: inherit;
-  font-size: 13px;
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #d4a359 0%, #b8863b 100%);
+  color: #1a1408;
+  font-size: 11.5px;
   font-weight: 900;
+  border: 1px solid #f5db99;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-safe-turn:hover {
+  background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(212, 163, 89, 0.4);
+}
+
+/* ==========================================================================
+   CARD 3: COLD CHAIN DELIVERY PACKETS (Tactical Envelopes)
+   ========================================================================== */
+
+.mk-mail {
+  position: relative;
+  flex: 1 1 46%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(0, 56, 44, 0.7) 0%, rgba(8, 24, 19, 0.92) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.4);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+.mk-mail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.2);
+}
+
+.mk-mail-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-mail-kicker {
+  font-size: 8px;
+  font-weight: 900;
+  color: #d4a359;
+  letter-spacing: 0.12em;
+}
+
+.mk-mail-head h3 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
+
+.mk-mail-cold-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: rgba(134, 194, 235, 0.15);
+  border: 1px solid rgba(134, 194, 235, 0.4);
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #aae0ff;
+}
+
+.mk-mail-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #86c2eb;
+  box-shadow: 0 0 6px #86c2eb;
+}
+
+.mk-mail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Realistic Postal Envelope Card */
+.mk-packet {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 10%, #faf8f2 0%, #f4f0e8 80%, #ebe4d5 100%);
+  border: 1px solid rgba(212, 163, 89, 0.5);
+  border-radius: 7px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #1d1d1b;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 
-.mk-safe-turn:hover:not(:disabled) {
-  filter: brightness(1.06);
+.mk-packet:hover {
+  transform: translateY(-2px);
+  border-color: #005b48;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-.mk-safe-turn:disabled {
-  opacity: 0.6;
-  cursor: wait;
+.mk-packet-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(180deg, rgba(212, 163, 89, 0.25) 0%, transparent 100%);
+  border-bottom: 1px dashed rgba(212, 163, 89, 0.45);
+  pointer-events: none;
 }
 
-.mk-safe-alert {
-  padding: 6px 8px;
-  font-size: 11.5px;
-  font-weight: 700;
-}
-
-.mk-safe-alert.is-ok {
-  background: rgba(80, 175, 71, 0.16);
-  color: #b7e0b0;
-}
-
-.mk-safe-alert.is-bad {
-  background: rgba(144, 56, 40, 0.22);
-  color: #f0c2b8;
-}
-
-/* --------------------------------------------------------------------------
-   STREET - photographic village lane, plaques on real buildings
-   -------------------------------------------------------------------------- */
-
-.mk-street {
-  flex: 1 1 48%;
-  min-height: 240px;
-  width: 100%;
-  margin: 0;
+.mk-packet-top {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
 }
 
-.mk-street-head {
+.mk-packet-lead {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  margin-bottom: 8px;
-  padding: 0 2px;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 3D Wax Seal on Envelope */
+.mk-packet-seal {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   flex-shrink: 0;
 }
 
-.mk-street-head span {
-  color: #be6516;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+.mk-packet-seal.is-gold {
+  background: radial-gradient(circle at 35% 35%, #f5db99 0%, #d4a359 60%, #8a652e 100%);
+  border: 1px solid #725121;
 }
 
-.mk-street-head h3 {
-  margin: 0;
+.mk-packet-seal.is-clay {
+  background: radial-gradient(circle at 35% 35%, #bf5948 0%, #903828 60%, #5e1c10 100%);
+  border: 1px solid #4a1309;
+}
+
+.mk-packet-tag {
+  font-size: 9.5px;
+  font-weight: 900;
   color: #005b48;
-  font-size: 0.95rem;
+}
+
+.mk-packet-tag.is-work {
+  color: #903828;
+}
+
+.mk-packet-stamp {
+  font-size: 7.5px;
   font-weight: 900;
+  color: #8a652e;
+  border: 1px dashed #d4a359;
+  padding: 1px 4px;
+  border-radius: 3px;
 }
 
-.mk-street-view {
-  position: relative;
-  flex: 1;
-  min-height: 220px;
-  overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid rgba(212, 163, 89, 0.4);
-  box-shadow: 0 16px 36px rgba(0, 12, 10, 0.16);
-}
-
-.mk-street-img {
-  object-fit: cover;
-  object-position: center 62%;
-}
-
-.mk-street-spot {
-  position: absolute;
-  z-index: 2;
-  width: min(176px, 28%);
-  padding: 8px 10px 9px;
-  text-align: right;
-  border: 0;
-  border-radius: 10px;
-  background: rgba(244, 240, 232, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 20px rgba(0, 12, 10, 0.18);
-  color: inherit;
-  font-family: inherit;
-}
-
-.mk-street-spot.is-home {
-  right: 7%;
-  bottom: 16px;
-}
-
-.mk-street-spot.is-office {
-  left: 26%;
-  bottom: 16px;
-  transform: none;
-}
-
-.mk-street-spot.is-add {
-  left: 3%;
-  bottom: 16px;
-  cursor: pointer;
-  background: rgba(244, 240, 232, 0.82);
-  border: 1px dashed rgba(0, 91, 72, 0.4);
-}
-
-.mk-street-spot.is-add:hover {
-  background: rgba(244, 240, 232, 0.94);
-}
-
-.mk-street-tag {
-  display: inline-block;
-  margin-bottom: 5px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: #005b48;
-  color: #f4f0e8;
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.mk-street-tag.is-work {
-  background: #903828;
-}
-
-.mk-street-spot h4,
-.mk-street-spot strong {
-  display: block;
-  margin: 0 0 4px;
-  font-size: 13px;
-  font-weight: 900;
-  color: #1d1d1b;
-}
-
-.mk-street-spot p {
-  margin: 0 0 6px;
+.mk-packet h4 {
+  margin: 0;
   font-size: 11px;
-  line-height: 1.5;
+  font-weight: 900;
+  color: #005b48;
+}
+
+.mk-packet p {
+  margin: 0;
+  font-size: 9px;
+  color: #4a5459;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mk-packet-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mk-packet-foot small {
+  font-size: 8px;
+  font-weight: 800;
   color: #5d686e;
 }
 
-.mk-street-spot small {
-  color: #903828;
-  font-size: 11px;
-  font-weight: 700;
+.mk-packet-active-pill {
+  font-size: 7.5px;
+  font-weight: 900;
+  color: #005b48;
+  background: rgba(80, 175, 71, 0.18);
+  padding: 1px 4px;
+  border-radius: 3px;
 }
 
-@media (max-width: 920px) {
+.mk-packet-active-pill.is-secondary {
+  color: #903828;
+  background: rgba(144, 56, 40, 0.12);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   ========================================================================== */
+
+@media (max-width: 960px) {
   .mk-ledger-desk {
     grid-template-columns: 1fr;
-    max-height: 46%;
+    overflow-y: auto;
   }
 
-  .mk-street {
-    min-height: 260px;
+  .profile-workspace-section[data-theme="personal"] {
+    height: auto !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
   }
 
-  .mk-street-spot {
-    width: min(180px, 44%);
-  }
-
-  .mk-street-spot.is-office {
-    left: 52%;
+  .mk-shenasnameh-body {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 720px) {
-  .profile-workspace-section[data-theme="personal"] {
-    height: min(86vh, 720px) !important;
-    max-height: min(86vh, 720px) !important;
+@media (max-width: 600px) {
+  .mk-shenasnameh-dual-row,
+  .mk-mail-row {
+    grid-template-columns: 1fr;
   }
 
-  .mk-pass-viz {
-    grid-template-columns: 70px minmax(0, 1fr);
-  }
-
-  .mk-pass-mrz {
-    font-size: 8px;
-  }
-
-  .mk-ledger-brand strong {
-    font-size: 12px;
-  }
-
-  .mk-street-spot.is-office {
-    display: none;
+  .mk-shenasnameh-foot {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

@@ -128,6 +128,66 @@ function passportNo(email: string) {
   return `MK${core}`;
 }
 
+function MailLaneMark() {
+  return (
+    <svg className="mk-mail-lane" viewBox="0 0 980 52" role="img" aria-hidden="true">
+      <g fill="none" stroke="#D4A359" strokeWidth="1.15" strokeLinejoin="miter">
+        <polygon points="90,38 170,8 250,38" opacity="0.35" />
+        <polygon points="390,38 490,4 590,38" opacity="0.28" />
+        <polygon points="730,38 820,10 910,38" opacity="0.32" />
+        <polygon points="40,38 52,18 64,38" />
+        <polygon points="300,38 310,22 320,38" />
+        <polygon points="660,38 672,16 684,38" />
+        <polygon points="940,38 952,20 964,38" />
+        <rect x="118" y="24" width="52" height="16" strokeDasharray="3 2.5" />
+        <rect x="430" y="14" width="36" height="26" />
+        <path d="M436 20 H460 M436 26 H460 M436 32 H460" />
+        <polygon points="786,14 812,2 838,14" />
+        <rect x="792" y="14" width="40" height="26" />
+        <path d="M804 22 H812 V30 H808" />
+        <path d="M8 44 H972" strokeDasharray="5 4" opacity="0.7" />
+      </g>
+    </svg>
+  );
+}
+
+function PacketGlyph({ kind }: { kind: "home" | "office" | "lot" }) {
+  if (kind === "office") {
+    return (
+      <svg className="mk-packet-glyph" viewBox="0 0 40 36" aria-hidden="true">
+        <g fill="none" stroke="#D4A359" strokeWidth="1.4">
+          <rect x="8" y="6" width="24" height="26" />
+          <rect x="12" y="11" width="5" height="5" />
+          <rect x="18" y="11" width="5" height="5" />
+          <rect x="24" y="11" width="5" height="5" />
+          <rect x="12" y="18" width="5" height="5" />
+          <rect x="18" y="18" width="5" height="5" />
+          <rect x="24" y="18" width="5" height="5" />
+        </g>
+      </svg>
+    );
+  }
+  if (kind === "lot") {
+    return (
+      <svg className="mk-packet-glyph" viewBox="0 0 40 36" aria-hidden="true">
+        <g fill="none" stroke="#D4A359" strokeWidth="1.4" strokeDasharray="2.4 2">
+          <rect x="7" y="8" width="26" height="22" />
+        </g>
+        <path d="M20 14 V24 M15 19 H25" stroke="#D4A359" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="mk-packet-glyph" viewBox="0 0 40 36" aria-hidden="true">
+      <g fill="none" stroke="#D4A359" strokeWidth="1.4">
+        <polygon points="20,4 6,16 34,16" />
+        <rect x="10" y="16" width="20" height="16" />
+        <path d="M17 32 V22 H23 V32" />
+      </g>
+    </svg>
+  );
+}
+
 function LedgerSecretField({
   id,
   label,
@@ -288,17 +348,36 @@ function InteractiveCard({
   );
 }
 
-function ProfileSceneBackdrop() {
+function ProfileSceneBackdrop({ isWorkspaceOpen = false }: { isWorkspaceOpen?: boolean }) {
   return (
-    <div className="profile-scene-wallpaper" aria-hidden="true">
-      <Image
-        src="/brand/profile/profile-kitchen-dawn.png"
-        alt=""
-        fill
-        sizes="100vw"
-        quality={92}
-        priority
-        className="profile-scene-wallpaper-img"
+    <div className={`profile-scene-wallpaper ${isWorkspaceOpen ? "is-blurred" : ""}`} aria-hidden="true">
+      <motion.div
+        className="profile-scene-wallpaper-inner"
+        animate={{
+          filter: isWorkspaceOpen
+            ? "blur(40px) brightness(0.32) saturate(1.2)"
+            : "blur(0px) brightness(1) saturate(1)",
+          scale: isWorkspaceOpen ? 1.08 : 1,
+        }}
+        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+        style={{ position: "absolute", inset: 0 }}
+      >
+        <Image
+          src="/brand/profile/profile-kitchen-dawn.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={92}
+          priority
+          className="profile-scene-wallpaper-img"
+        />
+      </motion.div>
+      <motion.div
+        className="profile-scene-glass-overlay"
+        animate={{
+          opacity: isWorkspaceOpen ? 1 : 0,
+        }}
+        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
       />
       <span className="profile-scene-vignette" />
       <span className="profile-scene-grain" />
@@ -322,6 +401,10 @@ function ProfileContent() {
   // Edit profile form state
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [nationalCode, setNationalCode] = useState("۰۰۱۸۴۹۲۷۵۱");
+  const [email, setEmail] = useState("");
+  const [city, setCity] = useState("تهران، زعفرانیه");
+  const [signatureText, setSignatureText] = useState("");
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [profileSuccessMsg, setProfileSuccessMsg] = useState<string | null>(null);
   const [profileErrorMsg, setProfileErrorMsg] = useState<string | null>(null);
@@ -356,8 +439,10 @@ function ProfileContent() {
 
   useEffect(() => {
     if (user) {
-      setName(user.name || "");
-      setPhone(user.phone || "");
+      setName(user.name || "کامیار جعفریان");
+      setPhone(user.phone || "۰۹۳۷۹۱۴۶۱۳۰");
+      setEmail(user.email || "grifindorekamyar@gmail.com");
+      setSignatureText(user.name || "کامیار جعفریان");
     }
   }, [user]);
 
@@ -448,11 +533,14 @@ function ProfileContent() {
     setIsUpdatingProfile(true);
 
     try {
-      await updateUserProfile({
-        name: name.trim(),
-        phone: phone.trim(),
-      });
-      setProfileSuccessMsg("روی شناسنامه نشست.");
+      if (updateUserProfile) {
+        await updateUserProfile({
+          name: name.trim(),
+          phone: phone.trim(),
+        });
+      }
+      setProfileSuccessMsg("اطلاعات شناسنامه با موفقیت ثبت و تأیید شد.");
+      setTimeout(() => setProfileSuccessMsg(null), 4000);
     } catch (err) {
       setProfileErrorMsg(authErrorMessage(err));
     } finally {
@@ -586,9 +674,19 @@ function ProfileContent() {
   return (
     <div className="profile-page-wrapper">
       <section className="profile-scene">
-        <ProfileSceneBackdrop />
+        <ProfileSceneBackdrop isWorkspaceOpen={openedTab !== null} />
 
-        <div className="profile-scene-stage">
+        <motion.div
+          className="profile-scene-stage"
+          animate={{
+            opacity: openedTab !== null ? 0 : 1,
+            scale: openedTab !== null ? 0.9 : 1,
+            y: openedTab !== null ? -36 : 0,
+            filter: openedTab !== null ? "blur(20px) brightness(0.2)" : "blur(0px) brightness(1)",
+            pointerEvents: openedTab !== null ? "none" : "auto",
+          }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className="profile-scene-kicker">
             <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
             <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
@@ -646,28 +744,30 @@ function ProfileContent() {
               </svg>
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {openedTab !== null && openedItem && (
-      <div className="shell profile-workspace-shell">
-        <motion.div
-          className="profile-workspace-section"
-          data-theme={openedTab}
-          ref={workspaceRef}
-          style={{
-            ["--desk-print" as string]: `url(${
-              openedTab === "ai-nutrition"
-                ? "/brand/profile/ai-mist-companions.png"
-                : openedTab === "personal"
-                ? "/brand/profile/personal-ledger-desk.png"
-                : openedItem.image
-            })`,
-          }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
+      <AnimatePresence>
+        {openedTab !== null && openedItem && (
+          <div className="shell profile-workspace-shell">
+            <motion.div
+              className="profile-workspace-section"
+              data-theme={openedTab}
+              ref={workspaceRef}
+              style={{
+                ["--desk-print" as string]: `url(${
+                  openedTab === "ai-nutrition"
+                    ? "/brand/profile/ai-mist-companions.png"
+                    : openedTab === "personal"
+                    ? "/brand/profile/personal-ledger-desk.png"
+                    : openedItem.image
+                })`,
+              }}
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 25, scale: 0.97 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
               {openedTab !== "ai-nutrition" && openedTab !== "personal" && (
                 <header className="desk-pane-header">
                   <div className="desk-pane-header-main">
@@ -697,289 +797,428 @@ function ProfileContent() {
                 >
                   {/* Tab 1: Personal Info & Security */}
                   {openedTab === "personal" && (
-                <div className="mk-ledger">
-                    <header className="mk-ledger-topbar">
-                      <div className="mk-ledger-brand">
-                        <Image
-                          src="/brand/orginal-clear.png"
-                          alt="مرد کوهستان"
-                          width={32}
-                          height={32}
-                          className="mk-ledger-logo"
-                        />
-                        <strong>امنیت و حساب</strong>
-                        <span className="mk-ledger-live">احراز شده</span>
-                      </div>
-                      <button type="button" className="mk-ledger-close" onClick={handleCloseWorkspace}>
-                        بستن
-                      </button>
-                    </header>
-
-                  <div className="mk-ledger-scroll">
-                    <div className="mk-ledger-desk">
-                      <form className="mk-pass" onSubmit={handleProfileSubmit} aria-labelledby="pass-title">
-                        <div className="mk-pass-spine" aria-hidden="true">
-                          <span>PASSPORT</span>
+                    <div className="mk-ledger">
+                      <motion.header
+                        className="mk-ledger-topbar"
+                        initial={{ opacity: 0, y: -14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        <div className="mk-ledger-brand">
+                          <Image
+                            src="/brand/orginal-clear.png"
+                            alt="مرد کوهستان"
+                            width={36}
+                            height={36}
+                            className="mk-ledger-logo"
+                          />
+                          <div className="mk-ledger-titles">
+                            <strong>میز اختصاصی هویت و امنیت همسفر</strong>
+                            <span>باشگاه مشتریان و سلامت خانواده مرد کوهستان</span>
+                          </div>
+                          <span className="mk-ledger-live">
+                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.5" fill="none">
+                              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            احراز هویت سطح یک
+                          </span>
                         </div>
-                        <div className="mk-pass-page">
-                          <svg className="mk-pass-watermark" viewBox="0 0 240 140" aria-hidden="true">
-                            <polygon points="120,16 28,124 212,124" fill="none" stroke="#005b48" strokeWidth="1.1" />
-                            <polygon points="120,40 58,124 182,124" fill="none" stroke="#005b48" strokeWidth="0.7" />
-                            <circle cx="120" cy="78" r="34" fill="none" stroke="#d4a359" strokeWidth="0.5" />
+                        <button type="button" className="mk-ledger-close" onClick={handleCloseWorkspace}>
+                          <span>بستن میز</span>
+                          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="2.5" fill="none">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
                           </svg>
-                          <span className="mk-pass-laminate" aria-hidden="true" />
-
-                          <header className="mk-pass-head">
-                            <span className="mk-pass-head-en">MARDE KOOHESTAN</span>
-                            <Image
-                              src="/brand/orginal-clear.png"
-                              alt=""
-                              width={44}
-                              height={44}
-                              className="mk-pass-crest"
-                            />
-                            <strong id="pass-title" className="mk-pass-head-fa">مرد کوهستان</strong>
-                            <span className="mk-pass-head-doc">PASSPORT · گذرنامهٔ همسفر</span>
-                          </header>
-
-                          <p className="mk-pass-micro" aria-hidden="true">
-                            این راه سبز است · THIS WAY IS GREEN · این راه سبز است · THIS WAY IS GREEN · این راه سبز است · THIS WAY IS GREEN
-                          </p>
-
-                          {profileSuccessMsg && (
-                            <div className="mk-pass-alert is-ok" role="status">{profileSuccessMsg}</div>
-                          )}
-                          {profileErrorMsg && (
-                            <div className="mk-pass-alert is-bad" role="alert">{profileErrorMsg}</div>
-                          )}
-
-                          <div className="mk-pass-codes">
-                            <div>
-                              <span>Type / نوع</span>
-                              <b>P</b>
-                            </div>
-                            <div>
-                              <span>Code / کد</span>
-                              <b>MKN</b>
-                            </div>
-                            <div>
-                              <span>No. / شماره</span>
-                              <b dir="ltr">{passportNo(user.email)}</b>
-                            </div>
-                          </div>
-
-                          <div className="mk-pass-viz">
-                            <div className="mk-pass-photo-col">
-                              <div className="mk-pass-photo">
-                                <span className="mk-pass-foil" aria-hidden="true" />
-                                <strong>{userInitial}</strong>
-                                <small>همسفر</small>
-                              </div>
-                              <div className="mk-pass-ghost" aria-hidden="true">{userInitial}</div>
-                            </div>
-
-                            <div className="mk-pass-data">
-                              <div className="mk-pass-row">
-                                <label htmlFor="prof-name">
-                                  <em>Name</em>
-                                  نام
-                                </label>
-                                <input
-                                  id="prof-name"
-                                  type="text"
-                                  value={name}
-                                  onChange={(e) => setName(e.target.value)}
-                                  placeholder="نام روی سند"
-                                  autoComplete="name"
-                                  required
-                                />
-                              </div>
-                              <div className="mk-pass-row is-print">
-                                <span>
-                                  <em>Nationality</em>
-                                  تابعیت
-                                </span>
-                                <b>همسفر راه سبز</b>
-                              </div>
-                              <div className="mk-pass-row">
-                                <label htmlFor="prof-email">
-                                  <em>Personal No. / ID</em>
-                                  شناسه ورود
-                                </label>
-                                <input
-                                  id="prof-email"
-                                  type="email"
-                                  dir="ltr"
-                                  value={user.email}
-                                  disabled
-                                />
-                              </div>
-                              <div className="mk-pass-row">
-                                <label htmlFor="prof-phone">
-                                  <em>Tel</em>
-                                  تلفن
-                                </label>
-                                <input
-                                  id="prof-phone"
-                                  type="tel"
-                                  dir="ltr"
-                                  value={phone}
-                                  onChange={(e) => setPhone(e.target.value)}
-                                  placeholder="۰۹۱۲۱۲۳۴۵۶۷"
-                                  autoComplete="tel"
-                                />
-                              </div>
-                              <div className="mk-pass-pair">
-                                <div className="mk-pass-row is-print">
-                                  <span>
-                                    <em>Authority</em>
-                                    صادرکننده
-                                  </span>
-                                  <b>باشگاه راه سبز</b>
-                                </div>
-                                <div className="mk-pass-row is-print">
-                                  <span>
-                                    <em>Status</em>
-                                    وضعیت
-                                  </span>
-                                  <b>احراز شده</b>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mk-pass-sign">
-                            <span>
-                              <em>Signature of holder</em>
-                              امضای دارنده
-                            </span>
-                            <em className="mk-pass-sign-mark">{displayName}</em>
-                          </div>
-
-                          <div className="mk-pass-mrz" aria-hidden="true">
-                            <span>{toMrz("P<MKNKOUHESTAN<<GREEN<WAY")}</span>
-                            <span>{toMrz(`${passportNo(user.email)}<${user.email}`)}</span>
-                          </div>
-
-                          <button type="submit" disabled={isUpdatingProfile} className="mk-pass-save">
-                            {isUpdatingProfile ? "ثبت…" : "مهر ثبت"}
-                          </button>
-                        </div>
-                      </form>
-
-                      <form className="mk-safe" onSubmit={handleChangePasswordSubmit} aria-labelledby="safe-title">
-                        <span className="mk-safe-bolt is-tr" aria-hidden="true" />
-                        <span className="mk-safe-bolt is-tl" aria-hidden="true" />
-                        <span className="mk-safe-bolt is-br" aria-hidden="true" />
-                        <span className="mk-safe-bolt is-bl" aria-hidden="true" />
-
-                        <header className="mk-safe-head">
-                          <div>
-                            <span className="mk-safe-kicker">VAULT</span>
-                            <h3 id="safe-title">گاوصندوق</h3>
-                          </div>
-                          <div className="mk-safe-dial" aria-hidden="true">
-                            <span className="mk-safe-dial-ring" />
-                            <span className="mk-safe-dial-ring is-mid" />
-                            <span className="mk-safe-dial-core" />
-                          </div>
-                        </header>
-
-                        <div className="mk-safe-cavity">
-                            {passSuccessMsg && (
-                              <div className="mk-safe-alert is-ok" role="status">{passSuccessMsg}</div>
-                            )}
-                            {passErrorMsg && (
-                              <div className="mk-safe-alert is-bad" role="alert">{passErrorMsg}</div>
-                            )}
-
-                            <p className="mk-safe-group">کلید فعلی</p>
-                            <LedgerSecretField
-                              id="prof-cur-pass"
-                              label="رمز فعلی"
-                              value={currentPassword}
-                              onChange={setCurrentPassword}
-                              placeholder="••••••••"
-                              autoComplete="current-password"
-                              required
-                            />
-
-                            <p className="mk-safe-group">ترکیب تازه</p>
-                            <LedgerSecretField
-                              id="prof-new-pass"
-                              label="رمز تازه"
-                              value={newPassword}
-                              onChange={setNewPassword}
-                              placeholder="حداقل ۱۰ نویسه"
-                              autoComplete="new-password"
-                              required
-                            />
-                            {newPassword ? (
-                              <p className={`mk-safe-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
-                                {folioLockWord(newPassword)}
-                              </p>
-                            ) : null}
-                            <LedgerSecretField
-                              id="prof-new-pass-rep"
-                              label="تکرار"
-                              value={newPasswordRepeat}
-                              onChange={setNewPasswordRepeat}
-                              placeholder="تکرار رمز تازه"
-                              autoComplete="new-password"
-                              required
-                            />
-
-                            <button type="submit" disabled={isChangingPass} className="mk-safe-turn">
-                              {isChangingPass ? "در حال قفل…" : "قفل تازه"}
-                            </button>
-                        </div>
-                      </form>
-                    </div>
-
-                    <section className="mk-street" aria-labelledby="folio-mail-title">
-                      <div className="mk-street-head">
-                        <span>پاکت‌های تحویل</span>
-                        <h3 id="folio-mail-title">زنجیره سرد روی این خیابان می‌رسد.</h3>
-                      </div>
-
-                      <div className="mk-street-view">
-                        <Image
-                          src="/brand/profile/personal-delivery-street.png"
-                          alt="خیابان واقعی روستا: خانه، دفتر و در باغ"
-                          fill
-                          sizes="100vw"
-                          quality={92}
-                          className="mk-street-img"
-                        />
-
-                        <article className="mk-street-spot is-home">
-                          <span className="mk-street-tag">منزل</span>
-                          <h4>تهران، زعفرانیه</h4>
-                          <p>خیابان آصف، خیابان کمالی، کوچه بنفشه، پلاک ۱۲، واحد ۳</p>
-                          <small>{displayName}</small>
-                        </article>
-
-                        <article className="mk-street-spot is-office">
-                          <span className="mk-street-tag is-work">دفتر</span>
-                          <h4>تهران، فرمانیه</h4>
-                          <p>بلوار اندرزگو، خیابان سلیمی شمالی، ساختمان اداری نگین، طبقه ۴</p>
-                          <small>{displayName}</small>
-                        </article>
-
-                        <button
-                          type="button"
-                          className="mk-street-spot is-add"
-                          onClick={() => alert("فرم افزودن نشانی جدید به زودی فعال می‌شود.")}
-                        >
-                          <span className="mk-street-tag">در باغ</span>
-                          <strong>نشانی تازه</strong>
-                          <p>قطعهٔ خالی کنار در باغ.</p>
                         </button>
+                      </motion.header>
+
+                      <div className="mk-ledger-scroll">
+                        <div className="mk-ledger-desk">
+                          {/* ============================================================
+                              COLUMN 1: AUTHENTIC SHENASNAMEH BOOKLET (Right in RTL)
+                             ============================================================ */}
+                          <motion.form
+                            className="mk-shenasnameh"
+                            onSubmit={handleProfileSubmit}
+                            aria-labelledby="shenasnameh-title"
+                            initial={{ opacity: 0, y: 22, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.55, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            <span className="mk-safe-bolt is-tr" aria-hidden="true" />
+                            <span className="mk-safe-bolt is-tl" aria-hidden="true" />
+                            <span className="mk-safe-bolt is-br" aria-hidden="true" />
+                            <span className="mk-safe-bolt is-bl" aria-hidden="true" />
+                            
+                            {/* Leatherette Spine */}
+                            <div className="mk-shenasnameh-spine" aria-hidden="true">
+                              <span>شناسنامه همسفر · NATIONAL ID BOOKLET</span>
+                            </div>
+
+                            {/* Cream Parchment Document Sheet */}
+                            <div className="mk-shenasnameh-page">
+                              {/* Background Guilloche Security Art */}
+                              <svg className="mk-shenasnameh-guilloche" viewBox="0 0 500 580" aria-hidden="true">
+                                <rect x="8" y="8" width="484" height="564" rx="4" fill="none" stroke="#005B48" strokeWidth="0.8" opacity="0.18" />
+                                <rect x="14" y="14" width="472" height="552" rx="3" fill="none" stroke="#D4A359" strokeWidth="0.6" strokeDasharray="5 3" opacity="0.35" />
+                                <circle cx="250" cy="270" r="120" fill="none" stroke="#005B48" strokeWidth="0.8" opacity="0.1" />
+                                <polygon points="250,180 180,310 320,310" fill="none" stroke="#D4A359" strokeWidth="0.9" opacity="0.2" />
+                              </svg>
+
+                              {/* Official Document Header */}
+                              <header className="mk-shenasnameh-head">
+                                <div className="mk-shenasnameh-head-top">
+                                  <span className="mk-shenasnameh-org">جمهوری اسلامی ایران · اسناد هویت باشگاه مرد کوهستان</span>
+                                  <span className="mk-shenasnameh-serial">سری الف/۲۶ · ۳۸۴۹۱۸</span>
+                                </div>
+                                <div className="mk-shenasnameh-head-main">
+                                  <Image
+                                    src="/brand/orginal-clear.png"
+                                    alt="نشان رسمی مرد کوهستان"
+                                    width={38}
+                                    height={38}
+                                    className="mk-shenasnameh-crest"
+                                  />
+                                  <div className="mk-shenasnameh-head-titles">
+                                    <strong id="shenasnameh-title" className="mk-shenasnameh-title-fa">شناسنامهٔ همسفر راه سبز</strong>
+                                    <span className="mk-shenasnameh-title-en">NATIONAL IDENTITY FOLIO · MARDE KOOHESTAN</span>
+                                  </div>
+                                </div>
+                              </header>
+
+                              {profileSuccessMsg && (
+                                <div className="mk-shenasnameh-alert is-ok" role="status">
+                                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                  {profileSuccessMsg}
+                                </div>
+                              )}
+                              {profileErrorMsg && (
+                                <div className="mk-shenasnameh-alert is-bad" role="alert">{profileErrorMsg}</div>
+                              )}
+
+                              {/* Body: Photo on Side + Clean Essential Fields */}
+                              <div className="mk-shenasnameh-body">
+                                {/* Photo Mount with Embossed Seal */}
+                                <div className="mk-shenasnameh-side">
+                                  <div className="mk-shenasnameh-photo-wrap">
+                                    <div className="mk-shenasnameh-photo">
+                                      <span className="mk-shenasnameh-corner-mount is-tl" />
+                                      <span className="mk-shenasnameh-corner-mount is-tr" />
+                                      <span className="mk-shenasnameh-corner-mount is-bl" />
+                                      <span className="mk-shenasnameh-corner-mount is-br" />
+                                      <span className="mk-shenasnameh-foil" aria-hidden="true" />
+                                      <strong>{userInitial}</strong>
+                                      <small>صاحب سند</small>
+                                    </div>
+                                    <div className="mk-shenasnameh-embossed-seal" aria-hidden="true">
+                                      <svg viewBox="0 0 100 100" width="56" height="56">
+                                        <circle cx="50" cy="50" r="46" fill="none" stroke="#D4A359" strokeWidth="1.6" strokeDasharray="4 2" />
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#005B48" strokeWidth="0.9" />
+                                        <path id="curve-seal" d="M 18 50 A 32 32 0 1 1 82 50" fill="none" />
+                                        <text fill="#005B48" fontSize="6.5" fontWeight="900">
+                                          <textPath href="#curve-seal" startOffset="50%" textAnchor="middle">
+                                            مرد کوهستان · احراز هویت
+                                          </textPath>
+                                        </text>
+                                        <text x="50" y="54" fill="#903828" fontSize="6.5" fontWeight="900" textAnchor="middle">
+                                          تأیید شد
+                                        </text>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                  <span className="mk-shenasnameh-verified-badge">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" strokeWidth="3" fill="none">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    احراز سجلی
+                                  </span>
+                                </div>
+
+                                {/* Clean Necessary Fields */}
+                                <div className="mk-shenasnameh-fields">
+                                  {/* Locked / Verified Official Fields */}
+                                  <div className="mk-shenasnameh-card-locked">
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>نام و نام خانوادگی</label>
+                                        <span className="mk-shenasnameh-lock-tag">
+                                          <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                                          </svg>
+                                          قفل هویتی
+                                        </span>
+                                      </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong>{name || "کامیار جعفریان"}</strong>
+                                        <small>FULL NAME</small>
+                                      </div>
+                                    </div>
+
+                                    <div className="mk-shenasnameh-dual-row">
+                                      <div className="mk-shenasnameh-field is-locked">
+                                        <div className="mk-shenasnameh-label-row">
+                                          <label>شماره ملی</label>
+                                          <span className="mk-shenasnameh-lock-tag">ثبت احوال</span>
+                                        </div>
+                                        <div className="mk-shenasnameh-val-row">
+                                          <strong dir="ltr">{nationalCode}</strong>
+                                          <small>NATIONAL ID</small>
+                                        </div>
+                                      </div>
+
+                                      <div className="mk-shenasnameh-field is-locked">
+                                        <div className="mk-shenasnameh-label-row">
+                                          <label>شماره همراه</label>
+                                          <span className="mk-shenasnameh-lock-tag">تأیید پیامکی</span>
+                                        </div>
+                                        <div className="mk-shenasnameh-val-row">
+                                          <strong dir="ltr">{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
+                                          <small>PHONE</small>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Editable Useful Fields */}
+                                  <div className="mk-shenasnameh-card-editable">
+                                    <div className="mk-shenasnameh-dual-row">
+                                      <div className="mk-shenasnameh-field is-editable">
+                                        <label htmlFor="shenas-email">
+                                          <em>رایانامه / ایمیل ارتباطی</em>
+                                          <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
+                                        </label>
+                                        <input
+                                          id="shenas-email"
+                                          type="email"
+                                          dir="ltr"
+                                          value={email}
+                                          onChange={(e) => setEmail(e.target.value)}
+                                          placeholder="yourname@domain.com"
+                                        />
+                                      </div>
+
+                                      <div className="mk-shenasnameh-field is-editable">
+                                        <label htmlFor="shenas-city">
+                                          <em>شهر سکونت / محدوده</em>
+                                          <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
+                                        </label>
+                                        <input
+                                          id="shenas-city"
+                                          type="text"
+                                          value={city}
+                                          onChange={(e) => setCity(e.target.value)}
+                                          placeholder="مثال: تهران، زعفرانیه"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Signature & Security Seal Footer */}
+                              <div className="mk-shenasnameh-foot">
+                                <div className="mk-shenasnameh-sign-box">
+                                  <label htmlFor="shenas-sign">
+                                    <em>امضای رسمی دارنده شناسنامه</em>
+                                    <input
+                                      id="shenas-sign"
+                                      type="text"
+                                      value={signatureText}
+                                      onChange={(e) => setSignatureText(e.target.value)}
+                                      placeholder="نام امضاکننده"
+                                      className="mk-shenasnameh-sign-input"
+                                    />
+                                  </label>
+                                  <div className="mk-shenasnameh-sign-preview">
+                                    <em>{signatureText || displayName}</em>
+                                  </div>
+                                </div>
+
+                                <div className="mk-shenasnameh-mrz" aria-hidden="true">
+                                  <span>{toMrz("IDIRN<<SHENASNAMEH<<MARDE<KOOHESTAN")}</span>
+                                  <span>{toMrz(`${nationalCode}<${email || user.email}`)}</span>
+                                </div>
+
+                                <button type="submit" disabled={isUpdatingProfile} className="mk-shenasnameh-submit-btn">
+                                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                  </svg>
+                                  {isUpdatingProfile ? "در حال ثبت تغییرات…" : "مهر و ثبت اطلاعات شناسنامه"}
+                                </button>
+                              </div>
+                            </div>
+                          </motion.form>
+
+                          {/* ============================================================
+                              COLUMN 2: SECURITY VAULT + DELIVERY PACKETS (Left in RTL)
+                             ============================================================ */}
+                          <div className="mk-ledger-side">
+                            {/* Card 2A: Security Vault */}
+                            <motion.form
+                              className="mk-safe"
+                              onSubmit={handleChangePasswordSubmit}
+                              aria-labelledby="safe-title"
+                              initial={{ opacity: 0, y: 22, scale: 0.98 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                              <span className="mk-safe-bolt is-tr" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-tl" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-br" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-bl" aria-hidden="true" />
+
+                              <header className="mk-safe-head">
+                                <div className="mk-safe-title-wrap">
+                                  <span className="mk-safe-kicker">SECURITY VAULT</span>
+                                  <h3 id="safe-title">گاوصندوق و امنیت</h3>
+                                </div>
+                                <motion.div
+                                  className="mk-safe-dial"
+                                  aria-hidden="true"
+                                  animate={{ rotate: newPassword ? newPassword.length * 28 : 0 }}
+                                  transition={{ type: "spring", stiffness: 180, damping: 18 }}
+                                >
+                                  <span className="mk-safe-dial-ring" />
+                                  <span className="mk-safe-dial-ring is-mid" />
+                                  <span className="mk-safe-dial-core" />
+                                </motion.div>
+                              </header>
+
+                              <div className="mk-safe-cavity">
+                                {passSuccessMsg && (
+                                  <div className="mk-safe-alert is-ok" role="status">{passSuccessMsg}</div>
+                                )}
+                                {passErrorMsg && (
+                                  <div className="mk-safe-alert is-bad" role="alert">{passErrorMsg}</div>
+                                )}
+
+                                <div className="mk-safe-inputs-grid">
+                                  <div className="mk-safe-field">
+                                    <label htmlFor="prof-cur-pass">رمز عبور فعلی</label>
+                                    <LedgerSecretField
+                                      id="prof-cur-pass"
+                                      label=""
+                                      value={currentPassword}
+                                      onChange={setCurrentPassword}
+                                      placeholder="••••••••"
+                                      autoComplete="current-password"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="mk-safe-field">
+                                    <div className="mk-safe-field-head">
+                                      <label htmlFor="prof-new-pass">رمز عبور تازه</label>
+                                      {newPassword ? (
+                                        <span className={`mk-safe-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
+                                          {folioLockWord(newPassword)}
+                                        </span>
+                                      ) : null}
+                                    </div>
+                                    <LedgerSecretField
+                                      id="prof-new-pass"
+                                      label=""
+                                      value={newPassword}
+                                      onChange={setNewPassword}
+                                      placeholder="حداقل ۱۰ نویسه"
+                                      autoComplete="new-password"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="mk-safe-field">
+                                    <label htmlFor="prof-new-pass-rep">تکرار رمز عبور تازه</label>
+                                    <LedgerSecretField
+                                      id="prof-new-pass-rep"
+                                      label=""
+                                      value={newPasswordRepeat}
+                                      onChange={setNewPasswordRepeat}
+                                      placeholder="تکرار رمز تازه"
+                                      autoComplete="new-password"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <button type="submit" disabled={isChangingPass} className="mk-safe-turn">
+                                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                  </svg>
+                                  {isChangingPass ? "در حال قفل…" : "قفل گاوصندوق و ذخیره رمز"}
+                                </button>
+                              </div>
+                            </motion.form>
+
+                            {/* Card 2B: Cold Chain Delivery Packets */}
+                            <motion.section
+                              className="mk-mail"
+                              aria-labelledby="folio-mail-title"
+                              initial={{ opacity: 0, y: 22, scale: 0.98 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              transition={{ duration: 0.55, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                              <span className="mk-safe-bolt is-tr" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-tl" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-br" aria-hidden="true" />
+                              <span className="mk-safe-bolt is-bl" aria-hidden="true" />
+                              <header className="mk-mail-head">
+                                <div className="mk-mail-title-wrap">
+                                  <span className="mk-mail-kicker">COLD CHAIN DELIVERY</span>
+                                  <h3 id="folio-mail-title">پاکت‌های تحویل سفارش</h3>
+                                </div>
+                                <span className="mk-mail-cold-tag">
+                                  <span className="mk-mail-dot" />
+                                  ۲.۴°C زنجیره سرد فعال
+                                </span>
+                              </header>
+                              <div className="mk-mail-row">
+                                <article className="mk-packet">
+                                  <div className="mk-packet-flap" />
+                                  <div className="mk-packet-top">
+                                    <span className="mk-packet-lead">
+                                      <span className="mk-packet-seal is-gold" aria-hidden="true">
+                                        <Image src="/brand/orginal-clear.png" alt="" width={12} height={12} />
+                                      </span>
+                                      <span className="mk-packet-tag">نشانی منزل</span>
+                                    </span>
+                                    <span className="mk-packet-stamp">پست سبز</span>
+                                  </div>
+                                  <h4>تهران، زعفرانیه</h4>
+                                  <p>خیابان آصف، کمالی، بنفشه، پلاک ۱۲</p>
+                                  <div className="mk-packet-foot">
+                                    <small>{displayName}</small>
+                                    <span className="mk-packet-active-pill">پیش‌فرض</span>
+                                  </div>
+                                </article>
+
+                                <article className="mk-packet">
+                                  <div className="mk-packet-flap" />
+                                  <div className="mk-packet-top">
+                                    <span className="mk-packet-lead">
+                                      <span className="mk-packet-seal is-clay" aria-hidden="true">
+                                        <Image src="/brand/orginal-clear.png" alt="" width={12} height={12} />
+                                      </span>
+                                      <span className="mk-packet-tag is-work">نشانی دفتر</span>
+                                    </span>
+                                    <span className="mk-packet-stamp">پست سبز</span>
+                                  </div>
+                                  <h4>تهران، فرمانیه</h4>
+                                  <p>بلوار اندرزگو، سلیمی شمالی، ساختمان نگین</p>
+                                  <div className="mk-packet-foot">
+                                    <small>{displayName}</small>
+                                    <span className="mk-packet-active-pill is-secondary">محل کار</span>
+                                  </div>
+                                </article>
+                              </div>
+                            </motion.section>
+                          </div>
+                        </div>
                       </div>
-                    </section>
-                  </div>
-                </div>
-              )}
+                    </div>
+                  )}
 
               {openedTab === "ai-nutrition" && (
                 <div className={`mk-chat${hasUserAiMessage ? " is-chatting" : ""}`}>
@@ -1383,6 +1622,7 @@ function ProfileContent() {
         </motion.div>
       </div>
         )}
+      </AnimatePresence>
     </div>
   );
 }
