@@ -96,10 +96,20 @@ const AI_PROMPTS = [
 const INITIAL_AI_MESSAGES = [
   {
     sender: "assistant",
-    text: "درود بر شما همسفر گرامی مرد کوهستان! 🏔️ من دستیار هوشمند سلامت، تغذیه و طبخ ارگانیک مرد کوهستان هستم. چطور می‌توانم در انتخاب بهترین مواد غذایی سالم، برنامه‌ریزی رژیم روزانه یا نحوه طبخ اصیل به شما کمک کنم؟",
+    text: "درود بر شما همسفر گرامی مرد کوهستان. من دستیار تغذیه، سلامت و طبخ ارگانیک مرد کوهستان هستم. از خواص گوشت مرتع تا برنامه غذایی روزانه، همراه شما هستم.",
     time: "همین حالا",
   },
 ];
+
+function AiMessageBody({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("\n").map((line, i) => (
+        <p key={i}>{line || "\u00A0"}</p>
+      ))}
+    </>
+  );
+}
 
 function InteractiveCard({
   item,
@@ -246,6 +256,7 @@ function ProfileContent() {
   /** Workspace content — only after explicit card click */
   const [openedTab, setOpenedTab] = useState<ActiveTab | null>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
+  const aiThreadRef = useRef<HTMLDivElement>(null);
 
   // Edit profile form state
   const [name, setName] = useState("");
@@ -309,10 +320,19 @@ function ProfileContent() {
     [router]
   );
 
+  const handleCloseWorkspace = useCallback(() => {
+    setOpenedTab(null);
+  }, []);
+
   useEffect(() => {
     if (!openedTab || !workspaceRef.current) return;
     workspaceRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [openedTab]);
+
+  useEffect(() => {
+    if (openedTab !== "ai-nutrition" || !aiThreadRef.current) return;
+    aiThreadRef.current.scrollTop = aiThreadRef.current.scrollHeight;
+  }, [aiMessages, aiTyping, openedTab]);
 
   useLayoutEffect(() => {
     const root = document.documentElement;
@@ -332,6 +352,9 @@ function ProfileContent() {
   const openedIdx = openedTab
     ? COVERFLOW_ITEMS.findIndex((item) => item.id === openedTab)
     : -1;
+  const openedItem = openedIdx >= 0 ? COVERFLOW_ITEMS[openedIdx] : null;
+  const hasUserAiMessage = aiMessages.some((msg) => msg.sender === "user");
+  const userInitial = displayName.trim().charAt(0) || "ک";
 
   const handlePrevCard = () => {
     const nextIdx = (selectedIndex - 1 + COVERFLOW_ITEMS.length) % COVERFLOW_ITEMS.length;
@@ -427,15 +450,15 @@ function ProfileContent() {
       const lower = textToSend.toLowerCase();
 
       if (lower.includes("گوشت") || lower.includes("راسته") || lower.includes("بره") || lower.includes("پخت")) {
-        reply = "🥩 برای گوشت راسته گوسفندی مرتع مرد کوهستان:\n\n۱. به دلیل تغذیه طبیعی دام در ارتفاعات البرز و بافت بسیار لطیف، نیازی به مرینیت طولانی با اسیدهای تند ندارید.\n۲. فقط با کمی روغن زیتون فرابکر، رزماری کوهی و فلفل سیاه نیم‌کوب آغشته کنید.\n۳. در تابه چدنی بسیار داغ هر طرف را ۳ تا ۴ دقیقه تفت دهید تا آبدار بماند.\n۴. قبل از برش، ۳ دقیقه استراحت دهید تا میوگلوبین و ارزش پروتئینی آن در بافت حفظ شود.";
+        reply = "برای گوشت راسته گوسفندی مرتع مرد کوهستان:\n\n۱. به دلیل تغذیه طبیعی دام در ارتفاعات البرز و بافت بسیار لطیف، نیازی به مرینیت طولانی با اسیدهای تند ندارید.\n۲. فقط با کمی روغن زیتون فرابکر، رزماری کوهی و فلفل سیاه نیم‌کوب آغشته کنید.\n۳. در تابه چدنی بسیار داغ هر طرف را ۳ تا ۴ دقیقه تفت دهید تا آبدار بماند.\n۴. قبل از برش، ۳ دقیقه استراحت دهید تا میوگلوبین و ارزش پروتئینی آن در بافت حفظ شود.";
       } else if (lower.includes("برنامه") || lower.includes("رژیم") || lower.includes("پروتئین")) {
-        reply = "📋 برنامه ۳ روزه پروتئین سالم با محصولات سبز مرد کوهستان:\n\n• روز اول: فیله مرغ بدون آنتی‌بیوتیک + خوراک سبزیجات معطر مزرعه + روغن زیتون طبیعی\n• روز دوم: ماهی قزل‌آلای آب سرد کبابی + دوغ سنتی و پروبیوتیک کوهپایه\n• روز سوم: فیله گوسفند مرتعی با پوره سیب‌زمینی تنوری و سبزیجات خشک کوهستان\n\n💡 این ترکیب روزانه به طور میانگین ۱۱۰ گرم پروتئین خالص بدون چربی مضر تامین می‌کند.";
+        reply = "برنامه ۳ روزه پروتئین سالم با محصولات سبز مرد کوهستان:\n\n• روز اول: فیله مرغ بدون آنتی‌بیوتیک + خوراک سبزیجات معطر مزرعه + روغن زیتون طبیعی\n• روز دوم: ماهی قزل‌آلای آب سرد کبابی + دوغ سنتی و پروبیوتیک کوهپایه\n• روز سوم: فیله گوسفند مرتعی با پوره سیب‌زمینی تنوری و سبزیجات خشک کوهستان\n\nاین ترکیب روزانه به طور میانگین ۱۱۰ گرم پروتئین خالص بدون چربی مضر تامین می‌کند.";
       } else if (lower.includes("ماهی") || lower.includes("دریایی") || lower.includes("قزل")) {
-        reply = "🐟 ماهی قزل‌آلای مرد کوهستان در جریان آب خنک و پر از اکسیژن چشمه‌های طبیعی رشد می‌کند. به همین خاطر:\n• بافت آن بدون بو و کاملاً منسجم و صورتی است.\n• سرشار از اسیدهای چرب امگا ۳ فعال و فسفر طبیعی است.\n• در مقایسه با استخرهای متراکم، میزان پروتئین خالص آن ۲۵٪ بیشتر و فاقد هرگونه چربی سنگین است.";
+        reply = "ماهی قزل‌آلای مرد کوهستان در جریان آب خنک و پر از اکسیژن چشمه‌های طبیعی رشد می‌کند. به همین خاطر:\n• بافت آن بدون بو و کاملاً منسجم و صورتی است.\n• سرشار از اسیدهای چرب امگا ۳ فعال و فسفر طبیعی است.\n• در مقایسه با استخرهای متراکم، میزان پروتئین خالص آن بیشتر و فاقد چربی سنگین است.";
       } else if (lower.includes("کره") || lower.includes("روغن") || lower.includes("کتو")) {
-        reply = "🧈 روغن حیوانی و کره سنتی مرد کوهستان از شیر دوشیده‌شده در مراتع ییلاقی تولید می‌شود. این محصولات حاوی CLA (اسید لینولئیک کونژوگه) و ویتامین‌های محلول در چربی (A, D, K2) هستند که در رژیم کتوژنیک به عنوان سوخت پاک برای سلول‌ها و افزایش انرژی پایدار روزانه عمل می‌کنند.";
+        reply = "روغن حیوانی و کره سنتی مرد کوهستان از شیر دوشیده‌شده در مراتع ییلاقی تولید می‌شود. این محصولات حاوی CLA و ویتامین‌های محلول در چربی هستند که در رژیم کتوژنیک به عنوان سوخت پاک برای سلول‌ها و افزایش انرژی پایدار روزانه عمل می‌کنند.";
       } else {
-        reply = `✨ پیشنهاد تغذیه هوشمند بر اساس سفره سبز مرد کوهستان:\n\nغذای طبیعی سلامت تن و آرامش روان را می‌سازد. محصولات مرد کوهستان از منبع مرتع و مزرعه بدون هیچ‌گونه ماده نگه‌دارنده به دست شما می‌رسد. شما می‌توانید محصولات پروتئینی، لبنی و ارگانیک را مستقیماً از بخش «محصولات» سفارش داده و ارزش غذایی دقیق هر کدام را در شناسنامه مزرعه مشاهده نمایید.`;
+        reply = "غذای طبیعی سلامت تن و آرامش روان را می‌سازد. محصولات مرد کوهستان از منبع مرتع و مزرعه بدون ماده نگه‌دارنده به دست شما می‌رسد. می‌توانید محصولات پروتئینی، لبنی و ارگانیک را از بخش محصولات سفارش دهید و ارزش غذایی هر کدام را در شناسنامه مزرعه ببینید.";
       }
 
       setAiMessages((prev) => [
@@ -565,31 +588,39 @@ function ProfileContent() {
         </div>
       </section>
 
-      {openedTab !== null && (
+      {openedTab !== null && openedItem && (
       <div className="shell profile-workspace-shell">
         <motion.div
           className="profile-workspace-section"
+          data-theme={openedTab}
           ref={workspaceRef}
+          style={{ ["--desk-print" as string]: `url(${openedItem.image})` }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-              <div className="profile-workspace-header">
-                <div className="profile-workspace-title-wrap">
-                  <h2>
-                    <span>{COVERFLOW_ITEMS[openedIdx]?.badgeIcon}</span>
-                    <span>{COVERFLOW_ITEMS[openedIdx]?.title}</span>
-                  </h2>
-                  <p>{COVERFLOW_ITEMS[openedIdx]?.subtitle}</p>
-                </div>
-                <span className="profile-workspace-badge">
-                  {COVERFLOW_ITEMS[openedIdx]?.badge}
-                </span>
-              </div>
+              {openedTab !== "ai-nutrition" && (
+                <header className="desk-pane-header">
+                  <div className="desk-pane-header-main">
+                    <div className="desk-pane-thumb">
+                      <Image src={openedItem.image} alt="" fill sizes="56px" />
+                    </div>
+                    <div>
+                      <span className="desk-pane-kicker">{openedItem.badge}</span>
+                      <h2>{openedItem.title}</h2>
+                      <p>{openedItem.subtitle}</p>
+                    </div>
+                  </div>
+                  <button type="button" className="desk-pane-close" onClick={handleCloseWorkspace}>
+                    بستن
+                  </button>
+                </header>
+              )}
 
               <AnimatePresence mode="wait">
                 <motion.div
                   key={openedTab}
+                  className="desk-pane-body"
                   initial={{ opacity: 0, y: 18, scale: 0.99 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -14, scale: 0.99 }}
@@ -600,7 +631,7 @@ function ProfileContent() {
                 <div className="profile-tab-pane">
                   <div className="profile-grid-deck">
                     {/* Profile Details Form */}
-                    <div className="profile-card">
+                    <div className="profile-card ledger-sheet">
                       <div className="profile-card-header">
                         <h3>مشخصات فردی و تماس</h3>
                         <p>اطلاعاتی که برای ارسال سفارش و شناسنامه مشتری استفاده می‌شود.</p>
@@ -666,7 +697,7 @@ function ProfileContent() {
                     </div>
 
                     {/* Change Password Form */}
-                    <div className="profile-card">
+                    <div className="profile-card ledger-lock-card">
                       <div className="profile-card-header">
                         <h3>تغییر رمز عبور</h3>
                         <p>برای حفظ امنیت حساب، رمز عبور قوی با حداقل ۱۰ کاراکتر انتخاب کنید.</p>
@@ -767,93 +798,144 @@ function ProfileContent() {
                 </div>
               )}
 
-              {/* Tab 2: AI Mountain Nutrition Assistant */}
-                  {openedTab === "ai-nutrition" && (
-                <div className="profile-tab-pane">
-                  <div className="profile-ai-hero">
-                    <h2>مشاور هوشمند رژیم غذایی و آشپزی ارگانیک مرد کوهستان</h2>
-                    <p>
-                      پاسخگویی آنی درباره نحوه طبخ اصیل گوشت مرتع، ارزش غذایی ماهی آب سرد، خواص روغن حیوانی سنتی و پیشنهاد برنامه‌های غذایی هفتگی.
-                    </p>
-
-                    <div className="profile-ai-prompts-grid">
-                      {AI_PROMPTS.map((prompt, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          className="profile-ai-prompt-btn"
-                          onClick={() => handleSendAiMessage(prompt)}
-                        >
-                          <span>{prompt}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="profile-ai-chatbox">
-                    <div className="profile-ai-chat-header">
+              {openedTab === "ai-nutrition" && (
+                <div className="mk-chat">
+                  <header className="mk-chat-topbar">
+                    <div className="mk-chat-brand">
                       <Image
                         src="/brand/orginal-clear.png"
                         alt="مرد کوهستان"
-                        width={36}
-                        height={36}
-                        className="profile-ai-assistant-avatar"
+                        width={44}
+                        height={44}
+                        className="mk-chat-logo"
                       />
                       <div>
-                        <strong>دستیار تغذیه و سلامت مرد کوهستان</strong>
-                        <span className="profile-ai-online-status">آنلاین • متصل به پایگاه داده تغذیه مرتع</span>
+                        <strong>دستیار تغذیه مرد کوهستان</strong>
+                        <span>آنلاین · مشاور رژیم و طبخ مرتع</span>
                       </div>
                     </div>
-
-                    <div className="profile-ai-messages-area">
-                      {aiMessages.map((msg, idx) => (
-                        <div
-                          key={idx}
-                          className={`profile-ai-msg ${msg.sender === "user" ? "is-user" : "is-assistant"}`}
-                        >
-                          <div className="profile-ai-msg-bubble">
-                            <p>{msg.text}</p>
-                            <span className="profile-ai-msg-time">{msg.time}</span>
-                          </div>
-                        </div>
-                      ))}
-                      {aiTyping && (
-                        <div className="profile-ai-msg is-assistant">
-                          <div className="profile-ai-msg-bubble profile-ai-typing">
-                            <span />
-                            <span />
-                            <span />
-                          </div>
-                        </div>
-                      )}
+                    <div className="mk-chat-actions">
+                      <button
+                        type="button"
+                        className="mk-chat-new"
+                        onClick={() => {
+                          setAiMessages(INITIAL_AI_MESSAGES);
+                          setAiInput("");
+                        }}
+                      >
+                        گفتگوی تازه
+                      </button>
+                      <button
+                        type="button"
+                        className="desk-pane-close is-on-dark"
+                        onClick={handleCloseWorkspace}
+                      >
+                        بستن
+                      </button>
                     </div>
+                  </header>
 
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSendAiMessage();
-                      }}
-                      className="profile-ai-input-bar"
-                    >
+                  <div className="mk-chat-thread" ref={aiThreadRef}>
+                    {!hasUserAiMessage ? (
+                      <div className="mk-chat-welcome">
+                        <Image
+                          src="/brand/orginal-clear.png"
+                          alt="مرد کوهستان"
+                          width={96}
+                          height={96}
+                          className="mk-chat-welcome-logo"
+                        />
+                        <h2>چطور می‌توانم کمکتان کنم؟</h2>
+                        <p>
+                          مشاور سلامت، تغذیه ارگانیک و طبخ اصیل مرد کوهستان. از گوشت مرتع تا برنامه روزانه، همین‌جا بپرسید.
+                        </p>
+                        <div className="mk-chat-starters">
+                          {AI_PROMPTS.map((prompt, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              className="mk-chat-starter"
+                              onClick={() => handleSendAiMessage(prompt)}
+                            >
+                              {prompt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mk-chat-feed">
+                        {aiMessages.map((msg, idx) => (
+                          <div
+                            key={idx}
+                            className={`mk-chat-row ${msg.sender === "user" ? "is-user" : "is-assistant"}`}
+                          >
+                            {msg.sender === "assistant" ? (
+                              <Image
+                                src="/brand/orginal-clear.png"
+                                alt=""
+                                width={36}
+                                height={36}
+                                className="mk-chat-avatar"
+                              />
+                            ) : (
+                              <span className="mk-chat-user-mark" aria-hidden="true">
+                                {userInitial}
+                              </span>
+                            )}
+                            <div className="mk-chat-bubble">
+                              <AiMessageBody text={msg.text} />
+                              <span className="mk-chat-time">{msg.time}</span>
+                            </div>
+                          </div>
+                        ))}
+                        {aiTyping && (
+                          <div className="mk-chat-row is-assistant">
+                            <Image
+                              src="/brand/orginal-clear.png"
+                              alt=""
+                              width={36}
+                              height={36}
+                              className="mk-chat-avatar"
+                            />
+                            <div className="mk-chat-typing" aria-label="در حال نوشتن">
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSendAiMessage();
+                    }}
+                    className="mk-chat-composer"
+                  >
+                    <div className="mk-chat-composer-inner">
                       <input
                         type="text"
-                        placeholder="از دستیار هوش مصنوعی درباره خواص گوشت مرتع، ماهی تازه، رژیم غذایی یا روش طبخ بپرسید…"
+                        placeholder="از خواص گوشت مرتع، ماهی آب‌سرد، رژیم یا روش طبخ بپرسید…"
                         value={aiInput}
                         onChange={(e) => setAiInput(e.target.value)}
                       />
                       <button
                         type="submit"
                         disabled={aiTyping || !aiInput.trim()}
-                        className="profile-ai-send-btn"
+                        className="mk-chat-send"
                         aria-label="ارسال پیام"
                       >
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
                           <line x1="22" y1="2" x2="11" y2="13" />
                           <polygon points="22 2 15 22 11 13 2 9 22 2" />
                         </svg>
                       </button>
-                    </form>
-                  </div>
+                    </div>
+                    <span className="mk-chat-footnote">پاسخ‌ها بر اساس محصولات و مراتع مرد کوهستان است.</span>
+                  </form>
                 </div>
               )}
 
@@ -868,11 +950,18 @@ function ProfileContent() {
                         <p>اعتبار نقدی برای خرید بی‌واسطه و سریع با تخفیف‌های ویژه همسفران.</p>
                       </div>
 
-                      <div className="profile-wallet-balance-banner">
-                        <span className="profile-wallet-kicker">موجودی در دسترس</span>
-                        <strong className="profile-wallet-big-val">{walletBalance.toLocaleString("fa-IR")} <span>تومان</span></strong>
-                        <span className="profile-wallet-gift-note">شامل ۵۰,۰۰۰ تومان هدیه عضویت باشگاه راه سبز</span>
+                      <div className="mk-leather-card">
+                        <span className="mk-leather-kicker">باشگاه راه سبز</span>
+                        <span className="mk-leather-name">{displayName}</span>
+                        <div className="mk-leather-balance">
+                          <em>موجودی در دسترس</em>
+                          <strong>
+                            {walletBalance.toLocaleString("fa-IR")}
+                            <span>تومان</span>
+                          </strong>
+                        </div>
                       </div>
+                      <p className="mk-leather-gift">شامل ۵۰,۰۰۰ تومان هدیه عضویت باشگاه راه سبز</p>
 
                       {walletMsg && (
                         <div className="profile-alert profile-alert--success">
@@ -909,8 +998,8 @@ function ProfileContent() {
                         <p>با هر سفارش و اشتراک هفتگی، امتیاز سبز کسب کنید و کوپن تخفیف بگیرید.</p>
                       </div>
 
-                      <div className="profile-points-box">
-                        <div className="profile-points-icon">🌱</div>
+                      <div className="mk-coin-row">
+                        <span className="mk-coin" aria-hidden="true">سکه</span>
                         <div className="profile-points-meta">
                           <strong>{greenPoints} امتیاز سبز</strong>
                           <span>معادل ۲۴,۰۰۰ تومان تخفیف روی سفارش بعدی</span>
@@ -993,6 +1082,7 @@ function ProfileContent() {
                         className={`profile-sub-plan-card ${selectedPlan === "standard" ? "is-selected" : ""}`}
                         onClick={() => setSelectedPlan("standard")}
                       >
+                        <span className="crate-tag">سبد انفرادی</span>
                         <h4>سبد انفرادی / زوج (سبک زندگی سالم)</h4>
                         <p>شامل ۲ کیلوگرم فیله و راسته، ۱ کیلوگرم ماهی قزل‌آلا، کره و ماست سنتی کوهپایه</p>
                         <div className="profile-sub-plan-price">
@@ -1005,6 +1095,7 @@ function ProfileContent() {
                         onClick={() => setSelectedPlan("family")}
                       >
                         <span className="profile-address-badge">محبوب‌ترین انتخاب</span>
+                        <span className="crate-tag">سبد خانواده</span>
                         <h4>سبد خانواده سلامت (۴ تا ۵ نفره)</h4>
                         <p>شامل ۴ کیلوگرم انواع برش‌های گوسفندی و گوشت گرم، ۲ کیلوگرم ماهی، روغن حیوانی و پنیر ییلاقی</p>
                         <div className="profile-sub-plan-price">
@@ -1016,6 +1107,7 @@ function ProfileContent() {
                         className={`profile-sub-plan-card ${selectedPlan === "gourmet" ? "is-selected" : ""}`}
                         onClick={() => setSelectedPlan("gourmet")}
                       >
+                        <span className="crate-tag">سبد گورمه</span>
                         <h4>سبد گورمه و سرآشپز ارگانیک</h4>
                         <p>برش‌های ویژه استیک دنده‌ای، راسته بدون چربی، عسل وحشی کوهستان و سبزیجات معطر</p>
                         <div className="profile-sub-plan-price">
@@ -1066,6 +1158,7 @@ function ProfileContent() {
                             <div>
                               <strong>راسته بره مرتعی تازه (۱ کیلوگرم)</strong>
                               <span>شناسنامه: مرتع ییلاقی کلاردشت (ارتفاع ۲,۲۰۰ متر)</span>
+                              <p className="passport-origin">مُهر مرتع · گله آزاد</p>
                             </div>
                           </div>
                           <div className="profile-order-product-card">
@@ -1073,6 +1166,7 @@ function ProfileContent() {
                             <div>
                               <strong>کره سنتی خالص کوهپایه (۵۰۰ گرم)</strong>
                               <span>شناسنامه: دامداری سنتی هزارجریب</span>
+                              <p className="passport-origin">زنجیره سرد ثبت‌شده</p>
                             </div>
                           </div>
                         </div>
