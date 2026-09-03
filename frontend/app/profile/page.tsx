@@ -899,12 +899,14 @@ function ProfileContent() {
                     )}
                   </div>
 
-                  <div className="mk-chat-plate">
+                  <div className="mk-chat-dock">
                     {!hasUserAiMessage && (
                       <div className="mk-chat-welcome">
-                        <span className="mk-chat-kicker">این راه سبز است</span>
+                        <p className="mk-chat-speakers">مرد کوهستان و دستیار هوشمند</p>
                         <h2>چطور می‌توانیم کمکتان کنیم؟</h2>
-                        <p>از گوشت مرتع تا برنامه روزانه و طبخ اصیل، با هم راه سبز را نشانتان می‌دهیم.</p>
+                        <p className="mk-chat-said">
+                          از گوشت مرتع تا برنامه روزانه و طبخ اصیل، با هم راه سبز را نشانتان می‌دهیم.
+                        </p>
                         <div className="mk-chat-starters">
                           {AI_PROMPTS.map((prompt, idx) => (
                             <button
@@ -913,10 +915,7 @@ function ProfileContent() {
                               className="mk-chat-starter"
                               onClick={() => handleSendAiMessage(prompt)}
                             >
-                              <span className="mk-chat-starter-n">
-                                {["۰۱", "۰۲", "۰۳", "۰۴"][idx]}
-                              </span>
-                              <span className="mk-chat-starter-t">{prompt}</span>
+                              {prompt}
                             </button>
                           ))}
                         </div>
@@ -932,7 +931,7 @@ function ProfileContent() {
                       <div className="mk-chat-composer-inner">
                         <input
                           type="text"
-                          placeholder="از خواص گوشت مرتع، ماهی آب‌سرد، رژیم یا روش طبخ بپرسید…"
+                          placeholder="از ما بپرسید؛ از گوشت مرتع تا رژیم و طبخ…"
                           value={aiInput}
                           onChange={(e) => setAiInput(e.target.value)}
                         />
