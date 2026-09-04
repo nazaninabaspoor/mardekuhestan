@@ -405,6 +405,8 @@ function ProfileContent() {
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("تهران، زعفرانیه");
   const [signatureText, setSignatureText] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [profileSuccessMsg, setProfileSuccessMsg] = useState<string | null>(null);
   const [profileErrorMsg, setProfileErrorMsg] = useState<string | null>(null);
@@ -443,8 +445,44 @@ function ProfileContent() {
       setPhone(user.phone || "۰۹۳۷۹۱۴۶۱۳۰");
       setEmail(user.email || "grifindorekamyar@gmail.com");
       setSignatureText(user.name || "کامیار جعفریان");
+      try {
+        const savedAvatar = localStorage.getItem(`mk_avatar_${user.id || user.email || "user"}`);
+        if (savedAvatar) {
+          setAvatarUrl(savedAvatar);
+        }
+      } catch {}
     }
   }, [user]);
+
+  const handlePhotoClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handlePhotoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setProfileErrorMsg("لطفاً یک فایل تصویری معتبر انتخاب کنید.");
+      setTimeout(() => setProfileErrorMsg(null), 3500);
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileErrorMsg("حجم تصویر نباید بیشتر از ۵ مگابایت باشد.");
+      setTimeout(() => setProfileErrorMsg(null), 3500);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      setAvatarUrl(dataUrl);
+      try {
+        localStorage.setItem(`mk_avatar_${user?.id || user?.email || "user"}`, dataUrl);
+      } catch {}
+      setProfileSuccessMsg("تصویر پرسنلی شناسنامه با موفقیت به‌روزرسانی شد.");
+      setTimeout(() => setProfileSuccessMsg(null), 4000);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const displayName = name.trim() || user?.name || "کاربر کوهستان";
 
@@ -902,18 +940,58 @@ function ProfileContent() {
 
                               {/* Body: Photo on Side + Clean Essential Fields */}
                               <div className="mk-shenasnameh-body">
-                                {/* Photo Mount with Embossed Seal */}
+                                {/* Photo Mount with Real Upload, Embossed Seal & Biometrics */}
                                 <div className="mk-shenasnameh-side">
                                   <div className="mk-shenasnameh-photo-wrap">
-                                    <div className="mk-shenasnameh-photo">
+                                    <input
+                                      ref={fileInputRef}
+                                      type="file"
+                                      accept="image/*"
+                                      style={{ display: "none" }}
+                                      onChange={handlePhotoFileChange}
+                                      aria-label="بارگذاری تصویر پرسنلی شناسنامه"
+                                    />
+                                    <div
+                                      className="mk-shenasnameh-photo"
+                                      onClick={handlePhotoClick}
+                                      role="button"
+                                      tabIndex={0}
+                                      title="برای تغییر عکس شناسنامه کلیک کنید"
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                          e.preventDefault();
+                                          handlePhotoClick();
+                                        }
+                                      }}
+                                    >
                                       <span className="mk-shenasnameh-corner-mount is-tl" />
                                       <span className="mk-shenasnameh-corner-mount is-tr" />
                                       <span className="mk-shenasnameh-corner-mount is-bl" />
                                       <span className="mk-shenasnameh-corner-mount is-br" />
                                       <span className="mk-shenasnameh-foil" aria-hidden="true" />
-                                      <strong>{userInitial}</strong>
-                                      <small>صاحب سند</small>
+
+                                      {avatarUrl ? (
+                                        <img
+                                          src={avatarUrl}
+                                          alt="عکس پرسنلی صاحب شناسنامه"
+                                          className="mk-shenasnameh-user-img"
+                                        />
+                                      ) : (
+                                        <>
+                                          <strong>{userInitial}</strong>
+                                          <small>عکس صاحب سند</small>
+                                        </>
+                                      )}
+
+                                      <div className="mk-shenasnameh-photo-overlay" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.3" fill="none">
+                                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                          <circle cx="12" cy="13" r="4" />
+                                        </svg>
+                                        <span>تغییر عکس</span>
+                                      </div>
                                     </div>
+
                                     <div className="mk-shenasnameh-embossed-seal" aria-hidden="true">
                                       <svg viewBox="0 0 100 100" width="56" height="56">
                                         <circle cx="50" cy="50" r="46" fill="none" stroke="#D4A359" strokeWidth="1.6" strokeDasharray="4 2" />
@@ -938,81 +1016,128 @@ function ProfileContent() {
                                   </span>
                                 </div>
 
-                                {/* Clean Necessary Fields */}
+                                {/* Clean Necessary Fields & Green Records */}
                                 <div className="mk-shenasnameh-fields">
-                                  {/* Locked / Verified Official Fields */}
-                                  <div className="mk-shenasnameh-card-locked">
+                                  {/* Row 1: Full Name */}
+                                  <div className="mk-shenasnameh-field is-locked">
+                                    <div className="mk-shenasnameh-label-row">
+                                      <label>نام و نام خانوادگی</label>
+                                      <span className="mk-shenasnameh-lock-tag">
+                                        <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                                          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                                        </svg>
+                                        قفل هویتی
+                                      </span>
+                                    </div>
+                                    <div className="mk-shenasnameh-val-row">
+                                      <strong>{name || "کامیار جعفریان"}</strong>
+                                      <small>FULL NAME</small>
+                                    </div>
+                                  </div>
+
+                                  {/* Row 2: National ID + Phone */}
+                                  <div className="mk-shenasnameh-dual-row">
                                     <div className="mk-shenasnameh-field is-locked">
                                       <div className="mk-shenasnameh-label-row">
-                                        <label>نام و نام خانوادگی</label>
-                                        <span className="mk-shenasnameh-lock-tag">
-                                          <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
-                                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                                          </svg>
-                                          قفل هویتی
-                                        </span>
+                                        <label>شماره ملی</label>
+                                        <span className="mk-shenasnameh-lock-tag">ثبت احوال</span>
                                       </div>
                                       <div className="mk-shenasnameh-val-row">
-                                        <strong>{name || "کامیار جعفریان"}</strong>
-                                        <small>FULL NAME</small>
+                                        <strong dir="ltr">{nationalCode}</strong>
+                                        <small>NATIONAL ID</small>
                                       </div>
                                     </div>
 
-                                    <div className="mk-shenasnameh-dual-row">
-                                      <div className="mk-shenasnameh-field is-locked">
-                                        <div className="mk-shenasnameh-label-row">
-                                          <label>شماره ملی</label>
-                                          <span className="mk-shenasnameh-lock-tag">ثبت احوال</span>
-                                        </div>
-                                        <div className="mk-shenasnameh-val-row">
-                                          <strong dir="ltr">{nationalCode}</strong>
-                                          <small>NATIONAL ID</small>
-                                        </div>
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>شماره همراه</label>
+                                        <span className="mk-shenasnameh-lock-tag">تأیید پیامکی</span>
                                       </div>
-
-                                      <div className="mk-shenasnameh-field is-locked">
-                                        <div className="mk-shenasnameh-label-row">
-                                          <label>شماره همراه</label>
-                                          <span className="mk-shenasnameh-lock-tag">تأیید پیامکی</span>
-                                        </div>
-                                        <div className="mk-shenasnameh-val-row">
-                                          <strong dir="ltr">{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
-                                          <small>PHONE</small>
-                                        </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong dir="ltr">{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
+                                        <small>MOBILE PHONE</small>
                                       </div>
                                     </div>
                                   </div>
 
-                                  {/* Editable Useful Fields */}
-                                  <div className="mk-shenasnameh-card-editable">
-                                    <div className="mk-shenasnameh-dual-row">
-                                      <div className="mk-shenasnameh-field is-editable">
-                                        <label htmlFor="shenas-email">
-                                          <em>رایانامه / ایمیل ارتباطی</em>
-                                          <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
-                                        </label>
-                                        <input
-                                          id="shenas-email"
-                                          type="email"
-                                          dir="ltr"
-                                          value={email}
-                                          onChange={(e) => setEmail(e.target.value)}
-                                          placeholder="yourname@domain.com"
-                                        />
-                                      </div>
+                                  {/* Row 3: Email + City (Editable) */}
+                                  <div className="mk-shenasnameh-dual-row">
+                                    <div className="mk-shenasnameh-field is-editable">
+                                      <label htmlFor="shenas-email">
+                                        <em>رایانامه / ایمیل ارتباطی</em>
+                                        <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
+                                      </label>
+                                      <input
+                                        id="shenas-email"
+                                        type="email"
+                                        dir="ltr"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="yourname@domain.com"
+                                      />
+                                    </div>
 
-                                      <div className="mk-shenasnameh-field is-editable">
-                                        <label htmlFor="shenas-city">
-                                          <em>شهر سکونت / محدوده</em>
-                                          <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
-                                        </label>
-                                        <input
-                                          id="shenas-city"
-                                          type="text"
-                                          value={city}
-                                          onChange={(e) => setCity(e.target.value)}
-                                          placeholder="مثال: تهران، زعفرانیه"
-                                        />
+                                    <div className="mk-shenasnameh-field is-editable">
+                                      <label htmlFor="shenas-city">
+                                        <em>شهر سکونت / محدوده تحویل</em>
+                                        <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
+                                      </label>
+                                      <input
+                                        id="shenas-city"
+                                        type="text"
+                                        value={city}
+                                        onChange={(e) => setCity(e.target.value)}
+                                        placeholder="مثال: تهران، زعفرانیه"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  {/* Row 4: Pasture Tier + Green Points (Official Records - Locked) */}
+                                  <div className="mk-shenasnameh-dual-row">
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>سطح و رتبه همسفری</label>
+                                        <span className="mk-shenasnameh-lock-tag">باشگاه سلامت</span>
+                                      </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong>الماس سبز · پیشکسوت مرتع</strong>
+                                        <small>MEMBERSHIP TIER</small>
+                                      </div>
+                                    </div>
+
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>اندوخته امتیاز سبز مرتع</label>
+                                        <span className="mk-shenasnameh-lock-tag">محیط‌زیست</span>
+                                      </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong>{greenPoints} امتیاز سلامت</strong>
+                                        <small>GREEN HEALTH POINTS</small>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Row 5: Cold Chain Delivery + Account Category (Locked) */}
+                                  <div className="mk-shenasnameh-dual-row">
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>تحویل‌های زنجیره سرد</label>
+                                        <span className="mk-shenasnameh-lock-tag">۲.۴°C فعال</span>
+                                      </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong>۷ بسته تحویل موفق</strong>
+                                        <small>COLD CHAIN DELIVERIES</small>
+                                      </div>
+                                    </div>
+
+                                    <div className="mk-shenasnameh-field is-locked">
+                                      <div className="mk-shenasnameh-label-row">
+                                        <label>نوع حساب و رده مشتری</label>
+                                        <span className="mk-shenasnameh-lock-tag">شخصی / سازمانی</span>
+                                      </div>
+                                      <div className="mk-shenasnameh-val-row">
+                                        <strong>حقیقی · مشتری ویژه خانوادگی</strong>
+                                        <small>ACCOUNT CLASSIFICATION</small>
                                       </div>
                                     </div>
                                   </div>
@@ -1021,29 +1146,8 @@ function ProfileContent() {
 
                               {/* Dedicated Official Seal & Certificate Centerpiece */}
                               <div className="mk-shenasnameh-centerpiece">
-                                <div className="mk-shenasnameh-centerpiece-bg" aria-hidden="true">
-                                  <svg viewBox="0 0 460 115" className="mk-shenasnameh-center-guilloche">
-                                    <line x1="12" y1="57" x2="160" y2="57" stroke="#D4A359" strokeWidth="1" strokeDasharray="4 2" opacity="0.6" />
-                                    <line x1="300" y1="57" x2="448" y2="57" stroke="#D4A359" strokeWidth="1" strokeDasharray="4 2" opacity="0.6" />
-                                    <circle cx="230" cy="57" r="52" fill="none" stroke="#D4A359" strokeWidth="1.4" strokeDasharray="5 3" opacity="0.75" />
-                                    <circle cx="230" cy="57" r="44" fill="none" stroke="#005B48" strokeWidth="1.2" opacity="0.8" />
-                                    <path id="center-seal-arc-top" d="M 188 57 A 42 42 0 1 1 272 57" fill="none" />
-                                    <path id="center-seal-arc-bot" d="M 272 57 A 42 42 0 1 1 188 57" fill="none" />
-                                    <text fill="#005B48" fontSize="5.4" fontWeight="900" letterSpacing="0.08em">
-                                      <textPath href="#center-seal-arc-top" startOffset="50%" textAnchor="middle">
-                                        باشگاه مشتریان و سلامت مرد کوهستان
-                                      </textPath>
-                                    </text>
-                                    <text fill="#8A652E" fontSize="5.1" fontWeight="900" letterSpacing="0.08em">
-                                      <textPath href="#center-seal-arc-bot" startOffset="50%" textAnchor="middle">
-                                        THIS WAY IS GREEN · این راه سبز است
-                                      </textPath>
-                                    </text>
-                                  </svg>
-                                </div>
-
                                 <div className="mk-shenasnameh-center-content">
-                                  {/* Right Pillar: Cold Chain */}
+                                  {/* Right Wing: Organic Cold Chain */}
                                   <div className="mk-shenasnameh-pillar is-right">
                                     <div className="mk-pillar-icon">
                                       <svg viewBox="0 0 24 24" width="16" height="16" stroke="#005B48" strokeWidth="2.2" fill="none">
@@ -1051,28 +1155,48 @@ function ProfileContent() {
                                       </svg>
                                     </div>
                                     <div className="mk-pillar-info">
-                                      <strong>پروتئین پاک و مرتعی</strong>
-                                      <span>زنجیره سرد ۲.۴°C اختصاصی</span>
+                                      <strong>نشان اصالت مرتع و تغذیه پاک</strong>
+                                      <span>پروتئین سالم · زنجیره سرد ۲.۴°C</span>
                                     </div>
                                   </div>
 
-                                  {/* Prominent Center Seal Emblem */}
-                                  <div className="mk-shenasnameh-main-seal">
-                                    <div className="mk-main-seal-halo" />
-                                    <div className="mk-main-seal-disc">
+                                  {/* Unified Precision Medallion Seal */}
+                                  <div className="mk-shenasnameh-seal-medallion">
+                                    <svg viewBox="0 0 140 140" className="mk-seal-svg" width="92" height="92" aria-hidden="true">
+                                      <circle cx="70" cy="70" r="67" fill="none" stroke="#D4A359" strokeWidth="1.4" strokeDasharray="3 2" opacity="0.85" />
+                                      <circle cx="70" cy="70" r="63" fill="#F4F0E8" stroke="#005B48" strokeWidth="1.8" />
+                                      <circle cx="70" cy="70" r="49" fill="none" stroke="#D4A359" strokeWidth="0.9" strokeDasharray="2 2" />
+                                      <circle cx="70" cy="70" r="45" fill="#005B48" stroke="#D4A359" strokeWidth="1" />
+                                      <circle cx="70" cy="70" r="33" fill="#FFFFFF" stroke="#005B48" strokeWidth="1.2" />
+
+                                      {/* Curved Text along Outer Circle */}
+                                      <path id="seal-text-top" d="M 21 70 A 49 49 0 1 1 119 70" fill="none" />
+                                      <path id="seal-text-bot" d="M 119 70 A 49 49 0 1 1 21 70" fill="none" />
+                                      
+                                      <text fill="#005B48" fontSize="6.4" fontWeight="900" letterSpacing="0.06em">
+                                        <textPath href="#seal-text-top" startOffset="50%" textAnchor="middle">
+                                          باشگاه رسمی مرد کوهستان
+                                        </textPath>
+                                      </text>
+                                      <text fill="#8A652E" fontSize="5.6" fontWeight="900" letterSpacing="0.08em">
+                                        <textPath href="#seal-text-bot" startOffset="50%" textAnchor="middle">
+                                          THIS WAY IS GREEN · راه سبز
+                                        </textPath>
+                                      </text>
+                                    </svg>
+                                    <div className="mk-seal-center-logo">
                                       <Image
                                         src="/brand/orginal-clear.png"
-                                        alt="مهر رسمی مرد کوهستان"
-                                        width={62}
-                                        height={62}
+                                        alt="نشان رسمی مرد کوهستان"
+                                        width={42}
+                                        height={42}
                                         priority
-                                        className="mk-main-seal-img"
+                                        className="mk-seal-logo-img"
                                       />
                                     </div>
-                                    <span className="mk-main-seal-tag">نشان اصالت مرتع</span>
                                   </div>
 
-                                  {/* Left Pillar: Membership Credential */}
+                                  {/* Left Wing: Official Membership Code */}
                                   <div className="mk-shenasnameh-pillar is-left">
                                     <div className="mk-pillar-icon">
                                       <svg viewBox="0 0 24 24" width="16" height="16" stroke="#005B48" strokeWidth="2.2" fill="none">
@@ -1080,7 +1204,7 @@ function ProfileContent() {
                                       </svg>
                                     </div>
                                     <div className="mk-pillar-info">
-                                      <strong>شناسه معتبر همسفر</strong>
+                                      <strong>شناسه سجلی همسفر سلامت</strong>
                                       <span dir="ltr">MK-94021-IR</span>
                                     </div>
                                   </div>
