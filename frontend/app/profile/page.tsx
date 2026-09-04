@@ -1136,7 +1136,7 @@ function ProfileContent() {
                                         <span className="mk-shenasnameh-lock-tag">شخصی / سازمانی</span>
                                       </div>
                                       <div className="mk-shenasnameh-val-row">
-                                        <strong>حقیقی · مشتری ویژه خانوادگی</strong>
+                                        <strong>حقیقی · مشتری خانوادگی</strong>
                                         <small>ACCOUNT CLASSIFICATION</small>
                                       </div>
                                     </div>

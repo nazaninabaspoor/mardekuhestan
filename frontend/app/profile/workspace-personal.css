@@ -262,6 +262,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   /* Authentic Warm Cream Security Parchment */
   background:
     radial-gradient(ellipse at 50% 20%, #faf8f3 0%, #f4f0e8 70%, #eae4d6 100%);
@@ -270,7 +271,7 @@
   box-shadow:
     inset 0 0 24px rgba(144, 56, 40, 0.04),
     0 4px 14px rgba(0, 0, 0, 0.25);
-  padding: 14px 18px 12px;
+  padding: 16px 20px 14px;
   color: #1d1d1b;
   overflow: hidden;
   box-sizing: border-box;
@@ -316,7 +317,7 @@
 }
 
 .mk-shenasnameh-org {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
   color: #005b48;
 }
@@ -369,11 +370,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 800;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .mk-shenasnameh-alert.is-ok {
@@ -391,11 +392,11 @@
 /* Document Body Layout */
 .mk-shenasnameh-body {
   display: grid;
-  grid-template-columns: 106px minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: 122px minmax(0, 1fr);
+  gap: 18px;
   flex: 1;
   min-height: 0;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* Photo Section */
@@ -403,13 +404,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 .mk-shenasnameh-photo-wrap {
   position: relative;
-  width: 102px;
-  height: 124px;
+  width: 118px;
+  height: 154px;
 }
 
 .mk-shenasnameh-photo {
@@ -465,20 +467,20 @@
 }
 
 .mk-shenasnameh-photo-overlay span {
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .mk-shenasnameh-photo strong {
-  font-size: 34px;
+  font-size: 38px;
   font-weight: 900;
   color: #005b48;
   line-height: 1;
 }
 
 .mk-shenasnameh-photo small {
-  font-size: 8.5px;
+  font-size: 9px;
   font-weight: 700;
   color: #5d686e;
   margin-top: 4px;
@@ -523,12 +525,12 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
+  padding: 3.5px 9px;
   border-radius: 4px;
   background: rgba(80, 175, 71, 0.16);
   border: 1px solid rgba(80, 175, 71, 0.5);
   color: #005b48;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 900;
 }
 
@@ -536,7 +538,8 @@
 .mk-shenasnameh-fields {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 9px;
   min-width: 0;
   flex: 1;
 }
@@ -561,7 +564,7 @@
 
 .mk-shenasnameh-label-row label,
 .mk-shenasnameh-field label {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   color: #005b48;
   display: flex;
@@ -596,19 +599,25 @@
 
 .mk-shenasnameh-val-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  padding: 5.5px 10px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 10px;
   background: #ffffff;
   border: 1px solid rgba(0, 91, 72, 0.18);
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
 }
 
 .mk-shenasnameh-val-row strong {
   font-size: 12.5px;
   font-weight: 900;
   color: #1d1d1b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mk-shenasnameh-val-row small {
@@ -616,12 +625,17 @@
   font-weight: 800;
   color: #8a652e;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+  margin-inline-start: 6px;
+  flex-shrink: 0;
 }
 
 .mk-shenasnameh-field input {
   width: 100%;
-  padding: 5.5px 10px;
-  font-size: 11.5px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 12px;
   font-weight: 700;
   color: #1d1d1b;
   background: #ffffff;
@@ -643,7 +657,7 @@
 
 .mk-shenasnameh-centerpiece {
   position: relative;
-  margin: 10px 0 8px;
+  margin: 12px 0 10px;
   padding: 8px 12px;
   background:
     radial-gradient(ellipse at 50% 50%, rgba(244, 240, 232, 0.95) 0%, rgba(234, 228, 214, 0.65) 100%);

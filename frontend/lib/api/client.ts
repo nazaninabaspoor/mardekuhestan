@@ -1,5 +1,5 @@
 import { CATALOG_REVALIDATE_SECONDS, getApiBaseUrl } from "@/lib/api/config";
-import { getAccessToken } from "@/lib/api/access-token";
+import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
 
 export class ApiError extends Error {
   constructor(
@@ -15,7 +15,46 @@ export class ApiError extends Error {
 type ApiFetchOptions = RequestInit & {
   searchParams?: Record<string, string | number | boolean | undefined | null>;
   revalidate?: number | false;
+  _retry?: boolean;
 };
+
+let refreshPromise: Promise<string | null> | null = null;
+
+async function requestTokenRefresh(): Promise<string | null> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        const base = getApiBaseUrl();
+        const res = await fetch(`${base}/api/auth/token/refresh/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "include",
+          body: "{}",
+        });
+        if (!res.ok) {
+          setAccessToken(null);
+          return null;
+        }
+        const data = (await res.json()) as { access?: string };
+        if (data && typeof data.access === "string") {
+          setAccessToken(data.access);
+          return data.access;
+        }
+        setAccessToken(null);
+        return null;
+      } catch {
+        setAccessToken(null);
+        return null;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+  return refreshPromise;
+}
 
 function buildUrl(
   path: string,
@@ -39,8 +78,12 @@ export async function apiFetch<T>(
   path: string,
   options: ApiFetchOptions = {},
 ): Promise<T> {
-  const { searchParams, revalidate = CATALOG_REVALIDATE_SECONDS, ...init } =
-    options;
+  const {
+    searchParams,
+    revalidate = CATALOG_REVALIDATE_SECONDS,
+    _retry = false,
+    ...init
+  } = options;
 
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
@@ -62,6 +105,26 @@ export async function apiFetch<T>(
     } catch {
       body = undefined;
     }
+
+    const isAuthEndpoint =
+      path.includes("/api/auth/token/refresh/") ||
+      path.includes("/api/auth/login/") ||
+      path.includes("/api/auth/register/");
+
+    if (response.status === 401 && !_retry && !isAuthEndpoint) {
+      const newAccess = await requestTokenRefresh();
+      if (newAccess) {
+        return apiFetch<T>(path, {
+          ...options,
+          _retry: true,
+          headers: {
+            ...Object.fromEntries(headers.entries()),
+            Authorization: `Bearer ${newAccess}`,
+          },
+        });
+      }
+    }
+
     throw new ApiError(
       `API ${response.status} ${path}`,
       response.status,

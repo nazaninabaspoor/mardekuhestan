@@ -138,13 +138,19 @@ export function authErrorMessage(error: unknown): string {
     const body = error.body;
     if (body && typeof body === "object") {
       const record = body as Record<string, unknown>;
+      if (
+        record.code === "token_not_valid" ||
+        (typeof record.detail === "string" && record.detail.includes("توکن"))
+      ) {
+        return "نشست کاربری شما منقضی شده است. لطفاً مجدداً وارد حساب کاربری شوید.";
+      }
       if (typeof record.detail === "string") return record.detail;
       const first = Object.values(record).flatMap((val) =>
         Array.isArray(val) ? val : [val],
       )[0];
       if (typeof first === "string") return first;
     }
-    if (error.status === 401) return "ایمیل یا رمز درست نیست.";
+    if (error.status === 401) return "ایمیل یا رمز درست نیست یا نشست منقضی شده است.";
     if (error.status === 409) return "این ایمیل قبلاً ثبت شده است.";
     if (error.status === 429)
       return "درخواست‌های پشت‌سر‌هم زیاد بود. چند لحظه بعد تلاش کنید.";
