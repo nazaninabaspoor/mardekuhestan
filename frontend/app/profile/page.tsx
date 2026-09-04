@@ -406,6 +406,393 @@ function ProfileSceneBackdrop({ isWorkspaceOpen = false }: { isWorkspaceOpen?: b
   );
 }
 
+const PASTURE_ORDERS_DATABASE = [
+  {
+    id: "MK-94021",
+    title: "بسته پروتئین ییلاقی کلاردشت",
+    date: "۱۰ شهریور ۱۴۰۵",
+    pastureName: "مرتع ییلاقی کلاردشت (دامنه مازیچال)",
+    altitude: "۲,۲۰۰ متر از سطح دریا",
+    grazing: "علوفه وحشی کوهپایه و آویشن ارگانیک",
+    vetCode: "IR-88301 نظام دامپزشکی",
+    packDate: "۱۰ شهریور ۱۴۰۵ - ۰۵:۳۰",
+    tempLog: "۲.۴°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "گوشت بره مرتعی",
+    items: [
+      {
+        name: "راسته بره مرتعی تازه (۱ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "برش قصابی استریل · بدون چربی اضافه",
+        price: "۵۴۰,۰۰۰ تومان",
+      },
+      {
+        name: "کره سنتی خالص کوهپایه (۵۰۰ گرم)",
+        image: "/brand/home-dairy.png",
+        cut: "فرآوری ییلاقی با مشک سنتی",
+        price: "۲۴۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۷۸۰,۰۰۰ تومان",
+    discount: "۵۰,۰۰۰ تومان (امتیاز سبز)",
+    finalPrice: "۷۳۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-88143",
+    title: "بسته گوشت و لبنیات هزارجریب",
+    date: "۲۸ مرداد ۱۴۰۵",
+    pastureName: "مرتع کوهستانی هزارجریب (بهشهر)",
+    altitude: "۱,۸۵۰ متر از سطح دریا",
+    grazing: "یونجه کوهی و بومادران مرتع",
+    vetCode: "IR-84210 نظام دامپزشکی",
+    packDate: "۲۸ مرداد ۱۴۰۵ - ۰۶:۰۰",
+    tempLog: "۲.۱°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "فیله گوساله کوهستان",
+    items: [
+      {
+        name: "فیله گوساله پرواری مرتع (۱.۵ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "استیک ممتاز بدون استخوان",
+        price: "۸۹۰,۰۰۰ تومان",
+      },
+      {
+        name: "پنیر کهنه خیک سنتی (۴۰۰ گرم)",
+        image: "/brand/panir.png",
+        cut: "رسیده در غار طبیعی ۹۰ روزه",
+        price: "۱۹۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۱,۰۸۰,۰۰۰ تومان",
+    discount: "۸۰,۰۰۰ تومان",
+    finalPrice: "۱,۰۰۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-76519",
+    title: "بسته آبزیان و عسل سبلان",
+    date: "۱۵ مرداد ۱۴۰۵",
+    pastureName: "دامنه‌های آب‌شیرین سبلان (قینرجه)",
+    altitude: "۲,۶۰۰ متر از سطح دریا",
+    grazing: "آب چشمه‌های طبیعی و گیاهان دارویی",
+    vetCode: "IR-79104 نظام دامپزشکی",
+    packDate: "۱۵ مرداد ۱۴۰۵ - ۰۴:۱۵",
+    tempLog: "-۱۸°C منجمد سریع",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "ماهی قزل‌آلا و عسل",
+    items: [
+      {
+        name: "ماهی قزل‌آلای تازه چشمه سبلان (۲ عدد)",
+        image: "/brand/mahi.png",
+        cut: "پاک‌شده استریل وکیوم",
+        price: "۴۲۰,۰۰۰ تومان",
+      },
+      {
+        name: "عسل خالص گون و آویشن کوهستان (۱ کیلو)",
+        image: "/brand/home-dairy.png",
+        cut: "برداشت کندوی ییلاقی بدون شکر",
+        price: "۴۵۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۸۷۰,۰۰۰ تومان",
+    discount: "۴۰,۰۰۰ تومان",
+    finalPrice: "۸۳۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-65208",
+    title: "شقه گوسفندی دشت لار",
+    date: "۰۲ مرداد ۱۴۰۵",
+    pastureName: "مرتع دشت لار دماوند",
+    altitude: "۲,۴۰۰ متر از سطح دریا",
+    grazing: "گیاهان معطر البرز مرکزی",
+    vetCode: "IR-65402 نظام دامپزشکی",
+    packDate: "۰۲ مرداد ۱۴۰۵ - ۰۵:۰۰",
+    tempLog: "۲.۶°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "شقه کامل گوسفندی",
+    items: [
+      {
+        name: "شقه گوسفند نر مرتعی (۶ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "خردشده وکیوم شده خانوادگی",
+        price: "۳,۲۰۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۳,۲۰۰,۰۰۰ تومان",
+    discount: "۱۵۰,۰۰۰ تومان",
+    finalPrice: "۳,۰۵۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-54311",
+    title: "بسته ارگانیک دیلمان گیلان",
+    date: "۲۰ تیر ۱۴۰۵",
+    pastureName: "مرتع ییلاقی دیلمان و سیاهکل",
+    altitude: "۱,۷۰۰ متر از سطح دریا",
+    grazing: "مراتع جنگلی آزاد",
+    vetCode: "IR-52190 نظام دامپزشکی",
+    packDate: "۲۰ تیر ۱۴۰۵ - ۰۶:۲۰",
+    tempLog: "۲.۲°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "جوجه ارگانیک و ماست",
+    items: [
+      {
+        name: "جوجه محلی مرتعی پاک‌شده (۲ عدد)",
+        image: "/brand/home-ready.png",
+        cut: "تغذیه آزاد در علفزار",
+        price: "۳۹۰,۰۰۰ تومان",
+      },
+      {
+        name: "ماست چکیده کوزه سنتی (۱ کیلو)",
+        image: "/brand/home-dairy.png",
+        cut: "فرآوری شیر تازه گاومیش",
+        price: "۱۸۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۵۷۰,۰۰۰ تومان",
+    discount: "۳۰,۰۰۰ تومان",
+    finalPrice: "۵۴۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-43210",
+    title: "بسته ییلاقی شاهکوه گلستان",
+    date: "۰۵ تیر ۱۴۰۵",
+    pastureName: "مرتع کوهستانی شاهکوه",
+    altitude: "۲,۳۵۰ متر از سطح دریا",
+    grazing: "درمنه و آویشن کوهی",
+    vetCode: "IR-41098 نظام دامپزشکی",
+    packDate: "۰۵ تیر ۱۴۰۵ - ۰۵:۱۰",
+    tempLog: "۲.۳°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "ران بره و کشک",
+    items: [
+      {
+        name: "ران بره مرتعی درجه یک (۲ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "برش استیکی بی‌استخوان",
+        price: "۱,۱۰۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۱,۱۰۰,۰۰۰ تومان",
+    discount: "۶۰,۰۰۰ تومان",
+    finalPrice: "۱,۰۴۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-38902",
+    title: "بسته گوشت راسته طالقان",
+    date: "۱۸ خرداد ۱۴۰۵",
+    pastureName: "مرتع بالاطالقان (علم‌کوه)",
+    altitude: "۲,۵۰۰ متر از سطح دریا",
+    grazing: "چشمه‌های برفی و گون زرد",
+    vetCode: "IR-38112 نظام دامپزشکی",
+    packDate: "۱۸ خرداد ۱۴۰۵ - ۰۵:۴۵",
+    tempLog: "۲.۴°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "راسته گوساله",
+    items: [
+      {
+        name: "راسته گوساله ییلاقی (۱.۵ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "برش فیله‌کباب رستورانی",
+        price: "۸۷۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۸۷۰,۰۰۰ تومان",
+    discount: "۵۰,۰۰۰ تومان",
+    finalPrice: "۸۲۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-31284",
+    title: "بسته پروتئین الموت قزوین",
+    date: "۰۲ خرداد ۱۴۰۵",
+    pastureName: "دره الموت (دریاچه اوان)",
+    altitude: "۱,۹۰۰ متر از سطح دریا",
+    grazing: "علوفه کوهپایه البرز غربی",
+    vetCode: "IR-31005 نظام دامپزشکی",
+    packDate: "۰۲ خرداد ۱۴۰۵ - ۰۶:۱۵",
+    tempLog: "۲.۰°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "گوشت چرخ‌کرده کوهستان",
+    items: [
+      {
+        name: "چرخ‌کرده گوسفند و گوساله کوهی (۲ کیلو)",
+        image: "/brand/home-meat.png",
+        cut: "ترکیب ۸۰/۲۰ بدون دنبه مازاد",
+        price: "۹۸۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۹۸۰,۰۰۰ تومان",
+    discount: "۴۰,۰۰۰ تومان",
+    finalPrice: "۹۴۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-29871",
+    title: "بسته ویژه ماسال و شاندرمن",
+    date: "۱۵ اردیبهشت ۱۴۰۵",
+    pastureName: "ییلاق اولسبلنگاه ماسال",
+    altitude: "۱,۸۰۰ متر از سطح دریا",
+    grazing: "مراتع مه‌آلود تالش",
+    vetCode: "IR-29440 نظام دامپزشکی",
+    packDate: "۱۵ اردیبهشت ۱۴۰۵ - ۰۵:۳۰",
+    tempLog: "۲.۵°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "گردن و سردست بره",
+    items: [
+      {
+        name: "گردن بره مرتعی معطر (۱.۵ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "برش مخصوص چلوگوشت سنتی",
+        price: "۷۵۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۷۵۰,۰۰۰ تومان",
+    discount: "۳۵,۰۰۰ تومان",
+    finalPrice: "۷۱۵,۰۰۰ تومان",
+  },
+  {
+    id: "MK-24150",
+    title: "بسته سالمون و پنیر فیروزکوه",
+    date: "۲۸ فروردین ۱۴۰۵",
+    pastureName: "حوضچه چشمه‌های ارجمند فیروزکوه",
+    altitude: "۲,۰۵۰ متر از سطح دریا",
+    grazing: "آب زلال سرچشمه نمرود",
+    vetCode: "IR-23991 نظام دامپزشکی",
+    packDate: "۲۸ فروردین ۱۴۰۵ - ۰۴:۵۰",
+    tempLog: "-۱۸°C منجمد",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "ماهی سالمون مرتعی",
+    items: [
+      {
+        name: "فیله سالمون نروژی پرورشی چشمه (۱ کیلو)",
+        image: "/brand/mahi.png",
+        cut: "فیله بدون تیغ استیک",
+        price: "۶۸۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۶۸۰,۰۰۰ تومان",
+    discount: "۳۰,۰۰۰ تومان",
+    finalPrice: "۶۵۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-19842",
+    title: "بسته لبنیات و گوشت سوباتان",
+    date: "۱۰ فروردین ۱۴۰۵",
+    pastureName: "دشت شقایق سوباتان تالش",
+    altitude: "۲,۱۰۰ متر از سطح دریا",
+    grazing: "گیاهان کوهی و یونجه وحشی",
+    vetCode: "IR-19502 نظام دامپزشکی",
+    packDate: "۱۰ فروردین ۱۴۰۵ - ۰۶:۰۰",
+    tempLog: "۲.۳°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "کره و قلم گوساله",
+    items: [
+      {
+        name: "قلم و دنده گوساله ییلاقی (۲ کیلوگرم)",
+        image: "/brand/home-meat.png",
+        cut: "برش ویژه آبگوشت و سوپ",
+        price: "۵۲۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۵۲۰,۰۰۰ تومان",
+    discount: "۲۰,۰۰۰ تومان",
+    finalPrice: "۵۰۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-16503",
+    title: "بسته پروتئین الوند تویسرکان",
+    date: "۲۰ اسفند ۱۴۰۴",
+    pastureName: "دامنه‌های سرکان الوند",
+    altitude: "۲,۴۵۰ متر از سطح دریا",
+    grazing: "علوفه کوهستان الوند",
+    vetCode: "IR-16200 نظام دامپزشکی",
+    packDate: "۲۰ اسفند ۱۴۰۴ - ۰۵:۱۵",
+    tempLog: "۲.۱°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "فیله بره ممتاز",
+    items: [
+      {
+        name: "فیله بره ممتاز بدون استخوان (۱ کیلو)",
+        image: "/brand/home-meat.png",
+        cut: "برش کبابی باریک استریل",
+        price: "۶۹۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۶۹۰,۰۰۰ تومان",
+    discount: "۳۰,۰۰۰ تومان",
+    finalPrice: "۶۶۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-12490",
+    title: "بسته سنتی زردکوه کوهرنگ",
+    date: "۰۵ اسفند ۱۴۰۴",
+    pastureName: "مرتع چلگرد زردکوه بختیاری",
+    altitude: "۲,۷۰۰ متر از سطح دریا",
+    grazing: "لاله‌های واژگون و گیاهان آلپی",
+    vetCode: "IR-12108 نظام دامپزشکی",
+    packDate: "۰۵ اسفند ۱۴۰۴ - ۰۴:۴۰",
+    tempLog: "۲.۲°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "گوشت خالص و روغن زرد",
+    items: [
+      {
+        name: "گوشت تکه‌ای خالص گوسفندی (۲ کیلو)",
+        image: "/brand/home-meat.png",
+        cut: "خورشتی مکعبی پاک‌شده",
+        price: "۱,۰۵۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۱,۰۵۰,۰۰۰ تومان",
+    discount: "۵۰,۰۰۰ تومان",
+    finalPrice: "۱,۰۰۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-08321",
+    title: "بسته ییلاق کلیبر ارسباران",
+    date: "۱۸ بهمن ۱۴۰۴",
+    pastureName: "جنگل‌ها و مراتع قره‌داغ ارسباران",
+    altitude: "۱,۹۵۰ متر از سطح دریا",
+    grazing: "پوشش گیاهی حفاظت‌شده ارسباران",
+    vetCode: "IR-08092 نظام دامپزشکی",
+    packDate: "۱۸ بهمن ۱۴۰۴ - ۰۵:۳۰",
+    tempLog: "۲.۴°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "جگر و پنیر تبریز",
+    items: [
+      {
+        name: "جگر، دل و قلوه تازه گوسفندی (۱ دست)",
+        image: "/brand/home-meat.png",
+        cut: "تحویل فوق‌سریع زنجیره سرد",
+        price: "۴۸۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۴۸۰,۰۰۰ تومان",
+    discount: "۲۰,۰۰۰ تومان",
+    finalPrice: "۴۶۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-01001",
+    title: "پکیج شاهانه مرتع مرکزی کندوان",
+    date: "۰۱ بهمن ۱۴۰۴",
+    pastureName: "مرتع البرز مرکزی (کندوان)",
+    altitude: "۲,۸۰۰ متر از سطح دریا",
+    grazing: "علوفه بکر ارتفاعات سهند و البرز",
+    vetCode: "IR-01001 نظام دامپزشکی",
+    packDate: "۰۱ بهمن ۱۴۰۴ - ۰۵:۰۰",
+    tempLog: "۲.۰°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "پکیج مهمانی مرتعی",
+    items: [
+      {
+        name: "ست کامل راسته، فیله و ماهیچه (۴ کیلو)",
+        image: "/brand/home-meat.png",
+        cut: "بسته‌بندی شاهانه گلد مرتع",
+        price: "۲,۹۵۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۲,۹۵۰,۰۰۰ تومان",
+    discount: "۱۵۰,۰۰۰ تومان",
+    finalPrice: "۲,۸۰۰,۰۰۰ تومان",
+  },
+];
+
 function ProfileContent() {
   const { user, isLoading, openLoginModal, updateUserProfile } = useAuth();
   const searchParams = useSearchParams();
@@ -483,6 +870,10 @@ function ProfileContent() {
   const [editingAddress, setEditingAddress] = useState<CustomerAddress | null>(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
+
+  // Orders & Mountain Logistics Trolley State (0 to 15 boxes)
+  const [orderCount, setOrderCount] = useState(3);
+  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
 
   // Subscription plan selection
   const [selectedPlan, setSelectedPlan] = useState<"standard" | "family" | "gourmet">("family");
@@ -578,6 +969,10 @@ function ProfileContent() {
   };
 
   const displayName = name.trim() || user?.name || "کاربر کوهستان";
+  const activeOrder =
+    orderCount > 0 && PASTURE_ORDERS_DATABASE[selectedOrderIndex]
+      ? PASTURE_ORDERS_DATABASE[selectedOrderIndex]
+      : null;
 
   const handleFocusChange = useCallback(
     (tab: ActiveTab) => {
@@ -899,7 +1294,7 @@ function ProfileContent() {
               exit={{ opacity: 0, y: 25, scale: 0.97 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              {openedTab !== "ai-nutrition" && openedTab !== "personal" && (
+              {openedTab !== "ai-nutrition" && openedTab !== "personal" && openedTab !== "orders" && (
                 <header className="desk-pane-header">
                   <div className="desk-pane-header-main">
                     <div className="desk-pane-thumb">
@@ -2180,55 +2575,375 @@ function ProfileContent() {
                 </div>
               )}
 
-              {/* Tab 5: Orders & Farm Traceability */}
-                  {openedTab === "orders" && (
-                <div className="profile-tab-pane">
-                  <div className="profile-card profile-card--full">
-                    <div className="profile-card-header">
-                      <h3>تاریخچه سفارش‌ها و شناسنامه مرتع</h3>
-                      <p>ردیابی دقیق و شفاف از لحظه آماده‌سازی در مزرعه تا تحویل به خانه با زنجیره سرد.</p>
-                    </div>
-
-                    <div className="profile-orders-list">
-                      <div className="profile-order-item">
-                        <div className="profile-order-top">
-                          <div>
-                            <span className="profile-order-id">سفارش #MK-94021</span>
-                            <span className="profile-order-date">دوشنبه ۱۰ شهریور ۱۴۰۵</span>
-                          </div>
-                          <span className="profile-order-badge is-delivered">تحویل شده با زنجیره سرد</span>
-                        </div>
-
-                        <div className="profile-order-items-grid">
-                          <div className="profile-order-product-card">
-                            <Image src="/brand/home-meat.png" alt="راسته بره مرتعی" width={48} height={48} />
-                            <div>
-                              <strong>راسته بره مرتعی تازه (۱ کیلوگرم)</strong>
-                              <span>شناسنامه: مرتع ییلاقی کلاردشت (ارتفاع ۲,۲۰۰ متر)</span>
-                              <p className="passport-origin">مُهر مرتع · گله آزاد</p>
-                            </div>
-                          </div>
-                          <div className="profile-order-product-card">
-                            <Image src="/brand/home-dairy.png" alt="کره سنتی کوهپایه" width={48} height={48} />
-                            <div>
-                              <strong>کره سنتی خالص کوهپایه (۵۰۰ گرم)</strong>
-                              <span>شناسنامه: دامداری سنتی هزارجریب</span>
-                              <p className="passport-origin">زنجیره سرد ثبت‌شده</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="profile-order-footer">
-                          <div className="profile-order-passport-tag">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9Z" />
-                            </svg>
-                            دمای حمل زنجیره سرد: ۲.۴ درجه سانتی‌گراد (کنترل شده)
-                          </div>
-                          <strong className="profile-order-total">مبلغ کل: ۷۸۰,۰۰۰ تومان</strong>
-                        </div>
+              {/* Tab 5: Orders & Farm Traceability (Mountain Logistics Trolley & Pasture Passport) */}
+              {openedTab === "orders" && (
+                <div className="mk-orders-container">
+                  {/* Topbar: Brand, Live Cold-Chain Telemetry, Capacity Chip & Close */}
+                  <motion.header
+                    className="mk-orders-topbar"
+                    initial={{ opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="mk-orders-brand">
+                      <Image
+                        src="/brand/orginal-clear.png"
+                        alt="مرد کوهستان"
+                        width={36}
+                        height={36}
+                        className="mk-orders-logo"
+                      />
+                      <div className="mk-orders-titles">
+                        <strong>ترولی بارنامه و شناسنامه اصالت مرتع</strong>
+                        <span>سامانه رهگیری زنجیره سرد، گواهی چراگاه و پایش بسته‌های تحویل</span>
                       </div>
                     </div>
+
+                    <div className="mk-orders-topbar-meta">
+                      <span className="mk-orders-cold-live">
+                        <span className="mk-orders-live-dot" />
+                        پایش آنلاین زنجیره سرد ۲.۴°C
+                      </span>
+                      <button type="button" className="mk-orders-close-btn" onClick={handleCloseWorkspace}>
+                        <span>بستن میز</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </motion.header>
+
+                  {/* 2-Column Desk: Trolley with stacked 3D boxes on Right/Center, Pasture Passport on Left */}
+                  <div className="mk-orders-desk">
+                    {/* Side A: 3D Shopping Trolley & Cargo Bay */}
+                    <motion.section
+                      className="mk-trolley-console"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <header className="mk-trolley-head">
+                        <div className="mk-trolley-title-box">
+                          <span className="mk-trolley-kicker">MOUNTAIN LOGISTICS TROLLEY · ترولی مرتع</span>
+                          <h3>سبد بارنامه بسته‌های تحویل</h3>
+                        </div>
+                        <div className="mk-trolley-meter">
+                          <span className="mk-trolley-counter">
+                            بارگیری: <strong>{orderCount}</strong> / ۱۵ بسته
+                          </span>
+                          <div className="mk-trolley-bar-wrap" title={`${orderCount} از ۱۵ بسته تکمیل شده`}>
+                            <div
+                              className="mk-trolley-bar-fill"
+                              style={{ width: `${Math.min(100, (orderCount / 15) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </header>
+
+                      {/* Quick Simulation / Capacity Selector Pills */}
+                      <div className="mk-trolley-sim-bar">
+                        <span className="mk-trolley-sim-label">شبیه‌ساز سبد:</span>
+                        <div className="mk-trolley-sim-pills">
+                          {[0, 1, 2, 3, 5, 8, 12, 15].map((cnt) => (
+                            <button
+                              key={cnt}
+                              type="button"
+                              className={`mk-trolley-pill-btn${orderCount === cnt ? " is-active" : ""}`}
+                              onClick={() => {
+                                setOrderCount(cnt);
+                                if (cnt > 0) setSelectedOrderIndex(Math.min(selectedOrderIndex, cnt - 1));
+                              }}
+                            >
+                              {cnt === 0 ? "سبد خالی (۰)" : `${cnt} بسته`}
+                            </button>
+                          ))}
+                          {orderCount < 15 && (
+                            <button
+                              type="button"
+                              className="mk-trolley-pill-btn"
+                              onClick={() => setOrderCount((c) => Math.min(15, c + 1))}
+                              title="افزودن یک بسته جدید به ترولی"
+                            >
+                              + بسته جدید
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* The 3D Trolley Frame & Interior Stage */}
+                      <div className="mk-trolley-stage">
+                        {/* Trolley Handlebar with Telemetry LCD */}
+                        <div className="mk-trolley-handlebar">
+                          <div className="mk-trolley-grip">
+                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.4" fill="none">
+                              <circle cx="9" cy="21" r="1" />
+                              <circle cx="20" cy="21" r="1" />
+                              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                            </svg>
+                            <span>ترولی اختصاصی حمل سردخانه مرد کوهستان</span>
+                          </div>
+                          <div className="mk-trolley-lcd-screen">
+                            <span>TEMP: 2.4°C</span>
+                            <span>•</span>
+                            <span>CARGO: {orderCount}/15</span>
+                          </div>
+                        </div>
+
+                        {/* Cargo Bay: Either Empty State or Realistic 3D Boxes */}
+                        {orderCount === 0 ? (
+                          <div className="mk-trolley-empty">
+                            <div className="mk-trolley-empty-icon">
+                              <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" strokeWidth="1.8" fill="none">
+                                <circle cx="9" cy="21" r="1" />
+                                <circle cx="20" cy="21" r="1" />
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                              </svg>
+                            </div>
+                            <h4>سبد تحویل مرتع در انتظار نخستین سفر شماست</h4>
+                            <p>تاکنون سفارشی در این دوره ثبت نشده است. پس از هر سفارش، بسته اختصاصی مرتع در این ترولی قرار می‌گیرد.</p>
+                            <button
+                              type="button"
+                              className="mk-trolley-empty-btn"
+                              onClick={() => setOrderCount(1)}
+                            >
+                              <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                              </svg>
+                              ثبت و قرار دادن نخستین بسته
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="mk-trolley-cargo-grid">
+                            {PASTURE_ORDERS_DATABASE.slice(0, orderCount).map((ord, idx) => {
+                              const isSelected = selectedOrderIndex === idx;
+                              return (
+                                <motion.article
+                                  key={ord.id}
+                                  className={`mk-cargo-box${isSelected ? " is-selected" : ""}`}
+                                  onClick={() => setSelectedOrderIndex(idx)}
+                                  role="button"
+                                  tabIndex={0}
+                                  title={`کلیک برای مشاهده شناسنامه مرتع بسته #${ord.id}`}
+                                  initial={{ opacity: 0, scale: 0.85, y: 15 }}
+                                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                                  transition={{ duration: 0.35, delay: idx * 0.04 }}
+                                  whileHover={{ scale: 1.03, y: -2 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      setSelectedOrderIndex(idx);
+                                    }
+                                  }}
+                                >
+                                  <div className="mk-cargo-box-top">
+                                    <div className="mk-cargo-logo-badge">
+                                      <Image
+                                        src="/brand/orginal-clear.png"
+                                        alt="مرد کوهستان"
+                                        width={14}
+                                        height={14}
+                                        className="mk-cargo-logo-img"
+                                      />
+                                      <span className="mk-cargo-serial">#{ord.id}</span>
+                                    </div>
+                                    <span className="mk-cargo-status-pill">{ord.status.includes("تحویل") ? "تحویل شد" : "در مسیر"}</span>
+                                  </div>
+
+                                  <div className="mk-cargo-box-body">
+                                    <strong className="mk-cargo-pasture-title">{ord.title}</strong>
+                                    <span className="mk-cargo-pasture-origin">
+                                      <svg viewBox="0 0 24 24" width="8" height="8" fill="currentColor">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                      </svg>
+                                      {ord.pastureName.split("(")[0]}
+                                    </span>
+                                  </div>
+
+                                  <div className="mk-cargo-box-foot">
+                                    <span className="mk-cargo-temp-chip">{ord.tempLog.split(" ")[0]}</span>
+                                    <small style={{ fontSize: "7.5px", color: "#d4a359", fontWeight: 800 }}>{ord.date.split(" ")[0]} {ord.date.split(" ")[1]}</small>
+                                  </div>
+                                </motion.article>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* 15 Boxes Milestone Celebration Banner */}
+                        {orderCount >= 15 && (
+                          <motion.div
+                            className="mk-trolley-milestone"
+                            initial={{ opacity: 0, scale: 0.92 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            <div className="mk-milestone-text">
+                              <strong>🎉 سقف ۱۵ بسته فصلی تکمیل شد!</strong>
+                              <span>پاداش الماس سبز مرتع به حساب شما اضافه شد.</span>
+                            </div>
+                            <button
+                              type="button"
+                              className="mk-milestone-reset-btn"
+                              onClick={() => {
+                                setOrderCount(0);
+                                setSelectedOrderIndex(0);
+                              }}
+                            >
+                              شروع دوره جدید (ریست سبد)
+                            </button>
+                          </motion.div>
+                        )}
+
+                        {/* Trolley Bottom Hardware Wheels */}
+                        <div className="mk-trolley-wheels-bar">
+                          <div className="mk-trolley-wheel">
+                            <span className="mk-trolley-wheel-hub" />
+                          </div>
+                          <span style={{ fontSize: "7.5px", color: "#8a652e", fontWeight: 800, letterSpacing: "0.1em" }}>
+                            CHASSIS MK-HEAVY-DUTY · SUSPENSION
+                          </span>
+                          <div className="mk-trolley-wheel">
+                            <span className="mk-trolley-wheel-hub" />
+                          </div>
+                        </div>
+                      </div>
+                    </motion.section>
+
+                    {/* Side B: Authentic Pasture Traceability Passport (شناسنامه مرتع) */}
+                    <motion.section
+                      className="mk-passport-console"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {activeOrder ? (
+                        <article className="mk-passport-sheet">
+                          {/* Header: Title, Official Seal & Cold Chain Badge */}
+                          <header className="mk-passport-head">
+                            <div className="mk-passport-title-wrap">
+                              <span className="mk-passport-seal-icon">
+                                <Image src="/brand/orginal-clear.png" alt="" width={16} height={16} />
+                              </span>
+                              <div>
+                                <h3>شناسنامه مرتع و اصالت پروتئین</h3>
+                                <span>سند رسمی رهگیری: #{activeOrder.id}</span>
+                              </div>
+                            </div>
+                            <span className="mk-passport-badge-delivered">
+                              <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              {activeOrder.status}
+                            </span>
+                          </header>
+
+                          {/* Pasture Geolocation & Coordinates */}
+                          <div className="mk-passport-geo-box">
+                            <div className="mk-passport-geo-field">
+                              <small>موقعیت و نام چراگاه</small>
+                              <strong>{activeOrder.pastureName}</strong>
+                            </div>
+                            <div className="mk-passport-geo-field">
+                              <small>ارتفاع از سطح دریا</small>
+                              <strong>{activeOrder.altitude}</strong>
+                            </div>
+                            <div className="mk-passport-geo-field">
+                              <small>تغذیه و پوشش گیاهی</small>
+                              <strong>{activeOrder.grazing}</strong>
+                            </div>
+                            <div className="mk-passport-geo-field">
+                              <small>تأییدیه سلامت دامپزشکی</small>
+                              <strong>{activeOrder.vetCode}</strong>
+                            </div>
+                          </div>
+
+                          {/* Products Breakdown in this order */}
+                          <div className="mk-passport-items-list">
+                            {activeOrder.items.map((it, i) => (
+                              <div key={i} className="mk-passport-item-card">
+                                <div className="mk-passport-item-thumb">
+                                  <Image src={it.image} alt={it.name} width={30} height={30} />
+                                </div>
+                                <div className="mk-passport-item-info">
+                                  <strong>{it.name}</strong>
+                                  <span>{it.cut}</span>
+                                </div>
+                                <strong className="mk-passport-item-price">{it.price}</strong>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Cold Chain Tracking Timeline */}
+                          <div className="mk-passport-timeline">
+                            <div className="mk-passport-timeline-title">
+                              <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                              </svg>
+                              <span>گزارش تله‌متری پایش زنجیره سرد (ثبت در لاگر هوشمند)</span>
+                            </div>
+                            <div className="mk-passport-timeline-steps">
+                              <div className="mk-timeline-step">
+                                <span className="mk-timeline-dot" />
+                                <span>تخصیص سهمیه</span>
+                              </div>
+                              <div className="mk-timeline-step">
+                                <span className="mk-timeline-dot" />
+                                <span>برش استریل ({activeOrder.tempLog.split(" ")[0]})</span>
+                              </div>
+                              <div className="mk-timeline-step">
+                                <span className="mk-timeline-dot" />
+                                <span>بارگیری سردخانه</span>
+                              </div>
+                              <div className="mk-timeline-step">
+                                <span className="mk-timeline-dot" />
+                                <span>تحویل نهایی</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footer: Invoice & Actions */}
+                          <footer className="mk-passport-foot">
+                            <div className="mk-passport-total-box">
+                              <small>مبلغ نهایی پرداختی:</small>
+                              <strong>{activeOrder.finalPrice}</strong>
+                            </div>
+                            <div className="mk-passport-actions">
+                              <button
+                                type="button"
+                                className="mk-passport-pdf-btn"
+                                onClick={() => alert(`شناسنامه مرتع سفارش #${activeOrder.id} با مُهر دیجیتال آماده دانلود است.`)}
+                              >
+                                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                  <polyline points="7 10 12 15 17 10" />
+                                  <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                <span>دانلود PDF</span>
+                              </button>
+                              <button
+                                type="button"
+                                className="mk-passport-reorder-btn"
+                                onClick={() => alert(`بسته پروتئینی #${activeOrder.id} به سبد خرید تازه شما افزوده شد.`)}
+                              >
+                                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                  <polyline points="23 4 23 10 17 10" />
+                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                                </svg>
+                                <span>تکرار سفارش</span>
+                              </button>
+                            </div>
+                          </footer>
+                        </article>
+                      ) : (
+                        <div className="mk-passport-sheet" style={{ alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+                          <p style={{ color: "#736b5e", fontSize: "11px", fontWeight: 700 }}>
+                            یک بسته از ترولی را انتخاب کنید تا شناسنامه مرتع آن نمایش داده شود.
+                          </p>
+                        </div>
+                      )}
+                    </motion.section>
                   </div>
                 </div>
               )}

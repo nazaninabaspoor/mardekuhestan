@@ -1,0 +1,991 @@
+/* ==========================================================================
+   MARDE KOOHESTAN - ORDERS & PASTURE TRACEABILITY WORKSPACE
+   Theme: Luxury Mountain Logistics Trolley & Authentic Pasture Passport
+   Palette: Forest Green (#005B48), Warm Cream (#F4F0E8), Burnished Brass (#D4A359),
+            Terracotta (#903828), Cold Cyan (#86C2EB), Deep Obsidian (#02100C)
+   ========================================================================== */
+
+.profile-workspace-section[data-theme="orders"] {
+  height: min(92vh, 840px);
+  max-height: 840px;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(0, 91, 72, 0.45) 0%, transparent 70%),
+    linear-gradient(155deg, rgba(1, 28, 22, 0.95) 0%, rgba(2, 16, 12, 0.98) 60%, rgba(0, 10, 8, 0.99) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.55);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+}
+
+.profile-workspace-section[data-theme="orders"] .desk-pane-body {
+  height: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   WORKSPACE CONTAINER & TOPBAR
+   ========================================================================== */
+
+.mk-orders-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 14px 18px 16px;
+  box-sizing: border-box;
+  color: #f4f0e8;
+}
+
+.mk-orders-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.28);
+  flex-shrink: 0;
+}
+
+.mk-orders-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mk-orders-logo {
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+.mk-orders-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mk-orders-titles strong {
+  font-size: 14px;
+  font-weight: 900;
+  color: #f4f0e8;
+  letter-spacing: -0.01em;
+}
+
+.mk-orders-titles span {
+  font-size: 10px;
+  color: #b9c7c3;
+  font-weight: 600;
+}
+
+.mk-orders-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-orders-cold-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: rgba(134, 194, 235, 0.12);
+  border: 1px solid rgba(134, 194, 235, 0.35);
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #aae0ff;
+}
+
+.mk-orders-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #86c2eb;
+  box-shadow: 0 0 8px #86c2eb;
+  animation: mkOrdersPulse 2s infinite ease-in-out;
+}
+
+@keyframes mkOrdersPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.mk-orders-close-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 163, 89, 0.3);
+  color: #e1dcd1;
+  font-size: 10.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-orders-close-btn:hover {
+  background: rgba(212, 163, 89, 0.2);
+  border-color: #d4a359;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   2-COLUMN DESK LAYOUT
+   ========================================================================== */
+
+.mk-orders-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+}
+
+/* ==========================================================================
+   SIDE A: THE 3D SHOPPING TROLLEY & CARGO BAY
+   ========================================================================== */
+
+.mk-trolley-console {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(155deg, rgba(0, 48, 38, 0.85) 0%, rgba(4, 24, 18, 0.95) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
+  border-radius: 12px;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 20px rgba(0, 0, 0, 0.6);
+  padding: 12px 14px 10px;
+  box-sizing: border-box;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Trolley Telemetry & Header Controls */
+.mk-trolley-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.2);
+  flex-shrink: 0;
+}
+
+.mk-trolley-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-trolley-kicker {
+  font-size: 8px;
+  font-weight: 900;
+  color: #d4a359;
+  letter-spacing: 0.14em;
+}
+
+.mk-trolley-title-box h3 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
+
+.mk-trolley-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  padding: 3px 8px;
+  border-radius: 7px;
+}
+
+.mk-trolley-counter {
+  font-size: 10px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
+
+.mk-trolley-counter strong {
+  color: #d4a359;
+  font-size: 12px;
+}
+
+.mk-trolley-bar-wrap {
+  width: 60px;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.mk-trolley-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #50af47 0%, #d4a359 100%);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Interactive Simulation Pills (for testing 0 to 15 boxes) */
+.mk-trolley-sim-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background: rgba(0, 20, 15, 0.6);
+  border: 1px solid rgba(212, 163, 89, 0.18);
+  flex-shrink: 0;
+}
+
+.mk-trolley-sim-label {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #b9c7c3;
+  white-space: nowrap;
+}
+
+.mk-trolley-sim-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mk-trolley-sim-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.mk-trolley-pill-btn {
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 163, 89, 0.25);
+  color: #d4e0dc;
+  font-size: 8.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.mk-trolley-pill-btn:hover {
+  background: rgba(212, 163, 89, 0.2);
+  color: #ffffff;
+}
+
+.mk-trolley-pill-btn.is-active {
+  background: linear-gradient(135deg, #d4a359 0%, #a67c33 100%);
+  border-color: #f5db99;
+  color: #1a1205;
+  font-weight: 900;
+}
+
+/* The 3D Shopping Trolley Frame & Stage */
+.mk-trolley-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background:
+    radial-gradient(ellipse at 50% 90%, rgba(212, 163, 89, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(0, 18, 14, 0.8) 0%, rgba(1, 10, 8, 0.95) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.35);
+  box-shadow:
+    inset 0 4px 16px rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 10px 12px 14px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 163, 89, 0.4) transparent;
+}
+
+/* Trolley Handle Bar with Display */
+.mk-trolley-handlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #d4a359 0%, #8a652e 100%);
+  border: 1px solid #f5db99;
+  border-radius: 6px;
+  padding: 3px 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.mk-trolley-grip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #1a1205;
+  font-size: 8.5px;
+  font-weight: 900;
+}
+
+.mk-trolley-lcd-screen {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #041410;
+  border: 1px solid rgba(134, 194, 235, 0.5);
+  border-radius: 3px;
+  padding: 1.5px 6px;
+  font-family: monospace;
+  font-size: 8px;
+  font-weight: 800;
+  color: #86c2eb;
+  letter-spacing: 0.06em;
+}
+
+/* Empty Trolley State View (0 Orders) */
+.mk-trolley-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  gap: 12px;
+}
+
+.mk-trolley-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(212, 163, 89, 0.25) 0%, rgba(0, 91, 72, 0.2) 70%);
+  border: 1.5px dashed rgba(212, 163, 89, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4a359;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.mk-trolley-empty h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
+
+.mk-trolley-empty p {
+  margin: 0;
+  font-size: 10px;
+  color: #a9b5b2;
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+.mk-trolley-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
+  border: 1px solid #d4a359;
+  color: #f4f0e8;
+  font-size: 10.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 91, 72, 0.4);
+}
+
+.mk-trolley-empty-btn:hover {
+  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
+  transform: translateY(-1px);
+}
+
+/* Cargo Bay: Stack of 3D Delivery Boxes inside the cart */
+.mk-trolley-cargo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+/* Single Realistic 3D Craft Cargo Box */
+.mk-cargo-box {
+  position: relative;
+  background:
+    radial-gradient(circle at 75% 20%, rgba(245, 219, 153, 0.15) 0%, transparent 50%),
+    linear-gradient(145deg, #2b2216 0%, #1c150c 50%, #100b05 100%);
+  border: 1.2px solid rgba(212, 163, 89, 0.45);
+  border-radius: 7px;
+  padding: 7px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #f4f0e8;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  min-height: 86px;
+  overflow: hidden;
+}
+
+/* Box Brass Corner Straps */
+.mk-cargo-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid #d4a359;
+  border-left: 2px solid #d4a359;
+  opacity: 0.7;
+}
+
+.mk-cargo-box::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid #d4a359;
+  border-right: 2px solid #d4a359;
+  opacity: 0.7;
+}
+
+.mk-cargo-box:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: #d4a359;
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.6),
+    0 0 14px rgba(212, 163, 89, 0.35);
+}
+
+.mk-cargo-box.is-selected {
+  border-color: #50af47;
+  background:
+    radial-gradient(circle at 75% 20%, rgba(80, 175, 71, 0.25) 0%, transparent 60%),
+    linear-gradient(145deg, #0f2e22 0%, #071c14 60%, #030e0a 100%);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.6),
+    0 0 16px rgba(80, 175, 71, 0.4);
+}
+
+/* Box Header: Logo & Serial */
+.mk-cargo-box-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.mk-cargo-logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mk-cargo-logo-img {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+}
+
+.mk-cargo-serial {
+  font-family: monospace;
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #d4a359;
+  letter-spacing: 0.05em;
+}
+
+.mk-cargo-box-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+  margin: 2px 0;
+}
+
+.mk-cargo-pasture-title {
+  margin: 0;
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #f4f0e8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mk-cargo-pasture-origin {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #b9c7c3;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Box Footer: Cold Telemetry & Status Badge */
+.mk-cargo-box-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px dashed rgba(212, 163, 89, 0.25);
+}
+
+.mk-cargo-temp-chip {
+  font-size: 7.5px;
+  font-weight: 900;
+  color: #86c2eb;
+  background: rgba(134, 194, 235, 0.12);
+  border: 1px solid rgba(134, 194, 235, 0.3);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.mk-cargo-status-pill {
+  font-size: 7px;
+  font-weight: 900;
+  color: #a4e09e;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.35);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* Trolley Chassis & Bottom Wheels */
+.mk-trolley-wheels-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(212, 163, 89, 0.2);
+  flex-shrink: 0;
+}
+
+.mk-trolley-wheel {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff1c7 0%, #d4a359 50%, #4a3311 100%);
+  border: 2px solid #2a1c07;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mk-trolley-wheel-hub {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #110d05;
+}
+
+/* Milestone 15 Celebration Banner */
+.mk-trolley-milestone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #d4a359 0%, #903828 100%);
+  border: 1.5px solid #f5db99;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-top: 6px;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(212, 163, 89, 0.4);
+  flex-shrink: 0;
+}
+
+.mk-milestone-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mk-milestone-text strong {
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.mk-milestone-text span {
+  font-size: 8px;
+  opacity: 0.9;
+}
+
+.mk-milestone-reset-btn {
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #903828;
+  border: none;
+  font-size: 9px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.mk-milestone-reset-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   SIDE B: AUTHENTIC PASTURE TRACEABILITY PASSPORT (شناسنامه مرتع)
+   ========================================================================== */
+
+.mk-passport-console {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.mk-passport-sheet {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse at 50% 10%, #faf8f2 0%, #f4eee1 70%, #eae1cd 100%);
+  border: 1.5px solid #d4a359;
+  border-radius: 12px;
+  padding: 12px 14px 10px;
+  color: #1d1d1b;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 91, 72, 0.3) transparent;
+}
+
+/* Pasture Passport Header */
+.mk-passport-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1.5px solid rgba(0, 91, 72, 0.25);
+  flex-shrink: 0;
+}
+
+.mk-passport-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mk-passport-seal-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #50af47 0%, #005b48 85%);
+  border: 1px solid #003b2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.mk-passport-title-wrap h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 900;
+  color: #005b48;
+}
+
+.mk-passport-title-wrap span {
+  font-size: 8px;
+  font-weight: 800;
+  color: #8a652e;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+.mk-passport-badge-delivered {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(80, 175, 71, 0.15);
+  border: 1px solid #50af47;
+  font-size: 8.5px;
+  font-weight: 900;
+  color: #005b48;
+}
+
+/* Pasture Coordinates & Origin Box */
+.mk-passport-geo-box {
+  background: rgba(0, 91, 72, 0.06);
+  border: 1px solid rgba(0, 91, 72, 0.2);
+  border-radius: 7px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mk-passport-geo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-passport-geo-field small {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #736b5e;
+}
+
+.mk-passport-geo-field strong {
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #005b48;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Products in Pasture Order */
+.mk-passport-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.mk-passport-item-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  padding: 5px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.mk-passport-item-thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  background: #f4eee1;
+  border: 1px solid rgba(212, 163, 89, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mk-passport-item-thumb img {
+  object-fit: cover;
+}
+
+.mk-passport-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.mk-passport-item-info strong {
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #1d1d1b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mk-passport-item-info span {
+  font-size: 8px;
+  color: #005b48;
+  font-weight: 700;
+}
+
+.mk-passport-item-price {
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #903828;
+  white-space: nowrap;
+}
+
+/* Cold Chain Timeline Steps */
+.mk-passport-timeline {
+  background: rgba(134, 194, 235, 0.08);
+  border: 1px dashed rgba(0, 91, 72, 0.3);
+  border-radius: 6px;
+  padding: 5px 8px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.mk-passport-timeline-title {
+  font-size: 8px;
+  font-weight: 900;
+  color: #005b48;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mk-passport-timeline-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.mk-timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.mk-timeline-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #50af47;
+  border: 1.5px solid #005b48;
+}
+
+.mk-timeline-step span {
+  font-size: 7px;
+  font-weight: 800;
+  color: #3d4a46;
+  line-height: 1.2;
+}
+
+/* Passport Footer & Actions */
+.mk-passport-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1.5px solid rgba(0, 91, 72, 0.2);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.mk-passport-total-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.mk-passport-total-box small {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #736b5e;
+}
+
+.mk-passport-total-box strong {
+  font-size: 12px;
+  font-weight: 900;
+  color: #005b48;
+}
+
+.mk-passport-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mk-passport-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #d4a359;
+  color: #8a652e;
+  font-size: 8.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mk-passport-pdf-btn:hover {
+  background: #f4eee1;
+}
+
+.mk-passport-reorder-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
+  border: 1px solid #003b2e;
+  color: #f4f0e8;
+  font-size: 8.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mk-passport-reorder-btn:hover {
+  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .profile-workspace-section[data-theme="orders"] {
+    height: auto !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  .mk-orders-desk {
+    grid-template-columns: 1fr;
+    overflow-y: visible;
+  }
+
+  .mk-trolley-console,
+  .mk-passport-sheet {
+    min-height: 380px;
+  }
+}
