@@ -2894,170 +2894,183 @@ function ProfileContent() {
                       {/* The Photorealistic 3D Isometric Shopping Cart Stage */}
                       <div className="mk-iso-cart-stage">
                         <div className="mk-iso-trolley-svg-wrap">
-                          {/* 3D Realistic Wireframe Supermarket Trolley SVG Rig */}
+                          {/* 3D Realistic Wireframe Supermarket Trolley Hardware SVG */}
                           <svg
-                            viewBox="0 0 520 480"
+                            viewBox="0 0 540 500"
                             width="100%"
                             height="100%"
                             preserveAspectRatio="xMidYMid meet"
                             style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}
                           >
                             <defs>
-                              {/* Metallic Gold / Chrome Gradients */}
+                              {/* 1. Metallic Gold & Champagne Reflections */}
                               <linearGradient id="mkGoldTube" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#fff2c9" />
-                                <stop offset="40%" stopColor="#d4a359" />
-                                <stop offset="80%" stopColor="#8a6026" />
-                                <stop offset="100%" stopColor="#573a11" />
+                                <stop offset="0%" stopColor="#fff6d6" />
+                                <stop offset="25%" stopColor="#f5db99" />
+                                <stop offset="60%" stopColor="#d4a359" />
+                                <stop offset="85%" stopColor="#8a6026" />
+                                <stop offset="100%" stopColor="#4a3110" />
                               </linearGradient>
+
+                              {/* 2. Forest Emerald Leather/Rubber Handle */}
                               <linearGradient id="mkGreenHandle" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#0e4a3b" />
-                                <stop offset="50%" stopColor="#005b48" />
-                                <stop offset="100%" stopColor="#022a21" />
+                                <stop offset="0%" stopColor="#145c4a" />
+                                <stop offset="35%" stopColor="#005b48" />
+                                <stop offset="80%" stopColor="#003d30" />
+                                <stop offset="100%" stopColor="#011f18" />
                               </linearGradient>
+
+                              {/* 3. Double-Stroke Chrome Wire Gradients */}
                               <linearGradient id="mkWireMesh" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stopColor="#d4a359" stopOpacity="0.35" />
-                                <stop offset="50%" stopColor="#ffffff" stopOpacity="0.6" />
-                                <stop offset="100%" stopColor="#d4a359" stopOpacity="0.35" />
+                                <stop offset="0%" stopColor="#d4a359" stopOpacity="0.3" />
+                                <stop offset="30%" stopColor="#ffffff" stopOpacity="0.65" />
+                                <stop offset="70%" stopColor="#d4a359" stopOpacity="0.45" />
+                                <stop offset="100%" stopColor="#8a6026" stopOpacity="0.3" />
                               </linearGradient>
+
+                              {/* 4. Floor Soft Contact Ambient Occlusion */}
                               <radialGradient id="mkGroundGlow" cx="50%" cy="50%" r="50%">
-                                <stop offset="0%" stopColor="#000000" stopOpacity="0.8" />
-                                <stop offset="60%" stopColor="#000000" stopOpacity="0.4" />
+                                <stop offset="0%" stopColor="#000000" stopOpacity="0.9" />
+                                <stop offset="50%" stopColor="#000000" stopOpacity="0.45" />
                                 <stop offset="100%" stopColor="#000000" stopOpacity="0" />
                               </radialGradient>
+
+                              {/* 5. Caster Wheel Metallic Rim */}
                               <radialGradient id="mkWheelRim" cx="35%" cy="35%" r="65%">
                                 <stop offset="0%" stopColor="#ffffff" />
-                                <stop offset="40%" stopColor="#d4a359" />
-                                <stop offset="85%" stopColor="#2e1f0b" />
+                                <stop offset="35%" stopColor="#f5db99" />
+                                <stop offset="70%" stopColor="#9e722f" />
+                                <stop offset="90%" stopColor="#2e1f0b" />
                                 <stop offset="100%" stopColor="#000000" />
                               </radialGradient>
                             </defs>
 
-                            {/* 1. Ground Shadows under the 4 wheels */}
-                            <ellipse cx="140" cy="455" rx="35" ry="10" fill="url(#mkGroundGlow)" />
-                            <ellipse cx="380" cy="455" rx="35" ry="10" fill="url(#mkGroundGlow)" />
-                            <ellipse cx="200" cy="425" rx="26" ry="8" fill="url(#mkGroundGlow)" opacity="0.6" />
-                            <ellipse cx="320" cy="425" rx="26" ry="8" fill="url(#mkGroundGlow)" opacity="0.6" />
+                            {/* --- LAYER A: Ground Contact Shadows --- */}
+                            <ellipse cx="145" cy="468" rx="42" ry="11" fill="url(#mkGroundGlow)" />
+                            <ellipse cx="395" cy="468" rx="42" ry="11" fill="url(#mkGroundGlow)" />
+                            <ellipse cx="205" cy="435" rx="30" ry="9" fill="url(#mkGroundGlow)" opacity="0.7" />
+                            <ellipse cx="335" cy="435" rx="30" ry="9" fill="url(#mkGroundGlow)" opacity="0.7" />
 
-                            {/* 2. Lower Chassis Frame & Undercarriage Tubular Beams */}
+                            {/* --- LAYER B: Lower Chassis Frame & Undercarriage Tray --- */}
+                            {/* Triangular Main Chassis Bars */}
                             <path
-                              d="M140 435 L200 415 L320 415 L380 435 L340 375 L180 375 Z"
-                              fill="rgba(0, 45, 35, 0.45)"
+                              d="M145 448 L205 422 L335 422 L395 448 L355 385 L185 385 Z"
+                              fill="rgba(0, 40, 30, 0.55)"
                               stroke="url(#mkGoldTube)"
-                              strokeWidth="3.5"
+                              strokeWidth="4"
                               strokeLinejoin="round"
                             />
-                            {/* Chassis bottom wire tray */}
-                            <line x1="165" y1="428" x2="355" y2="428" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
-                            <line x1="190" y1="418" x2="330" y2="418" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
-                            <line x1="210" y1="390" x2="310" y2="390" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            {/* Bottom Wire Grid Rung Lines */}
+                            <line x1="170" y1="440" x2="370" y2="440" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
+                            <line x1="192" y1="428" x2="348" y2="428" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
+                            <line x1="215" y1="400" x2="325" y2="400" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
 
-                            {/* 3. Upright Cantilever Tubes connecting Basket to Chassis */}
-                            <line x1="140" y1="435" x2="80" y2="120" stroke="url(#mkGoldTube)" strokeWidth="4" strokeLinecap="round" />
-                            <line x1="380" y1="435" x2="440" y2="120" stroke="url(#mkGoldTube)" strokeWidth="4" strokeLinecap="round" />
+                            {/* Upright Cantilever Tubes connecting Basket to Chassis */}
+                            <line x1="145" y1="448" x2="80" y2="125" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
+                            <line x1="395" y1="448" x2="460" y2="125" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
 
-                            {/* 4. Rear Struts ascending to Handlebar */}
-                            <line x1="80" y1="120" x2="70" y2="55" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
-                            <line x1="440" y1="120" x2="450" y2="55" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
+                            {/* Rear Push Struts ascending to Handlebar */}
+                            <line x1="80" y1="125" x2="68" y2="52" stroke="url(#mkGoldTube)" strokeWidth="5" strokeLinecap="round" />
+                            <line x1="460" y1="125" x2="472" y2="52" stroke="url(#mkGoldTube)" strokeWidth="5" strokeLinecap="round" />
 
-                            {/* 5. 3D Ergonomic Green & Gold Push Handlebar */}
+                            {/* --- LAYER C: 3D Ergonomic Green & Gold Push Handlebar --- */}
                             <rect
-                              x="60"
-                              y="42"
-                              width="400"
-                              height="22"
-                              rx="11"
+                              x="58"
+                              y="40"
+                              width="424"
+                              height="24"
+                              rx="12"
                               fill="url(#mkGreenHandle)"
                               stroke="url(#mkGoldTube)"
                               strokeWidth="2"
-                              filter="drop-shadow(0 4px 10px rgba(0,0,0,0.7))"
+                              filter="drop-shadow(0 4px 12px rgba(0,0,0,0.75))"
                             />
                             {/* Gold Handle End-caps */}
-                            <rect x="60" y="44" width="14" height="18" rx="4" fill="url(#mkGoldTube)" />
-                            <rect x="446" y="44" width="14" height="18" rx="4" fill="url(#mkGoldTube)" />
+                            <rect x="58" y="42" width="16" height="20" rx="5" fill="url(#mkGoldTube)" />
+                            <rect x="466" y="42" width="16" height="20" rx="5" fill="url(#mkGoldTube)" />
                             {/* Center Marde Koohestan Gold Badge */}
-                            <rect x="185" y="47" width="150" height="12" rx="6" fill="#010d0a" stroke="#d4a359" strokeWidth="1" />
-                            <text x="260" y="56" fill="#f5db99" fontSize="7.5" fontWeight="900" textAnchor="middle" letterSpacing="0.08em">
+                            <rect x="195" y="45" width="150" height="14" rx="7" fill="#010f0b" stroke="#d4a359" strokeWidth="1.2" />
+                            <text x="270" y="55.5" fill="#f5db99" fontSize="8" fontWeight="900" textAnchor="middle" letterSpacing="0.09em">
                               MARDE KOOHESTAN · این راه سبز است
                             </text>
 
-                            {/* 6. 3D Isometric Wire Basket Frame (Angled 3D Mesh) */}
-                            {/* Back Face */}
+                            {/* --- LAYER D: 3D Wire Mesh Basket Geometry --- */}
+                            {/* Back Face Panel */}
                             <polygon
-                              points="95,120 425,120 375,340 145,340"
-                              fill="rgba(0, 30, 24, 0.4)"
+                              points="95,125 445,125 390,350 150,350"
+                              fill="rgba(0, 32, 25, 0.45)"
                               stroke="url(#mkWireMesh)"
-                              strokeWidth="1.5"
+                              strokeWidth="1.6"
                             />
-                            {/* Bottom Wire Grid */}
+                            {/* Bottom Wire Floor Grid */}
                             <polygon
-                              points="145,340 375,340 395,360 125,360"
-                              fill="rgba(212, 163, 89, 0.12)"
+                              points="150,350 390,350 415,375 125,375"
+                              fill="rgba(212, 163, 89, 0.14)"
                               stroke="url(#mkGoldTube)"
-                              strokeWidth="2.5"
+                              strokeWidth="2.8"
                             />
 
-                            {/* 7. Wire Basket Main Top Perimeter Rim Tube */}
+                            {/* Wire Basket Main Top Perimeter Rim Tube */}
                             <polygon
-                              points="75,115 445,115 485,240 35,240"
+                              points="78,120 462,120 505,250 35,250"
                               fill="none"
                               stroke="url(#mkGoldTube)"
-                              strokeWidth="4"
+                              strokeWidth="4.5"
                               strokeLinejoin="round"
                             />
 
                             {/* Front Lower Wire Mesh Panel */}
                             <polygon
-                              points="35,240 485,240 395,360 125,360"
+                              points="35,250 505,250 415,375 125,375"
                               fill="none"
                               stroke="url(#mkGoldTube)"
-                              strokeWidth="3"
+                              strokeWidth="3.2"
                               strokeLinejoin="round"
                             />
 
-                            {/* Wire Grid Horizontal Lines on Front Panel */}
-                            <line x1="50" y1="265" x2="470" y2="265" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
-                            <line x1="70" y1="290" x2="450" y2="290" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
-                            <line x1="90" y1="315" x2="430" y2="315" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
-                            <line x1="110" y1="340" x2="410" y2="340" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            {/* Horizontal Wire Mesh Ribs */}
+                            <line x1="52" y1="278" x2="488" y2="278" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
+                            <line x1="72" y1="304" x2="468" y2="304" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
+                            <line x1="92" y1="330" x2="448" y2="330" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
+                            <line x1="112" y1="354" x2="428" y2="354" stroke="url(#mkWireMesh)" strokeWidth="1.6" />
 
-                            {/* Wire Grid Vertical Ribs on Front Panel */}
-                            {[0.12, 0.22, 0.32, 0.42, 0.52, 0.62, 0.72, 0.82, 0.92].map((pct, i) => (
+                            {/* Vertical Wire Mesh Ribs */}
+                            {[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map((pct, i) => (
                               <line
                                 key={`vwire-${i}`}
-                                x1={35 + (485 - 35) * pct}
-                                y1="240"
-                                x2={125 + (395 - 125) * pct}
-                                y2="360"
+                                x1={35 + (505 - 35) * pct}
+                                y1="250"
+                                x2={125 + (415 - 125) * pct}
+                                y2="375"
                                 stroke="url(#mkWireMesh)"
-                                strokeWidth="1.4"
+                                strokeWidth="1.5"
                               />
                             ))}
 
-                            {/* 8. 4 Multi-Directional 3D Swivel Caster Wheels */}
+                            {/* --- LAYER E: 4 Multi-Directional 3D Swivel Casters --- */}
                             {/* Rear Left Wheel */}
-                            <g transform="translate(190, 415)">
-                              <rect x="-3" y="0" width="6" height="8" rx="1" fill="url(#mkGoldTube)" />
-                              <circle cx="0" cy="14" r="11" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2" />
-                              <circle cx="0" cy="14" r="3" fill="#ffffff" />
+                            <g transform="translate(195, 425)">
+                              <rect x="-3.5" y="0" width="7" height="9" rx="1.5" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="15" r="12" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.2" />
+                              <circle cx="0" cy="15" r="3.5" fill="#ffffff" />
                             </g>
                             {/* Rear Right Wheel */}
-                            <g transform="translate(330, 415)">
-                              <rect x="-3" y="0" width="6" height="8" rx="1" fill="url(#mkGoldTube)" />
-                              <circle cx="0" cy="14" r="11" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2" />
-                              <circle cx="0" cy="14" r="3" fill="#ffffff" />
+                            <g transform="translate(345, 425)">
+                              <rect x="-3.5" y="0" width="7" height="9" rx="1.5" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="15" r="12" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.2" />
+                              <circle cx="0" cy="15" r="3.5" fill="#ffffff" />
                             </g>
                             {/* Front Left Wheel */}
-                            <g transform="translate(140, 435)">
-                              <rect x="-4" y="0" width="8" height="10" rx="1" fill="url(#mkGoldTube)" />
-                              <circle cx="0" cy="17" r="15" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.5" />
-                              <circle cx="0" cy="17" r="4.5" fill="#f5db99" />
+                            <g transform="translate(145, 448)">
+                              <rect x="-4.5" y="0" width="9" height="11" rx="1.5" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="18" r="16" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.8" />
+                              <circle cx="0" cy="18" r="5" fill="#f5db99" />
                             </g>
                             {/* Front Right Wheel */}
-                            <g transform="translate(380, 435)">
-                              <rect x="-4" y="0" width="8" height="10" rx="1" fill="url(#mkGoldTube)" />
-                              <circle cx="0" cy="17" r="15" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.5" />
-                              <circle cx="0" cy="17" r="4.5" fill="#f5db99" />
+                            <g transform="translate(395, 448)">
+                              <rect x="-4.5" y="0" width="9" height="11" rx="1.5" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="18" r="16" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.8" />
+                              <circle cx="0" cy="18" r="5" fill="#f5db99" />
                             </g>
                           </svg>
 

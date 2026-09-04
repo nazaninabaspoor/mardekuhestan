@@ -1,24 +1,25 @@
 /* ==========================================================================
-   MARDE KOOHESTAN - TRUE 3D ISOMETRIC SUPERMARKET TROLLEY & ORDERS CONSOLE
-   Theme: Photorealistic 3D Isometric Shopping Cart (چرخ خرید سه‌بعدی فروشگاهی)
-          + Authentic Pasture Passport Book (کتاب واقعی شناسنامه) & Official Invoice (فاکتور واقعی)
+   MARDE KOOHESTAN - ULTRA-LUXURY 3D ISOMETRIC SUPERMARKET TROLLEY & ORDERS
+   Theme: Award-Winning 3D Isometric Shopping Cart (چرخ خرید سه‌بعدی واقعی لوکس)
+          + Authentic Pasture Passport Book (کتابچه شناسنامه مرتع) & Official Invoice (فاکتور رسمی)
    Palette: Forest Emerald (#005B48), Warm Cream (#F4F0E8), Burnished Gold (#D4A359),
-            Chrome/Brass (#F5DB99), Terracotta (#903828), Deep Obsidian (#01140F)
+            Champagne Chrome (#F5DB99), Terracotta (#903828), Deep Obsidian (#01120D)
    ========================================================================== */
 
 .profile-workspace-section[data-theme="orders"] {
   height: min(92vh, 880px);
   max-height: 880px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 20px;
   background:
-    radial-gradient(ellipse at 50% 10%, rgba(0, 91, 72, 0.45) 0%, transparent 65%),
-    linear-gradient(155deg, rgba(1, 28, 22, 0.96) 0%, rgba(2, 16, 12, 0.98) 55%, rgba(0, 10, 8, 0.99) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.55);
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.45) 0%, transparent 65%),
+    radial-gradient(ellipse at 20% 90%, rgba(212, 163, 89, 0.12) 0%, transparent 50%),
+    linear-gradient(160deg, rgba(1, 28, 22, 0.98) 0%, rgba(2, 16, 12, 0.99) 50%, rgba(0, 9, 7, 1) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.6);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 0 40px rgba(0, 0, 0, 0.7);
+    0 28px 70px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 50px rgba(0, 0, 0, 0.8);
   box-sizing: border-box;
 }
 
@@ -49,7 +50,7 @@
   justify-content: space-between;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.28);
+  border-bottom: 1px solid rgba(212, 163, 89, 0.3);
   flex-shrink: 0;
 }
 
@@ -61,7 +62,7 @@
 
 .mk-orders-logo {
   object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
 }
 
 .mk-orders-titles {
@@ -71,7 +72,7 @@
 }
 
 .mk-orders-titles strong {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 900;
   color: #f4f0e8;
   letter-spacing: -0.01em;
@@ -96,7 +97,7 @@
   padding: 4px 10px;
   border-radius: 99px;
   background: rgba(134, 194, 235, 0.12);
-  border: 1px solid rgba(134, 194, 235, 0.35);
+  border: 1px solid rgba(134, 194, 235, 0.4);
   font-size: 9.5px;
   font-weight: 800;
   color: #aae0ff;
@@ -107,7 +108,7 @@
   height: 6px;
   border-radius: 50%;
   background: #86c2eb;
-  box-shadow: 0 0 8px #86c2eb;
+  box-shadow: 0 0 10px #86c2eb;
   animation: mkOrdersPulse 2s infinite ease-in-out;
 }
 
@@ -123,7 +124,7 @@
   padding: 5px 12px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(212, 163, 89, 0.3);
+  border: 1px solid rgba(212, 163, 89, 0.35);
   color: #e1dcd1;
   font-size: 10.5px;
   font-weight: 800;
@@ -132,7 +133,7 @@
 }
 
 .mk-orders-close-btn:hover {
-  background: rgba(212, 163, 89, 0.2);
+  background: rgba(212, 163, 89, 0.22);
   border-color: #d4a359;
   color: #ffffff;
   transform: translateY(-1px);
@@ -152,7 +153,7 @@
 }
 
 /* ==========================================================================
-   SIDE A: 3D ISOMETRIC SUPERMARKET TROLLEY (چرخ خرید سه‌بعدی فروشگاهی)
+   SIDE A: 3D ISOMETRIC SUPERMARKET TROLLEY CONSOLE
    ========================================================================== */
 
 .mk-trolley-console {
@@ -160,14 +161,14 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.35) 0%, transparent 70%),
-    linear-gradient(155deg, rgba(0, 36, 28, 0.92) 0%, rgba(2, 16, 12, 0.98) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.45);
-  border-radius: 14px;
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.4) 0%, transparent 70%),
+    linear-gradient(155deg, rgba(0, 36, 28, 0.94) 0%, rgba(2, 16, 12, 0.98) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.5);
+  border-radius: 16px;
   box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 25px rgba(0, 0, 0, 0.6);
+    0 14px 36px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(0, 0, 0, 0.65);
   padding: 10px 14px 10px;
   box-sizing: border-box;
   min-height: 0;
@@ -180,7 +181,7 @@
   justify-content: space-between;
   padding-bottom: 6px;
   margin-bottom: 6px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.2);
+  border-bottom: 1px solid rgba(212, 163, 89, 0.22);
   flex-shrink: 0;
 }
 
@@ -199,7 +200,7 @@
 
 .mk-trolley-title-box h3 {
   margin: 0;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 900;
   color: #f4f0e8;
 }
@@ -208,10 +209,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(212, 163, 89, 0.35);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(212, 163, 89, 0.4);
   padding: 3px 9px;
-  border-radius: 7px;
+  border-radius: 8px;
 }
 
 .mk-trolley-counter {
@@ -221,26 +222,27 @@
 }
 
 .mk-trolley-counter strong {
-  color: #d4a359;
+  color: #f5db99;
   font-size: 12px;
 }
 
 .mk-trolley-bar-wrap {
-  width: 65px;
+  width: 70px;
   height: 5px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   overflow: hidden;
 }
 
 .mk-trolley-bar-fill {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #50af47 0%, #d4a359 100%);
+  background: linear-gradient(90deg, #50af47 0%, #d4a359 70%, #f5db99 100%);
+  box-shadow: 0 0 8px rgba(212, 163, 89, 0.6);
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Capacity Simulation Bar */
+/* Quick Simulation Bar */
 .mk-trolley-sim-bar {
   display: flex;
   align-items: center;
@@ -249,8 +251,8 @@
   margin-bottom: 8px;
   padding: 3px 6px;
   border-radius: 7px;
-  background: rgba(0, 16, 12, 0.7);
-  border: 1px solid rgba(212, 163, 89, 0.18);
+  background: rgba(0, 16, 12, 0.75);
+  border: 1px solid rgba(212, 163, 89, 0.2);
   flex-shrink: 0;
 }
 
@@ -274,20 +276,20 @@
 }
 
 .mk-trolley-pill-btn {
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 7px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(212, 163, 89, 0.25);
+  border: 1px solid rgba(212, 163, 89, 0.28);
   color: #d4e0dc;
   font-size: 8px;
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
 }
 
 .mk-trolley-pill-btn:hover {
-  background: rgba(212, 163, 89, 0.2);
+  background: rgba(212, 163, 89, 0.22);
   color: #ffffff;
 }
 
@@ -296,10 +298,11 @@
   border-color: #f5db99;
   color: #1a1205;
   font-weight: 900;
+  box-shadow: 0 2px 8px rgba(212, 163, 89, 0.4);
 }
 
 /* ==========================================================================
-   3D ISOMETRIC SHOPPING CART VIEWPORT (صحنه سه‌بعدی ایزومتریک چرخ خرید)
+   TRUE 3D ISOMETRIC SHOPPING CART STAGE
    ========================================================================== */
 
 .mk-iso-cart-stage {
@@ -310,20 +313,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 12px;
+  border-radius: 14px;
   background:
-    radial-gradient(ellipse at 50% 90%, rgba(212, 163, 89, 0.18) 0%, transparent 65%),
-    linear-gradient(180deg, rgba(0, 20, 15, 0.9) 0%, rgba(1, 10, 8, 0.98) 100%);
+    radial-gradient(ellipse at 50% 90%, rgba(212, 163, 89, 0.22) 0%, transparent 65%),
+    radial-gradient(circle at 50% 25%, rgba(0, 91, 72, 0.2) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(0, 20, 15, 0.92) 0%, rgba(1, 10, 8, 0.99) 100%);
   border: 1.5px solid rgba(212, 163, 89, 0.45);
   box-shadow:
     inset 0 4px 30px rgba(0, 0, 0, 0.85),
     0 8px 24px rgba(0, 0, 0, 0.4);
-  padding: 8px 8px 6px;
+  padding: 6px 8px 6px;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-/* Interactive 3D Cart SVG & Graphic Wireframe Rig */
+/* Interactive 3D Cart SVG Rig */
 .mk-iso-trolley-svg-wrap {
   position: relative;
   width: 100%;
@@ -335,13 +339,13 @@
   justify-content: center;
 }
 
-/* 3D Basket Cargo Area Container */
+/* 3D Basket Cargo Area Container (Positioned inside the 3D basket cage) */
 .mk-iso-cargo-overlay {
   position: absolute;
-  top: 14%;
-  left: 6%;
-  right: 6%;
-  bottom: 22%;
+  top: 13%;
+  left: 5%;
+  right: 5%;
+  bottom: 21%;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -355,7 +359,7 @@
 /* 3D Isometric Parcel Grid */
 .mk-iso-boxes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
   gap: 8px;
   width: 100%;
 }
@@ -368,14 +372,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 7px;
+  border-radius: 8px;
   background:
-    radial-gradient(circle at 85% 15%, rgba(245, 219, 153, 0.25) 0%, transparent 60%),
+    radial-gradient(circle at 85% 15%, rgba(245, 219, 153, 0.28) 0%, transparent 60%),
     linear-gradient(145deg, #443221 0%, #2a1b10 55%, #150d06 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.6);
+  border: 1.5px solid rgba(212, 163, 89, 0.65);
   box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 18px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 0 12px rgba(0, 0, 0, 0.7);
   padding: 6px 7px;
   box-sizing: border-box;
@@ -383,7 +387,7 @@
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
-  min-height: 86px;
+  min-height: 88px;
   justify-content: space-between;
 }
 
@@ -430,17 +434,17 @@
   border-color: #f5db99;
   box-shadow:
     0 12px 26px rgba(0, 0, 0, 0.75),
-    0 0 18px rgba(212, 163, 89, 0.5);
+    0 0 20px rgba(212, 163, 89, 0.5);
 }
 
 .mk-iso-box-card.is-selected {
   border-color: #50af47;
   background:
-    radial-gradient(circle at 85% 15%, rgba(80, 175, 71, 0.3) 0%, transparent 60%),
+    radial-gradient(circle at 85% 15%, rgba(80, 175, 71, 0.35) 0%, transparent 60%),
     linear-gradient(145deg, #123d2d 0%, #082117 60%, #03100b 100%);
   box-shadow:
     0 10px 24px rgba(0, 0, 0, 0.7),
-    0 0 20px rgba(80, 175, 71, 0.55);
+    0 0 22px rgba(80, 175, 71, 0.6);
 }
 
 .mk-iso-box-top {
@@ -687,7 +691,7 @@
   flex: 1;
   min-height: 0;
   display: flex;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #f4eee1;
   box-shadow:
     0 14px 32px rgba(0, 0, 0, 0.45),
@@ -1004,7 +1008,7 @@
   flex-direction: column;
   background: #ffffff;
   border: 1.5px solid #d4a359;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 10px 12px 10px;
   color: #1d1d1b;
   box-shadow:
