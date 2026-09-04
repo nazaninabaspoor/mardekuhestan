@@ -950,13 +950,13 @@
   border-radius: 12px;
   /* Brushed Emerald Titanium Door with Brass Trim */
   background:
-    linear-gradient(145deg, rgba(0, 72, 57, 0.75) 0%, rgba(10, 32, 25, 0.95) 100%);
+    linear-gradient(155deg, rgba(0, 68, 54, 0.85) 0%, rgba(8, 28, 22, 0.96) 60%, rgba(4, 16, 12, 0.98) 100%);
   border: 1.5px solid rgba(212, 163, 89, 0.55);
   box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.45),
+    0 14px 32px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 0 15px rgba(0, 0, 0, 0.5);
-  padding: 10px 14px;
+    inset 0 0 18px rgba(0, 0, 0, 0.55);
+  padding: 14px 16px 12px;
   box-sizing: border-box;
 }
 
@@ -964,9 +964,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.22);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
 }
 
 .mk-safe-title-wrap {
@@ -976,50 +976,52 @@
 }
 
 .mk-safe-kicker {
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 900;
   color: #d4a359;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
 }
 
 .mk-safe-head h3 {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   color: #f4f0e8;
+  letter-spacing: -0.01em;
 }
 
 /* 3D Tactile Brass Safe Dial */
 .mk-safe-dial {
   position: relative;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #f5db99 0%, #d4a359 55%, #8a652e 100%);
+  background: radial-gradient(circle at 35% 35%, #fff1c7 0%, #d4a359 50%, #8a652e 100%);
   border: 2px solid #5a411a;
   box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.5),
-    inset 0 0 6px rgba(0, 0, 0, 0.4);
+    inset 0 0 4px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .mk-safe-dial-ring {
   position: absolute;
-  inset: 3px;
+  inset: 4px;
   border-radius: 50%;
   border: 1px dashed rgba(0, 0, 0, 0.45);
 }
 
 .mk-safe-dial-ring.is-mid {
-  inset: 6px;
+  inset: 7px;
   border-style: dotted;
 }
 
 .mk-safe-dial-core {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff 0%, #005b48 70%, #00281f 100%);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
@@ -1028,40 +1030,44 @@
 .mk-safe-cavity {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   flex: 1;
   min-height: 0;
+  justify-content: space-between;
 }
 
 .mk-safe-alert {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10.5px;
   font-weight: 800;
 }
 
 .mk-safe-alert.is-ok {
   background: rgba(80, 175, 71, 0.2);
-  border: 1px solid rgba(80, 175, 71, 0.4);
+  border: 1px solid rgba(80, 175, 71, 0.45);
   color: #a4e09e;
 }
 
 .mk-safe-alert.is-bad {
   background: rgba(144, 56, 40, 0.2);
-  border: 1px solid rgba(144, 56, 40, 0.4);
+  border: 1px solid rgba(144, 56, 40, 0.45);
   color: #ff9b8c;
 }
 
 .mk-safe-inputs-grid {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
+  flex: 1;
+  gap: 10px;
+  margin: 2px 0 6px;
 }
 
 .mk-safe-field {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .mk-safe-field-head,
@@ -1069,43 +1075,177 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
-  color: rgba(244, 240, 232, 0.85);
+  color: rgba(244, 240, 232, 0.9);
+}
+
+.mk-safe-field-head label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f4f0e8;
+}
+
+.mk-safe-field-head label svg {
+  opacity: 0.95;
+  flex-shrink: 0;
 }
 
 .mk-safe-tight {
-  font-size: 9px;
-  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8.5px;
+  font-weight: 800;
   color: #a4e09e;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.45);
+  padding: 2px 8px;
+  border-radius: 99px;
 }
 
 .mk-safe-tight.is-loose {
   color: #ff9b8c;
+  background: rgba(144, 56, 40, 0.2);
+  border-color: rgba(144, 56, 40, 0.45);
 }
 
-.mk-safe-turn {
-  margin-top: auto;
+.mk-safe-tight-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Vault Tactical Secret Input Slot */
+.mk-safe-secret {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(2, 18, 14, 0.82);
+  border: 1.2px solid rgba(212, 163, 89, 0.42);
+  border-radius: 7px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.65),
+    0 1px 2px rgba(212, 163, 89, 0.08);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 42px;
+  min-height: 42px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.mk-safe-secret:focus-within {
+  border-color: #d4a359;
+  background: rgba(1, 24, 18, 0.94);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.7),
+    0 0 0 2px rgba(212, 163, 89, 0.28);
+}
+
+.mk-safe-input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f4f0e8;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.mk-safe-input::placeholder {
+  color: rgba(244, 240, 232, 0.35);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
+/* Tactical Peek / Show Password Button */
+.mk-safe-peek {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 7px 12px;
-  border-radius: 6px;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  margin-inline-end: 6px;
+  background: rgba(212, 163, 89, 0.14);
+  border: 1px solid rgba(212, 163, 89, 0.42);
+  border-radius: 5px;
+  color: #d4a359;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mk-safe-peek:hover {
+  background: rgba(212, 163, 89, 0.28);
+  border-color: #f5db99;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transform: translateY(-0.5px);
+}
+
+.mk-safe-peek:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.mk-safe-peek.is-active {
+  background: rgba(80, 175, 71, 0.22);
+  border-color: rgba(80, 175, 71, 0.6);
+  color: #a4e09e;
+}
+
+.mk-safe-peek.is-active:hover {
+  background: rgba(80, 175, 71, 0.32);
+  border-color: #a4e09e;
+  color: #ffffff;
+}
+
+.mk-safe-peek svg {
+  flex-shrink: 0;
+}
+
+.mk-safe-turn {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 7px;
   background: linear-gradient(135deg, #d4a359 0%, #b8863b 100%);
   color: #1a1408;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 900;
   border: 1px solid #f5db99;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mk-safe-turn:hover {
   background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(212, 163, 89, 0.4);
+  box-shadow: 0 6px 16px rgba(212, 163, 89, 0.45);
+}
+
+.mk-safe-turn:active {
+  transform: translateY(0);
 }
 
 /* ==========================================================================
