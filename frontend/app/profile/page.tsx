@@ -6,7 +6,14 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import { authErrorMessage, changePassword } from "@/lib/api/auth";
+import {
+  authErrorMessage,
+  changePassword,
+  createAddress,
+  CustomerAddress,
+  getUserAddresses,
+  updateAddress,
+} from "@/lib/api/auth";
 
 type ActiveTab = "personal" | "ai-nutrition" | "wallet" | "subscription" | "orders";
 
@@ -444,6 +451,39 @@ function ProfileContent() {
   const [chargeAmount, setChargeAmount] = useState("100000");
   const [walletMsg, setWalletMsg] = useState<string | null>(null);
 
+  // Delivery Addresses State
+  const [addresses, setAddresses] = useState<CustomerAddress[]>([
+    {
+      id: 1,
+      title: "نشانی منزل",
+      address_type: "home",
+      province: "تهران",
+      city: "تهران",
+      district: "زعفرانیه",
+      address_line: "خیابان آصف، کمالی، بنفشه، پلاک ۱۲",
+      postal_code: "۱۹۸۷۶۵۴۳۲۱",
+      receiver_name: "کامیار جعفریان",
+      receiver_phone: "۰۹۳۷۹۱۴۶۱۳۰",
+      is_default: true,
+    },
+    {
+      id: 2,
+      title: "نشانی دفتر",
+      address_type: "work",
+      province: "تهران",
+      city: "تهران",
+      district: "فرمانیه",
+      address_line: "بلوار اندرزگو، سلیمی شمالی، ساختمان نگین",
+      postal_code: "۱۹۳۴۵۶۷۸۹۰",
+      receiver_name: "کامیار جعفریان",
+      receiver_phone: "۰۹۳۷۹۱۴۶۱۳۰",
+      is_default: false,
+    },
+  ]);
+  const [editingAddress, setEditingAddress] = useState<CustomerAddress | null>(null);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isSavingAddress, setIsSavingAddress] = useState(false);
+
   // Subscription plan selection
   const [selectedPlan, setSelectedPlan] = useState<"standard" | "family" | "gourmet">("family");
 
@@ -465,8 +505,47 @@ function ProfileContent() {
           setAvatarUrl(savedAvatar);
         }
       } catch {}
+
+      getUserAddresses()
+        .then((data) => {
+          if (data && data.length > 0) {
+            setAddresses(data);
+          }
+        })
+        .catch(() => {
+          // fallback to defaults
+        });
     }
   }, [user]);
+
+  const handleOpenEditAddress = (addr: CustomerAddress) => {
+    setEditingAddress({ ...addr });
+    setIsAddressModalOpen(true);
+  };
+
+  const handleSaveAddress = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingAddress) return;
+    setIsSavingAddress(true);
+    try {
+      if (editingAddress.id) {
+        const updated = await updateAddress(editingAddress.id, editingAddress);
+        setAddresses((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
+      } else {
+        const created = await createAddress(editingAddress);
+        setAddresses((prev) => [...prev, created]);
+      }
+      setIsAddressModalOpen(false);
+      setEditingAddress(null);
+      setProfileSuccessMsg("نشانی تحویل مرسوله با موفقیت در سامانه و پنل ادمین ثبت شد.");
+      setTimeout(() => setProfileSuccessMsg(null), 4000);
+    } catch (err) {
+      setProfileErrorMsg(authErrorMessage(err));
+      setTimeout(() => setProfileErrorMsg(null), 4000);
+    } finally {
+      setIsSavingAddress(false);
+    }
+  };
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -1426,7 +1505,7 @@ function ProfileContent() {
                               <span className="mk-safe-bolt is-bl" aria-hidden="true" />
                               <header className="mk-mail-head">
                                 <div className="mk-mail-title-wrap">
-                                  <span className="mk-mail-kicker">COLD CHAIN DELIVERY</span>
+                                  <span className="mk-mail-kicker">COLD CHAIN LOGISTICS · موقعیت تحویل</span>
                                   <h3 id="folio-mail-title">پاکت‌های تحویل سفارش</h3>
                                 </div>
                                 <span className="mk-mail-cold-tag">
@@ -1435,48 +1514,281 @@ function ProfileContent() {
                                 </span>
                               </header>
                               <div className="mk-mail-row">
-                                <article className="mk-packet">
-                                  <div className="mk-packet-flap" />
-                                  <div className="mk-packet-top">
-                                    <span className="mk-packet-lead">
-                                      <span className="mk-packet-seal is-gold" aria-hidden="true">
-                                        <Image src="/brand/orginal-clear.png" alt="" width={12} height={12} />
-                                      </span>
-                                      <span className="mk-packet-tag">نشانی منزل</span>
-                                    </span>
-                                    <span className="mk-packet-stamp">پست سبز</span>
-                                  </div>
-                                  <h4>تهران، زعفرانیه</h4>
-                                  <p>خیابان آصف، کمالی، بنفشه، پلاک ۱۲</p>
-                                  <div className="mk-packet-foot">
-                                    <small>{displayName}</small>
-                                    <span className="mk-packet-active-pill">پیش‌فرض</span>
-                                  </div>
-                                </article>
+                                {addresses.slice(0, 2).map((addr, idx) => {
+                                  const isHome = addr.address_type === "home" || addr.title.includes("منزل");
+                                  return (
+                                    <article
+                                      key={addr.id || idx}
+                                      className={`mk-packet${isHome ? " is-home" : " is-work"}`}
+                                      onClick={() => handleOpenEditAddress(addr)}
+                                      role="button"
+                                      tabIndex={0}
+                                      title="کلیک برای ویرایش نشانی"
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                          e.preventDefault();
+                                          handleOpenEditAddress(addr);
+                                        }
+                                      }}
+                                    >
+                                      {/* Topographic Geo Matrix Watermark */}
+                                      <div className="mk-packet-geo-watermark" aria-hidden="true">
+                                        <svg viewBox="0 0 160 80" className="mk-geo-grid-svg">
+                                          <defs>
+                                            <pattern id={`geo-grid-${idx}`} width="14" height="14" patternUnits="userSpaceOnUse">
+                                              <path d="M 14 0 L 0 0 0 14" fill="none" stroke="#D4A359" strokeWidth="0.35" opacity="0.3" />
+                                            </pattern>
+                                          </defs>
+                                          <rect width="100%" height="100%" fill={`url(#geo-grid-${idx})`} />
+                                          <circle cx="128" cy="24" r="20" fill="none" stroke="#005B48" strokeWidth="0.5" strokeDasharray="2 2" opacity="0.4" />
+                                          <circle cx="128" cy="24" r="10" fill="none" stroke="#D4A359" strokeWidth="0.5" opacity="0.5" />
+                                          <circle cx="128" cy="24" r="2.5" fill="#D4A359" opacity="0.8" />
+                                        </svg>
+                                      </div>
 
-                                <article className="mk-packet">
-                                  <div className="mk-packet-flap" />
-                                  <div className="mk-packet-top">
-                                    <span className="mk-packet-lead">
-                                      <span className="mk-packet-seal is-clay" aria-hidden="true">
-                                        <Image src="/brand/orginal-clear.png" alt="" width={12} height={12} />
-                                      </span>
-                                      <span className="mk-packet-tag is-work">نشانی دفتر</span>
-                                    </span>
-                                    <span className="mk-packet-stamp">پست سبز</span>
-                                  </div>
-                                  <h4>تهران، فرمانیه</h4>
-                                  <p>بلوار اندرزگو، سلیمی شمالی، ساختمان نگین</p>
-                                  <div className="mk-packet-foot">
-                                    <small>{displayName}</small>
-                                    <span className="mk-packet-active-pill is-secondary">محل کار</span>
-                                  </div>
-                                </article>
+                                      <div className="mk-packet-top">
+                                        <span className="mk-packet-lead">
+                                          <span className={`mk-packet-pin${isHome ? " is-home" : " is-work"}`}>
+                                            <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+                                              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                            </svg>
+                                          </span>
+                                          <span className="mk-packet-tag">{addr.title || (isHome ? "نشانی منزل" : "نشانی دفتر")}</span>
+                                        </span>
+
+                                        <span className="mk-packet-route-chip">
+                                          <span className="mk-route-radar-dot" />
+                                          <span>{addr.district || (isHome ? "زعفرانیه" : "فرمانیه")}</span>
+                                        </span>
+                                      </div>
+
+                                      <div className="mk-packet-body">
+                                        <div className="mk-packet-city-row">
+                                          <svg viewBox="0 0 24 24" width="11" height="11" stroke="#005B48" strokeWidth="2.3" fill="none">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                          </svg>
+                                          <h4>{addr.city}{addr.district ? `، ${addr.district}` : ""}</h4>
+                                        </div>
+                                        <p className="mk-packet-address-text">{addr.address_line}</p>
+                                        {addr.postal_code ? (
+                                          <span className="mk-packet-postal-tag">
+                                            <span>کد پستی:</span>
+                                            <strong dir="ltr">{addr.postal_code}</strong>
+                                          </span>
+                                        ) : null}
+                                      </div>
+
+                                      <div className="mk-packet-foot">
+                                        <div className="mk-packet-receiver">
+                                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="#5D686E" strokeWidth="2.2" fill="none">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                          </svg>
+                                          <small>{addr.receiver_name || displayName}</small>
+                                        </div>
+
+                                        <div className="mk-packet-foot-actions">
+                                          {addr.is_default ? (
+                                            <span className="mk-packet-active-pill">پیش‌فرض</span>
+                                          ) : (
+                                            <span className="mk-packet-active-pill is-secondary">{isHome ? "منزل" : "محل کار"}</span>
+                                          )}
+                                          <button
+                                            type="button"
+                                            className="mk-packet-edit-btn"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleOpenEditAddress(addr);
+                                            }}
+                                            title="ویرایش این نشانی"
+                                          >
+                                            <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg>
+                                            <span>ویرایش</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </article>
+                                  );
+                                })}
                               </div>
                             </motion.section>
                           </div>
                         </div>
                       </div>
+
+                      {/* Address Edit / Creation Modal */}
+                      <AnimatePresence>
+                        {isAddressModalOpen && editingAddress && (
+                          <div className="mk-address-modal-backdrop" onClick={() => setIsAddressModalOpen(false)}>
+                            <motion.div
+                              className="mk-address-modal-card"
+                              onClick={(e) => e.stopPropagation()}
+                              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                              <header className="mk-address-modal-head">
+                                <div className="mk-address-modal-title">
+                                  <div className="mk-address-modal-icon">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#005B48" strokeWidth="2.3" fill="none">
+                                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                      <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                  </div>
+                                  <div>
+                                    <h3>ویرایش نشانی تحویل مرسوله</h3>
+                                    <p>ثبت رسمی نشانی در سامانه لجستیک زنجیره سرد و پنل مدیریت مرد کوهستان</p>
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  className="mk-address-modal-close"
+                                  onClick={() => setIsAddressModalOpen(false)}
+                                  aria-label="بستن پنجره"
+                                >
+                                  ✕
+                                </button>
+                              </header>
+
+                              <form onSubmit={handleSaveAddress} className="mk-address-modal-form">
+                                <div className="mk-modal-grid-2">
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-title">عنوان نشانی</label>
+                                    <input
+                                      id="addr-title"
+                                      type="text"
+                                      value={editingAddress.title}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, title: e.target.value })}
+                                      placeholder="مثال: نشانی منزل، دفتر، ویلا"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-type">نوع کاربری نشانی</label>
+                                    <select
+                                      id="addr-type"
+                                      value={editingAddress.address_type}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, address_type: e.target.value as "home" | "work" | "other" })}
+                                    >
+                                      <option value="home">منزل (تحویل خانوادگی)</option>
+                                      <option value="work">محل کار / دفتر اداری</option>
+                                      <option value="other">سایر نشانی‌ها</option>
+                                    </select>
+                                  </div>
+                                </div>
+
+                                <div className="mk-modal-grid-2">
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-city">شهر و استان</label>
+                                    <input
+                                      id="addr-city"
+                                      type="text"
+                                      value={editingAddress.city}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, city: e.target.value })}
+                                      placeholder="مثال: تهران"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-district">منطقه / محله</label>
+                                    <input
+                                      id="addr-district"
+                                      type="text"
+                                      value={editingAddress.district}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, district: e.target.value })}
+                                      placeholder="مثال: زعفرانیه، فرمانیه، شهرک غرب"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="mk-modal-field">
+                                  <label htmlFor="addr-line">نشانی کامل پستی (خیابان، کوچه، پلاک، واحد)</label>
+                                  <textarea
+                                    id="addr-line"
+                                    rows={2}
+                                    value={editingAddress.address_line}
+                                    onChange={(e) => setEditingAddress({ ...editingAddress, address_line: e.target.value })}
+                                    placeholder="مثال: خیابان آصف، خیابان کمالی، کوچه بنفشه، پلاک ۱۲، واحد ۴"
+                                    required
+                                  />
+                                </div>
+
+                                <div className="mk-modal-grid-3">
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-postal">کد پستی (۱۰ رقمی)</label>
+                                    <input
+                                      id="addr-postal"
+                                      type="text"
+                                      dir="ltr"
+                                      value={editingAddress.postal_code}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, postal_code: e.target.value })}
+                                      placeholder="۱۹۸۷۶۵۴۳۲۱"
+                                    />
+                                  </div>
+
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-receiver">تحویل‌گیرنده</label>
+                                    <input
+                                      id="addr-receiver"
+                                      type="text"
+                                      value={editingAddress.receiver_name}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, receiver_name: e.target.value })}
+                                      placeholder={displayName}
+                                    />
+                                  </div>
+
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-phone">تلفن هماهنگی</label>
+                                    <input
+                                      id="addr-phone"
+                                      type="text"
+                                      dir="ltr"
+                                      value={editingAddress.receiver_phone}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, receiver_phone: e.target.value })}
+                                      placeholder="۰۹۳۷۹۱۴۶۱۳۰"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="mk-modal-checkbox-row">
+                                  <label className="mk-modal-check-label">
+                                    <input
+                                      type="checkbox"
+                                      checked={editingAddress.is_default}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, is_default: e.target.checked })}
+                                    />
+                                    <span>تعیین به عنوان نشانی پیش‌فرض دریافت سفارش‌های پروتئینی</span>
+                                  </label>
+                                </div>
+
+                                <footer className="mk-address-modal-foot">
+                                  <button
+                                    type="button"
+                                    className="mk-modal-cancel-btn"
+                                    onClick={() => setIsAddressModalOpen(false)}
+                                  >
+                                    انصراف
+                                  </button>
+                                  <button
+                                    type="submit"
+                                    disabled={isSavingAddress}
+                                    className="mk-modal-save-btn"
+                                  >
+                                    {isSavingAddress ? "در حال ثبت و ذخیره…" : "ثبت و ذخیره رسمی نشانی"}
+                                  </button>
+                                </footer>
+                              </form>
+                            </motion.div>
+                          </div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   )}
 

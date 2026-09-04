@@ -5,6 +5,7 @@ from __future__ import annotations
 from rest_framework import serializers
 
 from accounts.constants import DISPLAY_NAME_MAX_LENGTH, PASSWORD_MIN_LENGTH
+from accounts.models import CustomerAddress
 from accounts.selectors import get_or_create_profile
 from sec.ownership import reject_foreign_identity
 
@@ -79,3 +80,41 @@ class UserMeSerializer(serializers.Serializer):
             "email_verified": profile.email_verified,
             "is_staff": bool(user.is_staff),
         }
+
+
+class CustomerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerAddress
+        fields = (
+            "id",
+            "title",
+            "address_type",
+            "province",
+            "city",
+            "district",
+            "address_line",
+            "postal_code",
+            "receiver_name",
+            "receiver_phone",
+            "is_default",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+
+class CustomerAddressWriteSerializer(IdentityLockedSerializer):
+    title = serializers.CharField(max_length=100, required=False, allow_blank=True, default="نشانی تحویل")
+    address_type = serializers.ChoiceField(
+        choices=CustomerAddress.AddressType.choices,
+        required=False,
+        default=CustomerAddress.AddressType.HOME,
+    )
+    province = serializers.CharField(max_length=100, required=False, allow_blank=True, default="تهران")
+    city = serializers.CharField(max_length=100, required=False, allow_blank=True, default="تهران")
+    district = serializers.CharField(max_length=120, required=False, allow_blank=True, default="")
+    address_line = serializers.CharField(max_length=500)
+    postal_code = serializers.CharField(max_length=30, required=False, allow_blank=True, default="")
+    receiver_name = serializers.CharField(max_length=120, required=False, allow_blank=True, default="")
+    receiver_phone = serializers.CharField(max_length=40, required=False, allow_blank=True, default="")
+    is_default = serializers.BooleanField(required=False, default=False)

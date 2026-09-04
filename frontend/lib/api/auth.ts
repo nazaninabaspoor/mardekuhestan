@@ -133,6 +133,57 @@ export async function changePassword(data: {
   return res;
 }
 
+export type CustomerAddress = {
+  id: number;
+  title: string;
+  address_type: "home" | "work" | "other";
+  province: string;
+  city: string;
+  district: string;
+  address_line: string;
+  postal_code: string;
+  receiver_name: string;
+  receiver_phone: string;
+  is_default: boolean;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export async function getUserAddresses(): Promise<CustomerAddress[]> {
+  return await apiFetch<CustomerAddress[]>("/api/auth/addresses/", {
+    credentials: "include",
+    revalidate: false,
+  });
+}
+
+export async function createAddress(
+  data: Partial<CustomerAddress>
+): Promise<CustomerAddress> {
+  return await apiFetch<CustomerAddress>("/api/auth/addresses/", {
+    ...authInit,
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateAddress(
+  id: number,
+  data: Partial<CustomerAddress>
+): Promise<CustomerAddress> {
+  return await apiFetch<CustomerAddress>(`/api/auth/addresses/${id}/`, {
+    ...authInit,
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteAddress(id: number): Promise<void> {
+  await apiFetch<void>(`/api/auth/addresses/${id}/`, {
+    ...authInit,
+    method: "DELETE",
+  });
+}
+
 export function authErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     const body = error.body;

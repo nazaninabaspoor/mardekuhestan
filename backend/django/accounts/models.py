@@ -27,3 +27,42 @@ class CustomerProfile(models.Model):
 
     def __str__(self) -> str:
         return self.display_name or self.user.get_username()
+
+
+class CustomerAddress(models.Model):
+    class AddressType(models.TextChoices):
+        HOME = "home", "منزل"
+        WORK = "work", "محل کار / دفتر"
+        OTHER = "other", "سایر نشانی‌ها"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="addresses",
+        verbose_name="کاربر",
+    )
+    title = models.CharField("عنوان نشانی", max_length=100, default="نشانی منزل")
+    address_type = models.CharField(
+        "نوع نشانی",
+        max_length=20,
+        choices=AddressType.choices,
+        default=AddressType.HOME,
+    )
+    province = models.CharField("استان", max_length=100, default="تهران")
+    city = models.CharField("شهر", max_length=100, default="تهران")
+    district = models.CharField("منطقه / محله", max_length=120, blank=True, default="زعفرانیه")
+    address_line = models.TextField("نشانی دقیق و پلاک", max_length=500)
+    postal_code = models.CharField("کد پستی", max_length=30, blank=True, default="")
+    receiver_name = models.CharField("نام تحویل‌گیرنده", max_length=120, blank=True, default="")
+    receiver_phone = models.CharField("تلفن تحویل‌گیرنده", max_length=40, blank=True, default="")
+    is_default = models.BooleanField("نشانی پیش‌فرض", default=False)
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین ویرایش", auto_now=True)
+
+    class Meta:
+        verbose_name = "نشانی تحویل مشتری"
+        verbose_name_plural = "نشانی‌های تحویل مشتریان"
+        ordering = ["-is_default", "-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.city}) - {self.user.get_username()}"

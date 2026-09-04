@@ -1,6 +1,8 @@
 ﻿from django.urls import path
 
 from accounts.views import (
+    AddressDetailView,
+    AddressListCreateView,
     ChangePasswordView,
     LoginView,
     LogoutAllView,
@@ -22,4 +24,6 @@ urlpatterns = [
     path("token/refresh/", RefreshView.as_view(), name="token_refresh"),
     path("me/", MeView.as_view(), name="me"),
     path("password/", ChangePasswordView.as_view(), name="change_password"),
+    path("addresses/", AddressListCreateView.as_view(), name="address_list_create"),
+    path("addresses/<int:pk>/", AddressDetailView.as_view(), name="address_detail"),
 ]
