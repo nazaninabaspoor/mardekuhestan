@@ -113,9 +113,9 @@ function AiMessageBody({ text }: { text: string }) {
 
 function folioLockWord(password: string) {
   if (!password) return "";
-  if (password.length < 10) return "شل";
-  if (password.length < 14) return "محکم";
-  return "سفت";
+  if (password.length < 10) return "رمز ضعیف (حداقل ۱۰ نویسه)";
+  if (password.length < 14) return "قفل محکم و مطمئن";
+  return "فولاد ضدسرقت";
 }
 
 function toMrz(text: string, length = 44) {
@@ -190,7 +190,6 @@ function PacketGlyph({ kind }: { kind: "home" | "office" | "lot" }) {
 
 function LedgerSecretField({
   id,
-  label,
   value,
   onChange,
   placeholder,
@@ -198,7 +197,6 @@ function LedgerSecretField({
   required,
 }: {
   id: string;
-  label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -207,27 +205,43 @@ function LedgerSecretField({
 }) {
   const [visible, setVisible] = useState(false);
   return (
-    <div className="mk-safe-field">
-      <label htmlFor={id}>{label}</label>
-      <div className="mk-safe-secret">
-        <input
-          id={id}
-          type={visible ? "text" : "password"}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          autoComplete={autoComplete}
-          required={required}
-        />
-        <button
-          type="button"
-          className="mk-safe-peek"
-          onClick={() => setVisible((open) => !open)}
-          aria-label={visible ? "پنهان کردن رمز" : "نمایش رمز"}
-        >
-          {visible ? "پنهان" : "نمایش"}
-        </button>
-      </div>
+    <div className="mk-safe-secret">
+      <input
+        id={id}
+        type={visible ? "text" : "password"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
+        className="mk-safe-input"
+        dir="ltr"
+      />
+      <button
+        type="button"
+        className={`mk-safe-peek${visible ? " is-active" : ""}`}
+        onClick={() => setVisible((open) => !open)}
+        title={visible ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"}
+        aria-label={visible ? "پنهان کردن رمز" : "نمایش رمز"}
+      >
+        {visible ? (
+          <>
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+            <span>مخفی</span>
+          </>
+        ) : (
+          <>
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span>نمایش</span>
+          </>
+        )}
+      </button>
     </div>
   );
 }
@@ -1322,10 +1336,17 @@ function ProfileContent() {
 
                                 <div className="mk-safe-inputs-grid">
                                   <div className="mk-safe-field">
-                                    <label htmlFor="prof-cur-pass">رمز عبور فعلی</label>
+                                    <div className="mk-safe-field-head">
+                                      <label htmlFor="prof-cur-pass">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" stroke="#D4A359" strokeWidth="2.2" fill="none">
+                                          <circle cx="7.5" cy="15.5" r="4.5" />
+                                          <path d="M10.5 12.5L20 3M16 7l2 2M13 10l2 2" />
+                                        </svg>
+                                        <span>رمز عبور فعلی گاوصندوق</span>
+                                      </label>
+                                    </div>
                                     <LedgerSecretField
                                       id="prof-cur-pass"
-                                      label=""
                                       value={currentPassword}
                                       onChange={setCurrentPassword}
                                       placeholder="••••••••"
@@ -1336,32 +1357,45 @@ function ProfileContent() {
 
                                   <div className="mk-safe-field">
                                     <div className="mk-safe-field-head">
-                                      <label htmlFor="prof-new-pass">رمز عبور تازه</label>
+                                      <label htmlFor="prof-new-pass">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" stroke="#D4A359" strokeWidth="2.2" fill="none">
+                                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        </svg>
+                                        <span>رمز عبور تازه</span>
+                                      </label>
                                       {newPassword ? (
                                         <span className={`mk-safe-tight${newPassword.length < 10 ? " is-loose" : ""}`}>
+                                          <span className="mk-safe-tight-dot" />
                                           {folioLockWord(newPassword)}
                                         </span>
                                       ) : null}
                                     </div>
                                     <LedgerSecretField
                                       id="prof-new-pass"
-                                      label=""
                                       value={newPassword}
                                       onChange={setNewPassword}
-                                      placeholder="حداقل ۱۰ نویسه"
+                                      placeholder="حداقل ۱۰ نویسه امنیتی"
                                       autoComplete="new-password"
                                       required
                                     />
                                   </div>
 
                                   <div className="mk-safe-field">
-                                    <label htmlFor="prof-new-pass-rep">تکرار رمز عبور تازه</label>
+                                    <div className="mk-safe-field-head">
+                                      <label htmlFor="prof-new-pass-rep">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" stroke="#D4A359" strokeWidth="2.2" fill="none">
+                                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                          <polyline points="9 12 11 14 15 10"/>
+                                        </svg>
+                                        <span>تکرار رمز عبور تازه</span>
+                                      </label>
+                                    </div>
                                     <LedgerSecretField
                                       id="prof-new-pass-rep"
-                                      label=""
                                       value={newPasswordRepeat}
                                       onChange={setNewPasswordRepeat}
-                                      placeholder="تکرار رمز تازه"
+                                      placeholder="تکرار رمز عبور تازه"
                                       autoComplete="new-password"
                                       required
                                     />
