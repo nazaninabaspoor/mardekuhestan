@@ -1516,6 +1516,13 @@ function ProfileContent() {
                               <div className="mk-mail-row">
                                 {addresses.slice(0, 2).map((addr, idx) => {
                                   const isHome = addr.address_type === "home" || addr.title.includes("منزل");
+                                  const typeLabel =
+                                    addr.address_type === "home"
+                                      ? "تحویل خانوادگی"
+                                      : addr.address_type === "work"
+                                      ? "محل کار / اداری"
+                                      : "نشانی سفارش";
+
                                   return (
                                     <article
                                       key={addr.id || idx}
@@ -1523,7 +1530,7 @@ function ProfileContent() {
                                       onClick={() => handleOpenEditAddress(addr)}
                                       role="button"
                                       tabIndex={0}
-                                      title="کلیک برای ویرایش نشانی"
+                                      title="کلیک برای مشاهده و ویرایش نشانی"
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter" || e.key === " ") {
                                           e.preventDefault();
@@ -1531,85 +1538,121 @@ function ProfileContent() {
                                         }
                                       }}
                                     >
-                                      {/* Topographic Geo Matrix Watermark */}
+                                      {/* Topographic Geo Matrix Background Watermark */}
                                       <div className="mk-packet-geo-watermark" aria-hidden="true">
-                                        <svg viewBox="0 0 160 80" className="mk-geo-grid-svg">
+                                        <svg viewBox="0 0 200 100" className="mk-geo-grid-svg">
                                           <defs>
-                                            <pattern id={`geo-grid-${idx}`} width="14" height="14" patternUnits="userSpaceOnUse">
-                                              <path d="M 14 0 L 0 0 0 14" fill="none" stroke="#D4A359" strokeWidth="0.35" opacity="0.3" />
+                                            <pattern id={`geo-grid-${idx}`} width="16" height="16" patternUnits="userSpaceOnUse">
+                                              <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#D4A359" strokeWidth="0.4" opacity="0.2" />
                                             </pattern>
                                           </defs>
                                           <rect width="100%" height="100%" fill={`url(#geo-grid-${idx})`} />
-                                          <circle cx="128" cy="24" r="20" fill="none" stroke="#005B48" strokeWidth="0.5" strokeDasharray="2 2" opacity="0.4" />
-                                          <circle cx="128" cy="24" r="10" fill="none" stroke="#D4A359" strokeWidth="0.5" opacity="0.5" />
-                                          <circle cx="128" cy="24" r="2.5" fill="#D4A359" opacity="0.8" />
+                                          <circle cx="160" cy="30" r="24" fill="none" stroke="#50AF47" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.3" />
+                                          <circle cx="160" cy="30" r="12" fill="none" stroke="#D4A359" strokeWidth="0.6" opacity="0.4" />
+                                          <circle cx="160" cy="30" r="3" fill="#D4A359" opacity="0.75" />
                                         </svg>
                                       </div>
 
+                                      {/* Top Header: Title, 3D Pin & Classification Tag */}
                                       <div className="mk-packet-top">
-                                        <span className="mk-packet-lead">
+                                        <div className="mk-packet-lead">
                                           <span className={`mk-packet-pin${isHome ? " is-home" : " is-work"}`}>
                                             <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
                                               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                             </svg>
                                           </span>
-                                          <span className="mk-packet-tag">{addr.title || (isHome ? "نشانی منزل" : "نشانی دفتر")}</span>
-                                        </span>
+                                          <div className="mk-packet-title-box">
+                                            <h4>{addr.title || (isHome ? "نشانی منزل" : "نشانی دفتر")}</h4>
+                                            <span className="mk-packet-type-text">{typeLabel}</span>
+                                          </div>
+                                        </div>
 
-                                        <span className="mk-packet-route-chip">
+                                        <div className="mk-packet-route-chip">
                                           <span className="mk-route-radar-dot" />
                                           <span>{addr.district || (isHome ? "زعفرانیه" : "فرمانیه")}</span>
-                                        </span>
+                                        </div>
                                       </div>
 
-                                      <div className="mk-packet-body">
-                                        <div className="mk-packet-city-row">
-                                          <svg viewBox="0 0 24 24" width="11" height="11" stroke="#005B48" strokeWidth="2.3" fill="none">
+                                      {/* Geo City & Postal Code Info Row */}
+                                      <div className="mk-packet-meta-row">
+                                        <div className="mk-packet-meta-item">
+                                          <svg viewBox="0 0 24 24" width="11" height="11" stroke="#D4A359" strokeWidth="2.2" fill="none">
                                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                             <circle cx="12" cy="10" r="3" />
                                           </svg>
-                                          <h4>{addr.city}{addr.district ? `، ${addr.district}` : ""}</h4>
+                                          <span>{addr.province || "تهران"}، {addr.city}</span>
                                         </div>
-                                        <p className="mk-packet-address-text">{addr.address_line}</p>
-                                        {addr.postal_code ? (
-                                          <span className="mk-packet-postal-tag">
-                                            <span>کد پستی:</span>
-                                            <strong dir="ltr">{addr.postal_code}</strong>
+                                        <div className="mk-packet-meta-item is-postal">
+                                          <svg viewBox="0 0 24 24" width="11" height="11" stroke="#86C2EB" strokeWidth="2.2" fill="none">
+                                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                          </svg>
+                                          <span>
+                                            کد پستی:{" "}
+                                            <strong dir="ltr">{addr.postal_code ? addr.postal_code : "ثبت‌نشده (اختیاری)"}</strong>
                                           </span>
-                                        ) : null}
+                                        </div>
                                       </div>
 
-                                      <div className="mk-packet-foot">
-                                        <div className="mk-packet-receiver">
-                                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="#5D686E" strokeWidth="2.2" fill="none">
+                                      {/* Detailed Address Line Box */}
+                                      <div className="mk-packet-body">
+                                        <div className="mk-packet-address-wrap">
+                                          <svg viewBox="0 0 24 24" width="11" height="11" stroke="#50AF47" strokeWidth="2.2" fill="none" className="mk-packet-addr-icon">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                                          </svg>
+                                          <p className="mk-packet-address-text">{addr.address_line}</p>
+                                        </div>
+                                      </div>
+
+                                      {/* Recipient & Contact Row */}
+                                      <div className="mk-packet-contact-row">
+                                        <div className="mk-packet-contact-item">
+                                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="#D4A359" strokeWidth="2.2" fill="none">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                             <circle cx="12" cy="7" r="4" />
                                           </svg>
-                                          <small>{addr.receiver_name || displayName}</small>
+                                          <span>گیرنده: <strong>{addr.receiver_name || displayName}</strong></span>
                                         </div>
+                                        <div className="mk-packet-contact-item" dir="ltr">
+                                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="#50AF47" strokeWidth="2.2" fill="none">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                          </svg>
+                                          <span>{addr.receiver_phone || phone || "۰۹۳۷۹۱۴۶۱۳۰"}</span>
+                                        </div>
+                                      </div>
 
-                                        <div className="mk-packet-foot-actions">
+                                      {/* Footer: Priority Badge & Edit Action */}
+                                      <div className="mk-packet-foot">
+                                        <div className="mk-packet-status-group">
                                           {addr.is_default ? (
-                                            <span className="mk-packet-active-pill">پیش‌فرض</span>
+                                            <span className="mk-packet-active-pill">
+                                              <svg viewBox="0 0 24 24" width="9" height="9" stroke="currentColor" strokeWidth="3" fill="none">
+                                                <polyline points="20 6 9 17 4 12" />
+                                              </svg>
+                                              نشانی پیش‌فرض
+                                            </span>
                                           ) : (
                                             <span className="mk-packet-active-pill is-secondary">{isHome ? "منزل" : "محل کار"}</span>
                                           )}
-                                          <button
-                                            type="button"
-                                            className="mk-packet-edit-btn"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              handleOpenEditAddress(addr);
-                                            }}
-                                            title="ویرایش این نشانی"
-                                          >
-                                            <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.4" fill="none">
-                                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                            </svg>
-                                            <span>ویرایش</span>
-                                          </button>
+                                          <span className="mk-packet-cold-state">۲.۴°C آماده تحویل</span>
                                         </div>
+
+                                        <button
+                                          type="button"
+                                          className="mk-packet-edit-btn"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOpenEditAddress(addr);
+                                          }}
+                                          title="ویرایش این نشانی"
+                                        >
+                                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                          </svg>
+                                          <span>ویرایش</span>
+                                        </button>
                                       </div>
                                     </article>
                                   );
@@ -1722,18 +1765,6 @@ function ProfileContent() {
 
                                 <div className="mk-modal-grid-3">
                                   <div className="mk-modal-field">
-                                    <label htmlFor="addr-postal">کد پستی (۱۰ رقمی)</label>
-                                    <input
-                                      id="addr-postal"
-                                      type="text"
-                                      dir="ltr"
-                                      value={editingAddress.postal_code}
-                                      onChange={(e) => setEditingAddress({ ...editingAddress, postal_code: e.target.value })}
-                                      placeholder="۱۹۸۷۶۵۴۳۲۱"
-                                    />
-                                  </div>
-
-                                  <div className="mk-modal-field">
                                     <label htmlFor="addr-receiver">تحویل‌گیرنده</label>
                                     <input
                                       id="addr-receiver"
@@ -1753,6 +1784,18 @@ function ProfileContent() {
                                       value={editingAddress.receiver_phone}
                                       onChange={(e) => setEditingAddress({ ...editingAddress, receiver_phone: e.target.value })}
                                       placeholder="۰۹۳۷۹۱۴۶۱۳۰"
+                                    />
+                                  </div>
+
+                                  <div className="mk-modal-field">
+                                    <label htmlFor="addr-postal">کد پستی (اختیاری)</label>
+                                    <input
+                                      id="addr-postal"
+                                      type="text"
+                                      dir="ltr"
+                                      value={editingAddress.postal_code}
+                                      onChange={(e) => setEditingAddress({ ...editingAddress, postal_code: e.target.value })}
+                                      placeholder="۱۰ رقم (اختیاری)"
                                     />
                                   </div>
                                 </div>

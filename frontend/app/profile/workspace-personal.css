@@ -1260,11 +1260,12 @@
   flex-direction: column;
   border-radius: 12px;
   background:
-    linear-gradient(145deg, rgba(0, 56, 44, 0.7) 0%, rgba(8, 24, 19, 0.92) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.4);
+    linear-gradient(155deg, rgba(0, 56, 44, 0.82) 0%, rgba(4, 20, 16, 0.96) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
   box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 16px rgba(0, 0, 0, 0.5);
   padding: 10px 12px;
   box-sizing: border-box;
 }
@@ -1273,9 +1274,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.2);
+  margin-bottom: 7px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.22);
 }
 
 .mk-mail-title-wrap {
@@ -1288,24 +1289,25 @@
   font-size: 8px;
   font-weight: 900;
   color: #d4a359;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
 }
 
 .mk-mail-head h3 {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 900;
   color: #f4f0e8;
+  letter-spacing: -0.01em;
 }
 
 .mk-mail-cold-tag {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 99px;
-  background: rgba(134, 194, 235, 0.15);
-  border: 1px solid rgba(134, 194, 235, 0.4);
+  background: rgba(134, 194, 235, 0.12);
+  border: 1px solid rgba(134, 194, 235, 0.38);
   font-size: 9.5px;
   font-weight: 800;
   color: #aae0ff;
@@ -1327,45 +1329,49 @@
   min-height: 0;
 }
 
-/* Realistic Location & Postal Consignment Ticket Card */
+/* Realistic Location & Postal Consignment Ticket Card - Emerald Obsidian & Brass */
 .mk-packet {
   position: relative;
   background:
-    linear-gradient(140deg, #fdfbf7 0%, #f4eee1 60%, #eae2d0 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.5);
-  border-radius: 8px;
-  padding: 7px 9px 6px;
+    linear-gradient(150deg, rgba(3, 30, 24, 0.95) 0%, rgba(1, 18, 14, 0.98) 60%, rgba(0, 11, 8, 0.99) 100%);
+  border: 1.2px solid rgba(212, 163, 89, 0.4);
+  border-radius: 9px;
+  padding: 8px 10px 7px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  color: #1d1d1b;
+    0 6px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 14px rgba(0, 0, 0, 0.45);
+  color: #f4f0e8;
   overflow: hidden;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .mk-packet.is-home {
-  border-right: 3px solid #005b48;
+  border-right: 3px solid #50af47;
 }
 
 .mk-packet.is-work {
-  border-right: 3px solid #903828;
+  border-right: 3px solid #be6516;
 }
 
 .mk-packet:hover {
   transform: translateY(-2px);
-  border-color: #005b48;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  border-color: #d4a359;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(212, 163, 89, 0.22);
 }
 
 .mk-packet-geo-watermark {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.6;
   overflow: hidden;
 }
 
@@ -1375,72 +1381,82 @@
   object-fit: cover;
 }
 
+/* Header: Title, Pin & Type Badge */
 .mk-packet-top {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .mk-packet-lead {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .mk-packet-pin {
-  width: 19px;
-  height: 19px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
 }
 
 .mk-packet-pin.is-home {
   background: radial-gradient(circle at 35% 35%, #50af47 0%, #005b48 85%);
   color: #ffffff;
-  border: 1px solid #003b2e;
+  border: 1px solid #73d66a;
 }
 
 .mk-packet-pin.is-work {
-  background: radial-gradient(circle at 35% 35%, #be6516 0%, #903828 85%);
+  background: radial-gradient(circle at 35% 35%, #e67e22 0%, #903828 85%);
   color: #ffffff;
-  border: 1px solid #5e1c10;
+  border: 1px solid #f39c12;
 }
 
-.mk-packet-tag {
-  font-size: 10px;
+.mk-packet-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mk-packet-title-box h4 {
+  margin: 0;
+  font-size: 11.5px;
   font-weight: 900;
-  color: #005b48;
+  color: #f4f0e8;
   letter-spacing: -0.01em;
 }
 
-.mk-packet.is-work .mk-packet-tag {
-  color: #903828;
+.mk-packet-type-text {
+  font-size: 8px;
+  font-weight: 800;
+  color: #d4a359;
 }
 
 .mk-packet-route-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 1.5px 6px;
-  border-radius: 4px;
-  background: rgba(0, 91, 72, 0.08);
-  border: 1px solid rgba(0, 91, 72, 0.22);
-  font-size: 8px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(0, 91, 72, 0.5);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  font-size: 8.5px;
   font-weight: 800;
-  color: #005b48;
+  color: #aae0ff;
 }
 
 .mk-packet.is-work .mk-packet-route-chip {
-  background: rgba(144, 56, 40, 0.08);
-  border-color: rgba(144, 56, 40, 0.22);
-  color: #903828;
+  background: rgba(144, 56, 40, 0.4);
+  border-color: rgba(212, 163, 89, 0.35);
+  color: #fed0bb;
 }
 
 .mk-route-radar-dot {
@@ -1448,128 +1464,176 @@
   height: 4px;
   border-radius: 50%;
   background: #50af47;
-  box-shadow: 0 0 5px #50af47;
+  box-shadow: 0 0 6px #50af47;
 }
 
 .mk-packet.is-work .mk-route-radar-dot {
-  background: #be6516;
-  box-shadow: 0 0 5px #be6516;
+  background: #e67e22;
+  box-shadow: 0 0 6px #e67e22;
 }
 
-.mk-packet-body {
+/* Geo City & Postal Code Info Row */
+.mk-packet-meta-row {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: 1px 0 2px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding: 2.5px 6px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(212, 163, 89, 0.18);
 }
 
-.mk-packet-city-row {
-  display: flex;
+.mk-packet-meta-item {
+  display: inline-flex;
   align-items: center;
   gap: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: rgba(244, 240, 232, 0.9);
 }
 
-.mk-packet-city-row h4 {
-  margin: 0;
-  font-size: 11.5px;
+.mk-packet-meta-item.is-postal {
+  color: #86c2eb;
+}
+
+.mk-packet-meta-item.is-postal strong {
+  color: #d4a359;
+  font-family: inherit;
   font-weight: 900;
-  color: #005b48;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
 }
 
-.mk-packet.is-work .mk-packet-city-row h4 {
-  color: #903828;
+/* Detailed Address Line Box */
+.mk-packet-body {
+  position: relative;
+  z-index: 1;
+  margin: 1px 0 4px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mk-packet-address-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  background: rgba(0, 28, 22, 0.55);
+  border: 1px dashed rgba(212, 163, 89, 0.28);
+  border-radius: 5px;
+  padding: 4px 6px;
+}
+
+.mk-packet-addr-icon {
+  flex-shrink: 0;
+  margin-top: 1.5px;
 }
 
 .mk-packet-address-text {
   margin: 0;
   font-size: 9.5px;
-  color: #384247;
-  font-weight: 600;
-  line-height: 1.35;
+  color: #f4f0e8;
+  font-weight: 700;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.mk-packet-postal-tag {
+/* Recipient & Contact Row */
+.mk-packet-contact-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+  padding: 2px 2px;
+}
+
+.mk-packet-contact-item {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 8px;
-  color: #736b5e;
+  font-size: 8.5px;
   font-weight: 700;
-  margin-top: 1px;
+  color: #b9c7c3;
 }
 
-.mk-packet-postal-tag strong {
-  color: #1d1d1b;
-  font-family: inherit;
-  letter-spacing: 0.05em;
+.mk-packet-contact-item strong {
+  color: #f4f0e8;
+  font-weight: 800;
 }
 
+/* Footer: Priority Badge, Cold State & Edit Button */
 .mk-packet-foot {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 3px;
-  padding-top: 3px;
-  border-top: 1px solid rgba(212, 163, 89, 0.35);
+  padding-top: 4px;
+  border-top: 1px solid rgba(212, 163, 89, 0.22);
 }
 
-.mk-packet-receiver {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: #5d686e;
-  font-size: 8.5px;
-  font-weight: 800;
-}
-
-.mk-packet-foot-actions {
+.mk-packet-status-group {
   display: inline-flex;
   align-items: center;
   gap: 5px;
 }
 
 .mk-packet-active-pill {
-  font-size: 7.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
   font-weight: 900;
-  color: #005b48;
+  color: #a4e09e;
   background: rgba(80, 175, 71, 0.2);
+  border: 1px solid rgba(80, 175, 71, 0.4);
   padding: 1.5px 5px;
   border-radius: 3px;
 }
 
 .mk-packet-active-pill.is-secondary {
-  color: #903828;
-  background: rgba(144, 56, 40, 0.15);
+  color: #fed0bb;
+  background: rgba(144, 56, 40, 0.25);
+  border-color: rgba(190, 101, 22, 0.4);
+}
+
+.mk-packet-cold-state {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #86c2eb;
+  opacity: 0.85;
 }
 
 .mk-packet-edit-btn {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px 7px;
+  padding: 2.5px 8px;
   border-radius: 4px;
-  background: #005b48;
-  border: 1px solid #003b2e;
-  color: #f4f0e8;
+  background: linear-gradient(135deg, #d4a359 0%, #a67c33 100%);
+  border: 1px solid #f5db99;
+  color: #151004;
   font-size: 8.5px;
   font-weight: 900;
   cursor: pointer;
   transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(212, 163, 89, 0.25);
 }
 
 .mk-packet-edit-btn:hover {
-  background: #004537;
+  background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 91, 72, 0.4);
+  box-shadow: 0 4px 10px rgba(212, 163, 89, 0.4);
 }
 
 /* ==========================================================================
@@ -1580,8 +1644,8 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(3, 18, 14, 0.75);
-  backdrop-filter: blur(10px);
+  background: rgba(3, 18, 14, 0.82);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1591,14 +1655,15 @@
 
 .mk-address-modal-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 550px;
   background: linear-gradient(150deg, #0a2e25 0%, #041812 100%);
   border: 1.5px solid #d4a359;
   border-radius: 14px;
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  padding: 18px 20px;
+    0 24px 60px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+  padding: 18px 22px;
   color: #f4f0e8;
   box-sizing: border-box;
 }
@@ -1668,26 +1733,35 @@
 .mk-address-modal-form {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mk-modal-grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mk-modal-grid-3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mk-modal-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mk-modal-field label {
@@ -1699,10 +1773,13 @@
 .mk-modal-field input,
 .mk-modal-field select,
 .mk-modal-field textarea {
-  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(212, 163, 89, 0.35);
   border-radius: 7px;
-  padding: 7px 10px;
+  padding: 7px 9px;
   color: #f4f0e8;
   font-size: 11.5px;
   font-family: inherit;
@@ -1712,7 +1789,7 @@
 
 .mk-modal-field textarea {
   resize: vertical;
-  min-height: 50px;
+  min-height: 52px;
 }
 
 .mk-modal-field select {
