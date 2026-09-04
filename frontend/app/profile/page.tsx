@@ -406,6 +406,186 @@ function ProfileSceneBackdrop({ isWorkspaceOpen = false }: { isWorkspaceOpen?: b
   );
 }
 
+const CURRENT_PENDING_INVOICE = {
+  invoiceNumber: "INV-1405-9920",
+  date: "جمعه ۱۴ شهریور ۱۴۰۵",
+  status: "در انتظار پرداخت آنلاین",
+  dueDate: "۱۴ شهریور ۱۴۰۵ - ۲۳:۵۹",
+  items: [
+    {
+      row: 1,
+      name: "راسته گوسفند پرواری مرتع ییلاقی کلاردشت (۱.۵ کیلو)",
+      code: "MK-PR-102",
+      weight: "۱,۵۰۰ گرم",
+      unitPrice: "۵۴۰,۰۰۰ تومان",
+      total: "۸۱۰,۰۰۰ تومان",
+    },
+    {
+      row: 2,
+      name: "کره سنتی ییلاقی دوغی خالص کوهپایه (۵۰۰ گرم)",
+      code: "MK-DY-408",
+      weight: "۵۰۰ گرم",
+      unitPrice: "۲۴۰,۰۰۰ تومان",
+      total: "۲۴۰,۰۰۰ تومان",
+    },
+    {
+      row: 3,
+      name: "عسل آویشن و گون وحشی سبلان (۱ کیلوگرم)",
+      code: "MK-HN-201",
+      weight: "۱,۰۰۰ گرم",
+      unitPrice: "۴۵۰,۰۰۰ تومان",
+      total: "۴۵۰,۰۰۰ تومان",
+    },
+  ],
+  subtotal: "۱,۵۰۰,۰۰۰ تومان",
+  discountQuota: "۱۵۰,۰۰۰ تومان (تخفیف سهمیه سبز)",
+  shippingColdChain: "رایگان (سفیر اختصاصی زنجیره سرد)",
+  payableAmount: "۱,۳۵۰,۰۰۰ تومان",
+};
+
+function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buyerInfo: any) {
+  if (typeof window === "undefined") return;
+  const printWindow = window.open("", "_blank", "width=850,height=1000");
+  if (!printWindow) {
+    alert("لطفاً اجازه باز شدن پنجره پاپ‌آپ (Pop-up) را در مرورگر خود صادر فرمایید.");
+    return;
+  }
+
+  const isBook = type === "book";
+  const contentHtml = isBook
+    ? `
+      <!DOCTYPE html>
+      <html lang="fa" dir="rtl">
+      <head>
+        <meta charset="utf-8" />
+        <title>شناسنامه اصالت مرتع #${data.id} - مرد کوهستان</title>
+        <style>
+          body { font-family: Tahoma, 'Segoe UI', sans-serif; direction: rtl; padding: 40px; background: #faf8f2; color: #1d1d1b; }
+          .cert-container { border: 3px double #005b48; padding: 30px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+          .cert-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #005b48; padding-bottom: 15px; margin-bottom: 20px; }
+          .cert-title h1 { margin: 0; color: #005b48; font-size: 22px; }
+          .cert-title p { margin: 5px 0 0; color: #666; font-size: 13px; }
+          .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f4f0e8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; }
+          .cert-grid div strong { color: #005b48; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+          th { background: #005b48; color: #ffffff; padding: 10px; text-align: right; }
+          td { border-bottom: 1px solid #ddd; padding: 10px; }
+          .cert-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #005b48; padding-top: 15px; margin-top: 20px; }
+          .stamp-box { border: 2px dashed #005b48; padding: 10px 20px; border-radius: 8px; color: #005b48; font-weight: bold; text-align: center; }
+          @media print { body { padding: 0; background: #fff; } .cert-container { box-shadow: none; border-color: #000; } }
+        </style>
+      </head>
+      <body>
+        <div class="cert-container">
+          <div class="cert-header">
+            <div class="cert-title">
+              <h1>سند رسمی اصالت مرتع و زنجیره پروتئین</h1>
+              <p>باشگاه همسفران و پایش کیفیت مرد کوهستان · کد رهگیری: #${data.id}</p>
+            </div>
+            <div style="text-align: left;">
+              <strong>تاریخ ثبت: ${data.date}</strong><br />
+              <small>وضعیت: ${data.status}</small>
+            </div>
+          </div>
+          <div class="cert-grid">
+            <div><strong>چراگاه خاستگاه:</strong> ${data.pastureName}</div>
+            <div><strong>ارتفاع چراگاه:</strong> ${data.altitude}</div>
+            <div><strong>تغذیه دام:</strong> ${data.grazing}</div>
+            <div><strong>تأییدیه بهداشت دامپزشکی:</strong> ${data.vetCode}</div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>ردیف</th><th>شرح اقلام پروتئینی</th><th>فرآوری و برش</th><th>مبلغ</th></tr>
+            </thead>
+            <tbody>
+              ${data.items.map((it: any, i: number) => `<tr><td>${i + 1}</td><td>${it.name}</td><td>${it.cut}</td><td>${it.price}</td></tr>`).join("")}
+            </tbody>
+          </table>
+          <div class="cert-footer">
+            <div>
+              <strong>مبلغ نهایی پرداخت‌شده: ${data.finalPrice}</strong><br />
+              <small>پایش دما: ${data.tempLog}</small>
+            </div>
+            <div class="stamp-box">
+              مُهر تایید دیجیتال اصالت مرتع<br />مرد کوهستان (گله آزاد)
+            </div>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); };
+        </script>
+      </body>
+      </html>
+    `
+    : `
+      <!DOCTYPE html>
+      <html lang="fa" dir="rtl">
+      <head>
+        <meta charset="utf-8" />
+        <title>فاکتور رسمی فروش #${data.invoiceNumber} - مرد کوهستان</title>
+        <style>
+          body { font-family: Tahoma, 'Segoe UI', sans-serif; direction: rtl; padding: 40px; background: #ffffff; color: #1d1d1b; }
+          .inv-box { border: 2px solid #333; padding: 25px; border-radius: 8px; }
+          .inv-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 12px; margin-bottom: 15px; }
+          .inv-head h2 { margin: 0; color: #005b48; font-size: 20px; }
+          .inv-buyer { background: #f7f7f7; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; line-height: 1.8; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; }
+          th { background: #333; color: #fff; padding: 8px; text-align: right; }
+          td { border-bottom: 1px solid #e0e0e0; padding: 8px; }
+          .inv-notice { background: #eaf7f2; border: 1px solid #005b48; padding: 12px; border-radius: 6px; font-size: 12px; color: #004537; margin-bottom: 15px; line-height: 1.6; }
+          .inv-foot { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #333; padding-top: 12px; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="inv-box">
+          <div class="inv-head">
+            <div>
+              <h2>صورت‌حساب رسمی فروش کالا و خدمات</h2>
+              <p>فروشگاه اختصاصی و سامانه توزیع مستقیم مراتع مرد کوهستان</p>
+            </div>
+            <div style="text-align: left;">
+              <strong>شماره فاکتور: ${data.invoiceNumber}</strong><br />
+              <small>تاریخ صدور: ${data.date}</small>
+            </div>
+          </div>
+          <div class="inv-buyer">
+            <strong>مشخصات خریدار:</strong> ${buyerInfo.name} | <strong>کد ملی:</strong> ${buyerInfo.nationalCode} | <strong>شماره همراه:</strong> ${buyerInfo.phone}<br />
+            <strong>نشانی تحویل:</strong> ${buyerInfo.address}
+          </div>
+          <table>
+            <thead>
+              <tr><th>ردیف</th><th>شرح کالا</th><th>کد کالا</th><th>وزن</th><th>مبلغ کل</th></tr>
+            </thead>
+            <tbody>
+              ${data.items.map((it: any) => `<tr><td>${it.row}</td><td>${it.name}</td><td>${it.code}</td><td>${it.weight}</td><td>${it.total}</td></tr>`).join("")}
+            </tbody>
+          </table>
+          <div class="inv-notice">
+            📌 <strong>تذکر مهم تحویل:</strong> در صورت صحت اطلاعات نشانی و شماره تماس فوق (${buyerInfo.phone})، این سفارش ظرف ۲ الی ۳ روز کاری آینده با حفظ کامل زنجیره سرد (۲.۴°C) تحویل شما می‌گردد. همچنین پیش از اعزام سفیر کوهستان، جهت هماهنگی نهایی ساعت تحویل با شماره همراه شما تماس گرفته خواهد شد.
+          </div>
+          <div class="inv-foot">
+            <div>
+              <strong>مبلغ قابل پرداخت: ${data.payableAmount}</strong><br />
+              <small>تخفیف سهمیه: ${data.discountQuota}</small>
+            </div>
+            <div style="text-align: center; border: 1px solid #333; padding: 8px 15px; border-radius: 4px;">
+              مُهر مالی و حسابداری<br />سامانه مرد کوهستان
+            </div>
+          </div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); };
+        </script>
+      </body>
+      </html>
+    `;
+
+  printWindow.document.open();
+  printWindow.document.write(contentHtml);
+  printWindow.document.close();
+}
+
 const PASTURE_ORDERS_DATABASE = [
   {
     id: "MK-94021",
@@ -874,6 +1054,17 @@ function ProfileContent() {
   // Orders & Mountain Logistics Trolley State (0 to 15 boxes)
   const [orderCount, setOrderCount] = useState(3);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
+  const [docViewMode, setDocViewMode] = useState<"book" | "invoice">("book");
+
+  // Payment Gateway simulation state
+  const [isPayModalOpen, setIsPayModalOpen] = useState(false);
+  const [payCardNum, setPayCardNum] = useState("۶۰۳۷ - ۹۹۷۵ - ۴۸۲۱ - ۳۰۱۴");
+  const [payCvv2, setPayCvv2] = useState("۸۲۴");
+  const [payOtp, setPayOtp] = useState("");
+  const [payOtpTimer, setPayOtpTimer] = useState(120);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paySuccess, setPaySuccess] = useState(false);
 
   // Subscription plan selection
   const [selectedPlan, setSelectedPlan] = useState<"standard" | "family" | "gourmet">("family");
@@ -973,6 +1164,36 @@ function ProfileContent() {
     orderCount > 0 && PASTURE_ORDERS_DATABASE[selectedOrderIndex]
       ? PASTURE_ORDERS_DATABASE[selectedOrderIndex]
       : null;
+
+  const buyerInfo = {
+    name: displayName,
+    nationalCode: nationalCode || "۰۰۱۸۴۹۲۷۵۱",
+    phone: phone || "۰۹۳۷۹۱۴۶۱۳۰",
+    address: addresses[0]
+      ? `${addresses[0].city}، ${addresses[0].district}، ${addresses[0].address_line}`
+      : "تهران، زعفرانیه، خیابان آصف، پلاک ۱۲",
+  };
+
+  const handleRequestOtp = () => {
+    setIsOtpSent(true);
+    setPayOtpTimer(120);
+    setPayOtp("۷۴۸۲");
+  };
+
+  const handleSimulatePayment = () => {
+    setIsPaying(true);
+    setTimeout(() => {
+      setIsPaying(false);
+      setPaySuccess(true);
+      setOrderCount((prev) => Math.min(15, prev + 1));
+      setSelectedOrderIndex(0);
+      setTimeout(() => {
+        setIsPayModalOpen(false);
+        setPaySuccess(false);
+        setDocViewMode("book");
+      }, 2000);
+    }, 1200);
+  };
 
   const handleFocusChange = useCallback(
     (tab: ActiveTab) => {
@@ -2575,7 +2796,7 @@ function ProfileContent() {
                 </div>
               )}
 
-              {/* Tab 5: Orders & Farm Traceability (Mountain Logistics Trolley & Pasture Passport) */}
+              {/* Tab 5: Orders & Farm Traceability (3D Mountain Logistics Trolley & Pasture Passport / Invoice) */}
               {openedTab === "orders" && (
                 <div className="mk-orders-container">
                   {/* Topbar: Brand, Live Cold-Chain Telemetry, Capacity Chip & Close */}
@@ -2613,9 +2834,9 @@ function ProfileContent() {
                     </div>
                   </motion.header>
 
-                  {/* 2-Column Desk: Trolley with stacked 3D boxes on Right/Center, Pasture Passport on Left */}
+                  {/* 2-Column Desk: Side A (3D Trolley & Boxes) | Side B (Book & Invoice Viewer) */}
                   <div className="mk-orders-desk">
-                    {/* Side A: 3D Shopping Trolley & Cargo Bay */}
+                    {/* Side A: 3D Shopping Trolley & 3D Realistic Cargo Boxes */}
                     <motion.section
                       className="mk-trolley-console"
                       initial={{ opacity: 0, x: 20 }}
@@ -2624,7 +2845,7 @@ function ProfileContent() {
                     >
                       <header className="mk-trolley-head">
                         <div className="mk-trolley-title-box">
-                          <span className="mk-trolley-kicker">MOUNTAIN LOGISTICS TROLLEY · ترولی مرتع</span>
+                          <span className="mk-trolley-kicker">3D MOUNTAIN LOGISTICS TROLLEY · ترولی سه‌بعدی مرتع</span>
                           <h3>سبد بارنامه بسته‌های تحویل</h3>
                         </div>
                         <div className="mk-trolley-meter">
@@ -2670,106 +2891,270 @@ function ProfileContent() {
                         </div>
                       </div>
 
-                      {/* The 3D Trolley Frame & Interior Stage */}
-                      <div className="mk-trolley-stage">
-                        {/* Trolley Handlebar with Telemetry LCD */}
-                        <div className="mk-trolley-handlebar">
-                          <div className="mk-trolley-grip">
-                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.4" fill="none">
-                              <circle cx="9" cy="21" r="1" />
-                              <circle cx="20" cy="21" r="1" />
-                              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                            </svg>
-                            <span>ترولی اختصاصی حمل سردخانه مرد کوهستان</span>
-                          </div>
-                          <div className="mk-trolley-lcd-screen">
-                            <span>TEMP: 2.4°C</span>
-                            <span>•</span>
-                            <span>CARGO: {orderCount}/15</span>
+                      {/* The Photorealistic 3D Isometric Shopping Cart Stage */}
+                      <div className="mk-iso-cart-stage">
+                        <div className="mk-iso-trolley-svg-wrap">
+                          {/* 3D Realistic Wireframe Supermarket Trolley SVG Rig */}
+                          <svg
+                            viewBox="0 0 520 480"
+                            width="100%"
+                            height="100%"
+                            preserveAspectRatio="xMidYMid meet"
+                            style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}
+                          >
+                            <defs>
+                              {/* Metallic Gold / Chrome Gradients */}
+                              <linearGradient id="mkGoldTube" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#fff2c9" />
+                                <stop offset="40%" stopColor="#d4a359" />
+                                <stop offset="80%" stopColor="#8a6026" />
+                                <stop offset="100%" stopColor="#573a11" />
+                              </linearGradient>
+                              <linearGradient id="mkGreenHandle" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#0e4a3b" />
+                                <stop offset="50%" stopColor="#005b48" />
+                                <stop offset="100%" stopColor="#022a21" />
+                              </linearGradient>
+                              <linearGradient id="mkWireMesh" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#d4a359" stopOpacity="0.35" />
+                                <stop offset="50%" stopColor="#ffffff" stopOpacity="0.6" />
+                                <stop offset="100%" stopColor="#d4a359" stopOpacity="0.35" />
+                              </linearGradient>
+                              <radialGradient id="mkGroundGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="#000000" stopOpacity="0.8" />
+                                <stop offset="60%" stopColor="#000000" stopOpacity="0.4" />
+                                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+                              </radialGradient>
+                              <radialGradient id="mkWheelRim" cx="35%" cy="35%" r="65%">
+                                <stop offset="0%" stopColor="#ffffff" />
+                                <stop offset="40%" stopColor="#d4a359" />
+                                <stop offset="85%" stopColor="#2e1f0b" />
+                                <stop offset="100%" stopColor="#000000" />
+                              </radialGradient>
+                            </defs>
+
+                            {/* 1. Ground Shadows under the 4 wheels */}
+                            <ellipse cx="140" cy="455" rx="35" ry="10" fill="url(#mkGroundGlow)" />
+                            <ellipse cx="380" cy="455" rx="35" ry="10" fill="url(#mkGroundGlow)" />
+                            <ellipse cx="200" cy="425" rx="26" ry="8" fill="url(#mkGroundGlow)" opacity="0.6" />
+                            <ellipse cx="320" cy="425" rx="26" ry="8" fill="url(#mkGroundGlow)" opacity="0.6" />
+
+                            {/* 2. Lower Chassis Frame & Undercarriage Tubular Beams */}
+                            <path
+                              d="M140 435 L200 415 L320 415 L380 435 L340 375 L180 375 Z"
+                              fill="rgba(0, 45, 35, 0.45)"
+                              stroke="url(#mkGoldTube)"
+                              strokeWidth="3.5"
+                              strokeLinejoin="round"
+                            />
+                            {/* Chassis bottom wire tray */}
+                            <line x1="165" y1="428" x2="355" y2="428" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            <line x1="190" y1="418" x2="330" y2="418" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            <line x1="210" y1="390" x2="310" y2="390" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+
+                            {/* 3. Upright Cantilever Tubes connecting Basket to Chassis */}
+                            <line x1="140" y1="435" x2="80" y2="120" stroke="url(#mkGoldTube)" strokeWidth="4" strokeLinecap="round" />
+                            <line x1="380" y1="435" x2="440" y2="120" stroke="url(#mkGoldTube)" strokeWidth="4" strokeLinecap="round" />
+
+                            {/* 4. Rear Struts ascending to Handlebar */}
+                            <line x1="80" y1="120" x2="70" y2="55" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
+                            <line x1="440" y1="120" x2="450" y2="55" stroke="url(#mkGoldTube)" strokeWidth="4.5" strokeLinecap="round" />
+
+                            {/* 5. 3D Ergonomic Green & Gold Push Handlebar */}
+                            <rect
+                              x="60"
+                              y="42"
+                              width="400"
+                              height="22"
+                              rx="11"
+                              fill="url(#mkGreenHandle)"
+                              stroke="url(#mkGoldTube)"
+                              strokeWidth="2"
+                              filter="drop-shadow(0 4px 10px rgba(0,0,0,0.7))"
+                            />
+                            {/* Gold Handle End-caps */}
+                            <rect x="60" y="44" width="14" height="18" rx="4" fill="url(#mkGoldTube)" />
+                            <rect x="446" y="44" width="14" height="18" rx="4" fill="url(#mkGoldTube)" />
+                            {/* Center Marde Koohestan Gold Badge */}
+                            <rect x="185" y="47" width="150" height="12" rx="6" fill="#010d0a" stroke="#d4a359" strokeWidth="1" />
+                            <text x="260" y="56" fill="#f5db99" fontSize="7.5" fontWeight="900" textAnchor="middle" letterSpacing="0.08em">
+                              MARDE KOOHESTAN · این راه سبز است
+                            </text>
+
+                            {/* 6. 3D Isometric Wire Basket Frame (Angled 3D Mesh) */}
+                            {/* Back Face */}
+                            <polygon
+                              points="95,120 425,120 375,340 145,340"
+                              fill="rgba(0, 30, 24, 0.4)"
+                              stroke="url(#mkWireMesh)"
+                              strokeWidth="1.5"
+                            />
+                            {/* Bottom Wire Grid */}
+                            <polygon
+                              points="145,340 375,340 395,360 125,360"
+                              fill="rgba(212, 163, 89, 0.12)"
+                              stroke="url(#mkGoldTube)"
+                              strokeWidth="2.5"
+                            />
+
+                            {/* 7. Wire Basket Main Top Perimeter Rim Tube */}
+                            <polygon
+                              points="75,115 445,115 485,240 35,240"
+                              fill="none"
+                              stroke="url(#mkGoldTube)"
+                              strokeWidth="4"
+                              strokeLinejoin="round"
+                            />
+
+                            {/* Front Lower Wire Mesh Panel */}
+                            <polygon
+                              points="35,240 485,240 395,360 125,360"
+                              fill="none"
+                              stroke="url(#mkGoldTube)"
+                              strokeWidth="3"
+                              strokeLinejoin="round"
+                            />
+
+                            {/* Wire Grid Horizontal Lines on Front Panel */}
+                            <line x1="50" y1="265" x2="470" y2="265" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            <line x1="70" y1="290" x2="450" y2="290" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            <line x1="90" y1="315" x2="430" y2="315" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+                            <line x1="110" y1="340" x2="410" y2="340" stroke="url(#mkWireMesh)" strokeWidth="1.5" />
+
+                            {/* Wire Grid Vertical Ribs on Front Panel */}
+                            {[0.12, 0.22, 0.32, 0.42, 0.52, 0.62, 0.72, 0.82, 0.92].map((pct, i) => (
+                              <line
+                                key={`vwire-${i}`}
+                                x1={35 + (485 - 35) * pct}
+                                y1="240"
+                                x2={125 + (395 - 125) * pct}
+                                y2="360"
+                                stroke="url(#mkWireMesh)"
+                                strokeWidth="1.4"
+                              />
+                            ))}
+
+                            {/* 8. 4 Multi-Directional 3D Swivel Caster Wheels */}
+                            {/* Rear Left Wheel */}
+                            <g transform="translate(190, 415)">
+                              <rect x="-3" y="0" width="6" height="8" rx="1" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="14" r="11" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2" />
+                              <circle cx="0" cy="14" r="3" fill="#ffffff" />
+                            </g>
+                            {/* Rear Right Wheel */}
+                            <g transform="translate(330, 415)">
+                              <rect x="-3" y="0" width="6" height="8" rx="1" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="14" r="11" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2" />
+                              <circle cx="0" cy="14" r="3" fill="#ffffff" />
+                            </g>
+                            {/* Front Left Wheel */}
+                            <g transform="translate(140, 435)">
+                              <rect x="-4" y="0" width="8" height="10" rx="1" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="17" r="15" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.5" />
+                              <circle cx="0" cy="17" r="4.5" fill="#f5db99" />
+                            </g>
+                            {/* Front Right Wheel */}
+                            <g transform="translate(380, 435)">
+                              <rect x="-4" y="0" width="8" height="10" rx="1" fill="url(#mkGoldTube)" />
+                              <circle cx="0" cy="17" r="15" fill="url(#mkWheelRim)" stroke="#001812" strokeWidth="2.5" />
+                              <circle cx="0" cy="17" r="4.5" fill="#f5db99" />
+                            </g>
+                          </svg>
+
+                          {/* 3D Basket Cargo Area Overlay: Holds the 3D Kraft Boxes inside the 3D Cart */}
+                          <div className="mk-iso-cargo-overlay">
+                            {orderCount === 0 ? (
+                              <div className="mk-iso-empty-card">
+                                <div className="mk-iso-empty-badge">
+                                  <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" strokeWidth="1.8" fill="none">
+                                    <circle cx="9" cy="21" r="1" />
+                                    <circle cx="20" cy="21" r="1" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                  </svg>
+                                </div>
+                                <h4>سبد ۳ بعدی چرخ‌دار در انتظار نخستین بارگیری</h4>
+                                <p>چرخ خرید اختصاصی شما در ایستگاه بارگیری آماده است. با ثبت هر سفارش، بسته ۳ بعدی شناسنامه مرتع در این سبد چیده می‌شود.</p>
+                                <button
+                                  type="button"
+                                  className="mk-iso-empty-action-btn"
+                                  onClick={() => setDocViewMode("invoice")}
+                                >
+                                  <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                  </svg>
+                                  مشاهده فاکتور و ثبت سفارش جدید
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="mk-iso-boxes-grid">
+                                {PASTURE_ORDERS_DATABASE.slice(0, orderCount).map((ord, idx) => {
+                                  const isSelected = docViewMode === "book" && selectedOrderIndex === idx;
+                                  return (
+                                    <motion.article
+                                      key={ord.id}
+                                      className={`mk-iso-box-card${isSelected ? " is-selected" : ""}`}
+                                      onClick={() => {
+                                        setSelectedOrderIndex(idx);
+                                        setDocViewMode("book");
+                                      }}
+                                      role="button"
+                                      tabIndex={0}
+                                      title={`کلیک برای مطالعه شناسنامه مرتع #${ord.id}`}
+                                      initial={{ opacity: 0, scale: 0.82, y: 20 }}
+                                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                                      transition={{ duration: 0.32, delay: idx * 0.035 }}
+                                      whileHover={{ scale: 1.04, y: -3 }}
+                                      whileTap={{ scale: 0.97 }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                          e.preventDefault();
+                                          setSelectedOrderIndex(idx);
+                                          setDocViewMode("book");
+                                        }
+                                      }}
+                                    >
+                                      {/* Top Face Gold Security Tape */}
+                                      <span className="mk-iso-box-tape" />
+
+                                      <div className="mk-iso-box-top">
+                                        <div className="mk-iso-box-logo">
+                                          <Image
+                                            src="/brand/orginal-clear.png"
+                                            alt="مرد کوهستان"
+                                            width={14}
+                                            height={14}
+                                          />
+                                          <span className="mk-iso-box-serial">#{ord.id}</span>
+                                        </div>
+                                        <span className="mk-iso-box-pill">
+                                          {ord.status.includes("تحویل") ? "تحویل شد" : "در مسیر"}
+                                        </span>
+                                      </div>
+
+                                      <div className="mk-iso-box-body">
+                                        <strong className="mk-iso-box-title">{ord.title}</strong>
+                                        <span className="mk-iso-box-origin">
+                                          <svg viewBox="0 0 24 24" width="8" height="8" fill="currentColor">
+                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                          </svg>
+                                          {ord.pastureName.split("(")[0]}
+                                        </span>
+                                      </div>
+
+                                      <div className="mk-iso-box-foot">
+                                        <span className="mk-iso-box-temp">{ord.tempLog.split(" ")[0]}</span>
+                                        <small style={{ fontSize: "7.5px", color: "#d4a359", fontWeight: 800 }}>
+                                          {ord.date.split(" ")[0]} {ord.date.split(" ")[1]}
+                                        </small>
+                                      </div>
+                                    </motion.article>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                         </div>
-
-                        {/* Cargo Bay: Either Empty State or Realistic 3D Boxes */}
-                        {orderCount === 0 ? (
-                          <div className="mk-trolley-empty">
-                            <div className="mk-trolley-empty-icon">
-                              <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" strokeWidth="1.8" fill="none">
-                                <circle cx="9" cy="21" r="1" />
-                                <circle cx="20" cy="21" r="1" />
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                              </svg>
-                            </div>
-                            <h4>سبد تحویل مرتع در انتظار نخستین سفر شماست</h4>
-                            <p>تاکنون سفارشی در این دوره ثبت نشده است. پس از هر سفارش، بسته اختصاصی مرتع در این ترولی قرار می‌گیرد.</p>
-                            <button
-                              type="button"
-                              className="mk-trolley-empty-btn"
-                              onClick={() => setOrderCount(1)}
-                            >
-                              <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                              </svg>
-                              ثبت و قرار دادن نخستین بسته
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="mk-trolley-cargo-grid">
-                            {PASTURE_ORDERS_DATABASE.slice(0, orderCount).map((ord, idx) => {
-                              const isSelected = selectedOrderIndex === idx;
-                              return (
-                                <motion.article
-                                  key={ord.id}
-                                  className={`mk-cargo-box${isSelected ? " is-selected" : ""}`}
-                                  onClick={() => setSelectedOrderIndex(idx)}
-                                  role="button"
-                                  tabIndex={0}
-                                  title={`کلیک برای مشاهده شناسنامه مرتع بسته #${ord.id}`}
-                                  initial={{ opacity: 0, scale: 0.85, y: 15 }}
-                                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                                  transition={{ duration: 0.35, delay: idx * 0.04 }}
-                                  whileHover={{ scale: 1.03, y: -2 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter" || e.key === " ") {
-                                      e.preventDefault();
-                                      setSelectedOrderIndex(idx);
-                                    }
-                                  }}
-                                >
-                                  <div className="mk-cargo-box-top">
-                                    <div className="mk-cargo-logo-badge">
-                                      <Image
-                                        src="/brand/orginal-clear.png"
-                                        alt="مرد کوهستان"
-                                        width={14}
-                                        height={14}
-                                        className="mk-cargo-logo-img"
-                                      />
-                                      <span className="mk-cargo-serial">#{ord.id}</span>
-                                    </div>
-                                    <span className="mk-cargo-status-pill">{ord.status.includes("تحویل") ? "تحویل شد" : "در مسیر"}</span>
-                                  </div>
-
-                                  <div className="mk-cargo-box-body">
-                                    <strong className="mk-cargo-pasture-title">{ord.title}</strong>
-                                    <span className="mk-cargo-pasture-origin">
-                                      <svg viewBox="0 0 24 24" width="8" height="8" fill="currentColor">
-                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                      </svg>
-                                      {ord.pastureName.split("(")[0]}
-                                    </span>
-                                  </div>
-
-                                  <div className="mk-cargo-box-foot">
-                                    <span className="mk-cargo-temp-chip">{ord.tempLog.split(" ")[0]}</span>
-                                    <small style={{ fontSize: "7.5px", color: "#d4a359", fontWeight: 800 }}>{ord.date.split(" ")[0]} {ord.date.split(" ")[1]}</small>
-                                  </div>
-                                </motion.article>
-                              );
-                            })}
-                          </div>
-                        )}
 
                         {/* 15 Boxes Milestone Celebration Banner */}
                         {orderCount >= 15 && (
@@ -2795,156 +3180,420 @@ function ProfileContent() {
                             </button>
                           </motion.div>
                         )}
-
-                        {/* Trolley Bottom Hardware Wheels */}
-                        <div className="mk-trolley-wheels-bar">
-                          <div className="mk-trolley-wheel">
-                            <span className="mk-trolley-wheel-hub" />
-                          </div>
-                          <span style={{ fontSize: "7.5px", color: "#8a652e", fontWeight: 800, letterSpacing: "0.1em" }}>
-                            CHASSIS MK-HEAVY-DUTY · SUSPENSION
-                          </span>
-                          <div className="mk-trolley-wheel">
-                            <span className="mk-trolley-wheel-hub" />
-                          </div>
-                        </div>
                       </div>
                     </motion.section>
 
-                    {/* Side B: Authentic Pasture Traceability Passport (شناسنامه مرتع) */}
+                    {/* Side B: Document Console (Authentic Book & Real Invoice Viewer) */}
                     <motion.section
-                      className="mk-passport-console"
+                      className="mk-doc-console"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      {activeOrder ? (
-                        <article className="mk-passport-sheet">
-                          {/* Header: Title, Official Seal & Cold Chain Badge */}
-                          <header className="mk-passport-head">
-                            <div className="mk-passport-title-wrap">
-                              <span className="mk-passport-seal-icon">
-                                <Image src="/brand/orginal-clear.png" alt="" width={16} height={16} />
-                              </span>
-                              <div>
-                                <h3>شناسنامه مرتع و اصالت پروتئین</h3>
-                                <span>سند رسمی رهگیری: #{activeOrder.id}</span>
+                      {/* Segmented Mode Switcher */}
+                      <div className="mk-doc-segmented-bar">
+                        <button
+                          type="button"
+                          className={`mk-doc-tab-btn${docViewMode === "book" ? " is-active" : ""}`}
+                          onClick={() => setDocViewMode("book")}
+                        >
+                          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                          </svg>
+                          <span>کتابچه شناسنامه مرتع (سفارش‌های قبلی)</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`mk-doc-tab-btn is-invoice-tab${docViewMode === "invoice" ? " is-active" : ""}`}
+                          onClick={() => setDocViewMode("invoice")}
+                        >
+                          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none">
+                            <rect x="2" y="3" width="20" height="18" rx="2" />
+                            <line x1="6" y1="8" x2="18" y2="8" />
+                            <line x1="6" y1="12" x2="18" y2="12" />
+                            <line x1="6" y1="16" x2="12" y2="16" />
+                          </svg>
+                          <span>فاکتور رسمی خرید (سفارش جدید جاری)</span>
+                        </button>
+                      </div>
+
+                      {/* View 1: Authentic Real Pasture Book (کتاب واقعی شناسنامه مرتع) */}
+                      {docViewMode === "book" && (
+                        activeOrder ? (
+                          <article className="mk-real-book">
+                            {/* Leather Spine with Gold Foil Stitches */}
+                            <div className="mk-book-spine" />
+
+                            {/* Parchment Book Page */}
+                            <div className="mk-book-page">
+                              {/* Header: Title, Official Wax Seal & Paid Badge */}
+                              <header className="mk-book-head">
+                                <div className="mk-book-title-wrap">
+                                  <span className="mk-book-seal-wax">
+                                    <Image src="/brand/orginal-clear.png" alt="" width={16} height={16} />
+                                  </span>
+                                  <div>
+                                    <h3>شناسنامه مرتع و اصالت پروتئین</h3>
+                                    <span>سند رسمی رهگیری کتابچه: #{activeOrder.id}</span>
+                                  </div>
+                                </div>
+                                <span className="mk-book-badge-paid">
+                                  <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                  {activeOrder.status}
+                                </span>
+                              </header>
+
+                              {/* Pasture Geolocation Coordinates */}
+                              <div className="mk-book-geo-grid">
+                                <div className="mk-book-geo-cell">
+                                  <small>موقعیت و نام چراگاه</small>
+                                  <strong>{activeOrder.pastureName}</strong>
+                                </div>
+                                <div className="mk-book-geo-cell">
+                                  <small>ارتفاع از سطح دریا</small>
+                                  <strong>{activeOrder.altitude}</strong>
+                                </div>
+                                <div className="mk-book-geo-cell">
+                                  <small>تغذیه و پوشش گیاهی</small>
+                                  <strong>{activeOrder.grazing}</strong>
+                                </div>
+                                <div className="mk-book-geo-cell">
+                                  <small>تأییدیه بهداشت دامپزشکی</small>
+                                  <strong>{activeOrder.vetCode}</strong>
+                                </div>
                               </div>
+
+                              {/* Meat Cuts Breakdown in this Book Entry */}
+                              <div className="mk-book-items-list">
+                                {activeOrder.items.map((it, i) => (
+                                  <div key={i} className="mk-book-item-row">
+                                    <div className="mk-book-item-thumb">
+                                      <Image src={it.image} alt={it.name} width={28} height={28} />
+                                    </div>
+                                    <div className="mk-book-item-info">
+                                      <strong>{it.name}</strong>
+                                      <span>{it.cut}</span>
+                                    </div>
+                                    <strong className="mk-book-item-price">{it.price}</strong>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Cold Chain Tracking Timeline */}
+                              <div className="mk-book-timeline">
+                                <div className="mk-book-timeline-title">
+                                  <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                  </svg>
+                                  <span>گزارش تله‌متری پایش زنجیره سرد (ثبت در لاگر هوشمند)</span>
+                                </div>
+                                <div className="mk-book-timeline-steps">
+                                  <div className="mk-book-step">
+                                    <span className="mk-book-step-dot" />
+                                    <span>تخصیص سهمیه</span>
+                                  </div>
+                                  <div className="mk-book-step">
+                                    <span className="mk-book-step-dot" />
+                                    <span>برش استریل ({activeOrder.tempLog.split(" ")[0]})</span>
+                                  </div>
+                                  <div className="mk-book-step">
+                                    <span className="mk-book-step-dot" />
+                                    <span>بارگیری سردخانه</span>
+                                  </div>
+                                  <div className="mk-book-step">
+                                    <span className="mk-book-step-dot" />
+                                    <span>تحویل نهایی</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Book Foot: Invoice summary & Action Buttons */}
+                              <footer className="mk-book-foot">
+                                <div className="mk-book-total-box">
+                                  <small>مبلغ نهایی پرداخت‌شده:</small>
+                                  <strong>{activeOrder.finalPrice}</strong>
+                                </div>
+                                <div className="mk-book-actions">
+                                  <button
+                                    type="button"
+                                    className="mk-book-pdf-btn"
+                                    onClick={() => handleDownloadOrderPdf("book", activeOrder, buyerInfo)}
+                                    title="دریافت نسخه چاپی و PDF شناسنامه مرتع با کیفیت بالا"
+                                  >
+                                    <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                      <polyline points="7 10 12 15 17 10" />
+                                      <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    <span>دانلود PDF شناسنامه</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="mk-book-reorder-btn"
+                                    onClick={() => {
+                                      setDocViewMode("invoice");
+                                    }}
+                                  >
+                                    <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                      <polyline points="23 4 23 10 17 10" />
+                                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                                    </svg>
+                                    <span>مشاهده فاکتور جدید</span>
+                                  </button>
+                                </div>
+                              </footer>
                             </div>
-                            <span className="mk-passport-badge-delivered">
-                              <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                              {activeOrder.status}
-                            </span>
+                          </article>
+                        ) : (
+                          <div className="mk-real-book" style={{ alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px" }}>
+                            <p style={{ color: "#736b5e", fontSize: "11px", fontWeight: 700 }}>
+                              یک بسته از ترولی را انتخاب کنید تا شناسنامه مرتع آن نمایش داده شود.
+                            </p>
+                          </div>
+                        )
+                      )}
+
+                      {/* View 2: Authentic Real Official Invoice (فاکتور رسمی و معتبر خرید) */}
+                      {docViewMode === "invoice" && (
+                        <article className="mk-real-invoice">
+                          {/* Invoice Header */}
+                          <header className="mk-invoice-head">
+                            <div className="mk-invoice-title-block">
+                              <h3>صورت‌حساب رسمی فروش کالا و خدمات</h3>
+                              <span>سامانه فروش مستقیم و توزیع اختصاصی مراتع مرد کوهستان</span>
+                            </div>
+                            <div className="mk-invoice-meta-block">
+                              <span className="mk-invoice-serial-badge">شماره: {CURRENT_PENDING_INVOICE.invoiceNumber}</span>
+                              <span className="mk-invoice-date">تاریخ: {CURRENT_PENDING_INVOICE.date}</span>
+                            </div>
                           </header>
 
-                          {/* Pasture Geolocation & Coordinates */}
-                          <div className="mk-passport-geo-box">
-                            <div className="mk-passport-geo-field">
-                              <small>موقعیت و نام چراگاه</small>
-                              <strong>{activeOrder.pastureName}</strong>
+                          {/* Buyer Information Strip */}
+                          <div className="mk-invoice-buyer-strip">
+                            <div className="mk-invoice-buyer-item">
+                              <span>خریدار:</span>
+                              <strong>{displayName}</strong>
                             </div>
-                            <div className="mk-passport-geo-field">
-                              <small>ارتفاع از سطح دریا</small>
-                              <strong>{activeOrder.altitude}</strong>
+                            <div className="mk-invoice-buyer-item">
+                              <span>کد ملی:</span>
+                              <strong>{nationalCode || "۰۰۱۸۴۹۲۷۵۱"}</strong>
                             </div>
-                            <div className="mk-passport-geo-field">
-                              <small>تغذیه و پوشش گیاهی</small>
-                              <strong>{activeOrder.grazing}</strong>
+                            <div className="mk-invoice-buyer-item">
+                              <span>شماره تماس:</span>
+                              <strong>{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
                             </div>
-                            <div className="mk-passport-geo-field">
-                              <small>تأییدیه سلامت دامپزشکی</small>
-                              <strong>{activeOrder.vetCode}</strong>
-                            </div>
-                          </div>
-
-                          {/* Products Breakdown in this order */}
-                          <div className="mk-passport-items-list">
-                            {activeOrder.items.map((it, i) => (
-                              <div key={i} className="mk-passport-item-card">
-                                <div className="mk-passport-item-thumb">
-                                  <Image src={it.image} alt={it.name} width={30} height={30} />
-                                </div>
-                                <div className="mk-passport-item-info">
-                                  <strong>{it.name}</strong>
-                                  <span>{it.cut}</span>
-                                </div>
-                                <strong className="mk-passport-item-price">{it.price}</strong>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* Cold Chain Tracking Timeline */}
-                          <div className="mk-passport-timeline">
-                            <div className="mk-passport-timeline-title">
-                              <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.5" fill="none">
-                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                              </svg>
-                              <span>گزارش تله‌متری پایش زنجیره سرد (ثبت در لاگر هوشمند)</span>
-                            </div>
-                            <div className="mk-passport-timeline-steps">
-                              <div className="mk-timeline-step">
-                                <span className="mk-timeline-dot" />
-                                <span>تخصیص سهمیه</span>
-                              </div>
-                              <div className="mk-timeline-step">
-                                <span className="mk-timeline-dot" />
-                                <span>برش استریل ({activeOrder.tempLog.split(" ")[0]})</span>
-                              </div>
-                              <div className="mk-timeline-step">
-                                <span className="mk-timeline-dot" />
-                                <span>بارگیری سردخانه</span>
-                              </div>
-                              <div className="mk-timeline-step">
-                                <span className="mk-timeline-dot" />
-                                <span>تحویل نهایی</span>
-                              </div>
+                            <div className="mk-invoice-buyer-item">
+                              <span>نشانی:</span>
+                              <strong style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                {addresses[0]?.city || "تهران"}، {addresses[0]?.district || "زعفرانیه"}
+                              </strong>
                             </div>
                           </div>
 
-                          {/* Footer: Invoice & Actions */}
-                          <footer className="mk-passport-foot">
-                            <div className="mk-passport-total-box">
-                              <small>مبلغ نهایی پرداختی:</small>
-                              <strong>{activeOrder.finalPrice}</strong>
+                          {/* Items Table */}
+                          <div className="mk-invoice-table-wrap">
+                            <table className="mk-invoice-table">
+                              <thead>
+                                <tr>
+                                  <th>ردیف</th>
+                                  <th>شرح کالا / بسته پروتئین</th>
+                                  <th>کد کالا</th>
+                                  <th>وزن</th>
+                                  <th>مبلغ کل</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {CURRENT_PENDING_INVOICE.items.map((it) => (
+                                  <tr key={it.row}>
+                                    <td>{it.row}</td>
+                                    <td>{it.name}</td>
+                                    <td style={{ fontFamily: "monospace" }}>{it.code}</td>
+                                    <td>{it.weight}</td>
+                                    <td style={{ fontWeight: 800 }}>{it.total}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Important Delivery & Call Notice (تذکر تلفنی و بازه تحویل) */}
+                          <div className="mk-invoice-notice-box">
+                            <div className="mk-invoice-notice-icon">✓</div>
+                            <div className="mk-invoice-notice-content">
+                              <strong>هماهنگی تلفنی و تحویل زنجیره سرد:</strong>
+                              <p>
+                                در صورت صحت اطلاعات نشانی و شماره تماس فوق (<strong>{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>)، این سفارش ظرف ۲ الی ۳ روز کاری آینده با حفظ کامل زنجیره سرد (۲.۴°C) تحویل شما می‌گردد. همچنین پیش از اعزام سفیر کوهستان، جهت هماهنگی نهایی ساعت تحویل با شماره همراه شما تماس گرفته خواهد شد.
+                              </p>
                             </div>
-                            <div className="mk-passport-actions">
+                          </div>
+
+                          {/* Invoice Footer Actions */}
+                          <footer className="mk-invoice-foot">
+                            <div className="mk-invoice-total-box">
+                              <small>مبلغ قابل پرداخت با تخفیف سهمیه:</small>
+                              <strong>{CURRENT_PENDING_INVOICE.payableAmount}</strong>
+                            </div>
+                            <div className="mk-invoice-actions">
                               <button
                                 type="button"
-                                className="mk-passport-pdf-btn"
-                                onClick={() => alert(`شناسنامه مرتع سفارش #${activeOrder.id} با مُهر دیجیتال آماده دانلود است.`)}
+                                className="mk-invoice-pdf-btn"
+                                onClick={() => handleDownloadOrderPdf("invoice", CURRENT_PENDING_INVOICE, buyerInfo)}
+                                title="دریافت فایل چاپی و PDF فاکتور رسمی"
                               >
                                 <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
                                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                   <polyline points="7 10 12 15 17 10" />
                                   <line x1="12" y1="15" x2="12" y2="3" />
                                 </svg>
-                                <span>دانلود PDF</span>
+                                <span>دانلود PDF فاکتور</span>
                               </button>
                               <button
                                 type="button"
-                                className="mk-passport-reorder-btn"
-                                onClick={() => alert(`بسته پروتئینی #${activeOrder.id} به سبد خرید تازه شما افزوده شد.`)}
+                                className="mk-invoice-pay-btn"
+                                onClick={() => setIsPayModalOpen(true)}
                               >
-                                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
-                                  <polyline points="23 4 23 10 17 10" />
-                                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                                <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                  <line x1="1" y1="10" x2="23" y2="10" />
                                 </svg>
-                                <span>تکرار سفارش</span>
+                                <span>پرداخت آنلاین و نهایی‌سازی</span>
                               </button>
                             </div>
                           </footer>
                         </article>
-                      ) : (
-                        <div className="mk-passport-sheet" style={{ alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-                          <p style={{ color: "#736b5e", fontSize: "11px", fontWeight: 700 }}>
-                            یک بسته از ترولی را انتخاب کنید تا شناسنامه مرتع آن نمایش داده شود.
-                          </p>
-                        </div>
                       )}
                     </motion.section>
                   </div>
+
+                  {/* Simulated Payment Gateway Modal */}
+                  <AnimatePresence>
+                    {isPayModalOpen && (
+                      <div className="mk-payment-modal-backdrop" onClick={() => !isPaying && setIsPayModalOpen(false)}>
+                        <motion.div
+                          className="mk-payment-card"
+                          onClick={(e) => e.stopPropagation()}
+                          initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          {!paySuccess ? (
+                            <>
+                              <header className="mk-payment-head">
+                                <div className="mk-payment-brand">
+                                  <Image src="/brand/orginal-clear.png" alt="" width={24} height={24} />
+                                  <div>
+                                    <strong>درگاه امن پرداخت کوهستان</strong>
+                                    <span>شاپرک · شاخه پرداخت متمرکز الکترونیک</span>
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  className="mk-payment-close"
+                                  onClick={() => !isPaying && setIsPayModalOpen(false)}
+                                >
+                                  ✕
+                                </button>
+                              </header>
+
+                              <div className="mk-payment-amount-box">
+                                <span>مبلغ قابل پرداخت فاکتور:</span>
+                                <strong>{CURRENT_PENDING_INVOICE.payableAmount}</strong>
+                              </div>
+
+                              <form
+                                className="mk-payment-form"
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  handleSimulatePayment();
+                                }}
+                              >
+                                <div className="mk-pay-field">
+                                  <label>شماره کارت بانکی عضو شتاب</label>
+                                  <input
+                                    type="text"
+                                    dir="ltr"
+                                    value={payCardNum}
+                                    onChange={(e) => setPayCardNum(e.target.value)}
+                                    placeholder="---- ---- ---- ----"
+                                    required
+                                  />
+                                </div>
+
+                                <div className="mk-pay-grid-2">
+                                  <div className="mk-pay-field">
+                                    <label>کد امنیتی CVV2</label>
+                                    <input
+                                      type="password"
+                                      dir="ltr"
+                                      maxLength={4}
+                                      value={payCvv2}
+                                      onChange={(e) => setPayCvv2(e.target.value)}
+                                      placeholder="•••"
+                                      required
+                                    />
+                                  </div>
+                                  <div className="mk-pay-field">
+                                    <label>تاریخ انقضا</label>
+                                    <input
+                                      type="text"
+                                      dir="ltr"
+                                      defaultValue="۱۴۰۸ / ۰۶"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="mk-pay-field">
+                                  <label>رمز پویا (پیامک‌شده به همراه شما)</label>
+                                  <div className="mk-pay-otp-row">
+                                    <input
+                                      type="text"
+                                      dir="ltr"
+                                      value={payOtp}
+                                      onChange={(e) => setPayOtp(e.target.value)}
+                                      placeholder="رمز پیامک‌شده"
+                                      required
+                                    />
+                                    <button
+                                      type="button"
+                                      className="mk-pay-otp-btn"
+                                      onClick={handleRequestOtp}
+                                    >
+                                      {isOtpSent ? `ارسال مجدد (${payOtpTimer}ثانیه)` : "دریافت رمز پویا"}
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="submit"
+                                  disabled={isPaying}
+                                  className="mk-payment-submit-btn"
+                                >
+                                  {isPaying ? "در حال پردازش تراکنش بانکی…" : `پرداخت ${CURRENT_PENDING_INVOICE.payableAmount}`}
+                                </button>
+                              </form>
+                            </>
+                          ) : (
+                            <div className="mk-payment-success-card">
+                              <div className="mk-payment-success-icon">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="3" fill="none">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              </div>
+                              <strong style={{ fontSize: "14px", color: "#50af47" }}>پرداخت با موفقیت تایید شد!</strong>
+                              <p style={{ fontSize: "9.5px", color: "#b9c7c3", margin: 0, lineHeight: 1.6 }}>
+                                بسته جدید در ترولی بارگیری شد و شناسنامه مرتع آن در کتابچه ثبت گردید.
+                              </p>
+                            </div>
+                          )}
+                        </motion.div>
+                      </div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
                 </motion.div>
