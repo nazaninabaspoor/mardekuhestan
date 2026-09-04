@@ -270,7 +270,7 @@
   box-shadow:
     inset 0 0 24px rgba(144, 56, 40, 0.04),
     0 4px 14px rgba(0, 0, 0, 0.25);
-  padding: 12px 14px 10px;
+  padding: 14px 18px 12px;
   color: #1d1d1b;
   overflow: hidden;
   box-sizing: border-box;
@@ -302,10 +302,10 @@
 .mk-shenasnameh-head {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding-bottom: 6px;
+  gap: 4px;
+  padding-bottom: 8px;
   border-bottom: 1.5px solid rgba(0, 91, 72, 0.18);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .mk-shenasnameh-head-top {
@@ -316,13 +316,13 @@
 }
 
 .mk-shenasnameh-org {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 800;
   color: #005b48;
 }
 
 .mk-shenasnameh-serial {
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 900;
   font-family: monospace;
   color: #903828;
@@ -336,8 +336,8 @@
 }
 
 .mk-shenasnameh-crest {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1.2px solid #005b48;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
@@ -351,14 +351,14 @@
 }
 
 .mk-shenasnameh-title-fa {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 900;
   color: #005b48;
   letter-spacing: -0.01em;
 }
 
 .mk-shenasnameh-title-en {
-  font-size: 7.5px;
+  font-size: 8px;
   font-weight: 800;
   color: #8a652e;
   letter-spacing: 0.1em;
@@ -391,8 +391,8 @@
 /* Document Body Layout */
 .mk-shenasnameh-body {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 106px minmax(0, 1fr);
+  gap: 16px;
   flex: 1;
   min-height: 0;
   align-items: start;
@@ -403,13 +403,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .mk-shenasnameh-photo-wrap {
   position: relative;
-  width: 84px;
-  height: 98px;
+  width: 102px;
+  height: 124px;
 }
 
 .mk-shenasnameh-photo {
@@ -453,7 +453,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   color: #f4f0e8;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -465,20 +465,20 @@
 }
 
 .mk-shenasnameh-photo-overlay span {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .mk-shenasnameh-photo strong {
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 900;
   color: #005b48;
   line-height: 1;
 }
 
 .mk-shenasnameh-photo small {
-  font-size: 7.5px;
+  font-size: 8.5px;
   font-weight: 700;
   color: #5d686e;
   margin-top: 4px;
@@ -498,8 +498,8 @@
 
 .mk-shenasnameh-corner-mount {
   position: absolute;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-color: #d4a359;
   border-style: solid;
   z-index: 2;
@@ -512,8 +512,8 @@
 
 .mk-shenasnameh-embossed-seal {
   position: absolute;
-  bottom: -10px;
-  right: -10px;
+  bottom: -12px;
+  right: -12px;
   z-index: 4;
   pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
@@ -523,12 +523,12 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 7px;
+  padding: 3px 8px;
   border-radius: 4px;
   background: rgba(80, 175, 71, 0.16);
   border: 1px solid rgba(80, 175, 71, 0.5);
   color: #005b48;
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 900;
 }
 
@@ -536,7 +536,7 @@
 .mk-shenasnameh-fields {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
   min-width: 0;
   flex: 1;
 }
@@ -544,13 +544,13 @@
 .mk-shenasnameh-dual-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 7px;
+  gap: 10px;
 }
 
 .mk-shenasnameh-field {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .mk-shenasnameh-label-row {
@@ -561,7 +561,7 @@
 
 .mk-shenasnameh-label-row label,
 .mk-shenasnameh-field label {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 800;
   color: #005b48;
   display: flex;
@@ -577,20 +577,20 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 7.5px;
+  font-size: 8.5px;
   font-weight: 800;
   color: #5d686e;
   background: rgba(0, 0, 0, 0.05);
-  padding: 1px 5px;
+  padding: 2px 6px;
   border-radius: 3px;
 }
 
 .mk-shenasnameh-edit-badge {
-  font-size: 7.5px;
+  font-size: 8.5px;
   font-weight: 800;
   color: #903828;
   background: rgba(144, 56, 40, 0.08);
-  padding: 1px 5px;
+  padding: 2px 6px;
   border-radius: 3px;
 }
 
@@ -598,21 +598,21 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 3.5px 7px;
+  padding: 5.5px 10px;
   background: #ffffff;
   border: 1px solid rgba(0, 91, 72, 0.18);
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .mk-shenasnameh-val-row strong {
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 900;
   color: #1d1d1b;
 }
 
 .mk-shenasnameh-val-row small {
-  font-size: 7px;
+  font-size: 7.5px;
   font-weight: 800;
   color: #8a652e;
   letter-spacing: 0.04em;
@@ -620,13 +620,13 @@
 
 .mk-shenasnameh-field input {
   width: 100%;
-  padding: 3.5px 7px;
-  font-size: 11px;
+  padding: 5.5px 10px;
+  font-size: 11.5px;
   font-weight: 700;
   color: #1d1d1b;
   background: #ffffff;
   border: 1px solid rgba(212, 163, 89, 0.55);
-  border-radius: 4px;
+  border-radius: 5px;
   outline: none;
   transition: all 0.2s;
   box-sizing: border-box;
@@ -643,8 +643,8 @@
 
 .mk-shenasnameh-centerpiece {
   position: relative;
-  margin: 5px 0 3px;
-  padding: 6px 8px;
+  margin: 10px 0 8px;
+  padding: 8px 12px;
   background:
     radial-gradient(ellipse at 50% 50%, rgba(244, 240, 232, 0.95) 0%, rgba(234, 228, 214, 0.65) 100%);
   border: 1px solid rgba(212, 163, 89, 0.45);
@@ -669,11 +669,11 @@
 .mk-shenasnameh-pillar {
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.82);
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(0, 91, 72, 0.16);
   border-radius: 6px;
-  padding: 5px 8px;
+  padding: 6px 10px;
   backdrop-filter: blur(4px);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
@@ -687,8 +687,8 @@
 }
 
 .mk-pillar-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: rgba(0, 91, 72, 0.1);
   border: 1px solid rgba(0, 91, 72, 0.25);
@@ -705,7 +705,7 @@
 }
 
 .mk-pillar-info strong {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 900;
   color: #005b48;
   letter-spacing: -0.01em;
@@ -713,7 +713,7 @@
 }
 
 .mk-pillar-info span {
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 800;
   color: #5d686e;
   white-space: nowrap;
@@ -768,9 +768,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-top: 6px;
+  padding-top: 8px;
   border-top: 1.5px solid rgba(0, 91, 72, 0.18);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* Official Signature Badge Card */
