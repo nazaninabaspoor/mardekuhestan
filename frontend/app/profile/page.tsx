@@ -2796,10 +2796,10 @@ function ProfileContent() {
                 </div>
               )}
 
-              {/* Tab 5: Orders & Farm Traceability (3D Mountain Logistics Trolley & Pasture Passport / Invoice) */}
+              {/* Tab 5: Orders & Farm Traceability (Cohesive 3D Mountain Logistics Cart & Pasture Folio / Invoice) */}
               {openedTab === "orders" && (
                 <div className="mk-orders-container">
-                  {/* Topbar: Brand, Live Cold-Chain Telemetry, Capacity Chip & Close */}
+                  {/* Topbar: Brand, Live Cold-Chain Telemetry & Close */}
                   <motion.header
                     className="mk-orders-topbar"
                     initial={{ opacity: 0, y: -12 }}
@@ -2810,13 +2810,13 @@ function ProfileContent() {
                       <Image
                         src="/brand/orginal-clear.png"
                         alt="مرد کوهستان"
-                        width={36}
-                        height={36}
+                        width={38}
+                        height={38}
                         className="mk-orders-logo"
                       />
                       <div className="mk-orders-titles">
-                        <strong>ترولی بارنامه و شناسنامه اصالت مرتع</strong>
-                        <span>سامانه رهگیری زنجیره سرد، گواهی چراگاه و پایش بسته‌های تحویل</span>
+                        <strong>سفارش‌ها و شناسنامه اصالت مرتع</strong>
+                        <span>سامانه رهگیری هوشمند زنجیره سرد، گواهی اصالت چراگاه و بارنامه بسته‌ها</span>
                       </div>
                     </div>
 
@@ -2827,16 +2827,16 @@ function ProfileContent() {
                       </span>
                       <button type="button" className="mk-orders-close-btn" onClick={handleCloseWorkspace}>
                         <span>بستن میز</span>
-                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+                        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="2.5" fill="none">
                           <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
                       </button>
                     </div>
                   </motion.header>
 
-                  {/* 2-Column Desk: Side A (3D Trolley & Boxes) | Side B (Book & Invoice Viewer) */}
+                  {/* 2-Column Desk: Side A (3D Logistics Cart & Parcels) | Side B (Unified Folio & Invoice) */}
                   <div className="mk-orders-desk">
-                    {/* Side A: 3D Shopping Trolley & 3D Realistic Cargo Boxes */}
+                    {/* Side A: 3D Shopping Cart & Mountain Parcel Boxes */}
                     <motion.section
                       className="mk-trolley-console"
                       initial={{ opacity: 0, x: 20 }}
@@ -2845,12 +2845,12 @@ function ProfileContent() {
                     >
                       <header className="mk-trolley-head">
                         <div className="mk-trolley-title-box">
-                          <span className="mk-trolley-kicker">3D MOUNTAIN LOGISTICS TROLLEY · ترولی سه‌بعدی مرتع</span>
+                          <span className="mk-trolley-kicker">3D MOUNTAIN LOGISTICS TROLLEY · ترولی چرخ‌دار مرتع</span>
                           <h3>سبد بارنامه بسته‌های تحویل</h3>
                         </div>
                         <div className="mk-trolley-meter">
                           <span className="mk-trolley-counter">
-                            بارگیری: <strong>{orderCount}</strong> / ۱۵ بسته
+                            ظرفیت دوره: <strong>{orderCount}</strong> / ۱۵ بسته
                           </span>
                           <div className="mk-trolley-bar-wrap" title={`${orderCount} از ۱۵ بسته تکمیل شده`}>
                             <div
@@ -2861,73 +2861,88 @@ function ProfileContent() {
                         </div>
                       </header>
 
-                      {/* Quick Simulation / Capacity Selector Pills */}
+                      {/* Clean Capacity Stepper Bar */}
                       <div className="mk-trolley-sim-bar">
-                        <span className="mk-trolley-sim-label">شبیه‌ساز سبد:</span>
-                        <div className="mk-trolley-sim-pills">
-                          {[0, 1, 2, 3, 5, 8, 12, 15].map((cnt) => (
-                            <button
-                              key={cnt}
-                              type="button"
-                              className={`mk-trolley-pill-btn${orderCount === cnt ? " is-active" : ""}`}
-                              onClick={() => {
-                                setOrderCount(cnt);
-                                if (cnt > 0) setSelectedOrderIndex(Math.min(selectedOrderIndex, cnt - 1));
-                              }}
-                            >
-                              {cnt === 0 ? "سبد خالی (۰)" : `${cnt} بسته`}
-                            </button>
-                          ))}
-                          {orderCount < 15 && (
+                        <span className="mk-trolley-sim-label">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="#D4A359" strokeWidth="2.2" fill="none">
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                          </svg>
+                          <span>وضعیت چیدمان بسته‌ها در ترولی:</span>
+                        </span>
+                        <div className="mk-trolley-sim-actions">
+                          {orderCount > 0 && (
                             <button
                               type="button"
                               className="mk-trolley-pill-btn"
-                              onClick={() => setOrderCount((c) => Math.min(15, c + 1))}
-                              title="افزودن یک بسته جدید به ترولی"
+                              onClick={() => setOrderCount(0)}
+                              title="تخلیه سبد"
                             >
-                              + بسته جدید
+                              خالی‌کردن سبد
+                            </button>
+                          )}
+                          {orderCount < 15 ? (
+                            <button
+                              type="button"
+                              className="mk-trolley-pill-btn is-add"
+                              onClick={() => {
+                                const nextCount = Math.min(15, orderCount + 1);
+                                setOrderCount(nextCount);
+                                setSelectedOrderIndex(nextCount - 1);
+                              }}
+                              title="افزودن یک بسته جدید به سبد بارنامه"
+                            >
+                              + بارگیری بسته جدید
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="mk-trolley-pill-btn is-add"
+                              onClick={() => {
+                                setOrderCount(1);
+                                setSelectedOrderIndex(0);
+                              }}
+                            >
+                              شروع دوره جدید
                             </button>
                           )}
                         </div>
                       </div>
 
-                      {/* The Photorealistic 3D Shopping Cart Hardware Rig */}
+                      {/* The 3D Shopping Cart Hardware Stage */}
                       <div className="mk-3d-cart-container">
                         {/* 1. Real Trolley Green & Gold Push Handlebar */}
                         <div className="mk-cart-handlebar-rig">
                           <div className="mk-cart-handle-bar">
                             <span className="mk-cart-handle-cap" />
                             <div className="mk-cart-handle-badge">
-                              <Image src="/brand/orginal-clear.png" alt="" width={13} height={13} />
+                              <Image src="/brand/orginal-clear.png" alt="" width={15} height={15} />
                               <span>مرد کوهستان · این راه سبز است</span>
                             </div>
                             <div className="mk-cart-handle-telemetry">
-                              <span>❄️ 2.4°C</span>
+                              <span>❄️ ۲.۴°C</span>
                               <span>•</span>
-                              <span>{orderCount}/15 بسته</span>
+                              <span>{orderCount} از ۱۵ بسته</span>
                             </div>
                             <span className="mk-cart-handle-cap" />
-                          </div>
-                          <div className="mk-cart-struts">
-                            <span className="mk-cart-strut" />
-                            <span className="mk-cart-strut" />
                           </div>
                         </div>
 
                         {/* 2. Real Wire Mesh Basket Body with 3D Craft Boxes */}
                         <div className="mk-cart-mesh-basket">
-                          {/* Empty State vs Realistic 3D Boxes */}
+                          {/* Empty State vs Substantial 3D Parcel Cards */}
                           {orderCount === 0 ? (
                             <div className="mk-trolley-empty-view">
                               <div className="mk-trolley-empty-halo">
-                                <svg viewBox="0 0 24 24" width="38" height="38" stroke="currentColor" strokeWidth="1.8" fill="none">
+                                <svg viewBox="0 0 24 24" width="42" height="42" stroke="currentColor" strokeWidth="1.8" fill="none">
                                   <circle cx="9" cy="21" r="1" />
                                   <circle cx="20" cy="21" r="1" />
                                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                                 </svg>
                               </div>
-                              <h4>سبد تحویل مرتع در انتظار نخستین سفر شماست</h4>
-                              <p>تاکنون سفارشی در این دوره ثبت نشده است. پس از هر سفارش، بسته اختصاصی مرتع در این ترولی قرار می‌گیرد.</p>
+                              <h4>سبد تحویل مرتع در انتظار نخستین بارگیری شماست</h4>
+                              <p>در حال حاضر بسته‌ای در سبد بارنامه قرار ندارد. با ثبت هر سفارش، بسته اختصاصی شناسنامه مرتع در این ترولی قرار می‌گیرد.</p>
                               <button
                                 type="button"
                                 className="mk-trolley-empty-btn"
@@ -2935,7 +2950,7 @@ function ProfileContent() {
                                   setDocViewMode("invoice");
                                 }}
                               >
-                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none">
                                   <line x1="12" y1="5" x2="12" y2="19" />
                                   <line x1="5" y1="12" x2="19" y2="12" />
                                 </svg>
@@ -2957,16 +2972,11 @@ function ProfileContent() {
                                     role="button"
                                     tabIndex={0}
                                     title={`کلیک برای مطالعه کتابچه شناسنامه مرتع بسته #${ord.id}`}
-                                    initial={{ opacity: 0, scale: 0.82, y: -40 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    transition={{
-                                      type: "spring",
-                                      stiffness: 300,
-                                      damping: 20,
-                                      delay: idx * 0.035,
-                                    }}
-                                    whileHover={{ scale: 1.04, y: -3 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.25, delay: idx * 0.04 }}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.99 }}
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter" || e.key === " ") {
                                         e.preventDefault();
@@ -2975,39 +2985,37 @@ function ProfileContent() {
                                       }
                                     }}
                                   >
-                                    {/* 3D Box Kraft Gold Sealing Tape */}
-                                    <span className="mk-box-3d-tape" />
-
                                     <div className="mk-box-3d-top">
                                       <div className="mk-box-3d-logo-wrap">
                                         <Image
                                           src="/brand/orginal-clear.png"
                                           alt="مرد کوهستان"
-                                          width={14}
-                                          height={14}
+                                          width={18}
+                                          height={18}
                                         />
-                                        <span className="mk-box-3d-serial">#{ord.id}</span>
+                                        <span className="mk-box-3d-serial">بسته #{ord.id}</span>
                                       </div>
                                       <span className="mk-box-3d-pill">
-                                        {ord.status.includes("تحویل") ? "تحویل شد" : "در مسیر"}
+                                        {ord.status.includes("تحویل") ? "تحویل شد" : "در مسیر تحویل"}
                                       </span>
                                     </div>
 
                                     <div className="mk-box-3d-body">
                                       <strong className="mk-box-3d-title">{ord.title}</strong>
                                       <span className="mk-box-3d-origin">
-                                        <svg viewBox="0 0 24 24" width="8" height="8" fill="currentColor">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
                                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                         </svg>
-                                        {ord.pastureName.split("(")[0]}
+                                        {ord.pastureName}
                                       </span>
                                     </div>
 
                                     <div className="mk-box-3d-foot">
-                                      <span className="mk-box-3d-temp">{ord.tempLog.split(" ")[0]}</span>
-                                      <small style={{ fontSize: "7.5px", color: "#d4a359", fontWeight: 800 }}>
-                                        {ord.date.split(" ")[0]} {ord.date.split(" ")[1]}
-                                      </small>
+                                      <span className="mk-box-3d-temp">{ord.tempLog.split(" ")[0]} زنجیره سرد</span>
+                                      <span style={{ fontSize: "11.5px", color: "#b9c7c3", fontWeight: 700 }}>
+                                        {ord.date}
+                                      </span>
+                                      <strong className="mk-box-3d-price">{ord.finalPrice}</strong>
                                     </div>
                                   </motion.article>
                                 );
@@ -3020,13 +3028,13 @@ function ProfileContent() {
                         {orderCount >= 15 && (
                           <motion.div
                             className="mk-trolley-milestone"
-                            initial={{ opacity: 0, scale: 0.92 }}
+                            initial={{ opacity: 0, scale: 0.94 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.4 }}
+                            transition={{ duration: 0.35 }}
                           >
                             <div className="mk-milestone-text">
                               <strong>🎉 سقف ۱۵ بسته فصلی تکمیل شد!</strong>
-                              <span>پاداش الماس سبز مرتع به حساب شما اضافه شد.</span>
+                              <span>پاداش الماس سبز مرتع به حساب شما افزوده شد.</span>
                             </div>
                             <button
                               type="button"
@@ -3036,16 +3044,13 @@ function ProfileContent() {
                                 setSelectedOrderIndex(0);
                               }}
                             >
-                              شروع دوره جدید (ریست سبد)
+                              ریست و شروع دوره جدید
                             </button>
                           </motion.div>
                         )}
 
-                        {/* 3. Real Tubular Chassis Frame & Bottom Shelf */}
+                        {/* 3. Tubular Chassis Frame & Bottom Wheels */}
                         <div className="mk-cart-chassis-rig">
-                          <div className="mk-cart-chassis-tray" />
-
-                          {/* 4. Real 4-Wheel Caster System */}
                           <div className="mk-cart-wheels-system">
                             <div className="mk-caster-wheel-assembly">
                               <span className="mk-caster-fork" />
@@ -3055,8 +3060,8 @@ function ProfileContent() {
                               <span className="mk-caster-shadow" />
                             </div>
 
-                            <span style={{ fontSize: "7.5px", color: "#8a652e", fontWeight: 900, letterSpacing: "0.14em" }}>
-                              CHASSIS MK-HEAVY-DUTY · SUSPENSION
+                            <span style={{ fontSize: "10.5px", color: "#d4a359", fontWeight: 900, letterSpacing: "0.12em" }}>
+                              MARDE KOOHESTAN · LOGISTICS CHASSIS
                             </span>
 
                             <div className="mk-caster-wheel-assembly">
@@ -3085,18 +3090,18 @@ function ProfileContent() {
                           className={`mk-doc-tab-btn${docViewMode === "book" ? " is-active" : ""}`}
                           onClick={() => setDocViewMode("book")}
                         >
-                          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none">
+                          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                           </svg>
-                          <span>کتابچه شناسنامه مرتع (سفارش‌های قبلی)</span>
+                          <span>شناسنامه اصالت مرتع (سفارش‌های قبلی)</span>
                         </button>
                         <button
                           type="button"
                           className={`mk-doc-tab-btn is-invoice-tab${docViewMode === "invoice" ? " is-active" : ""}`}
                           onClick={() => setDocViewMode("invoice")}
                         >
-                          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none">
+                          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none">
                             <rect x="2" y="3" width="20" height="18" rx="2" />
                             <line x1="6" y1="8" x2="18" y2="8" />
                             <line x1="6" y1="12" x2="18" y2="12" />
@@ -3119,7 +3124,7 @@ function ProfileContent() {
                               <header className="mk-book-head">
                                 <div className="mk-book-title-wrap">
                                   <span className="mk-book-seal-wax">
-                                    <Image src="/brand/orginal-clear.png" alt="" width={16} height={16} />
+                                    <Image src="/brand/orginal-clear.png" alt="" width={20} height={20} />
                                   </span>
                                   <div>
                                     <h3>شناسنامه مرتع و اصالت پروتئین</h3>
@@ -3127,7 +3132,7 @@ function ProfileContent() {
                                   </div>
                                 </div>
                                 <span className="mk-book-badge-paid">
-                                  <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none">
+                                  <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" strokeWidth="3" fill="none">
                                     <polyline points="20 6 9 17 4 12" />
                                   </svg>
                                   {activeOrder.status}
@@ -3159,7 +3164,7 @@ function ProfileContent() {
                                 {activeOrder.items.map((it, i) => (
                                   <div key={i} className="mk-book-item-row">
                                     <div className="mk-book-item-thumb">
-                                      <Image src={it.image} alt={it.name} width={28} height={28} />
+                                      <Image src={it.image} alt={it.name} width={32} height={32} />
                                     </div>
                                     <div className="mk-book-item-info">
                                       <strong>{it.name}</strong>
@@ -3173,19 +3178,19 @@ function ProfileContent() {
                               {/* Cold Chain Tracking Timeline */}
                               <div className="mk-book-timeline">
                                 <div className="mk-book-timeline-title">
-                                  <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                  <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" strokeWidth="2.5" fill="none">
                                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                                   </svg>
-                                  <span>گزارش تله‌متری پایش زنجیره سرد (ثبت در لاگر هوشمند)</span>
+                                  <span>گزارش تله‌متری پایش زنجیره سرد (ثبت در لاگر هوشمند ۲.۴°C)</span>
                                 </div>
                                 <div className="mk-book-timeline-steps">
                                   <div className="mk-book-step">
                                     <span className="mk-book-step-dot" />
-                                    <span>تخصیص سهمیه</span>
+                                    <span>ثبت در مرتع</span>
                                   </div>
                                   <div className="mk-book-step">
                                     <span className="mk-book-step-dot" />
-                                    <span>برش استریل ({activeOrder.tempLog.split(" ")[0]})</span>
+                                    <span>بسته‌بندی خلأ</span>
                                   </div>
                                   <div className="mk-book-step">
                                     <span className="mk-book-step-dot" />
@@ -3193,7 +3198,7 @@ function ProfileContent() {
                                   </div>
                                   <div className="mk-book-step">
                                     <span className="mk-book-step-dot" />
-                                    <span>تحویل نهایی</span>
+                                    <span>تحویل درب منزل</span>
                                   </div>
                                 </div>
                               </div>
@@ -3211,12 +3216,12 @@ function ProfileContent() {
                                     onClick={() => handleDownloadOrderPdf("book", activeOrder, buyerInfo)}
                                     title="دریافت نسخه چاپی و PDF شناسنامه مرتع با کیفیت بالا"
                                   >
-                                    <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.2" fill="none">
                                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                       <polyline points="7 10 12 15 17 10" />
                                       <line x1="12" y1="15" x2="12" y2="3" />
                                     </svg>
-                                    <span>دانلود PDF شناسنامه</span>
+                                    <span>دانلود رسمی PDF</span>
                                   </button>
                                   <button
                                     type="button"
@@ -3225,7 +3230,7 @@ function ProfileContent() {
                                       setDocViewMode("invoice");
                                     }}
                                   >
-                                    <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.2" fill="none">
                                       <polyline points="23 4 23 10 17 10" />
                                       <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                                     </svg>
@@ -3236,8 +3241,8 @@ function ProfileContent() {
                             </div>
                           </article>
                         ) : (
-                          <div className="mk-real-book" style={{ alignItems: "center", justifyContent: "center", textAlign: "center", padding: "20px" }}>
-                            <p style={{ color: "#736b5e", fontSize: "11px", fontWeight: 700 }}>
+                          <div className="mk-real-book" style={{ alignItems: "center", justifyContent: "center", textAlign: "center", padding: "24px" }}>
+                            <p style={{ color: "#b9c7c3", fontSize: "13px", fontWeight: 700 }}>
                               یک بسته از ترولی را انتخاب کنید تا شناسنامه مرتع آن نمایش داده شود.
                             </p>
                           </div>
@@ -3331,19 +3336,19 @@ function ProfileContent() {
                                 onClick={() => handleDownloadOrderPdf("invoice", CURRENT_PENDING_INVOICE, buyerInfo)}
                                 title="دریافت فایل چاپی و PDF فاکتور رسمی"
                               >
-                                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.2" fill="none">
                                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                   <polyline points="7 10 12 15 17 10" />
                                   <line x1="12" y1="15" x2="12" y2="3" />
                                 </svg>
-                                <span>دانلود PDF فاکتور</span>
+                                <span>دانلود PDF پیش‌فاکتور</span>
                               </button>
                               <button
                                 type="button"
                                 className="mk-invoice-pay-btn"
                                 onClick={() => setIsPayModalOpen(true)}
                               >
-                                <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="2.4" fill="none">
                                   <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
                                   <line x1="1" y1="10" x2="23" y2="10" />
                                 </svg>
