@@ -608,7 +608,7 @@ const PASTURE_ORDERS_DATABASE = [
     items: [
       {
         name: "راسته بره مرتعی تازه (۱ کیلوگرم)",
-        image: "/brand/home-meat.png",
+        image: "/brand/goosht.png",
         cut: "برش قصابی استریل · بدون چربی اضافه",
         price: "۵۴۰,۰۰۰ تومان",
       },
@@ -674,7 +674,7 @@ const PASTURE_ORDERS_DATABASE = [
       },
       {
         name: "عسل خالص گون و آویشن کوهستان (۱ کیلو)",
-        image: "/brand/home-dairy.png",
+        image: "/brand/home-ready.png",
         cut: "برداشت کندوی ییلاقی بدون شکر",
         price: "۴۵۰,۰۰۰ تومان",
       },
@@ -698,7 +698,7 @@ const PASTURE_ORDERS_DATABASE = [
     items: [
       {
         name: "شقه گوسفند نر مرتعی (۶ کیلوگرم)",
-        image: "/brand/home-meat.png",
+        image: "/brand/goosht.png",
         cut: "خردشده وکیوم شده خانوادگی",
         price: "۳,۲۰۰,۰۰۰ تومان",
       },
@@ -736,6 +736,36 @@ const PASTURE_ORDERS_DATABASE = [
     totalAmount: "۵۷۰,۰۰۰ تومان",
     discount: "۳۰,۰۰۰ تومان",
     finalPrice: "۵۴۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-43210",
+    title: "بسته ییلاقی شاهکوه گلستان",
+    date: "۰۵ تیر ۱۴۰۵",
+    pastureName: "مرتع کوهستانی شاهکوه",
+    altitude: "۲,۳۵۰ متر از سطح دریا",
+    grazing: "درمنه و آویشن کوهی",
+    vetCode: "IR-41098 نظام دامپزشکی",
+    packDate: "۰۵ تیر ۱۴۰۵ - ۰۵:۱۰",
+    tempLog: "۲.۳°C (کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "ران بره و کشک",
+    items: [
+      {
+        name: "ران بره مرتعی درجه یک (۲ کیلوگرم)",
+        image: "/brand/goosht.png",
+        cut: "برش استیکی بی‌استخوان",
+        price: "۱,۱۰۰,۰۰۰ تومان",
+      },
+      {
+        name: "کشک خالص گوسفندی سنتی (۵۰۰ گرم)",
+        image: "/brand/home-dairy.png",
+        cut: "تهیه شده از دوغ ییلاقی",
+        price: "۲۱۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۱,۳۱۰,۰۰۰ تومان",
+    discount: "۶۰,۰۰۰ تومان",
+    finalPrice: "۱,۲۵۰,۰۰۰ تومان",
   },
   {
     id: "MK-43210",

@@ -62,7 +62,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o1,
         product_name="کره سنتی خالص کوهپایه (۵۰۰ گرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/home-dairy.png",
         cut_type="فرآوری ییلاقی با مشک سنتی",
         portion="۵۰۰ گرم",
         unit_price_toman=240000,
@@ -91,7 +91,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o2,
         product_name="ماهیچه بره تازه ییلاقی (۱.۵ کیلوگرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/goosht.png",
         cut_type="برش پاک‌شده استریل مجلسی",
         portion="۱.۵ کیلوگرم",
         unit_price_toman=650000,
@@ -101,7 +101,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o2,
         product_name="روغن زرد حیوانی دست‌ساز (۱ کیلوگرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/home-dairy.png",
         cut_type="عطر خالص کوهپایه مازندران",
         portion="۱ کیلوگرم",
         unit_price_toman=300000,
@@ -130,7 +130,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o3,
         product_name="عسل خام صخره‌ای سبلان (۱ کیلوگرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/home-ready.png",
         cut_type="برداشت مستقیم کندوهای ییلاق",
         portion="۱ کیلوگرم",
         unit_price_toman=490000,
@@ -140,7 +140,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o3,
         product_name="پنیر کوزه‌ای کهنه کوهستان (۱ کیلوگرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/panir.png",
         cut_type="رسیده در غارهای طبیعی سرعین",
         portion="۱ کیلوگرم",
         unit_price_toman=660000,
