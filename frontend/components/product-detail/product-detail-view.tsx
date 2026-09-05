@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductDetailData } from "@/lib/catalog/product-details";
+import { useCart } from "@/lib/cart-context";
 
 interface ProductDetailViewProps {
   product: ProductDetailData;
@@ -25,6 +26,8 @@ export function ProductDetailView({
   const [quantity, setQuantity] = useState(1);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const { addToCart } = useCart();
 
   const calculateTotalPrice = () => {
     let multiplier = 1;
@@ -35,9 +38,23 @@ export function ProductDetailView({
     return Math.round(product.price * multiplier * quantity);
   };
 
-  const handleAddToCart = () => {
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 3000);
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+    const calculatedUnitPrice = Math.round(calculateTotalPrice() / quantity);
+    const result = await addToCart({
+      product_id: product.id,
+      product_name: product.name,
+      product_image: product.image,
+      portion: selectedPortion,
+      cut_type: selectedCut,
+      unit_price_toman: calculatedUnitPrice,
+      quantity: quantity,
+    });
+    setIsAdding(false);
+    if (result.success) {
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 3500);
+    }
   };
 
   return (
@@ -298,6 +315,7 @@ export function ProductDetailView({
             <div className="pdetail-cta-group">
               <button
                 type="button"
+                disabled={isAdding}
                 className={`pdetail-submit-btn ${addedToCart ? "is-added" : ""}`}
                 onClick={handleAddToCart}
               >
@@ -308,6 +326,8 @@ export function ProductDetailView({
                     </svg>
                     <span>به سفره شما افزوده شد</span>
                   </>
+                ) : isAdding ? (
+                  <span>در حال افزودن…</span>
                 ) : (
                   <>
                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">

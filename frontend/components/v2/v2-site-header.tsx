@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { CatalogSearchBox } from "@/components/catalog-search-box";
 import { AuthHeaderButton } from "@/components/auth-header-button";
+import { HeaderCartButton } from "@/components/header-cart-button";
 import { AuthModal } from "@/components/auth-modal";
 
 const v2NavItems = [
@@ -164,6 +165,7 @@ export function V2SiteHeader() {
                 variant="v2"
                 placeholder="جستجو در راه سبز…"
               />
+              <HeaderCartButton />
               <AuthHeaderButton />
             </div>
 
@@ -190,6 +192,10 @@ export function V2SiteHeader() {
       >
         <div className="shell">
           <div className="v2-mobile-auth-wrapper">
+            <HeaderCartButton
+              variant="mobile"
+              onItemClick={() => setOpen(false)}
+            />
             <AuthHeaderButton
               variant="mobile"
               onItemClick={() => setOpen(false)}

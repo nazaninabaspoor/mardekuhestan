@@ -5,9 +5,12 @@
 .root h3 { width: 100%; margin: 1.3rem 0 0; color: #faf7f1; font-size: clamp(3rem, 3.55vw, 4rem); font-weight: 760; line-height: 1.12; letter-spacing: -.035em; text-align: center; text-shadow: 0 4px 22px rgb(0 0 0 / 28%); }
 .description { width: 100%; max-width: 380px; margin: 1.05rem auto 0; color: rgb(239 234 224 / 84%); font-size: clamp(.92rem, 1vw, 1rem); font-weight: 430; line-height: 1.85; text-align: center; }
 .actions { display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; width: 100%; gap: .65rem; margin-top: 1.35rem; direction: ltr; }
-.primaryAction, .videoAction { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; border-radius: 999px; padding: .6rem 1.15rem; outline: none; font: inherit; font-size: .9rem; cursor: pointer; transition: color .25s ease, background-color .25s ease, border-color .25s ease, transform .25s ease; }
-.primaryAction { min-width: 172px; }
-.videoAction { min-width: 138px; }
+.primaryAction, .videoAction, .quickCartAction { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 48px; border-radius: 999px; padding: .6rem 1.15rem; outline: none; font: inherit; font-size: .9rem; cursor: pointer; transition: color .25s ease, background-color .25s ease, border-color .25s ease, transform .25s ease; }
+.primaryAction { min-width: 155px; }
+.quickCartAction { min-width: 135px; border: 1px solid #50af47; color: #ffffff; background: linear-gradient(135deg, #005b48 0%, #004234 100%); font-weight: 700; box-shadow: 0 4px 14px rgba(0, 91, 72, 0.4); }
+.quickCartAction:hover { border-color: #a4e09e; background: linear-gradient(135deg, #007058 0%, #005b48 100%); transform: translateY(-2px); }
+.quickCartAction:disabled { opacity: 0.7; cursor: not-allowed; }
+.videoAction { min-width: 120px; }
 .primaryAction { border: 1px solid rgb(244 240 232 / 72%); color: #0a5540; background: #eee5d3; box-shadow: 0 7px 20px rgb(0 0 0 / 10%); font-weight: 700; }
 .primaryAction:hover { border-color: #f4f0e8; background: #f4f0e8; }
 .videoAction { border: 1px solid rgb(201 164 92 / 42%); color: #f4f0e8; background: rgb(4 30 24 / 32%); backdrop-filter: blur(12px); font-weight: 560; }

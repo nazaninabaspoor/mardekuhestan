@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { BrandTeaser } from "@/components/brand-teaser";
 import { AuthProvider } from "@/lib/auth-context";
+import { CartProvider } from "@/lib/cart-context";
 
 import "./globals.css";
 import "./v2/v2.css";
@@ -58,15 +59,17 @@ export default function RootLayout({
       </head>
       <body className={mardeKuhestan.className}>
         <AuthProvider>
-          <BrandTeaser />
-          <a className="skip-link btn-accent" href="#hero-title">
-            رفتن به محتوای اصلی
-          </a>
-          <div className="site-canvas">
-            <SiteHeader />
-            {children}
-            <SiteFooter />
-          </div>
+          <CartProvider>
+            <BrandTeaser />
+            <a className="skip-link btn-accent" href="#hero-title">
+              رفتن به محتوای اصلی
+            </a>
+            <div className="site-canvas">
+              <SiteHeader />
+              {children}
+              <SiteFooter />
+            </div>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
