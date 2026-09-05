@@ -1,46 +1,53 @@
 /* ==========================================================================
-   MARDE KOOHESTAN - ULTRA-LUXURY COHESIVE ORDERS & PASTURE LOGISTICS CONSOLE
-   Senior UI/UX Masterpiece: Unified Emerald Obsidian & Burnished Gold Theme
-   Palette: Forest Emerald (#005B48), Rich Obsidian (#071914, #0A221B),
-            Warm Cream (#F4F0E8, #FFFFFF), Burnished Gold (#D4A359, #F5DB99),
-            Pasture Sage (#50AF47), Terracotta (#903828), Cold Blue (#86C2EB)
+   MARDE KOOHESTAN — ORDERS & PASTURE LOGISTICS WORKSPACE STYLES (2026)
+   Ultra-Luxury Cohesive Emerald Obsidian & Burnished Gold Palette
    ========================================================================== */
 
-/* Main Workspace Window */
+:root {
+  --mk-ord-forest: #005B48;
+  --mk-ord-forest-dark: #003B2E;
+  --mk-ord-forest-deep: #00241C;
+  --mk-ord-obsidian: #04120E;
+  --mk-ord-cream: #F4F0E8;
+  --mk-ord-gold: #D4A359;
+  --mk-ord-gold-light: #F5DB99;
+  --mk-ord-gold-deep: #A67C37;
+  --mk-ord-sage: #50AF47;
+  --mk-ord-terracotta: #BE6516;
+  --mk-ord-cold-blue: #86C2EB;
+}
+
+/* ==========================================================================
+   MAIN ORDERS DESK WINDOW
+   ========================================================================== */
+
 .profile-workspace-section[data-theme="orders"] {
-  height: min(92vh, 900px);
-  max-height: 900px;
+  height: min(780px, 86vh);
+  max-height: 820px;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: 20px;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.4) 0%, transparent 65%),
-    radial-gradient(ellipse at 80% 90%, rgba(212, 163, 89, 0.1) 0%, transparent 50%),
-    linear-gradient(165deg, #071914 0%, #0a221b 50%, #04100c 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.55);
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.4) 0%, transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(190, 101, 22, 0.12) 0%, transparent 50%),
+    linear-gradient(160deg, #02110c 0%, #061e17 40%, #010c08 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
   box-shadow:
-    0 28px 75px rgba(0, 0, 0, 0.85),
+    0 24px 60px rgba(0, 0, 0, 0.75),
+    0 0 40px rgba(0, 91, 72, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 0 50px rgba(0, 0, 0, 0.65);
+    inset 0 0 30px rgba(0, 0, 0, 0.65);
   box-sizing: border-box;
 }
 
-.profile-workspace-section[data-theme="orders"] .desk-pane-body {
-  height: 100%;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Container */
 .mk-orders-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 0;
-  padding: 14px 20px 16px;
+  padding: 18px 22px;
   box-sizing: border-box;
+  gap: 14px;
   color: #f4f0e8;
-  gap: 12px;
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -51,20 +58,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.3);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(0, 91, 72, 0.45) 0%, rgba(0, 45, 36, 0.7) 100%),
+    rgba(0, 20, 15, 0.85);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
 }
 
 .mk-orders-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .mk-orders-logo {
-  object-fit: contain;
-  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 0 10px rgba(212, 163, 89, 0.5));
+  flex-shrink: 0;
 }
 
 .mk-orders-titles {
@@ -74,9 +88,9 @@
 }
 
 .mk-orders-titles strong {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 900;
-  color: #f4f0e8;
+  color: #f5db99;
   letter-spacing: -0.01em;
 }
 
@@ -96,7 +110,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 99px;
   background: rgba(134, 194, 235, 0.12);
   border: 1px solid rgba(134, 194, 235, 0.4);
@@ -142,607 +156,22 @@
 }
 
 /* ==========================================================================
-   2-COLUMN MAIN DESK LAYOUT
+   MAIN DESK & TABS SWITCHER
    ========================================================================== */
 
-.mk-orders-desk {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
-  gap: 16px;
+.mk-orders-main-desk {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
-  align-items: stretch;
-}
-
-/* ==========================================================================
-   PANEL A (RIGHT): 3D MOUNTAIN LOGISTICS TROLLEY & PARCEL CARDS
-   ========================================================================== */
-
-.mk-trolley-console {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.35) 0%, transparent 65%),
-    linear-gradient(160deg, rgba(8, 30, 24, 0.95) 0%, rgba(4, 18, 14, 0.98) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.45);
-  border-radius: 16px;
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 25px rgba(0, 0, 0, 0.55);
-  padding: 14px 16px;
-  box-sizing: border-box;
-  min-height: 0;
-  overflow: hidden;
-  gap: 10px;
-}
-
-/* Header */
-.mk-trolley-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
-  flex-shrink: 0;
-}
-
-.mk-trolley-title-box {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mk-trolley-kicker {
-  font-size: 11px;
-  font-weight: 900;
-  color: #d4a359;
-  letter-spacing: 0.08em;
-}
-
-.mk-trolley-title-box h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 900;
-  color: #f4f0e8;
-}
-
-.mk-trolley-meter {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(212, 163, 89, 0.35);
-  padding: 5px 12px;
-  border-radius: 9px;
-}
-
-.mk-trolley-counter {
-  font-size: 12px;
-  font-weight: 800;
-  color: #f4f0e8;
-}
-
-.mk-trolley-counter strong {
-  color: #f5db99;
-  font-size: 14px;
-}
-
-.mk-trolley-bar-wrap {
-  width: 80px;
-  height: 7px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.12);
-  overflow: hidden;
-}
-
-.mk-trolley-bar-fill {
-  height: 100%;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #50af47 0%, #d4a359 70%, #f5db99 100%);
-  box-shadow: 0 0 8px rgba(212, 163, 89, 0.6);
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Quick Stepper Bar */
-.mk-trolley-sim-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: rgba(0, 16, 12, 0.7);
-  border: 1px solid rgba(212, 163, 89, 0.22);
-  flex-shrink: 0;
-}
-
-.mk-trolley-sim-label {
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #b9c7c3;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.mk-trolley-sim-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.mk-trolley-pill-btn {
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(212, 163, 89, 0.3);
-  color: #d4e0dc;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.18s ease;
-}
-
-.mk-trolley-pill-btn:hover {
-  background: rgba(212, 163, 89, 0.22);
-  color: #ffffff;
-}
-
-.mk-trolley-pill-btn.is-add {
-  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
-  border-color: #50af47;
-  color: #ffffff;
-}
-
-.mk-trolley-pill-btn.is-add:hover {
-  background: linear-gradient(135deg, #00735b 0%, #005b48 100%);
-  transform: translateY(-1px);
-}
-
-/* ==========================================================================
-   TROLLEY STAGE & 3D PARCEL CARDS
-   ========================================================================== */
-
-.mk-3d-cart-container {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  border-radius: 14px;
-  background:
-    radial-gradient(ellipse at 50% 90%, rgba(212, 163, 89, 0.12) 0%, transparent 65%),
-    linear-gradient(180deg, rgba(0, 24, 18, 0.95) 0%, rgba(1, 14, 11, 0.98) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.4);
-  box-shadow:
-    inset 0 2px 20px rgba(0, 0, 0, 0.75),
-    0 8px 24px rgba(0, 0, 0, 0.4);
-  padding: 10px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* Handlebar */
-.mk-cart-handlebar-rig {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  margin-bottom: 8px;
-}
-
-.mk-cart-handle-bar {
-  width: 100%;
-  height: 32px;
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, #145c4a 0%, #005b48 40%, #00362b 90%, #011f18 100%);
-  border: 1.5px solid #d4a359;
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.6),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  box-sizing: border-box;
-}
-
-.mk-cart-handle-cap {
-  width: 10px;
-  height: 20px;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #fff2c9 0%, #d4a359 50%, #7d5924 100%);
-  border: 1px solid #ffebba;
-}
-
-.mk-cart-handle-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #020e0b;
-  border: 1px solid #d4a359;
-  border-radius: 99px;
-  padding: 3px 12px;
-  color: #f5db99;
-  font-size: 11.5px;
-  font-weight: 900;
-  letter-spacing: 0.03em;
-}
-
-.mk-cart-handle-telemetry {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(134, 194, 235, 0.4);
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #86c2eb;
-}
-
-/* Basket Body */
-.mk-cart-mesh-basket {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  background:
-    repeating-linear-gradient(0deg, rgba(212, 163, 89, 0.06) 0px, rgba(212, 163, 89, 0.06) 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(90deg, rgba(212, 163, 89, 0.06) 0px, rgba(212, 163, 89, 0.06) 1px, transparent 1px, transparent 20px),
-    linear-gradient(180deg, rgba(0, 36, 28, 0.65) 0%, rgba(1, 14, 11, 0.92) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.4);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(212, 163, 89, 0.45) transparent;
-}
-
-/* Empty State */
-.mk-trolley-empty-view {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px 16px;
   gap: 12px;
-}
-
-.mk-trolley-empty-halo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, rgba(212, 163, 89, 0.25) 0%, rgba(0, 91, 72, 0.2) 75%);
-  border: 1.5px dashed rgba(212, 163, 89, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #f5db99;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
-
-.mk-trolley-empty-view h4 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 900;
-  color: #f4f0e8;
-}
-
-.mk-trolley-empty-view p {
-  margin: 0;
-  font-size: 12px;
-  color: #b9c7c3;
-  max-width: 320px;
-  line-height: 1.6;
-}
-
-.mk-trolley-empty-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
-  border: 1.2px solid #d4a359;
-  color: #f4f0e8;
-  font-size: 12.5px;
-  font-weight: 900;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 91, 72, 0.45);
-  transition: all 0.2s ease;
-}
-
-.mk-trolley-empty-btn:hover {
-  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
-  transform: translateY(-1px);
-}
-
-/* ==========================================================================
-   SUBSTANTIAL, BEAUTIFUL 3D PARCEL BOX CARDS
-   ========================================================================== */
-
-.mk-boxes-3d-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.mk-box-3d-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 110px;
-  border-radius: 10px;
-  background:
-    radial-gradient(circle at 90% 10%, rgba(212, 163, 89, 0.15) 0%, transparent 60%),
-    linear-gradient(150deg, rgba(8, 32, 25, 0.95) 0%, rgba(3, 18, 14, 0.98) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.45);
-  box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 0 15px rgba(0, 0, 0, 0.5);
-  padding: 10px 14px;
-  box-sizing: border-box;
-  color: #f4f0e8;
-  cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-  gap: 6px;
-}
-
-/* Gold Corner Bracket Highlights */
-.mk-box-3d-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-top: 2px solid #d4a359;
-  border-left: 2px solid #d4a359;
-  opacity: 0.8;
-}
-
-.mk-box-3d-item::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  border-bottom: 2px solid #d4a359;
-  border-right: 2px solid #d4a359;
-  opacity: 0.8;
-}
-
-.mk-box-3d-item:hover {
-  transform: translateY(-2px);
-  border-color: #f5db99;
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.6),
-    0 0 16px rgba(212, 163, 89, 0.35);
-}
-
-.mk-box-3d-item.is-selected {
-  border-color: #50af47;
-  background:
-    radial-gradient(circle at 90% 10%, rgba(80, 175, 71, 0.25) 0%, transparent 60%),
-    linear-gradient(150deg, rgba(10, 48, 36, 0.98) 0%, rgba(3, 24, 18, 0.99) 100%);
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.6),
-    0 0 20px rgba(80, 175, 71, 0.45);
-}
-
-/* Card Header */
-.mk-box-3d-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.mk-box-3d-logo-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.mk-box-3d-serial {
-  font-family: monospace;
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #d4a359;
-}
-
-.mk-box-3d-pill {
-  font-size: 10.5px;
-  font-weight: 800;
-  color: #a4e09e;
-  background: rgba(80, 175, 71, 0.18);
-  border: 1px solid rgba(80, 175, 71, 0.4);
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-/* Card Body */
-.mk-box-3d-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mk-box-3d-title {
-  margin: 0;
-  font-size: 13.5px;
-  font-weight: 900;
-  color: #f4f0e8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mk-box-3d-origin {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #b9c7c3;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* Card Foot */
-.mk-box-3d-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 4px;
-  border-top: 1px dashed rgba(212, 163, 89, 0.25);
-}
-
-.mk-box-3d-temp {
-  font-size: 11px;
-  font-weight: 800;
-  color: #86c2eb;
-  background: rgba(134, 194, 235, 0.12);
-  border: 1px solid rgba(134, 194, 235, 0.3);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.mk-box-3d-price {
-  font-size: 12.5px;
-  font-weight: 900;
-  color: #50af47;
-}
-
-/* Chassis Base */
-.mk-cart-chassis-rig {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 8px;
-  flex-shrink: 0;
-}
-
-.mk-cart-wheels-system {
-  width: 96%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.mk-caster-wheel-assembly {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.mk-caster-fork {
-  width: 12px;
-  height: 8px;
-  background: linear-gradient(180deg, #d4a359 0%, #8a652e 100%);
-  border-radius: 2px;
-}
-
-.mk-caster-tire {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 35%, #ffffff 0%, #f5db99 30%, #9e722f 65%, #2e1f0b 90%, #000000 100%);
-  border: 2px solid #00120d;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mk-caster-hub {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff 0%, #a67c33 60%, #1a1205 100%);
-}
-
-.mk-caster-shadow {
-  width: 32px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.75);
-  filter: blur(2px);
-  margin-top: 2px;
-}
-
-/* Milestone */
-.mk-trolley-milestone {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #d4a359 0%, #903828 100%);
-  border: 1.5px solid #f5db99;
-  border-radius: 9px;
-  padding: 8px 12px;
-  margin-top: 8px;
-  color: #ffffff;
-  box-shadow: 0 6px 16px rgba(212, 163, 89, 0.4);
-  flex-shrink: 0;
-}
-
-.mk-milestone-text strong {
-  font-size: 12px;
-  font-weight: 900;
-  display: block;
-}
-
-.mk-milestone-text span {
-  font-size: 10.5px;
-  opacity: 0.9;
-}
-
-.mk-milestone-reset-btn {
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: #ffffff;
-  color: #903828;
-  border: none;
-  font-size: 11px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-/* ==========================================================================
-   PANEL B (LEFT): UNIFIED DOCUMENT FOLIO (BOOK & INVOICE CONSOLE)
-   ========================================================================== */
-
-.mk-doc-console {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  height: 100%;
-  gap: 10px;
 }
 
 /* Segmented Bar */
 .mk-doc-segmented-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: rgba(0, 20, 15, 0.85);
   border: 1.5px solid rgba(212, 163, 89, 0.4);
   border-radius: 12px;
@@ -757,12 +186,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 9px 14px;
+  padding: 10px 16px;
   border-radius: 9px;
   background: transparent;
   border: 1px solid transparent;
   color: #b9c7c3;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -771,7 +200,7 @@
 
 .mk-doc-tab-btn:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .mk-doc-tab-btn.is-active {
@@ -782,10 +211,7 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 10px rgba(0, 91, 72, 0.4);
 }
 
-/* ==========================================================================
-   NEON & NOTIFICATION STYLE FOR ACTIVE CART & INVOICE TAB
-   ========================================================================== */
-
+/* Neon style for active cart tab */
 .mk-doc-tab-btn.is-invoice-tab {
   border: 1px solid rgba(80, 175, 71, 0.35);
   background: rgba(0, 45, 36, 0.45);
@@ -857,9 +283,261 @@
 }
 
 /* ==========================================================================
-   VIEW 1: PASTURE PASSPORT IDENTITY FOLIO (شناسنامه اصالت مرتع)
-   Cohesive Dark Emerald & Gold Leather Folio Style
+   VIEW 1: PAST ORDERS AS CRAFT PACKAGES (بسته‌های سفارش‌های قبلی)
    ========================================================================== */
+
+.mk-parcels-shelf {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.3) 0%, transparent 70%),
+    linear-gradient(160deg, rgba(8, 30, 24, 0.96) 0%, rgba(4, 18, 14, 0.99) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 163, 89, 0.35) transparent;
+  gap: 14px;
+}
+
+.mk-parcels-shelf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid rgba(212, 163, 89, 0.25);
+  flex-shrink: 0;
+}
+
+.mk-parcels-shelf-title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mk-parcels-shelf-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: #f5db99;
+}
+
+.mk-parcels-shelf-title span {
+  font-size: 12px;
+  color: #b9c7c3;
+  font-weight: 600;
+}
+
+.mk-parcels-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(212, 163, 89, 0.15);
+  border: 1px solid rgba(212, 163, 89, 0.4);
+  color: #f5db99;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Grid of Package Box Cards */
+.mk-parcels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  padding-bottom: 8px;
+}
+
+.mk-parcel-card {
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(212, 163, 89, 0.15) 0%, transparent 50%),
+    linear-gradient(145deg, #0c2b22 0%, #051914 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.4);
+  border-radius: 13px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.mk-parcel-card:hover {
+  transform: translateY(-3px);
+  border-color: #f5db99;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6), 0 0 14px rgba(212, 163, 89, 0.35);
+  background: linear-gradient(145deg, #11382d 0%, #08221b 100%);
+}
+
+.mk-parcel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mk-parcel-code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mk-parcel-code strong {
+  font-size: 13px;
+  font-weight: 900;
+  color: #f5db99;
+}
+
+.mk-parcel-status-pill {
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(80, 175, 71, 0.2);
+  border: 1px solid rgba(80, 175, 71, 0.5);
+  color: #8ce483;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mk-parcel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mk-parcel-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.mk-parcel-origin {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #d4a359;
+  font-weight: 700;
+}
+
+/* Products Preview Chips with Actual Images */
+.mk-parcel-thumbs-preview {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: rgba(0, 16, 12, 0.6);
+  border: 1px solid rgba(212, 163, 89, 0.2);
+  border-radius: 8px;
+}
+
+.mk-parcel-thumb-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+
+.mk-parcel-thumb-chip img {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.mk-parcel-thumb-chip span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f4f0e8;
+  white-space: nowrap;
+}
+
+.mk-parcel-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid rgba(212, 163, 89, 0.2);
+}
+
+.mk-parcel-date {
+  font-size: 11.5px;
+  color: #b9c7c3;
+  font-weight: 600;
+}
+
+.mk-parcel-price {
+  font-size: 13px;
+  font-weight: 900;
+  color: #50af47;
+}
+
+.mk-parcel-view-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #f5db99;
+}
+
+/* ==========================================================================
+   VIEW 1B: DETAILED PACKAGE & PASTURE PASSPORT (شناسنامه مرتع بسته)
+   ========================================================================== */
+
+.mk-parcel-detail-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mk-detail-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(0, 20, 15, 0.85);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  flex-shrink: 0;
+}
+
+.mk-back-to-shelf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(212, 163, 89, 0.18);
+  border: 1px solid rgba(212, 163, 89, 0.45);
+  color: #f5db99;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mk-back-to-shelf-btn:hover {
+  background: rgba(212, 163, 89, 0.35);
+  color: #ffffff;
+}
+
+.mk-detail-package-badge {
+  font-size: 13px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
 
 .mk-real-book {
   position: relative;
@@ -893,13 +571,13 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 14px 18px;
+  padding: 16px 20px;
   color: #f4f0e8;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(212, 163, 89, 0.35) transparent;
   box-sizing: border-box;
-  gap: 10px;
+  gap: 12px;
 }
 
 /* Header */
@@ -922,51 +600,50 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #50af47 0%, #005b48 85%);
+  background: radial-gradient(circle, #be6516 0%, #7a150a 100%);
   border: 1.5px solid #f5db99;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
 }
 
 .mk-book-title-wrap h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 900;
-  color: #f4f0e8;
+  color: #f5db99;
 }
 
 .mk-book-title-wrap span {
-  font-size: 11px;
-  font-weight: 800;
-  color: #d4a359;
-  font-family: monospace;
+  font-size: 11.5px;
+  color: #b9c7c3;
+  font-weight: 600;
 }
 
 .mk-book-badge-paid {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 4px 10px;
   border-radius: 99px;
-  background: rgba(80, 175, 71, 0.15);
-  border: 1px solid #50af47;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.5);
+  color: #8ce483;
   font-size: 11.5px;
-  font-weight: 900;
-  color: #a4e09e;
+  font-weight: 800;
 }
 
-/* Pasture 4-Cell Grid */
+/* Pasture GPS Geolocation Grid */
 .mk-book-geo-grid {
-  background: rgba(0, 16, 12, 0.7);
-  border: 1px solid rgba(212, 163, 89, 0.25);
-  border-radius: 9px;
-  padding: 8px 12px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 16, 12, 0.65);
+  border: 1px solid rgba(212, 163, 89, 0.25);
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
@@ -978,128 +655,128 @@
 
 .mk-book-geo-cell small {
   font-size: 11px;
-  font-weight: 700;
   color: #b9c7c3;
+  font-weight: 700;
 }
 
 .mk-book-geo-cell strong {
   font-size: 12.5px;
-  font-weight: 900;
   color: #f4f0e8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 800;
 }
 
-/* Items List */
+/* Product Cuts Breakdown with Real Photos */
 .mk-book-items-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex-shrink: 0;
+  gap: 8px;
+  padding: 8px 0;
 }
 
 .mk-book-item-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(212, 163, 89, 0.2);
-  border-radius: 8px;
-  padding: 6px 10px;
+  border: 1px solid rgba(212, 163, 89, 0.18);
+  transition: background 0.2s ease;
+}
+
+.mk-book-item-row:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .mk-book-item-thumb {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  background: #0b221b;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(212, 163, 89, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.mk-book-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .mk-book-item-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   gap: 2px;
+  flex: 1;
 }
 
 .mk-book-item-info strong {
-  font-size: 12.5px;
-  font-weight: 900;
-  color: #f4f0e8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #ffffff;
 }
 
 .mk-book-item-info span {
-  font-size: 11px;
-  color: #d4a359;
-  font-weight: 700;
+  font-size: 11.5px;
+  color: #b9c7c3;
+  font-weight: 600;
 }
 
 .mk-book-item-price {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 900;
   color: #50af47;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* Logistics Timeline */
+/* Timeline */
 .mk-book-timeline {
-  background: rgba(0, 16, 12, 0.6);
-  border: 1px dashed rgba(212, 163, 89, 0.3);
-  border-radius: 8px;
-  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 20, 15, 0.7);
+  border: 1px solid rgba(212, 163, 89, 0.25);
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
 .mk-book-timeline-title {
-  font-size: 11.5px;
-  font-weight: 900;
-  color: #d4a359;
-  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #d4a359;
 }
 
 .mk-book-timeline-steps {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
 }
 
 .mk-book-step {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 4px;
-  flex: 1;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #e1dcd1;
+  font-weight: 700;
 }
 
 .mk-book-step-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #50af47;
-  border: 1px solid #a4e09e;
   box-shadow: 0 0 6px #50af47;
-}
-
-.mk-book-step span {
-  font-size: 11px;
-  font-weight: 800;
-  color: #d4e0dc;
 }
 
 /* Book Foot */
@@ -1109,101 +786,96 @@
   justify-content: space-between;
   padding-top: 10px;
   border-top: 1.5px solid rgba(212, 163, 89, 0.25);
-  margin-top: auto;
   flex-shrink: 0;
 }
 
 .mk-book-total-box {
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
 .mk-book-total-box small {
   font-size: 11px;
-  font-weight: 700;
   color: #b9c7c3;
+  font-weight: 700;
 }
 
 .mk-book-total-box strong {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 900;
-  color: #50af47;
+  color: #f5db99;
 }
 
 .mk-book-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .mk-book-pdf-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.2px solid #d4a359;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(212, 163, 89, 0.2);
+  border: 1px solid rgba(212, 163, 89, 0.5);
   color: #f5db99;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mk-book-pdf-btn:hover {
-  background: rgba(212, 163, 89, 0.22);
+  background: rgba(212, 163, 89, 0.35);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
 .mk-book-reorder-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 7px;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #005b48 0%, #004537 100%);
-  border: 1.2px solid #50af47;
+  border: 1px solid rgba(80, 175, 71, 0.6);
   color: #ffffff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mk-book-reorder-btn:hover {
-  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #00735b 0%, #005b48 100%);
+  border-color: #a4e09e;
 }
 
 /* ==========================================================================
-   VIEW 2: OFFICIAL INVOICE & CHECKOUT (فاکتور رسمی و معتبر خرید)
-   Cohesive Dark Emerald & Gold Executive Folio Style
+   VIEW 2: ACTIVE SHOPPING CART & INVOICE (سبد خرید جاری و پیش‌فاکتور)
    ========================================================================== */
 
 .mk-real-invoice {
-  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.35) 0%, transparent 70%),
-    linear-gradient(160deg, rgba(8, 30, 24, 0.96) 0%, rgba(4, 18, 14, 0.99) 100%);
-  border: 1.5px solid rgba(212, 163, 89, 0.55);
+  padding: 16px 20px;
   border-radius: 16px;
-  padding: 14px 18px;
-  color: #f4f0e8;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(190, 101, 22, 0.2) 0%, transparent 65%),
+    linear-gradient(160deg, rgba(8, 30, 24, 0.96) 0%, rgba(4, 18, 14, 0.99) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 25px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(212, 163, 89, 0.35) transparent;
+  gap: 12px;
   box-sizing: border-box;
-  gap: 10px;
 }
 
 /* Header */
@@ -1224,162 +896,163 @@
 
 .mk-invoice-title-block h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 900;
-  color: #f4f0e8;
+  color: #f5db99;
 }
 
 .mk-invoice-title-block span {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #b9c7c3;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .mk-invoice-meta-block {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
+  align-items: center;
+  gap: 8px;
 }
 
 .mk-invoice-serial-badge {
-  font-family: monospace;
-  font-size: 11.5px;
-  font-weight: 900;
-  color: #f5db99;
-  background: rgba(212, 163, 89, 0.15);
+  padding: 4px 10px;
+  border-radius: 7px;
+  background: rgba(212, 163, 89, 0.18);
   border: 1px solid rgba(212, 163, 89, 0.4);
-  padding: 2px 8px;
-  border-radius: 4px;
+  color: #f5db99;
+  font-size: 11.5px;
+  font-weight: 800;
 }
 
 .mk-invoice-date {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #b9c7c3;
+  font-weight: 600;
 }
 
-/* Buyer Details Strip */
+/* Buyer Details */
 .mk-invoice-buyer-strip {
-  background: rgba(0, 16, 12, 0.7);
-  border: 1px solid rgba(212, 163, 89, 0.25);
-  border-radius: 9px;
-  padding: 8px 12px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 16, 12, 0.65);
+  border: 1px solid rgba(212, 163, 89, 0.25);
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
 .mk-invoice-buyer-item {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mk-invoice-buyer-item span {
+  font-size: 11px;
   color: #b9c7c3;
+  font-weight: 700;
 }
 
 .mk-invoice-buyer-item strong {
+  font-size: 12.5px;
   color: #f4f0e8;
-  font-weight: 900;
+  font-weight: 800;
 }
 
-/* Invoice Table */
+/* Table */
 .mk-invoice-table-wrap {
   border: 1px solid rgba(212, 163, 89, 0.25);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
+  background: rgba(0, 16, 12, 0.6);
   flex-shrink: 0;
 }
 
 .mk-invoice-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 12.5px;
   text-align: right;
 }
 
 .mk-invoice-table th {
-  background: rgba(0, 40, 30, 0.85);
+  padding: 8px 12px;
+  background: rgba(0, 91, 72, 0.4);
   color: #f5db99;
-  font-weight: 900;
-  padding: 6px 10px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.3);
+  font-weight: 800;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
 }
 
 .mk-invoice-table td {
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
   color: #f4f0e8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .mk-invoice-table tr:last-child td {
   border-bottom: none;
 }
 
-/* Delivery Phone Call Notice Box */
+/* Delivery Call Notice */
 .mk-invoice-notice-box {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background:
-    radial-gradient(ellipse at 10% 10%, rgba(0, 91, 72, 0.2) 0%, transparent 60%),
-    linear-gradient(135deg, rgba(0, 45, 35, 0.85) 0%, rgba(0, 25, 20, 0.95) 100%);
-  border: 1.5px solid #005b48;
-  border-radius: 9px;
   padding: 10px 14px;
-  color: #d4e0dc;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  background: rgba(0, 91, 72, 0.25);
+  border: 1px solid rgba(80, 175, 71, 0.4);
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
 .mk-invoice-notice-icon {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: #005b48;
+  background: #50af47;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 900;
   flex-shrink: 0;
-  border: 1px solid #50af47;
+  margin-top: 2px;
 }
 
 .mk-invoice-notice-content {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .mk-invoice-notice-content strong {
   font-size: 12.5px;
-  font-weight: 900;
-  color: #50af47;
+  color: #f5db99;
+  font-weight: 800;
 }
 
 .mk-invoice-notice-content p {
   margin: 0;
-  font-size: 11.5px;
-  line-height: 1.6;
-  color: #d4e0dc;
-  font-weight: 600;
+  font-size: 12px;
+  color: #e1dcd1;
+  line-height: 1.5;
 }
 
-/* Invoice Foot */
+/* Footer Actions */
 .mk-invoice-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: 10px;
   border-top: 1.5px solid rgba(212, 163, 89, 0.25);
-  margin-top: auto;
   flex-shrink: 0;
 }
 
 .mk-invoice-total-box {
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
 .mk-invoice-total-box small {
@@ -1397,93 +1070,91 @@
 .mk-invoice-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .mk-invoice-pdf-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   padding: 8px 14px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.2px solid #d4a359;
+  border-radius: 8px;
+  background: rgba(212, 163, 89, 0.2);
+  border: 1px solid rgba(212, 163, 89, 0.5);
   color: #f5db99;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mk-invoice-pdf-btn:hover {
-  background: rgba(212, 163, 89, 0.22);
+  background: rgba(212, 163, 89, 0.35);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
 .mk-invoice-pay-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 8px 18px;
-  border-radius: 7px;
+  padding: 9px 18px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #005b48 0%, #004537 100%);
-  border: 1.2px solid #50af47;
+  border: 1.5px solid #50af47;
   color: #ffffff;
   font-size: 13px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 91, 72, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 91, 72, 0.4);
   transition: all 0.2s ease;
 }
 
 .mk-invoice-pay-btn:hover {
-  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
+  background: linear-gradient(135deg, #00735b 0%, #005b48 100%);
+  border-color: #a4e09e;
   transform: translateY(-1px);
 }
 
 /* ==========================================================================
-   SIMULATED TEST PAYMENT GATEWAY MODAL
+   SIMULATED PAYMENT MODAL
    ========================================================================== */
 
 .mk-payment-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(14px);
-  z-index: 10000;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
   padding: 16px;
-  box-sizing: border-box;
 }
 
 .mk-payment-card {
-  width: 100%;
-  max-width: 460px;
-  border-radius: 16px;
+  width: min(440px, 100%);
+  border-radius: 18px;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.35) 0%, transparent 70%),
-    linear-gradient(160deg, #08221b 0%, #03120e 100%);
-  border: 1.5px solid #d4a359;
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.45) 0%, transparent 70%),
+    linear-gradient(160deg, #051a14 0%, #020e0a 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.55);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  padding: 18px 20px;
-  box-sizing: border-box;
+    0 24px 60px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(0, 91, 72, 0.35);
+  padding: 20px 24px;
   color: #f4f0e8;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .mk-payment-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.3);
 }
 
 .mk-payment-brand {
@@ -1493,37 +1164,39 @@
 }
 
 .mk-payment-brand strong {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 900;
-  color: #f4f0e8;
+  color: #f5db99;
 }
 
 .mk-payment-brand span {
-  font-size: 11px;
-  color: #86c2eb;
+  font-size: 11.5px;
+  color: #b9c7c3;
+  display: block;
 }
 
 .mk-payment-close {
   background: transparent;
   border: none;
   color: #b9c7c3;
-  font-size: 16px;
   cursor: pointer;
+  padding: 4px;
 }
 
 .mk-payment-amount-box {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(212, 163, 89, 0.35);
-  border-radius: 8px;
-  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(0, 91, 72, 0.25);
+  border: 1px solid rgba(212, 163, 89, 0.3);
 }
 
 .mk-payment-amount-box span {
-  font-size: 12px;
+  font-size: 12.5px;
   color: #b9c7c3;
+  font-weight: 700;
 }
 
 .mk-payment-amount-box strong {
@@ -1546,26 +1219,24 @@
 
 .mk-pay-field label {
   font-size: 11.5px;
-  font-weight: 800;
+  font-weight: 700;
   color: #d4a359;
 }
 
 .mk-pay-field input {
-  height: 38px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(212, 163, 89, 0.4);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(212, 163, 89, 0.35);
   color: #ffffff;
-  padding: 0 12px;
   font-size: 13px;
+  font-weight: 700;
   outline: none;
   font-family: inherit;
-  box-sizing: border-box;
 }
 
 .mk-pay-field input:focus {
-  border-color: #50af47;
-  box-shadow: 0 0 10px rgba(80, 175, 71, 0.4);
+  border-color: #f5db99;
 }
 
 .mk-pay-grid-2 {
@@ -1585,9 +1256,9 @@
 
 .mk-pay-otp-btn {
   padding: 0 12px;
-  border-radius: 7px;
+  border-radius: 8px;
   background: rgba(212, 163, 89, 0.2);
-  border: 1px solid #d4a359;
+  border: 1px solid rgba(212, 163, 89, 0.45);
   color: #f5db99;
   font-size: 11.5px;
   font-weight: 800;
@@ -1596,62 +1267,67 @@
 }
 
 .mk-payment-submit-btn {
-  height: 42px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #50af47 0%, #005b48 100%);
-  border: 1.2px solid #a4e09e;
+  margin-top: 6px;
+  padding: 10px 16px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
+  border: 1.5px solid #50af47;
   color: #ffffff;
   font-size: 13.5px;
   font-weight: 900;
   cursor: pointer;
-  margin-top: 6px;
-  box-shadow: 0 4px 16px rgba(80, 175, 71, 0.45);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 91, 72, 0.4);
 }
 
 .mk-payment-submit-btn:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(135deg, #60c556 0%, #007059 100%);
+  background: linear-gradient(135deg, #00735b 0%, #005b48 100%);
 }
 
 .mk-payment-success-card {
-  text-align: center;
-  padding: 20px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  text-align: center;
+  padding: 18px 0;
+  gap: 10px;
 }
 
 .mk-payment-success-icon {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: #50af47;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 24px rgba(80, 175, 71, 0.6);
+  font-size: 26px;
+  font-weight: 900;
+  box-shadow: 0 0 20px rgba(80, 175, 71, 0.6);
 }
 
-/* ==========================================================================
-   RESPONSIVE DESIGN (Tablets & Mobile)
-   ========================================================================== */
+.mk-payment-success-card h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 900;
+  color: #f5db99;
+}
 
-@media (max-width: 960px) {
-  .profile-workspace-section[data-theme="orders"] {
-    height: auto !important;
-    max-height: 92vh !important;
-    overflow-y: auto !important;
-  }
+.mk-payment-success-card p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #b9c7c3;
+  line-height: 1.5;
+}
 
-  .mk-orders-desk {
+@media (max-width: 768px) {
+  .mk-parcels-grid {
     grid-template-columns: 1fr;
   }
-
-  .mk-trolley-console,
-  .mk-doc-console {
-    min-height: 480px;
+  .mk-book-geo-grid {
+    grid-template-columns: 1fr;
+  }
+  .mk-invoice-buyer-strip {
+    grid-template-columns: 1fr;
   }
 }
