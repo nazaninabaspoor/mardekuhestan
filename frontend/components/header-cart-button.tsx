@@ -19,7 +19,6 @@ export function HeaderCartButton({
   const { user } = useAuth();
   const { itemsCount, bumpCart, cartNotice, dismissCartNotice } = useCart();
 
-  // If user is not logged in, we can either hide or show login modal on click
   if (!user) {
     return null;
   }
@@ -27,7 +26,7 @@ export function HeaderCartButton({
   if (variant === "mobile") {
     return (
       <Link
-        href="/profile?tab=orders"
+        href="/profile?tab=orders&view=cart"
         className={`v2-nav-link v2-mobile-cart-link ${bumpCart ? "is-bumped" : ""} ${className}`}
         onClick={onItemClick}
       >
@@ -49,7 +48,7 @@ export function HeaderCartButton({
   return (
     <div className={`v2-header-cart-container ${className}`}>
       <Link
-        href="/profile?tab=orders"
+        href="/profile?tab=orders&view=cart"
         className={`v2-tool-link v2-cart-trigger ${bumpCart ? "is-bumped" : ""} ${itemsCount > 0 ? "has-items" : ""}`}
         aria-label={`سبد خرید با ${itemsCount} بسته`}
         title="مشاهده سبد خرید و سفارش‌ها"
@@ -86,11 +85,11 @@ export function HeaderCartButton({
           </div>
           <div className="v2-toast-actions">
             <Link
-              href="/profile?tab=orders"
+              href="/profile?tab=orders&view=cart"
               className="v2-toast-view-btn"
               onClick={() => dismissCartNotice()}
             >
-              مشاهده سبد
+              مشاهده سبد و پرداخت
             </Link>
             <button
               type="button"

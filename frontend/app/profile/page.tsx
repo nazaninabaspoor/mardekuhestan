@@ -1085,11 +1085,17 @@ function ProfileContent() {
   // Subscription plan selection
   const [selectedPlan, setSelectedPlan] = useState<"standard" | "family" | "gourmet">("family");
 
+  const viewParam = searchParams.get("view");
+
   useEffect(() => {
     if (tabParam && ["personal", "ai-nutrition", "wallet", "subscription", "orders"].includes(tabParam)) {
       setFocusedTab(tabParam);
+      if (tabParam === "orders" && (viewParam === "cart" || viewParam === "invoice")) {
+        setOpenedTab("orders");
+        setDocViewMode("invoice");
+      }
     }
-  }, [tabParam]);
+  }, [tabParam, viewParam]);
 
   useEffect(() => {
     if (user) {
@@ -3157,18 +3163,19 @@ function ProfileContent() {
                         </button>
                         <button
                           type="button"
-                          className={`mk-doc-tab-btn is-invoice-tab${docViewMode === "invoice" ? " is-active" : ""}`}
+                          className={`mk-doc-tab-btn is-invoice-tab${docViewMode === "invoice" ? " is-active" : ""}${cartItemsCount > 0 ? " has-cart-items" : ""}`}
                           onClick={() => setDocViewMode("invoice")}
                         >
+                          {cartItemsCount > 0 && <span className="mk-neon-dot" aria-hidden="true" />}
                           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none">
                             <circle cx="8" cy="21" r="1" />
                             <circle cx="19" cy="21" r="1" />
                             <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
                           </svg>
-                          <span>
-                            سبد خرید جاری و سفارش جدید
-                            {cartItemsCount > 0 && ` (${cartItemsCount})`}
-                          </span>
+                          <span>سبد خرید جاری و سفارش جدید</span>
+                          {cartItemsCount > 0 && (
+                            <span className="mk-neon-badge">{cartItemsCount}</span>
+                          )}
                         </button>
                       </div>
 
