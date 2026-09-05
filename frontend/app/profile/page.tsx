@@ -3287,7 +3287,7 @@ function ProfileContent() {
                                       <polyline points="7 10 12 15 17 10" />
                                       <line x1="12" y1="15" x2="12" y2="3" />
                                     </svg>
-                                    <span>دانلود فاکتور PDF</span>
+                                    <span>دانلود شناسنامه رسمی PDF</span>
                                   </button>
                                   <button
                                     type="button"
@@ -3325,6 +3325,26 @@ function ProfileContent() {
                               <span>محصولات انتخابی شما برای ارسال تازه از مرتع</span>
                             </div>
                             <div className="mk-invoice-meta-block">
+                              {cart && cart.items && cart.items.length > 0 && (
+                                <button
+                                  type="button"
+                                  style={{
+                                    background: "rgba(229,115,115,0.18)",
+                                    border: "1px solid rgba(229,115,115,0.45)",
+                                    color: "#ff8a80",
+                                    fontSize: "11px",
+                                    fontWeight: 800,
+                                    padding: "3px 8px",
+                                    borderRadius: "6px",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s ease",
+                                  }}
+                                  onClick={() => clearCart()}
+                                  title="حذف تمام اقلام و انصراف از خرید فعلی"
+                                >
+                                  انصراف و تخلیه سبد
+                                </button>
+                              )}
                               <span className="mk-invoice-serial-badge">
                                 {cartItemsCount > 0 ? `${cartItemsCount} قلم کالا` : "سبد خالی"}
                               </span>
@@ -3459,7 +3479,23 @@ function ProfileContent() {
                               <button
                                 type="button"
                                 className="mk-invoice-pdf-btn"
-                                onClick={() => handleDownloadOrderPdf("invoice", CURRENT_PENDING_INVOICE, buyerInfo)}
+                                onClick={() => {
+                                  const invoiceData = cart && cart.items && cart.items.length > 0
+                                    ? {
+                                        invoiceNumber: `MK-INV-${Math.floor(10000 + Math.random() * 90000)}`,
+                                        date: "امروز",
+                                        payableAmount: `${(cartTotalPriceToman >= 500000 ? cartTotalPriceToman - 40000 : cartTotalPriceToman).toLocaleString("fa-IR")} تومان`,
+                                        items: cart.items.map((it, idx) => ({
+                                          row: idx + 1,
+                                          name: it.product_name,
+                                          code: `MK-${it.id}`,
+                                          weight: it.portion,
+                                          total: `${it.total_price_toman.toLocaleString("fa-IR")} تومان`,
+                                        })),
+                                      }
+                                    : CURRENT_PENDING_INVOICE;
+                                  handleDownloadOrderPdf("invoice", invoiceData, buyerInfo);
+                                }}
                                 title="دریافت فایل چاپی و PDF پیش‌فاکتور"
                               >
                                 <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.2" fill="none">
@@ -3467,7 +3503,7 @@ function ProfileContent() {
                                   <polyline points="7 10 12 15 17 10" />
                                   <line x1="12" y1="15" x2="12" y2="3" />
                                 </svg>
-                                <span>دانلود فاکتور</span>
+                                <span>دانلود پیش‌فاکتور PDF</span>
                               </button>
                               <button
                                 type="button"
