@@ -21,14 +21,40 @@ from orders.serializers import (
 from sec.ownership import acting_user
 
 
+def resolve_product_image(name: str, current_image: str = "") -> str:
+    """تشخیص و اختصاص تصویر دقیق و متناسب با ماهیت واقعی کالا."""
+    n = (name or "").lower()
+    if "عسل" in n or "کندو" in n or "honey" in n:
+        return "/brand/home-ready.png"
+    if "پنیر" in n or "cheese" in n:
+        return "/brand/panir.png"
+    if any(w in n for w in ["کره", "روغن", "ماست", "دوغ", "شیر", "لبنیات", "dairy"]):
+        return "/brand/home-dairy.png"
+    if any(w in n for w in ["ماهی", "قزل", "میگو", "آبزیان", "fish"]):
+        return "/brand/mahi.png"
+    if any(w in n for w in ["راسته", "فیله", "ماهیچه", "شقه", "گوشت", "بره", "گوساله", "گوسفند", "پروتئین", "قلوه‌گاه", "سردست"]):
+        return "/brand/goosht.png"
+    if current_image and current_image != "/brand/home-meat.png" and current_image.startswith("/"):
+        return current_image
+    return "/brand/goosht.png"
+
+
 def _get_or_create_user_cart(user) -> Cart:
     cart, _ = Cart.objects.get_or_create(user=user)
     return cart
 
 
 def _seed_demo_orders_for_user(user):
-    """ایجاد سفارش‌های پیش‌فرض شناسنامه مرتع در صورتی که کاربر سفارشی نداشته باشد."""
-    if Order.objects.filter(user=user).exists():
+    """ایجاد یا به‌روزرسانی سفارش‌های پیش‌فرض شناسنامه مرتع با تصاویر و داده‌های دقیق."""
+    existing_orders = Order.objects.filter(user=user)
+    if existing_orders.exists():
+        # به‌روزرسانی هوشمند تصاویر اقلام سفارش‌های قبلی در دیتابیس
+        for o in existing_orders:
+            for item in o.items.all():
+                correct_img = resolve_product_image(item.product_name, item.product_image)
+                if item.product_image != correct_img:
+                    item.product_image = correct_img
+                    item.save(update_fields=["product_image"])
         return
 
     # سفارش اول (کلاردشت)
@@ -52,7 +78,7 @@ def _seed_demo_orders_for_user(user):
     OrderItem.objects.create(
         order=o1,
         product_name="راسته بره مرتعی تازه (۱ کیلوگرم)",
-        product_image="/brand/home-meat.png",
+        product_image="/brand/goosht.png",
         cut_type="برش قصابی استریل · بدون چربی اضافه",
         portion="۱ کیلوگرم",
         unit_price_toman=530000,
@@ -112,6 +138,41 @@ def _seed_demo_orders_for_user(user):
     # سفارش سوم (سبلان)
     o3 = Order.objects.create(
         order_number="MK-88712",
+        user=user,
+        status=Order.Status.DELIVERED,
+        pasture_name="دامنه‌های سبلان و آبگرم سرعین",
+        altitude="۲,۸۰۰ متر از سطح دریا",
+        grazing_info="گون و آویشن کوهستانی سبلان",
+        vet_code="IR-77412 نظام دامپزشکی",
+        pack_date="۱۵ مرداد ۱۴۰۵ - ۰۶:۰۰",
+        temperature_log="۲.۱°C (زنجیره سرد کنترل‌شده)",
+        receiver_name=getattr(user, "customer_profile", None) and user.customer_profile.display_name or "همسفر مرد کوهستان",
+        receiver_phone=getattr(user, "customer_profile", None) and user.customer_profile.phone or "۰۹۳۷۹۱۴۶۱۳۰",
+        shipping_address="تهران، زعفرانیه، خیابان آصف، کوچه رز، پلاک ۱۲",
+        total_amount_toman=1150000,
+        discount_amount_toman=60000,
+        final_amount_toman=1090000,
+    )
+    OrderItem.objects.create(
+        order=o3,
+        product_name="عسل خام صخره‌ای سبلان (۱ کیلوگرم)",
+        product_image="/brand/home-ready.png",
+        cut_type="برداشت مستقیم کندوهای ییلاق",
+        portion="۱ کیلوگرم",
+        unit_price_toman=490000,
+        quantity=1,
+        total_price_toman=490000,
+    )
+    OrderItem.objects.create(
+        order=o3,
+        product_name="پنیر کوزه‌ای کهنه کوهستان (۱ کیلوگرم)",
+        product_image="/brand/panir.png",
+        cut_type="رسیده در غارهای طبیعی سرعین",
+        portion="۱ کیلوگرم",
+        unit_price_toman=660000,
+        quantity=1,
+        total_price_toman=660000,
+    )
         user=user,
         status=Order.Status.DELIVERED,
         pasture_name="دامنه‌های سبلان و آبگرم سرعین",

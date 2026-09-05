@@ -592,25 +592,76 @@ function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buyerInfo: 
   printWindow.document.close();
 }
 
+export function resolveProductImage(name: string, rawImage?: string): string {
+  const n = (name || "").toLowerCase();
+  if (n.includes("عسل") || n.includes("کندو") || n.includes("honey")) {
+    return "/brand/home-ready.png";
+  }
+  if (n.includes("پنیر") || n.includes("cheese") || n.includes("panir")) {
+    return "/brand/panir.png";
+  }
+  if (
+    n.includes("کره") ||
+    n.includes("روغن") ||
+    n.includes("ماست") ||
+    n.includes("دوغ") ||
+    n.includes("شیر") ||
+    n.includes("لبنیات") ||
+    n.includes("dairy")
+  ) {
+    return "/brand/home-dairy.png";
+  }
+  if (
+    n.includes("ماهی") ||
+    n.includes("قزل") ||
+    n.includes("میگو") ||
+    n.includes("آبزیان") ||
+    n.includes("seafood") ||
+    n.includes("fish")
+  ) {
+    return "/brand/mahi.png";
+  }
+  if (
+    n.includes("راسته") ||
+    n.includes("فیله") ||
+    n.includes("ماهیچه") ||
+    n.includes("شقه") ||
+    n.includes("گوشت") ||
+    n.includes("بره") ||
+    n.includes("گوساله") ||
+    n.includes("گوسفند") ||
+    n.includes("پروتئین") ||
+    n.includes("قلوه‌گاه") ||
+    n.includes("سردست") ||
+    n.includes("چرخ‌کرده")
+  ) {
+    return "/brand/goosht.png";
+  }
+  if (rawImage && rawImage !== "/brand/home-meat.png" && rawImage.startsWith("/")) {
+    return rawImage;
+  }
+  return "/brand/goosht.png";
+}
+
 const PASTURE_ORDERS_DATABASE = [
   {
     id: "MK-94021",
-    title: "بسته پروتئین ییلاقی کلاردشت",
+    title: "بسته پروتئین و لبنیات کلاردشت",
     date: "۱۰ شهریور ۱۴۰۵",
     pastureName: "مرتع ییلاقی کلاردشت (دامنه مازیچال)",
     altitude: "۲,۲۰۰ متر از سطح دریا",
     grazing: "علوفه وحشی کوهپایه و آویشن ارگانیک",
     vetCode: "IR-88301 نظام دامپزشکی",
-    packDate: "۱۰ شهریور ۱۴۰۵ - ۰۵:۳۰",
-    tempLog: "۲.۴°C (کنترل‌شده)",
+    packDate: "۱۰ شهریور ۱۴۰۵ - ۰۶:۳۰",
+    tempLog: "۲.۴°C (زنجیره سرد کنترل‌شده)",
     status: "تحویل‌شده با زنجیره سرد",
-    boxCategory: "گوشت بره مرتعی",
+    boxCategory: "گوشت بره و کره سنتی",
     items: [
       {
         name: "راسته بره مرتعی تازه (۱ کیلوگرم)",
         image: "/brand/goosht.png",
         cut: "برش قصابی استریل · بدون چربی اضافه",
-        price: "۵۴۰,۰۰۰ تومان",
+        price: "۵۳۰,۰۰۰ تومان",
       },
       {
         name: "کره سنتی خالص کوهپایه (۵۰۰ گرم)",
@@ -619,49 +670,79 @@ const PASTURE_ORDERS_DATABASE = [
         price: "۲۴۰,۰۰۰ تومان",
       },
     ],
-    totalAmount: "۷۸۰,۰۰۰ تومان",
-    discount: "۵۰,۰۰۰ تومان (امتیاز سبز)",
+    totalAmount: "۷۷۰,۰۰۰ تومان",
+    discount: "۴۰,۰۰۰ تومان",
     finalPrice: "۷۳۰,۰۰۰ تومان",
   },
   {
-    id: "MK-88143",
-    title: "بسته گوشت و لبنیات هزارجریب",
+    id: "MK-91823",
+    title: "بسته ماهیچه بره و روغن زرد البرز",
     date: "۲۸ مرداد ۱۴۰۵",
-    pastureName: "مرتع کوهستانی هزارجریب (بهشهر)",
-    altitude: "۱,۸۵۰ متر از سطح دریا",
-    grazing: "یونجه کوهی و بومادران مرتع",
-    vetCode: "IR-84210 نظام دامپزشکی",
-    packDate: "۲۸ مرداد ۱۴۰۵ - ۰۶:۰۰",
-    tempLog: "۲.۱°C (کنترل‌شده)",
+    pastureName: "مرتع هزارجریب البرز شرقی",
+    altitude: "۲,۵۰۰ متر از سطح دریا",
+    grazing: "گیاهان دارویی، کاسنی و پونه کوهی",
+    vetCode: "IR-91802 نظام دامپزشکی",
+    packDate: "۲۸ مرداد ۱۴۰۵ - ۰۵:۴۵",
+    tempLog: "۲.۲°C (زنجیره سرد کنترل‌شده)",
     status: "تحویل‌شده با زنجیره سرد",
-    boxCategory: "فیله گوساله کوهستان",
+    boxCategory: "ماهیچه بره و روغن زرد",
     items: [
       {
-        name: "فیله گوساله پرواری مرتع (۱.۵ کیلوگرم)",
-        image: "/brand/home-meat.png",
-        cut: "استیک ممتاز بدون استخوان",
-        price: "۸۹۰,۰۰۰ تومان",
+        name: "ماهیچه بره تازه ییلاقی (۱.۵ کیلوگرم)",
+        image: "/brand/goosht.png",
+        cut: "برش پاک‌شده استریل مجلسی",
+        price: "۶۵۰,۰۰۰ تومان",
       },
       {
-        name: "پنیر کهنه خیک سنتی (۴۰۰ گرم)",
-        image: "/brand/panir.png",
-        cut: "رسیده در غار طبیعی ۹۰ روزه",
-        price: "۱۹۰,۰۰۰ تومان",
+        name: "روغن زرد حیوانی دست‌ساز (۱ کیلوگرم)",
+        image: "/brand/home-dairy.png",
+        cut: "عطر خالص کوهپایه مازندران",
+        price: "۳۰۰,۰۰۰ تومان",
       },
     ],
-    totalAmount: "۱,۰۸۰,۰۰۰ تومان",
-    discount: "۸۰,۰۰۰ تومان",
-    finalPrice: "۱,۰۰۰,۰۰۰ تومان",
+    totalAmount: "۹۵۰,۰۰۰ تومان",
+    discount: "۵۰,۰۰۰ تومان",
+    finalPrice: "۹۰۰,۰۰۰ تومان",
+  },
+  {
+    id: "MK-88712",
+    title: "بسته عسل سبلان و پنیر کهنه کوهستان",
+    date: "۱۵ مرداد ۱۴۰۵",
+    pastureName: "دامنه‌های سبلان و آبگرم سرعین",
+    altitude: "۲,۸۰۰ متر از سطح دریا",
+    grazing: "گون و آویشن کوهستانی سبلان",
+    vetCode: "IR-77412 نظام دامپزشکی",
+    packDate: "۱۵ مرداد ۱۴۰۵ - ۰۶:۰۰",
+    tempLog: "۲.۱°C (زنجیره سرد کنترل‌شده)",
+    status: "تحویل‌شده با زنجیره سرد",
+    boxCategory: "عسل خام و پنیر کوزه‌ای",
+    items: [
+      {
+        name: "عسل خام صخره‌ای سبلان (۱ کیلوگرم)",
+        image: "/brand/home-ready.png",
+        cut: "برداشت مستقیم کندوهای ییلاق",
+        price: "۴۹۰,۰۰۰ تومان",
+      },
+      {
+        name: "پنیر کوزه‌ای کهنه کوهستان (۱ کیلوگرم)",
+        image: "/brand/panir.png",
+        cut: "رسیده در غارهای طبیعی سرعین",
+        price: "۶۶۰,۰۰۰ تومان",
+      },
+    ],
+    totalAmount: "۱,۱۵۰,۰۰۰ تومان",
+    discount: "۶۰,۰۰۰ تومان",
+    finalPrice: "۱,۰۹۰,۰۰۰ تومان",
   },
   {
     id: "MK-76519",
-    title: "بسته آبزیان و عسل سبلان",
-    date: "۱۵ مرداد ۱۴۰۵",
+    title: "بسته قزل‌آلای تازه و عسل کوهستان",
+    date: "۰۲ مرداد ۱۴۰۵",
     pastureName: "دامنه‌های آب‌شیرین سبلان (قینرجه)",
     altitude: "۲,۶۰۰ متر از سطح دریا",
     grazing: "آب چشمه‌های طبیعی و گیاهان دارویی",
     vetCode: "IR-79104 نظام دامپزشکی",
-    packDate: "۱۵ مرداد ۱۴۰۵ - ۰۴:۱۵",
+    packDate: "۰۲ مرداد ۱۴۰۵ - ۰۴:۱۵",
     tempLog: "-۱۸°C منجمد سریع",
     status: "تحویل‌شده با زنجیره سرد",
     boxCategory: "ماهی قزل‌آلا و عسل",
@@ -685,13 +766,13 @@ const PASTURE_ORDERS_DATABASE = [
   },
   {
     id: "MK-65208",
-    title: "شقه گوسفندی دشت لار",
-    date: "۰۲ مرداد ۱۴۰۵",
+    title: "شقه کامل گوسفند نر مرتع لار",
+    date: "۱۸ تیر ۱۴۰۵",
     pastureName: "مرتع دشت لار دماوند",
     altitude: "۲,۴۰۰ متر از سطح دریا",
     grazing: "گیاهان معطر البرز مرکزی",
     vetCode: "IR-65402 نظام دامپزشکی",
-    packDate: "۰۲ مرداد ۱۴۰۵ - ۰۵:۰۰",
+    packDate: "۱۸ تیر ۱۴۰۵ - ۰۵:۰۰",
     tempLog: "۲.۶°C (کنترل‌شده)",
     status: "تحویل‌شده با زنجیره سرد",
     boxCategory: "شقه کامل گوسفندی",
@@ -707,6 +788,7 @@ const PASTURE_ORDERS_DATABASE = [
     discount: "۱۵۰,۰۰۰ تومان",
     finalPrice: "۳,۰۵۰,۰۰۰ تومان",
   },
+];
   {
     id: "MK-54311",
     title: "بسته ارگانیک دیلمان گیلان",
