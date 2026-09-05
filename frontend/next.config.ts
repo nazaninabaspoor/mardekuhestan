@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       { source: "/magazine/:slug", destination: "/#v2-magazine", permanent: false },
       { source: "/contact", destination: "/", permanent: false },
       { source: "/stores", destination: "/", permanent: false },
-      { source: "/cart", destination: "/", permanent: false },
+      { source: "/cart", destination: "/profile", permanent: false },
       { source: "/account", destination: "/profile", permanent: false },
       { source: "/wishlist", destination: "/", permanent: false },
       { source: "/rahyaar", destination: "/profile?tab=ai-nutrition", permanent: false },

@@ -15,6 +15,7 @@ import {
   registerAccount,
   updateProfile,
 } from "@/lib/api/auth";
+import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
 
 type AuthModalTab = "login" | "register";
 
@@ -62,6 +63,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     refreshUser();
   }, [refreshUser]);
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (user && token) setAccessToken(token);
+  }, [user]);
 
   const openLoginModal = useCallback(() => {
     setModalTab("login");

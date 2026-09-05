@@ -177,7 +177,9 @@ export function AuthHeaderButton({
           </Link>
 
           <Link
-            href="/profile?tab=orders"
+            href="/profile/orders"
+            target="_blank"
+            rel="noopener noreferrer"
             className="auth-mobile-link"
             onClick={() => onItemClick?.()}
           >
@@ -372,7 +374,9 @@ export function AuthHeaderButton({
 
             {/* 5. Orders & Traceability */}
             <Link
-              href="/profile?tab=orders"
+              href="/profile/orders"
+              target="_blank"
+              rel="noopener noreferrer"
               className="auth-dropdown-item"
               role="menuitem"
               onClick={() => setDropdownOpen(false)}

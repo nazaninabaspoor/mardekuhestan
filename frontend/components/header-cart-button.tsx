@@ -26,7 +26,9 @@ export function HeaderCartButton({
   if (variant === "mobile") {
     return (
       <Link
-        href="/profile?tab=orders&view=cart"
+        href="/profile/orders?view=cart"
+        target="_blank"
+        rel="noopener noreferrer"
         className={`v2-nav-link v2-mobile-cart-link ${bumpCart ? "is-bumped" : ""} ${className}`}
         onClick={onItemClick}
       >
@@ -48,7 +50,9 @@ export function HeaderCartButton({
   return (
     <div className={`v2-header-cart-container ${className}`}>
       <Link
-        href="/profile?tab=orders&view=cart"
+        href="/profile/orders?view=cart"
+        target="_blank"
+        rel="noopener noreferrer"
         className={`v2-tool-link v2-cart-trigger ${bumpCart ? "is-bumped" : ""} ${itemsCount > 0 ? "has-items" : ""}`}
         aria-label={`سبد خرید با ${itemsCount} بسته`}
         title="مشاهده سبد خرید و سفارش‌ها"
@@ -85,7 +89,9 @@ export function HeaderCartButton({
           </div>
           <div className="v2-toast-actions">
             <Link
-              href="/profile?tab=orders&view=cart"
+              href="/profile/orders?view=cart"
+              target="_blank"
+              rel="noopener noreferrer"
               className="v2-toast-view-btn"
               onClick={() => dismissCartNotice()}
             >
