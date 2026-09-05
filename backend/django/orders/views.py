@@ -265,8 +265,12 @@ class CartItemDetailView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        item.quantity = serializer.validated_data["quantity"]
-        item.save()
+        qty = serializer.validated_data["quantity"]
+        if qty <= 0:
+            item.delete()
+        else:
+            item.quantity = qty
+            item.save()
 
         cart_serializer = CartSerializer(cart)
         return Response(cart_serializer.data)

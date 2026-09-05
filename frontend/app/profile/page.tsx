@@ -3440,7 +3440,14 @@ function ProfileContent() {
                                           <button
                                             type="button"
                                             style={{ width: "22px", height: "22px", borderRadius: "4px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(212,163,89,0.4)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}
-                                            onClick={() => updateQuantity(it.id, Math.max(1, it.quantity - 1))}
+                                            onClick={() => {
+                                              if (it.quantity <= 1) {
+                                                removeFromCart(it.id);
+                                              } else {
+                                                updateQuantity(it.id, it.quantity - 1);
+                                              }
+                                            }}
+                                            title={it.quantity <= 1 ? "حذف کالا از سبد خرید" : "کاهش تعداد"}
                                           >
                                             -
                                           </button>

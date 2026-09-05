@@ -184,6 +184,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = useCallback(
     async (itemId: number, quantity: number) => {
       if (!user) return;
+      if (quantity <= 0) {
+        await removeFromCart(itemId);
+        return;
+      }
       // Optimistic update
       setCart((prev) => {
         if (!prev) return null;
@@ -212,7 +216,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     },
-    [user, saveCartToCache],
+    [user, saveCartToCache, removeFromCart],
   );
 
   const clearCart = useCallback(async () => {
