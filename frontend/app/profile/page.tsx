@@ -1564,7 +1564,7 @@ function ProfileContent() {
   const activeOrder =
     selectedOrderIndex !== null && ordersList[selectedOrderIndex]
       ? ordersList[selectedOrderIndex]
-      : null;
+      : ordersList[0] || null;
 
   const buyerInfo = {
     name: displayName,
@@ -3285,473 +3285,468 @@ function ProfileContent() {
                       </button>
                     </div>
 
-                    {/* View 1: Past Orders (سفارش‌های قبلی من - دسته‌های ۱۵ تایی) */}
+                    {/* View 1: Past Orders (Open Luxury Hardcover Pasture Ledger) */}
                     {docViewMode === "book" && (
-                      selectedOrderIndex === null ? (
-                        /* Subview A: Clean Order Cards Shelf */
-                        <div className="mk-parcels-shelf">
-                          {/* Clean Header with 15-Item Status */}
-                          <div className="mk-orders-list-header">
-                            <h3>سفارش‌های تحویل‌شده</h3>
-                            <span>صفحه {ordersCurrentPage} از {totalOrdersPages} (نمایش ۱۵ تایی)</span>
-                          </div>
-
-                          <div className="mk-parcels-grid">
-                            {paginatedOrders.map((ord: any) => {
-                              const globalIdx = ordersList.findIndex((o) => o.id === ord.id);
-                              return (
-                                <motion.div
-                                  key={ord.id}
-                                  className="mk-order-card"
-                                  onClick={() => setSelectedOrderIndex(globalIdx >= 0 ? globalIdx : 0)}
-                                  whileHover={{ y: -3 }}
-                                  whileTap={{ scale: 0.985 }}
-                                  transition={{ duration: 0.18 }}
-                                >
-                                  {/* Head */}
-                                  <div className="mk-order-card-head">
-                                    <span className="mk-order-id-badge">
-                                      سفارش #{ord.id}
-                                    </span>
-                                    <span className="mk-order-status-badge">تحویل‌شده</span>
-                                  </div>
-
-                                  {/* Info */}
-                                  <div className="mk-order-meta-info">
-                                    <h4 className="mk-order-title">{ord.title}</h4>
-                                    <div className="mk-order-pasture">
-                                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#005B48" strokeWidth="2.2">
-                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                      </svg>
-                                      <span>{ord.pastureName}</span>
-                                    </div>
-                                  </div>
-
-                                  {/* Products Preview */}
-                                  <div className="mk-order-items-row">
-                                    {ord.items.slice(0, 2).map((it: any, itemIdx: number) => {
-                                      const itemImg = resolveProductImage(it.name, it.image);
-                                      return (
-                                        <div key={itemIdx} className="mk-order-item-chip" title={it.name}>
-                                          <div className="mk-order-item-img">
-                                            <Image
-                                              src={itemImg}
-                                              alt={it.name}
-                                              width={38}
-                                              height={38}
-                                              style={{ objectFit: "contain" }}
-                                            />
-                                          </div>
-                                          <span className="mk-order-item-name">{it.name.split(" (")[0]}</span>
-                                        </div>
-                                      );
-                                    })}
-                                    {ord.items.length > 2 && (
-                                      <span className="mk-order-item-count">+{ord.items.length - 2} قلم دیگر</span>
-                                    )}
-                                  </div>
-
-                                  {/* Foot */}
-                                  <div className="mk-order-card-foot">
-                                    <div className="mk-order-price-group">
-                                      <span>مبلغ پرداختی:</span>
-                                      <strong>{ord.finalPrice}</strong>
-                                    </div>
-                                    <span className="mk-order-view-btn">
-                                      <span>مشاهده جزئیات</span>
-                                      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
-                                        <polyline points="15 18 9 12 15 6" />
-                                      </svg>
-                                    </span>
-                                  </div>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Bottom Pagination Bar */}
-                          {totalOrdersPages > 1 && (
-                            <div className="mk-orders-pagination-bar">
-                              <button
-                                type="button"
-                                className="mk-page-nav-btn"
-                                disabled={ordersCurrentPage === 1}
-                                onClick={() => setOrdersCurrentPage((p) => Math.max(1, p - 1))}
-                              >
-                                ‹ صفحه قبلی
-                              </button>
-                              <div className="mk-page-numbers">
-                                {Array.from({ length: totalOrdersPages }, (_, i) => i + 1).map((pageNum) => (
-                                  <button
-                                    key={pageNum}
-                                    type="button"
-                                    className={`mk-page-num-btn${ordersCurrentPage === pageNum ? " is-active" : ""}`}
-                                    onClick={() => setOrdersCurrentPage(pageNum)}
-                                  >
-                                    {pageNum}
-                                  </button>
-                                ))}
-                              </div>
-                              <button
-                                type="button"
-                                className="mk-page-nav-btn"
-                                disabled={ordersCurrentPage === totalOrdersPages}
-                                onClick={() => setOrdersCurrentPage((p) => Math.min(totalOrdersPages, p + 1))}
-                              >
-                                صفحه بعدی ›
-                              </button>
-                            </div>
-                          )}
+                      <div className="mk-book-spread">
+                        {/* Center Spine 3D Shadow & Ribbon */}
+                        <div className="mk-book-center-spine" aria-hidden="true">
+                          <span className="mk-book-spine-stitch" />
                         </div>
-                      ) : (
-                        /* Subview B: Detailed Order View (Unboxed) */
-                        <div className="mk-parcel-detail-view">
-                          <div className="mk-detail-nav-bar">
-                            <button
-                              type="button"
-                              className="mk-back-to-shelf-btn"
-                              onClick={() => setSelectedOrderIndex(null)}
-                            >
-                              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2.5" fill="none">
-                                <polyline points="9 18 15 12 9 6" />
-                              </svg>
-                              <span>بازگشت به لیست سفارش‌ها</span>
-                            </button>
+                        <div className="mk-book-silk-ribbon" aria-hidden="true" />
 
-                            <span className="mk-detail-package-badge">
-                              سفارش #{activeOrder?.id}
-                            </span>
+                        {/* Right Page: Artistic Plate — مرد کوهستان پس از تحویل سفارش‌ها با رضایت و حال خوب */}
+                        <div className="mk-book-right-page">
+                          <div className="mk-book-art-frame">
+                            <Image
+                              src="/brand/v2/book/cat-work-photo-full.png"
+                              alt="مرد کوهستان پس از تحویل سفارش‌ها"
+                              fill
+                              sizes="(max-width: 900px) 100vw, 400px"
+                              className="mk-book-art-img"
+                              priority
+                            />
+                            <div className="mk-book-art-overlay">
+                              <span className="mk-book-art-badge">
+                                <span>❄️</span>
+                                <span>تحویل‌شده با زنجیره سرد ۲.۴°C</span>
+                              </span>
+                              <div className="mk-book-art-caption">
+                                <h3>سفره‌های سبز، تحویل بی‌واسطه</h3>
+                                <p>ثبت لحظه‌به‌لحظه فرآورده‌ها از ارتفاعات مرتع تا سفره شما</p>
+                              </div>
+                            </div>
                           </div>
 
-                          {activeOrder && (
-                            <article className="mk-unboxed-passport-card">
-                              {/* Header */}
-                              <header className="mk-passport-head">
-                                <div className="mk-passport-brand-group">
-                                  <Image src="/brand/orginal-clear.png" alt="مرد کوهستان" width={36} height={36} />
-                                  <div>
-                                    <h3>شناسنامه اصالت مرتع · سفارش #{activeOrder.id}</h3>
-                                    <p>خاستگاه: {activeOrder.pastureName} · تاریخ دریافت: {activeOrder.date}</p>
-                                  </div>
-                                </div>
-                                <div className="mk-passport-status-pill">
-                                  <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="3" fill="none">
-                                    <polyline points="20 6 9 17 4 12" />
-                                  </svg>
-                                  <span>تحویل‌شده خنک ({activeOrder.tempLog || "۲.۴°C"})</span>
-                                </div>
-                              </header>
+                          <div className="mk-book-art-story">
+                            <span className="mk-story-tag">
+                              <span>📜</span>
+                              <strong>سند رسمی اصالت و سلامت محصولات</strong>
+                            </span>
+                            <p className="mk-story-text">
+                              تمامی سفارش‌های پیشین شما در این دفترچه ثبت شده‌اند. روی هر سفارش کلیک کنید تا شناسنامه چراگاه، شرایط نگهداری و تصاویر اقلام تحویل‌شده را مشاهده فرمایید.
+                            </p>
+                          </div>
 
-                              {/* 4 Origin Summary Tiles */}
-                              <div className="mk-passport-origin-grid">
-                                <div className="mk-origin-card">
-                                  <span className="mk-origin-icon">📍</span>
-                                  <div>
-                                    <small>خاستگاه و منطقه</small>
-                                    <strong>{activeOrder.pastureName}</strong>
-                                  </div>
-                                </div>
-                                <div className="mk-origin-card">
-                                  <span className="mk-origin-icon">⛰️</span>
-                                  <div>
-                                    <small>ارتفاع چراگاه</small>
-                                    <strong>{activeOrder.altitude}</strong>
-                                  </div>
-                                </div>
-                                <div className="mk-origin-card">
-                                  <span className="mk-origin-icon">🌿</span>
-                                  <div>
-                                    <small>تغذیه دام</small>
-                                    <strong>{activeOrder.grazing}</strong>
-                                  </div>
-                                </div>
-                                <div className="mk-origin-card">
-                                  <span className="mk-origin-icon">🛡️</span>
-                                  <div>
-                                    <small>تأییدیه بهداشت</small>
-                                    <strong>{activeOrder.vetCode}</strong>
-                                  </div>
-                                </div>
+                          <div className="mk-book-art-props-grid">
+                            <div className="mk-prop-card">
+                              <span className="mk-prop-icon">⛰️</span>
+                              <div>
+                                <small>خاستگاه تولید</small>
+                                <strong>مراتع ییلاقی البرز و سبلان</strong>
+                              </div>
+                            </div>
+                            <div className="mk-prop-card">
+                              <span className="mk-prop-icon">🛡️</span>
+                              <div>
+                                <small>پایش و بهداشت</small>
+                                <strong>زنجیره سرمای پایدار</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Left Page: Interactive Ledger (15-item list or passport details) */}
+                        <div className="mk-book-left-page">
+                          {selectedOrderIndex === null ? (
+                            <>
+                              <div className="mk-ledger-head">
+                                <h3>
+                                  <span>📖</span>
+                                  <span>سفارش‌های تحویل‌شده شما</span>
+                                </h3>
+                                <span>صفحه {ordersCurrentPage} از {totalOrdersPages} (دسته‌های ۱۵ تایی)</span>
                               </div>
 
-                              {/* Items List */}
-                              <div className="mk-passport-items-section">
-                                <span className="mk-passport-section-title">اقلام محتوی این سفارش ({activeOrder.items.length} قلم):</span>
-                                <div className="mk-passport-items-grid">
-                                  {activeOrder.items.map((it: any, i: number) => {
-                                    const itemPhoto = resolveProductImage(it.name, it.image);
-                                    return (
-                                      <div key={i} className="mk-passport-item-row">
-                                        <div className="mk-passport-item-thumb">
+                              <div className="mk-ledger-orders-list">
+                                {paginatedOrders.map((ord: any) => {
+                                  const globalIdx = ordersList.findIndex((o) => o.id === ord.id);
+                                  const itemImg = resolveProductImage(ord.items[0]?.name || "", ord.items[0]?.image || "");
+                                  return (
+                                    <motion.div
+                                      key={ord.id}
+                                      className="mk-book-order-row"
+                                      onClick={() => setSelectedOrderIndex(globalIdx >= 0 ? globalIdx : 0)}
+                                      whileHover={{ x: -3 }}
+                                      whileTap={{ scale: 0.985 }}
+                                      transition={{ duration: 0.15 }}
+                                    >
+                                      <div className="mk-book-order-main">
+                                        <div className="mk-book-order-thumb">
                                           <Image
-                                            src={itemPhoto}
-                                            alt={it.name}
-                                            width={48}
-                                            height={48}
+                                            src={itemImg}
+                                            alt={ord.title}
+                                            width={34}
+                                            height={34}
                                             style={{ objectFit: "contain" }}
                                           />
                                         </div>
-                                        <div className="mk-passport-item-details">
-                                          <strong className="mk-passport-item-title">{it.name}</strong>
-                                          <span className="mk-passport-item-cut">{it.cut}</span>
+                                        <div className="mk-book-order-info">
+                                          <strong className="mk-book-order-title">{ord.title}</strong>
+                                          <span className="mk-book-order-pasture">
+                                            <span>بسته #{ord.id}</span>
+                                            <span>·</span>
+                                            <span>{ord.pastureName}</span>
+                                          </span>
                                         </div>
-                                        <div className="mk-passport-item-price-tag">
-                                          <small>مبلغ:</small>
-                                          <strong>{it.price}</strong>
+                                      </div>
+
+                                      <div className="mk-book-order-side">
+                                        <strong className="mk-book-order-price">{ord.finalPrice}</strong>
+                                        <span className="mk-book-order-btn">
+                                          <span>شناسنامه</span>
+                                          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                            <polyline points="15 18 9 12 15 6" />
+                                          </svg>
+                                        </span>
+                                      </div>
+                                    </motion.div>
+                                  );
+                                })}
+                              </div>
+
+                              {/* 15-Item Pagination Bar */}
+                              {totalOrdersPages > 1 && (
+                                <div className="mk-book-pagination">
+                                  <button
+                                    type="button"
+                                    className="mk-book-page-btn"
+                                    disabled={ordersCurrentPage === 1}
+                                    onClick={() => setOrdersCurrentPage((p) => Math.max(1, p - 1))}
+                                  >
+                                    ‹ قبلی
+                                  </button>
+                                  {Array.from({ length: totalOrdersPages }, (_, i) => i + 1).map((pageNum) => (
+                                    <button
+                                      key={pageNum}
+                                      type="button"
+                                      className={`mk-book-page-num${ordersCurrentPage === pageNum ? " is-active" : ""}`}
+                                      onClick={() => setOrdersCurrentPage(pageNum)}
+                                    >
+                                      {pageNum}
+                                    </button>
+                                  ))}
+                                  <button
+                                    type="button"
+                                    className="mk-book-page-btn"
+                                    disabled={ordersCurrentPage === totalOrdersPages}
+                                    onClick={() => setOrdersCurrentPage((p) => Math.min(totalOrdersPages, p + 1))}
+                                  >
+                                    بعدی ›
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            /* Subview: Detailed Order Passport */
+                            activeOrder && (
+                              <div className="mk-book-passport-view">
+                                <div className="mk-ledger-head">
+                                  <button
+                                    type="button"
+                                    className="mk-passport-back-btn"
+                                    onClick={() => setSelectedOrderIndex(null)}
+                                  >
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none">
+                                      <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                    <span>بازگشت به لیست</span>
+                                  </button>
+                                  <span>شناسنامه بسته #{activeOrder.id}</span>
+                                </div>
+
+                                <div className="mk-passport-origins-mini">
+                                  <div className="mk-passport-mini-cell">
+                                    <span>📍</span>
+                                    <div>
+                                      <small>خاستگاه:</small>
+                                      <strong>{activeOrder.pastureName}</strong>
+                                    </div>
+                                  </div>
+                                  <div className="mk-passport-mini-cell">
+                                    <span>⛰️</span>
+                                    <div>
+                                      <small>ارتفاع چراگاه:</small>
+                                      <strong>{activeOrder.altitude}</strong>
+                                    </div>
+                                  </div>
+                                  <div className="mk-passport-mini-cell">
+                                    <span>🌿</span>
+                                    <div>
+                                      <small>تغذیه دام:</small>
+                                      <strong>{activeOrder.grazing}</strong>
+                                    </div>
+                                  </div>
+                                  <div className="mk-passport-mini-cell">
+                                    <span>🛡️</span>
+                                    <div>
+                                      <small>تأییدیه سلامت:</small>
+                                      <strong>{activeOrder.vetCode}</strong>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="mk-passport-items-box">
+                                  {activeOrder.items.map((it: any, i: number) => {
+                                    const itemPhoto = resolveProductImage(it.name, it.image);
+                                    return (
+                                      <div key={i} className="mk-passport-item-mini">
+                                        <div className="mk-passport-item-mini-img">
+                                          <Image
+                                            src={itemPhoto}
+                                            alt={it.name}
+                                            width={30}
+                                            height={30}
+                                            style={{ objectFit: "contain" }}
+                                          />
                                         </div>
+                                        <div className="mk-passport-item-mini-text">
+                                          <strong>{it.name}</strong>
+                                          <span>{it.cut}</span>
+                                        </div>
+                                        <strong className="mk-passport-item-mini-price">{it.price}</strong>
                                       </div>
                                     );
                                   })}
                                 </div>
-                              </div>
 
-                              {/* Cold Chain Traceability */}
-                              <div className="mk-passport-journey">
-                                <span className="mk-journey-title">مسیر حرکت تا رسیدن به دست شما (زنجیره سرد ۲.۴°C):</span>
-                                <div className="mk-journey-steps">
-                                  <div className="mk-journey-step">
-                                    <span className="mk-step-dot" />
-                                    <span>چرای طبیعی در مرتع</span>
-                                  </div>
-                                  <div className="mk-journey-divider" />
-                                  <div className="mk-journey-step">
-                                    <span className="mk-step-dot" />
-                                    <span>بسته‌بندی استریل</span>
-                                  </div>
-                                  <div className="mk-journey-divider" />
-                                  <div className="mk-journey-step">
-                                    <span className="mk-step-dot" />
-                                    <span>حمل با ماشین یخچال‌دار</span>
-                                  </div>
-                                  <div className="mk-journey-divider" />
-                                  <div className="mk-journey-step">
-                                    <span className="mk-step-dot" />
-                                    <span>تحویل درب منزل</span>
+                                <div className="mk-book-cart-summary">
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "12.5px" }}>
+                                    <span style={{ color: "#5D686E" }}>مبلغ کل پرداخت‌شده:</span>
+                                    <strong style={{ color: "#005B48", fontSize: "14.5px" }}>{activeOrder.finalPrice}</strong>
                                   </div>
                                 </div>
-                              </div>
 
-                              {/* Footer Actions */}
-                              <footer className="mk-passport-foot">
-                                <div className="mk-passport-total">
-                                  <span>مبلغ کل پرداختی:</span>
-                                  <strong>{activeOrder.finalPrice}</strong>
-                                </div>
-                                <div className="mk-passport-actions">
+                                <div className="mk-book-cart-actions">
                                   <button
                                     type="button"
-                                    className="mk-passport-pdf-btn"
-                                    onClick={() => handleDownloadOrderPdf("book", activeOrder, buyerInfo)}
-                                    title="دریافت نسخه چاپی و PDF رسید"
+                                    className="mk-book-pay-btn"
+                                    onClick={() => setDocViewMode("invoice")}
                                   >
-                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none">
-                                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                      <polyline points="7 10 12 15 17 10" />
-                                      <line x1="12" y1="15" x2="12" y2="3" />
-                                    </svg>
-                                    <span>دانلود رسید و فاکتور PDF</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="mk-passport-reorder-btn"
-                                    onClick={() => {
-                                      setDocViewMode("invoice");
-                                    }}
-                                  >
-                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.4" fill="none">
                                       <circle cx="8" cy="21" r="1" />
                                       <circle cx="19" cy="21" r="1" />
                                       <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
                                     </svg>
-                                    <span>مشاهده سبد خرید</span>
+                                    <span>سفارش جدید</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="mk-book-pdf-btn"
+                                    onClick={() => handleDownloadOrderPdf("book", activeOrder, buyerInfo)}
+                                    title="دانلود رسید رسمی PDF"
+                                  >
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                      <polyline points="7 10 12 15 17 10" />
+                                      <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    <span>دانلود PDF رسید</span>
                                   </button>
                                 </div>
-                              </footer>
-                            </article>
+                              </div>
+                            )
                           )}
                         </div>
-                      )
+                      </div>
                     )}
 
-                    {/* View 2: Live Active Shopping Cart & Checkout (سبد خرید جاری و سفارش جدید) */}
+                    {/* View 2: Active Cart (Open Luxury Hardcover Order Preparation Ledger) */}
                     {docViewMode === "invoice" && (
-                      <article className="mk-real-invoice">
-                        {/* Invoice Header */}
-                        <header className="mk-invoice-head">
-                          <div className="mk-invoice-title-block">
-                            <h3>سبد خرید جاری</h3>
-                            <span>محصولات تازه انتخابی شما از چراگاه کوهستان</span>
+                      <div className="mk-book-spread">
+                        {/* Center Spine 3D Shadow & Ribbon */}
+                        <div className="mk-book-center-spine" aria-hidden="true">
+                          <span className="mk-book-spine-stitch" />
+                        </div>
+                        <div className="mk-book-silk-ribbon" aria-hidden="true" />
+
+                        {/* Right Page: Artistic Plate — مرد کوهستان به همراه کارگران در حال بسته‌بندی سفارش‌های جدید */}
+                        <div className="mk-book-right-page">
+                          <div className="mk-book-art-frame">
+                            <Image
+                              src="/brand/v2/book/cat-cover-team.png"
+                              alt="مرد کوهستان و کارگران در حال بسته‌بندی سفارش‌های جدید"
+                              fill
+                              sizes="(max-width: 900px) 100vw, 400px"
+                              className="mk-book-art-img"
+                              priority
+                            />
+                            <div className="mk-book-art-overlay">
+                              <span className="mk-book-art-badge">
+                                <span>🌿</span>
+                                <span>آماده‌سازی روزانه در کارگاه مرتع</span>
+                              </span>
+                              <div className="mk-book-art-caption">
+                                <h3>بسته‌بندی تازه با دستان مرد کوهستان</h3>
+                                <p>برش دقیق، استریل بهداشتی و آماده‌سازی برای ارسال یخچال‌دار</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="mk-invoice-meta-block">
-                            {cart && cart.items && cart.items.length > 0 && (
+
+                          <div className="mk-book-art-story">
+                            <span className="mk-story-tag">
+                              <span>🚚</span>
+                              <strong>تحویل اختصاصی درب منزل</strong>
+                            </span>
+                            <p className="mk-story-text">
+                              سفارش شما در دمای ۲.۴°C بسته‌بندی شده و قبل از حرکت ناوگان، سفیر کوهستان با شماره‌تان جهت هماهنگی تماس می‌گیرد.
+                            </p>
+                          </div>
+
+                          <div className="mk-book-art-props-grid">
+                            <div className="mk-prop-card">
+                              <span className="mk-prop-icon">👤</span>
+                              <div>
+                                <small>تحویل‌گیرنده</small>
+                                <strong>{displayName}</strong>
+                              </div>
+                            </div>
+                            <div className="mk-prop-card">
+                              <span className="mk-prop-icon">📞</span>
+                              <div>
+                                <small>تماس هماهنگی</small>
+                                <strong>{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Left Page: Interactive Shopping Cart & Checkout */}
+                        <div className="mk-book-left-page">
+                          <div className="mk-ledger-head">
+                            <h3>
+                              <span>🛒</span>
+                              <span>سبد خرید جاری شما</span>
+                            </h3>
+                            {cart && cart.items && cart.items.length > 0 ? (
                               <button
                                 type="button"
                                 style={{
                                   background: "#FFEBEE",
                                   border: "1px solid #FFCDD2",
                                   color: "#D32F2F",
-                                  fontSize: "12px",
+                                  fontSize: "11px",
                                   fontWeight: 800,
-                                  padding: "5px 12px",
-                                  borderRadius: "8px",
+                                  padding: "3px 8px",
+                                  borderRadius: "6px",
                                   cursor: "pointer",
-                                  transition: "all 0.2s ease",
                                 }}
                                 onClick={() => clearCart()}
-                                title="حذف تمام اقلام و انصراف از خرید فعلی"
                               >
-                                تخلیه سبد خرید
+                                تخلیه سبد
                               </button>
+                            ) : (
+                              <span>سبد خالی است</span>
                             )}
-                            <span className="mk-invoice-serial-badge">
-                              {cartItemsCount > 0 ? `${cartItemsCount} قلم کالا در سبد` : "سبد خالی است"}
-                            </span>
                           </div>
-                        </header>
 
-                        {/* Buyer Details */}
-                        <div className="mk-invoice-buyer-strip">
-                          <div className="mk-invoice-buyer-item">
-                            <span>خریدار:</span>
-                            <strong>{displayName}</strong>
-                          </div>
-                          <div className="mk-invoice-buyer-item">
-                            <span>شماره تماس:</span>
-                            <strong>{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>
-                          </div>
-                          <div className="mk-invoice-buyer-item" style={{ gridColumn: "span 2" }}>
-                            <span>نشانی تحویل:</span>
-                            <strong style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                              {addresses[0] ? `${addresses[0].city}، ${addresses[0].district}، ${addresses[0].address_line}` : "تهران، زعفرانیه، خیابان آصف، پلاک ۱۲"}
-                            </strong>
-                          </div>
-                        </div>
+                          {cart && cart.items && cart.items.length > 0 ? (
+                            <>
+                              <div className="mk-book-cart-table-wrap">
+                                <table className="mk-book-cart-table">
+                                  <thead>
+                                    <tr>
+                                      <th>محصول</th>
+                                      <th>سهم/برش</th>
+                                      <th>تعداد</th>
+                                      <th>مبلغ کل</th>
+                                      <th>حذف</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {cart.items.map((it) => (
+                                      <tr key={it.id}>
+                                        <td>
+                                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                            <div style={{ width: "30px", height: "30px", borderRadius: "6px", background: "#FAF8F5", border: "1px solid #E5E0D8", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+                                              <Image src={it.product_image || "/brand/goosht.png"} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+                                            </div>
+                                            <strong style={{ fontSize: "12px" }}>{it.product_name}</strong>
+                                          </div>
+                                        </td>
+                                        <td style={{ fontSize: "11.5px", color: "#5D686E" }}>{it.portion}</td>
+                                        <td>
+                                          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                                            <button
+                                              type="button"
+                                              className="mk-qty-btn"
+                                              onClick={() => {
+                                                if (it.quantity <= 1) {
+                                                  removeFromCart(it.id);
+                                                } else {
+                                                  updateQuantity(it.id, it.quantity - 1);
+                                                }
+                                              }}
+                                            >
+                                              -
+                                            </button>
+                                            <strong style={{ fontSize: "12.5px", minWidth: "14px", textAlign: "center" }}>{it.quantity}</strong>
+                                            <button
+                                              type="button"
+                                              className="mk-qty-btn"
+                                              onClick={() => updateQuantity(it.id, it.quantity + 1)}
+                                            >
+                                              +
+                                            </button>
+                                          </div>
+                                        </td>
+                                        <td style={{ fontWeight: 900, color: "#005B48", fontSize: "12.5px" }}>
+                                          {it.total_price_toman.toLocaleString("fa-IR")} تومان
+                                        </td>
+                                        <td>
+                                          <button
+                                            type="button"
+                                            style={{ background: "transparent", border: "none", color: "#D32F2F", cursor: "pointer", fontSize: "14px", padding: "2px" }}
+                                            onClick={() => removeFromCart(it.id)}
+                                            title="حذف"
+                                          >
+                                            ✕
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
 
-                        {/* Real Cart Items List */}
-                        {cart && cart.items && cart.items.length > 0 ? (
-                          <div className="mk-invoice-table-wrap">
-                            <table className="mk-invoice-table">
-                              <thead>
-                                <tr>
-                                  <th>محصول انتخابی</th>
-                                  <th>وزن و نوع برش</th>
-                                  <th>تعداد</th>
-                                  <th>قیمت کل</th>
-                                  <th>حذف</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {cart.items.map((it) => (
-                                  <tr key={it.id}>
-                                    <td>
-                                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                        <div style={{ width: "40px", height: "40px", borderRadius: "8px", background: "#FAF8F5", border: "1px solid #E5E0D8", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                                          <Image src={it.product_image || "/brand/goosht.png"} alt="" width={32} height={32} style={{ objectFit: "contain" }} />
-                                        </div>
-                                        <strong style={{ fontSize: "14px", color: "#1D1D1B" }}>{it.product_name}</strong>
-                                      </div>
-                                    </td>
-                                    <td style={{ fontSize: "13px", color: "#5D686E" }}>{it.portion} · {it.cut_type}</td>
-                                    <td>
-                                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <button
-                                          type="button"
-                                          style={{ width: "30px", height: "30px", borderRadius: "8px", background: "#F4F0E8", border: "1px solid #D4A359", color: "#1D1D1B", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px" }}
-                                          onClick={() => {
-                                            if (it.quantity <= 1) {
-                                              removeFromCart(it.id);
-                                            } else {
-                                              updateQuantity(it.id, it.quantity - 1);
-                                            }
-                                          }}
-                                          title={it.quantity <= 1 ? "حذف کالا از سبد خرید" : "کاهش تعداد"}
-                                        >
-                                          -
-                                        </button>
-                                        <strong style={{ fontSize: "15px", minWidth: "20px", textAlign: "center", color: "#1D1D1B" }}>{it.quantity}</strong>
-                                        <button
-                                          type="button"
-                                          style={{ width: "30px", height: "30px", borderRadius: "8px", background: "#F4F0E8", border: "1px solid #D4A359", color: "#1D1D1B", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px" }}
-                                          onClick={() => updateQuantity(it.id, it.quantity + 1)}
-                                          title="افزایش تعداد"
-                                        >
-                                          +
-                                        </button>
-                                      </div>
-                                    </td>
-                                    <td style={{ fontWeight: 900, color: "#005B48", fontSize: "14.5px" }}>
-                                      {it.total_price_toman.toLocaleString("fa-IR")} تومان
-                                    </td>
-                                    <td>
-                                      <button
-                                        type="button"
-                                        style={{ background: "transparent", border: "none", color: "#D32F2F", cursor: "pointer", fontSize: "18px", padding: "4px" }}
-                                        onClick={() => removeFromCart(it.id)}
-                                        title="حذف کامل از سبد"
-                                      >
-                                        ✕
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        ) : (
-                          <div style={{ padding: "36px 20px", textAlign: "center", background: "#FFFFFF", borderRadius: "16px", border: "1.5px dashed #D4A359" }}>
-                            <p style={{ margin: "0 0 10px", color: "#1D1D1B", fontSize: "16px", fontWeight: 900 }}>
-                              سبد خرید شما در حال حاضر خالی است!
-                            </p>
-                            <p style={{ margin: "0 0 20px", color: "#5D686E", fontSize: "13.5px" }}>
-                              برای سفارش محصولات تازه مرتع (گوشت، ماهی، عسل و لبنیات)، کافی است وارد بخش محصولات شوید.
-                            </p>
-                            <button
-                              type="button"
-                              className="mk-trolley-empty-btn"
-                              onClick={() => {
-                                handleCloseWorkspace();
-                                setTimeout(() => {
-                                  const el = document.getElementById("for-home-kitchen");
-                                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                                }, 100);
-                              }}
-                            >
-                              مشاهده و انتخاب محصولات تازه
-                            </button>
-                          </div>
-                        )}
+                              <div className="mk-book-cart-summary">
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
+                                  <span style={{ color: "#5D686E" }}>جمع اقلام سبد:</span>
+                                  <strong>{cartTotalPriceToman.toLocaleString("fa-IR")} تومان</strong>
+                                </div>
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
+                                  <span style={{ color: "#5D686E" }}>ارسال زنجیره سرد:</span>
+                                  <strong style={{ color: cartTotalPriceToman >= 500000 ? "#2E7D32" : "#1D1D1B" }}>
+                                    {cartTotalPriceToman >= 500000 ? "رایگان (طرح همسفر)" : "۴۰,۰۰۰ تومان"}
+                                  </strong>
+                                </div>
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13.5px", paddingTop: "4px", borderTop: "1px dashed #E5E0D8" }}>
+                                  <span style={{ fontWeight: 800 }}>مبلغ نهایی قابل پرداخت:</span>
+                                  <strong style={{ color: "#005B48", fontSize: "15px", fontWeight: 900 }}>
+                                    {(cartTotalPriceToman >= 500000 ? cartTotalPriceToman : cartTotalPriceToman + 40000).toLocaleString("fa-IR")} تومان
+                                  </strong>
+                                </div>
+                              </div>
 
-                        {/* Friendly Delivery & Call Reassurance Notice */}
-                        <div className="mk-invoice-notice-box">
-                          <div className="mk-invoice-notice-icon">✓</div>
-                          <div className="mk-invoice-notice-content">
-                            <strong>هماهنگی تلفنی و ارسال با ماشین یخچال‌دار:</strong>
-                            <p>
-                              سفارش شما با بسته‌بندی خنک (۲.۴°C) ارسال می‌شه. قبل از ارسال، سفیر کوهستان با شماره‌تون (<strong>{phone || "۰۹۳۷۹۱۴۶۱۳۰"}</strong>) تماس می‌گیره تا زمان دقیق رسیدن بسته رو باهاتون هماهنگ کنه.
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Invoice Footer Actions */}
-                        <footer className="mk-invoice-foot">
-                          <div className="mk-invoice-total-box">
-                            <small>مبلغ نهایی قابل پرداخت:</small>
-                            <strong>
-                              {cart && cart.items && cart.items.length > 0
-                                ? `${(cartTotalPriceToman >= 500000 ? cartTotalPriceToman - 40000 : cartTotalPriceToman).toLocaleString("fa-IR")} تومان`
-                                : CURRENT_PENDING_INVOICE.payableAmount}
-                            </strong>
-                          </div>
-                          <div className="mk-invoice-actions">
-                            <button
-                              type="button"
-                              className="mk-invoice-pdf-btn"
-                              onClick={() => {
-                                const invoiceData = cart && cart.items && cart.items.length > 0
-                                  ? {
+                              <div className="mk-book-cart-actions">
+                                <button
+                                  type="button"
+                                  className="mk-book-pay-btn"
+                                  onClick={() => setIsPayModalOpen(true)}
+                                >
+                                  <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="2.4" fill="none">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                  </svg>
+                                  <span>پرداخت آنلاین و ثبت نهایی</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  className="mk-book-pdf-btn"
+                                  onClick={() => {
+                                    const invoiceData = {
                                       invoiceNumber: `MK-INV-${Math.floor(10000 + Math.random() * 90000)}`,
                                       date: "امروز",
-                                      payableAmount: `${(cartTotalPriceToman >= 500000 ? cartTotalPriceToman - 40000 : cartTotalPriceToman).toLocaleString("fa-IR")} تومان`,
+                                      payableAmount: `${(cartTotalPriceToman >= 500000 ? cartTotalPriceToman : cartTotalPriceToman + 40000).toLocaleString("fa-IR")} تومان`,
                                       items: cart.items.map((it, idx) => ({
                                         row: idx + 1,
                                         name: it.product_name,
@@ -3759,33 +3754,46 @@ function ProfileContent() {
                                         weight: it.portion,
                                         total: `${it.total_price_toman.toLocaleString("fa-IR")} تومان`,
                                       })),
-                                    }
-                                  : CURRENT_PENDING_INVOICE;
-                                handleDownloadOrderPdf("invoice", invoiceData, buyerInfo);
-                              }}
-                              title="دریافت فایل چاپی و PDF پیش‌فاکتور"
-                            >
-                              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.2" fill="none">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                              </svg>
-                              <span>دانلود پیش‌فاکتور PDF</span>
-                            </button>
-                            <button
-                              type="button"
-                              className="mk-invoice-pay-btn"
-                              onClick={() => setIsPayModalOpen(true)}
-                            >
-                              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2.4" fill="none">
-                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                                <line x1="1" y1="10" x2="23" y2="10" />
-                              </svg>
-                              <span>پرداخت آنلاین و ثبت نهایی</span>
-                            </button>
-                          </div>
-                        </footer>
-                      </article>
+                                    };
+                                    handleDownloadOrderPdf("invoice", invoiceData, buyerInfo);
+                                  }}
+                                  title="دانلود پیش‌فاکتور رسمی PDF"
+                                >
+                                  <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.2" fill="none">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                  </svg>
+                                  <span>پیش‌فاکتور PDF</span>
+                                </button>
+                              </div>
+                            </>
+                          ) : (
+                            <div style={{ padding: "30px 16px", textAlign: "center", background: "#FFFFFF", borderRadius: "10px", border: "1.5px dashed #D4A359", margin: "auto 0" }}>
+                              <p style={{ margin: "0 0 6px", color: "#1D1D1B", fontSize: "14.5px", fontWeight: 900 }}>
+                                سبد خرید شما در حال حاضر خالی است
+                              </p>
+                              <p style={{ margin: "0 0 14px", color: "#5D686E", fontSize: "12px" }}>
+                                برای سفارش فرآورده‌های تازه مرتع، وارد بخش محصولات شوید.
+                              </p>
+                              <button
+                                type="button"
+                                className="mk-trolley-empty-btn"
+                                style={{ padding: "8px 16px", fontSize: "12.5px" }}
+                                onClick={() => {
+                                  handleCloseWorkspace();
+                                  setTimeout(() => {
+                                    const el = document.getElementById("for-home-kitchen");
+                                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                                  }, 100);
+                                }}
+                              >
+                                مشاهده و انتخاب محصولات تازه
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
 
