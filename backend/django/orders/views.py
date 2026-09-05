@@ -173,41 +173,6 @@ def _seed_demo_orders_for_user(user):
         quantity=1,
         total_price_toman=660000,
     )
-        user=user,
-        status=Order.Status.DELIVERED,
-        pasture_name="دامنه‌های سبلان و آبگرم سرعین",
-        altitude="۲,۸۰۰ متر از سطح دریا",
-        grazing_info="گون و آویشن کوهستانی سبلان",
-        vet_code="IR-77412 نظام دامپزشکی",
-        pack_date="۱۵ مرداد ۱۴۰۵ - ۰۶:۰۰",
-        temperature_log="۲.۱°C (زنجیره سرد کنترل‌شده)",
-        receiver_name=getattr(user, "customer_profile", None) and user.customer_profile.display_name or "همسفر مرد کوهستان",
-        receiver_phone=getattr(user, "customer_profile", None) and user.customer_profile.phone or "۰۹۳۷۹۱۴۶۱۳۰",
-        shipping_address="تهران، زعفرانیه، خیابان آصف، کوچه رز، پلاک ۱۲",
-        total_amount_toman=1150000,
-        discount_amount_toman=60000,
-        final_amount_toman=1090000,
-    )
-    OrderItem.objects.create(
-        order=o3,
-        product_name="عسل خام صخره‌ای سبلان (۱ کیلوگرم)",
-        product_image="/brand/home-ready.png",
-        cut_type="برداشت مستقیم کندوهای ییلاق",
-        portion="۱ کیلوگرم",
-        unit_price_toman=490000,
-        quantity=1,
-        total_price_toman=490000,
-    )
-    OrderItem.objects.create(
-        order=o3,
-        product_name="پنیر کوزه‌ای کهنه کوهستان (۱ کیلوگرم)",
-        product_image="/brand/panir.png",
-        cut_type="رسیده در غارهای طبیعی سرعین",
-        portion="۱ کیلوگرم",
-        unit_price_toman=660000,
-        quantity=1,
-        total_price_toman=660000,
-    )
 
 
 class CartView(APIView):
