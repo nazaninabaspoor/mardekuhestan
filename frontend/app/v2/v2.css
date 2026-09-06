@@ -14379,7 +14379,8 @@ html.is-kitchen-travel body {
   background: #d4a359;
 }
 
-#for-home-kitchen.is-kitchen-arrived {
+#for-home-kitchen.is-kitchen-arrived,
+#v2-catalogs.is-kitchen-arrived {
   animation: mk-kitchen-arrive 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -14398,7 +14399,8 @@ html.is-kitchen-travel body {
 
 @media (prefers-reduced-motion: reduce) {
   .mk-kitchen-travel,
-  #for-home-kitchen.is-kitchen-arrived {
+  #for-home-kitchen.is-kitchen-arrived,
+  #v2-catalogs.is-kitchen-arrived {
     animation: none !important;
     transition: none !important;
   }
