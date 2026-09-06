@@ -183,10 +183,6 @@ export function DigikalaOrdersList({
 
                 {/* Order Action Buttons */}
                 <div className="mk-order-card-foot">
-                  <div className="mk-order-items-count-text">
-                    <span>مجموع اقلام: <strong>{toPersianDigits(ord.items.length)} قلم کالا</strong></span>
-                  </div>
-
                   <div className="mk-order-buttons-group">
                     <button
                       type="button"
@@ -234,6 +230,9 @@ export function DigikalaOrdersList({
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </button>
+                  </div>
+                  <div className="mk-order-items-count-text">
+                    <span>مجموع اقلام: <strong>{toPersianDigits(ord.items.length)} قلم کالا</strong></span>
                   </div>
                 </div>
 

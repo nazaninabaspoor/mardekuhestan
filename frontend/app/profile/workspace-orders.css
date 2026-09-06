@@ -1082,10 +1082,11 @@ html.is-orders-route .site-canvas {
 }
 
 .mk-order-card-foot {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  column-gap: 16px;
+  justify-content: flex-start;
+  gap: 12px 16px;
   padding-top: 14px;
   border-top: 1px dashed rgba(0, 91, 72, 0.14);
 }
@@ -1100,9 +1101,9 @@ html.is-orders-route .site-canvas {
 .mk-order-buttons-group {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 8px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .mk-reorder-action-btn,
@@ -1154,14 +1155,14 @@ html.is-orders-route .site-canvas {
 }
 
 @media (max-width: 860px) {
-  .mk-order-card-head,
-  .mk-order-card-foot {
+  .mk-order-card-head {
     grid-template-columns: 1fr;
     row-gap: 12px;
   }
 
   .mk-order-amount-box,
-  .mk-order-buttons-group {
+  .mk-order-buttons-group,
+  .mk-order-card-foot {
     justify-content: flex-start;
   }
 }
