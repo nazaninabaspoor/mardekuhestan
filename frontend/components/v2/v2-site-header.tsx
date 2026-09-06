@@ -33,7 +33,7 @@ function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
   } as const;
 
   return (
-    <svg className="v2-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="v2-nav-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       {paths[icon]}
     </svg>
   );

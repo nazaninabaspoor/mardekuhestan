@@ -10,7 +10,7 @@ export const MK_OPEN_AI_DESK = "mk-open-ai-desk";
 
 function AiSparkIcon() {
   return (
-    <svg className="v2-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="v2-nav-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z" />
     </svg>
   );
