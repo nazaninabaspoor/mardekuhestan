@@ -82,14 +82,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-inline-end: -18px;
+  margin-inline-end: -36px;
   animation: mk-soon-breathe 5.6s ease-in-out infinite;
 }
 
 .mk-soon-man {
   position: relative;
   z-index: 1;
-  width: min(32vw, 280px);
+  width: min(30vw, 250px);
   height: auto;
   max-height: min(68dvh, 560px);
   object-fit: contain;
