@@ -67,13 +67,14 @@
 }
 
 .mk-soon-pair {
+  --soon-man-w: min(15vw, 120px);
   display: flex;
   flex-direction: row;
-  direction: rtl;
+  direction: ltr;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  width: auto;
+  gap: 0;
+  width: max-content;
   max-width: min(720px, 100%);
 }
 
@@ -81,22 +82,29 @@
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-inline-end: 0;
+  display: block;
+  width: var(--soon-man-w);
+  line-height: 0;
+  /* eat the empty PNG beside the torso; hand sits in the air above the title */
+  margin: 1.2cm 0 0 calc(var(--soon-man-w) * -0.22 + 0.8cm);
   animation: mk-soon-breathe 5.6s ease-in-out infinite;
+}
+
+.mk-soon-figure :is(img, span) {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .mk-soon-man {
   position: relative;
   z-index: 1;
-  width: min(30vw, 250px);
-  height: auto;
-  max-height: min(68dvh, 560px);
+  width: 100%;
+  height: auto !important;
+  max-height: min(40dvh, 300px);
   object-fit: contain;
-  object-position: bottom center;
-  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.5));
+  object-position: left bottom;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.36));
   pointer-events: none;
   user-select: none;
 }
@@ -117,7 +125,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
   }
 }
 
@@ -125,14 +133,18 @@
   position: relative;
   z-index: 2;
   pointer-events: auto;
-  flex: 0 1 320px;
-  width: min(320px, 100%);
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: min(28ch, 52vw);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0;
   direction: rtl;
   text-align: right;
+  /* drop copy below the raised hand, then keep a 6px air gap from the torso */
+  margin-top: clamp(36px, 4.5vw, 52px);
+  padding-inline-end: 6px;
 }
 
 .mk-soon-service,
@@ -203,6 +215,7 @@
 
 @media (max-width: 860px) {
   .mk-soon-pair {
+    --soon-man-w: min(34vw, 132px);
     flex-direction: column;
     align-items: stretch;
     gap: 20px;
@@ -211,16 +224,18 @@
   .mk-soon-voice {
     flex-basis: auto;
     width: 100%;
+    margin-top: 0;
+    padding-inline-end: 0;
   }
 
   .mk-soon-figure {
     order: 2;
-    margin-inline-end: 0;
+    margin: 0;
   }
 
   .mk-soon-man {
-    width: min(58vw, 240px);
-    max-height: 38dvh;
+    width: min(34vw, 132px);
+    max-height: 26dvh;
   }
 }
 

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 
 export type ComingSoonKind = "wallet" | "subscription";
@@ -40,23 +39,6 @@ export function ProfileComingSoon({
       <div className="mk-soon-stage" role="dialog" aria-modal="true" aria-labelledby="mk-soon-word">
         <div className="mk-soon-pair">
           <motion.div
-            className="mk-soon-figure"
-            initial={{ opacity: 0, y: 48 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="mk-soon-ground" aria-hidden="true" />
-            <Image
-              src="/brand/profile/soon-mountain-man-stand.png"
-              alt="مرد کوهستان"
-              width={520}
-              height={780}
-              priority
-              className="mk-soon-man"
-            />
-          </motion.div>
-
-          <motion.div
             className="mk-soon-voice"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,6 +52,23 @@ export function ProfileComingSoon({
             <button type="button" className="mk-soon-back" onClick={onClose}>
               بازگشت به میز
             </button>
+          </motion.div>
+
+          <motion.div
+            className="mk-soon-figure"
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="mk-soon-ground" aria-hidden="true" />
+            {/* native img: Next/Image box was wider than the painted figure */}
+            <img
+              src="/brand/profile/soon-mountain-man-stand.png"
+              alt="مرد کوهستان"
+              width={429}
+              height={1112}
+              className="mk-soon-man"
+            />
           </motion.div>
         </div>
       </div>
