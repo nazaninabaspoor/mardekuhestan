@@ -14026,3 +14026,386 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 .pdetail-ai-btn:hover {
   background: rgba(212, 163, 89, 0.28);
 }
+
+/* Header nav pills — same language as ورود / عضویت */
+.site-header--v2 .v2-brand-cluster {
+  gap: 10px;
+}
+
+.site-header--v2 .v2-primary-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-header--v2 .v2-primary-nav .v2-nav-link,
+.site-header--v2 .v2-primary-nav .v2-nav-ai,
+.site-header--v2 .v2-mobile-panel .v2-nav-link,
+.site-header--v2 .v2-mobile-panel .v2-nav-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 240, 232, 0.4);
+  background: rgba(244, 240, 232, 0.12);
+  color: #f4f0e8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header--v2 .v2-primary-nav .v2-nav-link:hover,
+.site-header--v2 .v2-primary-nav .v2-nav-link:focus-visible,
+.site-header--v2 .v2-primary-nav .v2-nav-ai:hover,
+.site-header--v2 .v2-primary-nav .v2-nav-ai:focus-visible,
+.site-header--v2 .v2-mobile-panel .v2-nav-link:hover,
+.site-header--v2 .v2-mobile-panel .v2-nav-link:focus-visible,
+.site-header--v2 .v2-mobile-panel .v2-nav-ai:hover,
+.site-header--v2 .v2-mobile-panel .v2-nav-ai:focus-visible {
+  background: #f4f0e8;
+  color: #005b48;
+  border-color: #f4f0e8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.site-header--v2 .v2-primary-nav .v2-nav-icon,
+.site-header--v2 .v2-mobile-panel .v2-nav-icon {
+  position: static;
+  top: auto;
+  right: auto;
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: currentColor;
+  opacity: 1;
+  pointer-events: none;
+  filter: none;
+  transform: none;
+}
+
+.site-header--v2 .v2-primary-nav .v2-nav-label,
+.site-header--v2 .v2-mobile-panel .v2-nav-label {
+  transform: none;
+}
+
+.site-header--v2 .v2-mobile-panel .v2-nav-link,
+.site-header--v2 .v2-mobile-panel .v2-nav-ai {
+  width: 100%;
+  justify-content: flex-start;
+  min-height: 44px;
+}
+
+@media (max-width: 1280px) {
+  .site-header--v2 .v2-primary-nav .v2-nav-link,
+  .site-header--v2 .v2-primary-nav .v2-nav-ai {
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+.auth-ai-invite {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 163, 89, 0.38);
+  background: rgba(0, 91, 72, 0.07);
+}
+
+.auth-ai-invite-kicker {
+  margin: 0 0 4px;
+  color: #005b48;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.auth-ai-invite-line {
+  margin: 0;
+  color: #1d1d1b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mk-ai-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.mk-ai-gate-veil {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(5, 14, 11, 0.92);
+  cursor: pointer;
+}
+
+.mk-ai-gate-card {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  padding: 36px 32px 28px;
+  text-align: center;
+  color: #1d1d1b;
+  background: #f4f0e8;
+  border-radius: 20px;
+  border: 1px solid #005b48;
+  box-shadow:
+    0 0 0 1px #d4a359,
+    0 28px 64px rgba(0, 8, 6, 0.42);
+}
+
+.mk-ai-gate-peak {
+  position: absolute;
+  top: 0;
+  right: 18%;
+  left: 18%;
+  height: 10px;
+  background: #005b48;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.mk-ai-gate-mark {
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px auto 14px;
+  object-fit: contain;
+}
+
+.mk-ai-gate-kicker {
+  margin: 0 0 6px;
+  color: #005b48;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mk-ai-gate-card h2 {
+  margin: 0;
+  color: #005b48;
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.mk-ai-gate-rule {
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin: 14px auto;
+  background: #d4a359;
+}
+
+.mk-ai-gate-line {
+  margin: 0 0 10px;
+  color: #1d1d1b;
+  font-size: 0.95rem;
+  line-height: 1.9;
+}
+
+.mk-ai-gate-motto {
+  margin: 0 0 22px;
+  color: #d4a359;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mk-ai-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mk-ai-gate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-ai-gate-btn.is-forest {
+  border: 1px solid #005b48;
+  background: #005b48;
+  color: #f4f0e8;
+}
+
+.mk-ai-gate-btn.is-forest:hover,
+.mk-ai-gate-btn.is-forest:focus-visible {
+  background: #005040;
+}
+
+.mk-ai-gate-btn.is-cream {
+  border: 1px solid rgba(0, 91, 72, 0.28);
+  background: #fff;
+  color: #005b48;
+}
+
+.mk-ai-gate-btn.is-cream:hover,
+.mk-ai-gate-btn.is-cream:focus-visible {
+  border-color: #005b48;
+  background: #f4f0e8;
+}
+
+.mk-ai-gate-later {
+  display: block;
+  margin: 14px auto 0;
+  border: 0;
+  background: none;
+  color: #5d686e;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mk-ai-gate-later:hover {
+  color: #903828;
+}
+
+/* Cinematic descent into the products section */
+html.is-kitchen-travel,
+html.is-kitchen-travel body {
+  overflow: hidden !important;
+}
+
+.mk-kitchen-travel {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, -8%, 0);
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(212, 163, 89, 0.14), transparent 42%),
+    linear-gradient(180deg, #00362b 0%, #005040 38%, #021510 100%);
+  clip-path: inset(0 0 100% 0);
+  transition:
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    clip-path 560ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.mk-kitchen-travel.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  clip-path: inset(0 0 0 0);
+}
+
+.mk-kitchen-travel.is-out {
+  opacity: 1;
+  transform: translate3d(0, -6%, 0);
+  clip-path: inset(0 0 100% 0);
+  transition:
+    opacity 280ms 360ms ease,
+    transform 720ms cubic-bezier(0.7, 0, 0.3, 1),
+    clip-path 720ms cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.mk-kitchen-travel-mist {
+  position: absolute;
+  inset: auto 0 0;
+  height: 46%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(244, 240, 232, 0.12), transparent 68%);
+}
+
+.mk-kitchen-travel-peak {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 92px;
+  background: #021510;
+  clip-path: polygon(0 100%, 0 58%, 18% 78%, 36% 42%, 50% 68%, 64% 28%, 78% 62%, 100% 46%, 100% 100%);
+}
+
+.mk-kitchen-travel-word {
+  position: absolute;
+  top: 46%;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: #f4f0e8;
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  transform: translate3d(0, 18px, 0);
+  opacity: 0;
+}
+
+.mk-kitchen-travel.is-in .mk-kitchen-travel-word {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 480ms 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 680ms 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-kitchen-travel.is-out .mk-kitchen-travel-word {
+  opacity: 0;
+  transform: translate3d(0, -28px, 0);
+  transition: opacity 280ms ease, transform 420ms ease;
+}
+
+.mk-kitchen-travel-word i {
+  display: block;
+  width: 56px;
+  height: 2px;
+  background: #d4a359;
+}
+
+#for-home-kitchen.is-kitchen-arrived {
+  animation: mk-kitchen-arrive 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mk-kitchen-arrive {
+  from {
+    filter: brightness(0.72) saturate(0.92);
+    transform: scale(1.035);
+    transform-origin: center top;
+  }
+  to {
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+    transform-origin: center top;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-kitchen-travel,
+  #for-home-kitchen.is-kitchen-arrived {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { armWelcomeBellOnGesture, playWelcomeBell } from "@/lib/v2-bell-audio";
+import { consumeKitchenTravel, travelToKitchenSection } from "@/lib/travel-to-kitchen";
 
 function measureV2HeaderHeight(): number {
   const header = document.querySelector<HTMLElement>(".site-header--v2");
@@ -41,7 +42,19 @@ export function V2PageEffects() {
     const disarmBell = armWelcomeBellOnGesture();
     void playWelcomeBell();
 
+    let travelTimer = 0;
+    if (consumeKitchenTravel()) {
+      const tryTravel = (attempt = 0) => {
+        if (travelToKitchenSection()) return;
+        if (attempt < 16) {
+          travelTimer = window.setTimeout(() => tryTravel(attempt + 1), 50);
+        }
+      };
+      tryTravel();
+    }
+
     return () => {
+      window.clearTimeout(travelTimer);
       window.removeEventListener("resize", onResize);
       root.style.removeProperty("--v2-header-h");
       disarmBell();

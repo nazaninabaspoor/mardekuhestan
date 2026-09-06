@@ -22,6 +22,7 @@ import {
 } from "@/lib/api/orders";
 import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
 import { ProfileComingSoon, type ComingSoonKind } from "@/components/profile/profile-coming-soon";
+import { MK_OPEN_AI_DESK } from "@/components/header-ai-nav";
 
 type ActiveTab = "personal" | "ai-nutrition" | "wallet" | "subscription" | "orders";
 
@@ -1641,6 +1642,19 @@ function ProfileContent() {
     [router]
   );
 
+  useEffect(() => {
+    const openAiDesk = () => handleCardOpen("ai-nutrition");
+    window.addEventListener(MK_OPEN_AI_DESK, openAiDesk);
+    return () => window.removeEventListener(MK_OPEN_AI_DESK, openAiDesk);
+  }, [handleCardOpen]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (searchParams.get("open") !== "1") return;
+    if (tabParam !== "ai-nutrition") return;
+    handleCardOpen("ai-nutrition");
+  }, [user, tabParam, searchParams, handleCardOpen]);
+
   const handleCloseWorkspace = useCallback(() => {
     setOpenedTab(null);
     setComingSoon(null);
@@ -1825,6 +1839,7 @@ function ProfileContent() {
   }
 
   if (!user) {
+    const wantsAi = tabParam === "ai-nutrition";
     return (
       <div className="profile-page-wrapper">
         <ProfileSceneBackdrop />
@@ -1837,12 +1852,20 @@ function ProfileContent() {
               height={72}
               className="profile-guest-logo"
             />
-            <h2>ورود به باشگاه راه سبز</h2>
-            <p>برای مشاهده پنل اختصاصی، اطلاعات فردی، دستیار هوشمند و کیف پول، لطفاً وارد حساب خود شوید.</p>
+            <h2>{wantsAi ? "میز هوش مصنوعی بسته است" : "ورود به باشگاه راه سبز"}</h2>
+            <p>
+              {wantsAi
+                ? "دستیار تغذیه فقط برای همسفر خانواده باز می‌شود. ابتدا وارد شوید یا عضویت بگیرید."
+                : "برای مشاهده پنل اختصاصی، اطلاعات فردی، دستیار هوشمند و کیف پول، لطفاً وارد حساب خود شوید."}
+            </p>
             <button
               type="button"
               className="profile-btn-primary"
-              onClick={openLoginModal}
+              onClick={() =>
+                openLoginModal(
+                  wantsAi ? { next: "/profile?tab=ai-nutrition&open=1", reason: "ai" } : undefined,
+                )
+              }
             >
               ورود / عضویت در خانواده مرد کوهستان
             </button>

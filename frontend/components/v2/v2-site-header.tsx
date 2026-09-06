@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 
 import { CatalogSearchBox } from "@/components/catalog-search-box";
 import { AuthHeaderButton } from "@/components/auth-header-button";
 import { HeaderCartButton } from "@/components/header-cart-button";
 import { AuthModal } from "@/components/auth-modal";
+import { HeaderAiGate, HeaderAiNavItem } from "@/components/header-ai-nav";
+import { beginKitchenCover, markKitchenTravel, travelToKitchenSection } from "@/lib/travel-to-kitchen";
 
 const v2NavItems = [
   { id: "story", href: "/#v2-magazine", label: "داستان ما", icon: "book" },
@@ -32,8 +35,23 @@ function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
 }
 
 export function V2SiteHeader() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [aiGateOpen, setAiGateOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const goToProducts = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setOpen(false);
+    if (pathname === "/") {
+      travelToKitchenSection();
+      return;
+    }
+    markKitchenTravel();
+    beginKitchenCover();
+    router.push("/");
+  };
   const [logoReady, setLogoReady] = useState(false);
   const logoImageRef = useRef<HTMLImageElement>(null);
 
@@ -149,11 +167,17 @@ export function V2SiteHeader() {
 
               <nav className="v2-primary-nav" aria-label="منوی اصلی">
                 {v2NavItems.map((item) => (
-                  <Link key={item.id} href={item.href} className="v2-nav-link">
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className="v2-nav-link"
+                    onClick={item.id === "products" ? goToProducts : undefined}
+                  >
                     <V2NavIcon icon={item.icon} />
                     <span className="v2-nav-label">{item.label}</span>
                   </Link>
                 ))}
+                <HeaderAiNavItem onGuestClick={() => setAiGateOpen(true)} />
               </nav>
             </div>
 
@@ -212,15 +236,20 @@ export function V2SiteHeader() {
               key={item.id}
               href={item.href}
               className="v2-nav-link"
-              onClick={() => setOpen(false)}
+              onClick={item.id === "products" ? goToProducts : () => setOpen(false)}
             >
               <V2NavIcon icon={item.icon} />
               <span className="v2-nav-label">{item.label}</span>
             </Link>
           ))}
+          <HeaderAiNavItem
+            onGuestClick={() => setAiGateOpen(true)}
+            onNavigate={() => setOpen(false)}
+          />
         </div>
       </nav>
 
+      <HeaderAiGate open={aiGateOpen} onClose={() => setAiGateOpen(false)} />
       <AuthModal />
     </header>
   );

@@ -5,8 +5,10 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   AuthUser,
   getCurrentUser,
@@ -18,14 +20,21 @@ import {
 import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
 
 type AuthModalTab = "login" | "register";
+export type AuthReason = "ai" | null;
+
+export type OpenAuthOptions = {
+  next?: string;
+  reason?: AuthReason;
+};
 
 interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
   isModalOpen: boolean;
   modalTab: AuthModalTab;
-  openLoginModal: () => void;
-  openRegisterModal: () => void;
+  authReason: AuthReason;
+  openLoginModal: (options?: OpenAuthOptions) => void;
+  openRegisterModal: (options?: OpenAuthOptions) => void;
   closeAuthModal: () => void;
   setModalTab: (tab: AuthModalTab) => void;
   login: (email: string, pass: string) => Promise<void>;
@@ -44,10 +53,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTab, setModalTab] = useState<AuthModalTab>("login");
+  const [authReason, setAuthReason] = useState<AuthReason>(null);
+  const pendingNextRef = useRef<string | null>(null);
+
+  const applyOpenOptions = useCallback((options?: OpenAuthOptions) => {
+    pendingNextRef.current = options?.next ?? null;
+    setAuthReason(options?.reason ?? null);
+  }, []);
+
+  const finishAuth = useCallback(() => {
+    const dest = pendingNextRef.current;
+    pendingNextRef.current = null;
+    setAuthReason(null);
+    setIsModalOpen(false);
+    if (dest) router.push(dest);
+  }, [router]);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -69,17 +94,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user && token) setAccessToken(token);
   }, [user]);
 
-  const openLoginModal = useCallback(() => {
+  const openLoginModal = useCallback((options?: OpenAuthOptions) => {
+    applyOpenOptions(options);
     setModalTab("login");
     setIsModalOpen(true);
-  }, []);
+  }, [applyOpenOptions]);
 
-  const openRegisterModal = useCallback(() => {
+  const openRegisterModal = useCallback((options?: OpenAuthOptions) => {
+    applyOpenOptions(options);
     setModalTab("register");
     setIsModalOpen(true);
-  }, []);
+  }, [applyOpenOptions]);
 
   const closeAuthModal = useCallback(() => {
+    pendingNextRef.current = null;
+    setAuthReason(null);
     setIsModalOpen(false);
   }, []);
 
@@ -87,9 +116,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, pass: string) => {
       const payload = await loginAccount(email, pass);
       setUser(payload.user);
-      setIsModalOpen(false);
+      finishAuth();
     },
-    [],
+    [finishAuth],
   );
 
   const register = useCallback(
@@ -102,9 +131,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }) => {
       const payload = await registerAccount(input);
       setUser(payload.user);
-      setIsModalOpen(false);
+      finishAuth();
     },
-    [],
+    [finishAuth],
   );
 
   const updateUserProfile = useCallback(
@@ -131,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isModalOpen,
         modalTab,
+        authReason,
         openLoginModal,
         openRegisterModal,
         closeAuthModal,

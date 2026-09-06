@@ -9,6 +9,7 @@ export function AuthModal() {
   const {
     isModalOpen,
     modalTab,
+    authReason,
     closeAuthModal,
     setModalTab,
     login,
@@ -163,6 +164,15 @@ export function AuthModal() {
             </svg>
           </button>
         </div>
+
+        {authReason === "ai" && (
+          <div className="auth-ai-invite">
+            <p className="auth-ai-invite-kicker">دستیار تغذیه راه سبز</p>
+            <p className="auth-ai-invite-line">
+              اول وارد خانواده شوید؛ بعد میز هوش مصنوعی برایتان باز می‌شود.
+            </p>
+          </div>
+        )}
 
         {/* Tab switchers */}
         <div className="auth-modal-tabs" role="tablist">
