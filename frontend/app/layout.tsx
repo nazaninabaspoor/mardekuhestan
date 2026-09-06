@@ -13,6 +13,7 @@ import "./profile/workspace.css";
 import "./profile/workspace-ai.css";
 import "./profile/workspace-personal.css";
 import "./profile/workspace-orders.css";
+import "./profile/workspace-soon.css";
 
 const mardeKuhestan = localFont({
   src: [

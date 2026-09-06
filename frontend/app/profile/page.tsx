@@ -21,6 +21,7 @@ import {
   type ApiOrder,
 } from "@/lib/api/orders";
 import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
+import { ProfileComingSoon, type ComingSoonKind } from "@/components/profile/profile-coming-soon";
 
 type ActiveTab = "personal" | "ai-nutrition" | "wallet" | "subscription" | "orders";
 
@@ -1306,6 +1307,7 @@ function ProfileContent() {
   const [focusedTab, setFocusedTab] = useState<ActiveTab>("personal");
   /** Workspace content — only after explicit card click */
   const [openedTab, setOpenedTab] = useState<ActiveTab | null>(null);
+  const [comingSoon, setComingSoon] = useState<ComingSoonKind | null>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
   const aiThreadRef = useRef<HTMLDivElement>(null);
 
@@ -1609,6 +1611,7 @@ function ProfileContent() {
     (tab: ActiveTab) => {
       setFocusedTab(tab);
       setOpenedTab(null);
+      setComingSoon(null);
       if (tab === "orders") return;
       router.replace(`/profile?tab=${tab}`, { scroll: false });
     },
@@ -1623,6 +1626,14 @@ function ProfileContent() {
         window.open("/profile/orders", "_blank", "noopener,noreferrer");
         return;
       }
+      if (tab === "wallet" || tab === "subscription") {
+        setOpenedTab(null);
+        setFocusedTab(tab);
+        setComingSoon(tab);
+        router.replace(`/profile?tab=${tab}`, { scroll: false });
+        return;
+      }
+      setComingSoon(null);
       setFocusedTab(tab);
       setOpenedTab(tab);
       router.replace(`/profile?tab=${tab}`, { scroll: false });
@@ -1632,6 +1643,7 @@ function ProfileContent() {
 
   const handleCloseWorkspace = useCallback(() => {
     setOpenedTab(null);
+    setComingSoon(null);
   }, []);
 
   useEffect(() => {
@@ -1680,6 +1692,11 @@ function ProfileContent() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "Escape") {
+        setComingSoon(null);
+        return;
+      }
+      if (comingSoon) return;
       if (e.key === "ArrowLeft") {
         handleNextCard();
       } else if (e.key === "ArrowRight") {
@@ -1688,7 +1705,7 @@ function ProfileContent() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex]);
+  }, [selectedIndex, comingSoon]);
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1837,7 +1854,7 @@ function ProfileContent() {
 
   return (
     <div className="profile-page-wrapper">
-      <section className="profile-scene">
+      <section className={`profile-scene${comingSoon ? " is-soon-open" : ""}`}>
         <ProfileSceneBackdrop isWorkspaceOpen={openedTab !== null} />
 
         <motion.div
@@ -1910,6 +1927,15 @@ function ProfileContent() {
             </button>
           </div>
         </motion.div>
+
+        <AnimatePresence>
+          {comingSoon && (
+            <ProfileComingSoon
+              kind={comingSoon}
+              onClose={() => setComingSoon(null)}
+            />
+          )}
+        </AnimatePresence>
       </section>
 
       <AnimatePresence>
