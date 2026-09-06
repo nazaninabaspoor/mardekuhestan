@@ -10,13 +10,18 @@ import { AuthHeaderButton } from "@/components/auth-header-button";
 import { HeaderCartButton } from "@/components/header-cart-button";
 import { AuthModal } from "@/components/auth-modal";
 import { HeaderAiGate, HeaderAiNavItem } from "@/components/header-ai-nav";
-import { beginKitchenCover, markKitchenTravel, travelToKitchenSection } from "@/lib/travel-to-kitchen";
+import {
+  beginSectionCover,
+  markSectionTravel,
+  travelToSection,
+  type TravelTarget,
+} from "@/lib/travel-to-kitchen";
 
 const v2NavItems = [
-  { id: "story", href: "/#v2-magazine", label: "داستان ما", icon: "book" },
-  { id: "way", href: "/#coming-soon", label: "راه ما", icon: "mountain" },
+  { id: "story", href: "/#v2-catalogs", label: "داستان ما", icon: "book", travel: "catalogs" },
+  { id: "way", href: "/#v2-catalogs", label: "راه ما", icon: "mountain", travel: "catalogs" },
   { id: "chain", href: "/#v2-catalogs", label: "مسیر غذا", icon: "path" },
-  { id: "products", href: "/#for-home-kitchen", label: "محصولات", icon: "olive" },
+  { id: "products", href: "/#for-home-kitchen", label: "محصولات", icon: "olive", travel: "kitchen" },
 ] as const;
 
 function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
@@ -41,15 +46,15 @@ export function V2SiteHeader() {
   const [aiGateOpen, setAiGateOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const goToProducts = (event: MouseEvent<HTMLAnchorElement>) => {
+  const goToSection = (target: TravelTarget) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setOpen(false);
     if (pathname === "/") {
-      travelToKitchenSection();
+      travelToSection(target);
       return;
     }
-    markKitchenTravel();
-    beginKitchenCover();
+    markSectionTravel(target);
+    beginSectionCover(target);
     router.push("/");
   };
   const [logoReady, setLogoReady] = useState(false);
@@ -171,7 +176,7 @@ export function V2SiteHeader() {
                     key={item.id}
                     href={item.href}
                     className="v2-nav-link"
-                    onClick={item.id === "products" ? goToProducts : undefined}
+                    onClick={"travel" in item && item.travel ? goToSection(item.travel) : undefined}
                   >
                     <V2NavIcon icon={item.icon} />
                     <span className="v2-nav-label">{item.label}</span>
@@ -236,7 +241,7 @@ export function V2SiteHeader() {
               key={item.id}
               href={item.href}
               className="v2-nav-link"
-              onClick={item.id === "products" ? goToProducts : () => setOpen(false)}
+              onClick={"travel" in item && item.travel ? goToSection(item.travel) : () => setOpen(false)}
             >
               <V2NavIcon icon={item.icon} />
               <span className="v2-nav-label">{item.label}</span>

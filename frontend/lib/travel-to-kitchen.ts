@@ -1,6 +1,13 @@
+export type TravelTarget = "kitchen" | "catalogs";
+
+export const TRAVEL_SECTION_KEY = "mk_travel_section";
 export const TRAVEL_KITCHEN_KEY = "mk_travel_kitchen";
 
-const TRAVEL_EVENT = "mk-travel-kitchen";
+const TARGETS: Record<TravelTarget, { id: string; word: string }> = {
+  kitchen: { id: "for-home-kitchen", word: "این راه سبز است" },
+  catalogs: { id: "v2-catalogs", word: "کاتالوگ مرد کوهستان" },
+};
+
 const REDUCED = "(prefers-reduced-motion: reduce)";
 let travelLock = false;
 
@@ -12,10 +19,6 @@ function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
-function kitchenSection() {
-  return document.getElementById("for-home-kitchen");
-}
-
 function headerHeight() {
   const header = document.querySelector<HTMLElement>(".site-header--v2");
   if (header) return Math.round(header.getBoundingClientRect().height);
@@ -23,14 +26,14 @@ function headerHeight() {
   return Number.parseFloat(token) || 88;
 }
 
-function placeKitchen() {
-  const section = kitchenSection();
+function placeSection(id: string) {
+  const section = document.getElementById(id);
   if (!section) return;
   const top = window.scrollY + section.getBoundingClientRect().top - headerHeight();
   window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: "auto" });
 }
 
-function mountOverlay() {
+function mountOverlay(word: string) {
   const existing = document.querySelector(".mk-kitchen-travel");
   existing?.remove();
 
@@ -41,32 +44,32 @@ function mountOverlay() {
     <div class="mk-kitchen-travel-mist"></div>
     <div class="mk-kitchen-travel-peak"></div>
     <div class="mk-kitchen-travel-word">
-      <span>این راه سبز است</span>
+      <span>${word}</span>
       <i></i>
     </div>
   `;
   document.body.appendChild(overlay);
-  // force layout so the enter class animates
   overlay.getBoundingClientRect();
   return overlay;
 }
 
-export function beginKitchenCover() {
+export function beginSectionCover(target: TravelTarget) {
   if (prefersReducedMotion()) return;
   const root = document.documentElement;
   root.classList.add("is-kitchen-travel");
   document.body.style.overflow = "hidden";
-  const overlay = document.querySelector(".mk-kitchen-travel") ?? mountOverlay();
+  const overlay = document.querySelector(".mk-kitchen-travel") ?? mountOverlay(TARGETS[target].word);
   overlay.classList.add("is-in");
 }
 
-async function playKitchenTravel() {
+async function playSectionTravel(target: TravelTarget) {
+  const dest = TARGETS[target];
   const root = document.documentElement;
-  const section = kitchenSection();
+  const section = document.getElementById(dest.id);
   if (!section) return;
 
   if (prefersReducedMotion()) {
-    placeKitchen();
+    placeSection(dest.id);
     return;
   }
 
@@ -79,7 +82,7 @@ async function playKitchenTravel() {
   const prevOverflow = document.body.style.overflow;
   document.body.style.overflow = "hidden";
 
-  const overlay = alreadyCovered ?? mountOverlay();
+  const overlay = alreadyCovered ?? mountOverlay(dest.word);
   if (!alreadyCovered) {
     overlay.classList.add("is-in");
     await wait(520);
@@ -87,7 +90,7 @@ async function playKitchenTravel() {
     await wait(160);
   }
 
-  placeKitchen();
+  placeSection(dest.id);
   section.classList.add("is-kitchen-arrived");
 
   await wait(140);
@@ -104,31 +107,46 @@ async function playKitchenTravel() {
   travelLock = false;
 }
 
-/** Play the cinematic drop into the products section. Home page only. */
-export function travelToKitchenSection() {
-  if (kitchenSection()) {
-    void playKitchenTravel();
+export function travelToSection(target: TravelTarget) {
+  if (document.getElementById(TARGETS[target].id)) {
+    void playSectionTravel(target);
     return true;
   }
   return false;
 }
 
-/** Other pages: remember intent, then go home. */
-export function markKitchenTravel() {
+export function markSectionTravel(target: TravelTarget) {
   try {
-    sessionStorage.setItem(TRAVEL_KITCHEN_KEY, "1");
+    sessionStorage.setItem(TRAVEL_SECTION_KEY, target);
   } catch {
     // ignore
   }
-  window.dispatchEvent(new CustomEvent(TRAVEL_EVENT));
+}
+
+export function consumeSectionTravel(): TravelTarget | null {
+  try {
+    const next = sessionStorage.getItem(TRAVEL_SECTION_KEY);
+    sessionStorage.removeItem(TRAVEL_SECTION_KEY);
+    sessionStorage.removeItem(TRAVEL_KITCHEN_KEY);
+    if (next === "kitchen" || next === "catalogs") return next;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function beginKitchenCover() {
+  beginSectionCover("kitchen");
+}
+
+export function travelToKitchenSection() {
+  return travelToSection("kitchen");
+}
+
+export function markKitchenTravel() {
+  markSectionTravel("kitchen");
 }
 
 export function consumeKitchenTravel() {
-  try {
-    if (sessionStorage.getItem(TRAVEL_KITCHEN_KEY) !== "1") return false;
-    sessionStorage.removeItem(TRAVEL_KITCHEN_KEY);
-    return true;
-  } catch {
-    return false;
-  }
+  return consumeSectionTravel() === "kitchen";
 }

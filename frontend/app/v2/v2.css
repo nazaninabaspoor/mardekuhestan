@@ -797,7 +797,7 @@ html.is-v2-bell-cursor textarea {
   padding: 0 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(212, 163, 89, 0.4);
+  border: 0;
   color: #f4f0e8;
   font-size: 12px;
   font-weight: 800;
@@ -810,14 +810,12 @@ html.is-v2-bell-cursor textarea {
 .site-header--v2 .v2-cart-trigger:hover,
 .site-header--v2 .v2-cart-trigger:focus-visible {
   background: rgba(212, 163, 89, 0.25);
-  border-color: #d4a359;
   color: #ffffff;
   transform: translateY(-1px);
 }
 
 .site-header--v2 .v2-cart-trigger.has-items {
   background: linear-gradient(135deg, rgba(0, 91, 72, 0.75) 0%, rgba(0, 60, 48, 0.9) 100%);
-  border-color: #50af47;
 }
 
 .site-header--v2 .v2-cart-trigger.is-bumped {
@@ -9891,7 +9889,7 @@ html.is-v2-bell-cursor textarea {
   min-height: 38px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid rgba(244, 240, 232, 0.4);
+  border: 0;
   background: rgba(244, 240, 232, 0.12);
   color: #f4f0e8;
   font-family: inherit;
@@ -9908,7 +9906,6 @@ html.is-v2-bell-cursor textarea {
 .auth-login-trigger:focus-visible {
   background: #f4f0e8;
   color: #005b48;
-  border-color: #f4f0e8;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
@@ -9929,7 +9926,7 @@ html.is-v2-bell-cursor textarea {
   min-height: 38px;
   padding: 2px 14px 2px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(244, 240, 232, 0.45);
+  border: 0;
   background: rgba(244, 240, 232, 0.14);
   color: #f4f0e8;
   font-family: inherit;
@@ -9946,7 +9943,6 @@ html.is-v2-bell-cursor textarea {
 .auth-user-trigger.is-active {
   background: #f4f0e8;
   color: #005b48;
-  border-color: #f4f0e8;
 }
 
 .auth-user-avatar {
