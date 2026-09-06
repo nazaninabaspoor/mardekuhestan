@@ -40,22 +40,6 @@ export function ProfileComingSoon({
       <div className="mk-soon-stage" role="dialog" aria-modal="true" aria-labelledby="mk-soon-word">
         <div className="mk-soon-pair">
           <motion.div
-            className="mk-soon-voice"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <p className="mk-soon-service">{copy.service}</p>
-            <h2 id="mk-soon-word">به‌زودی.</h2>
-            <span className="mk-soon-rule" aria-hidden="true" />
-            <p className="mk-soon-line">{copy.line}</p>
-            <p className="mk-soon-motto">این راه سبز است</p>
-            <button type="button" className="mk-soon-back" onClick={onClose}>
-              بازگشت به میز
-            </button>
-          </motion.div>
-
-          <motion.div
             className="mk-soon-figure"
             initial={{ opacity: 0, y: 48 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,6 +54,22 @@ export function ProfileComingSoon({
               priority
               className="mk-soon-man"
             />
+          </motion.div>
+
+          <motion.div
+            className="mk-soon-voice"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="mk-soon-service">{copy.service}</p>
+            <h2 id="mk-soon-word">به‌زودی.</h2>
+            <span className="mk-soon-rule" aria-hidden="true" />
+            <p className="mk-soon-line">{copy.line}</p>
+            <p className="mk-soon-motto">این راه سبز است</p>
+            <button type="button" className="mk-soon-back" onClick={onClose}>
+              بازگشت به میز
+            </button>
           </motion.div>
         </div>
       </div>

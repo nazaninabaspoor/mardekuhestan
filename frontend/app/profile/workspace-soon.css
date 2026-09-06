@@ -72,8 +72,8 @@
   direction: rtl;
   align-items: center;
   justify-content: center;
-  gap: 28px 40px;
-  width: min(880px, 100%);
+  gap: 0;
+  width: min(760px, 100%);
 }
 
 .mk-soon-figure {
@@ -82,13 +82,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  margin-inline-end: -18px;
   animation: mk-soon-breathe 5.6s ease-in-out infinite;
 }
 
 .mk-soon-man {
   position: relative;
   z-index: 1;
-  width: min(34vw, 300px);
+  width: min(32vw, 280px);
   height: auto;
   max-height: min(68dvh, 560px);
   object-fit: contain;
@@ -210,6 +211,7 @@
 
   .mk-soon-figure {
     order: 2;
+    margin-inline-end: 0;
   }
 
   .mk-soon-man {
