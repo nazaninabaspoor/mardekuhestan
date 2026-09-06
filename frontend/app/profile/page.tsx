@@ -1855,7 +1855,7 @@ function ProfileContent() {
   return (
     <div className="profile-page-wrapper">
       <section className={`profile-scene${comingSoon ? " is-soon-open" : ""}`}>
-        <ProfileSceneBackdrop isWorkspaceOpen={openedTab !== null} />
+        <ProfileSceneBackdrop isWorkspaceOpen={openedTab !== null || comingSoon !== null} />
 
         <motion.div
           className="profile-scene-stage"
