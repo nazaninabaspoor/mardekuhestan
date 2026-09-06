@@ -820,7 +820,6 @@ html.is-v2-bell-cursor textarea {
 
 .site-header--v2 .v2-cart-trigger.is-bumped {
   animation: mkCartBump 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border-color: #f5db99;
   box-shadow: 0 0 18px rgba(212, 163, 89, 0.8), 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
@@ -14045,7 +14044,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   min-height: 38px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid rgba(244, 240, 232, 0.4);
+  border: 0;
   background: rgba(244, 240, 232, 0.12);
   color: #f4f0e8;
   font-family: inherit;
@@ -14070,7 +14069,6 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 .site-header--v2 .v2-mobile-panel .v2-nav-ai:focus-visible {
   background: #f4f0e8;
   color: #005b48;
-  border-color: #f4f0e8;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
