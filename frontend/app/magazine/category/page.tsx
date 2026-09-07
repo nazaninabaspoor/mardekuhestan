@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
 import { MagBoards } from "@/components/magazine/mag-boards";
-import { magazineBoards } from "@/data/magazine-issue";
+import { MagMasonry } from "@/components/magazine/mag-card";
+import { magazineBoards, magazinePins } from "@/data/magazine-issue";
+import { issueToPin } from "@/lib/content/magazine-feed";
 
 export const metadata: Metadata = {
   title: "قفسه‌های مجله | مرد کوهستان",
@@ -11,14 +13,13 @@ export const metadata: Metadata = {
 export default function MagazineCategoryIndexPage() {
   return (
     <div className="mk-mag-shell">
-      <header className="mk-pin-head">
-        <div>
-          <p className="mk-mag-kicker">مجله مرد کوهستان</p>
-          <h1>قفسه‌ها</h1>
-          <p className="mk-pin-lead">هر قفسه یک مسیر است. تصویر را باز کنید، نوشته پشت آن است.</p>
-        </div>
+      <header className="mk-shelf-head">
+        <p>مجله مرد کوهستان</p>
+        <h2>قفسه‌ها</h2>
+        <span>هر قفسه یک موضوع است. یکی را باز کنید.</span>
       </header>
-      <MagBoards boards={magazineBoards} />
+      <MagBoards boards={magazineBoards} active="all" />
+      <MagMasonry pins={magazinePins.map(issueToPin)} />
     </div>
   );
 }

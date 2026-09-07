@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 
 import { CatalogSearchBox } from "@/components/catalog-search-box";
+import { MagSearch } from "@/components/magazine/mag-search";
 import { AuthHeaderButton } from "@/components/auth-header-button";
 import { HeaderCartButton } from "@/components/header-cart-button";
 import { AuthModal } from "@/components/auth-modal";
@@ -43,6 +44,7 @@ function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
 export function V2SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
+  const isMagazine = Boolean(pathname?.startsWith("/magazine"));
   const [open, setOpen] = useState(false);
   const [aiGateOpen, setAiGateOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -189,11 +191,15 @@ export function V2SiteHeader() {
             <div className="v2-menubar-spacer" aria-hidden="true" />
 
             <div className="v2-menubar-actions">
-              <CatalogSearchBox
-                className="v2-header-search"
-                variant="v2"
-                placeholder="جستجو در راه سبز…"
-              />
+              {isMagazine ? (
+                <MagSearch size="header" />
+              ) : (
+                <CatalogSearchBox
+                  className="v2-header-search"
+                  variant="v2"
+                  placeholder="جستجو در راه سبز…"
+                />
+              )}
               <HeaderCartButton />
               <AuthHeaderButton />
             </div>
@@ -231,11 +237,15 @@ export function V2SiteHeader() {
             />
           </div>
 
-          <CatalogSearchBox
-            className="v2-header-search v2-header-search--mobile"
-            variant="v2"
-            placeholder="جستجو در راه سبز…"
-          />
+          {isMagazine ? (
+            <MagSearch size="header" className="v2-header-search--mobile" />
+          ) : (
+            <CatalogSearchBox
+              className="v2-header-search v2-header-search--mobile"
+              variant="v2"
+              placeholder="جستجو در راه سبز…"
+            />
+          )}
           {v2NavItems.map((item) => (
             <Link
               key={item.id}
