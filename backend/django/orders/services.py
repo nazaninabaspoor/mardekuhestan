@@ -38,7 +38,8 @@ def fulfill_cart_as_order(
     shipping = 0 if total_amount >= 500000 else 40000
     discount_amount = 0
     final_amount = total_amount + shipping
-    now_str = datetime.datetime.now().strftime("%d شهریور ۱۴۰۵ - %H:%M")
+    now = datetime.datetime.now()
+    now_str = f"{now.day:02d} شهریور ۱۴۰۵ - {now:%H:%M}"
 
     new_order = Order.objects.create(
         user=user,
