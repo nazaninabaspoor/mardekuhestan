@@ -16,6 +16,7 @@ class CustomerProfileAdmin(ModelAdmin):
     search_fields = ("user__email", "user__username", "display_name", "phone")
     list_filter = ("email_verified",)
     raw_id_fields = ("user",)
+    fields = ("user", "display_name", "phone", "email_verified", "avatar")
     list_fullwidth = True
 
 

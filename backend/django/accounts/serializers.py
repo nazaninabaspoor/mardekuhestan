@@ -71,15 +71,27 @@ class ProfileUpdateSerializer(IdentityLockedSerializer):
 
 class UserMeSerializer(serializers.Serializer):
     def to_representation(self, user):
-        profile = get_or_create_profile(user)
-        return {
-            "id": user.pk,
-            "email": user.email,
-            "name": profile.display_name or user.first_name or "",
-            "phone": profile.phone or "",
-            "email_verified": profile.email_verified,
-            "is_staff": bool(user.is_staff),
-        }
+        return serialize_user(user, self.context.get("request"))
+
+
+def serialize_user(user, request=None) -> dict:
+    profile = get_or_create_profile(user)
+    avatar_url = ""
+    if profile.avatar:
+        try:
+            rel = profile.avatar.url
+            avatar_url = request.build_absolute_uri(rel) if request else rel
+        except ValueError:
+            avatar_url = ""
+    return {
+        "id": user.pk,
+        "email": user.email,
+        "name": profile.display_name or user.first_name or "",
+        "phone": profile.phone or "",
+        "email_verified": profile.email_verified,
+        "is_staff": bool(user.is_staff),
+        "avatar_url": avatar_url,
+    }
 
 
 class CustomerAddressSerializer(serializers.ModelSerializer):

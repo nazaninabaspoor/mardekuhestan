@@ -14,6 +14,7 @@ import {
   CustomerAddress,
   getUserAddresses,
   updateAddress,
+  uploadAvatar,
 } from "@/lib/api/auth";
 import {
   fetchUserOrders,
@@ -1299,7 +1300,7 @@ export const PASTURE_ORDERS_DATABASE = [
 ];
 
 function ProfileContent() {
-  const { user, isLoading, openLoginModal, updateUserProfile } = useAuth();
+  const { user, isLoading, openLoginModal, updateUserProfile, refreshUser } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -1416,12 +1417,7 @@ function ProfileContent() {
       setPhone(user.phone || "۰۹۳۷۹۱۴۶۱۳۰");
       setEmail(user.email || "grifindorekamyar@gmail.com");
       setSignatureText(user.name || "کامیار جعفریان");
-      try {
-        const savedAvatar = localStorage.getItem(`mk_avatar_${user.id || user.email || "user"}`);
-        if (savedAvatar) {
-          setAvatarUrl(savedAvatar);
-        }
-      } catch {}
+      setAvatarUrl(user.avatar_url || null);
 
       getUserAddresses()
         .then((data) => {
@@ -1433,14 +1429,16 @@ function ProfileContent() {
           // fallback to defaults
         });
 
-      fetchUserOrders()
+      fetchUserOrders(1)
         .then((data) => {
-          if (data && data.length > 0) {
-            setUserOrders(data);
+          if (data?.results?.length) {
+            setUserOrders(data.results);
+          } else {
+            setUserOrders([]);
           }
         })
         .catch(() => {
-          // fallback to defaults
+          setUserOrders([]);
         });
     }
   }, [user]);
@@ -1478,8 +1476,9 @@ function ProfileContent() {
     fileInputRef.current?.click();
   };
 
-  const handlePhotoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setProfileErrorMsg("لطفاً یک فایل تصویری معتبر انتخاب کنید.");
@@ -1491,17 +1490,23 @@ function ProfileContent() {
       setTimeout(() => setProfileErrorMsg(null), 3500);
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setAvatarUrl(dataUrl);
-      try {
-        localStorage.setItem(`mk_avatar_${user?.id || user?.email || "user"}`, dataUrl);
-      } catch {}
-      setProfileSuccessMsg("تصویر پرسنلی شناسنامه با موفقیت به‌روزرسانی شد.");
+    const preview = URL.createObjectURL(file);
+    setAvatarUrl(preview);
+    try {
+      const updated = await uploadAvatar(file);
+      await refreshUser();
+      if (updated.avatar_url) {
+        setAvatarUrl(updated.avatar_url);
+        URL.revokeObjectURL(preview);
+      }
+      setProfileSuccessMsg("تصویر پرسنلی شناسنامه ذخیره شد و بعد از ورود دوباره هم باقی می‌ماند.");
       setTimeout(() => setProfileSuccessMsg(null), 4000);
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      URL.revokeObjectURL(preview);
+      setAvatarUrl(user?.avatar_url || null);
+      setProfileErrorMsg(authErrorMessage(err));
+      setTimeout(() => setProfileErrorMsg(null), 4000);
+    }
   };
 
   const displayName = name.trim() || user?.name || "کاربر کوهستان";
@@ -1589,8 +1594,8 @@ function ProfileContent() {
           shipping_address: buyerInfo.address,
         });
         await refreshCart();
-        const updated = await fetchUserOrders();
-        setUserOrders(updated);
+        const updated = await fetchUserOrders(1);
+        setUserOrders(updated.results || []);
         setSelectedOrderIndex(0);
       } else {
         setSelectedOrderIndex(0);
@@ -2122,7 +2127,7 @@ function ProfileContent() {
                                     <input
                                       ref={fileInputRef}
                                       type="file"
-                                      accept="image/*"
+                                      accept="image/jpeg,image/png,image/webp,image/jpg"
                                       style={{ display: "none" }}
                                       onChange={handlePhotoFileChange}
                                       aria-label="بارگذاری تصویر پرسنلی شناسنامه"

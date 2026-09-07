@@ -18,6 +18,7 @@ class CustomerProfile(models.Model):
     display_name = models.CharField("نام نمایشی", max_length=DISPLAY_NAME_MAX_LENGTH, blank=True)
     phone = models.CharField("موبایل", max_length=PHONE_MAX_LENGTH, blank=True)
     email_verified = models.BooleanField("ایمیل تأیید شده", default=False)
+    avatar = models.ImageField("تصویر پروفایل", upload_to="avatars/%Y/%m/", blank=True)
     created_at = models.DateTimeField("ایجاد", auto_now_add=True)
     updated_at = models.DateTimeField("بروزرسانی", auto_now=True)
 

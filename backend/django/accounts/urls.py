@@ -3,6 +3,7 @@
 from accounts.views import (
     AddressDetailView,
     AddressListCreateView,
+    AvatarUploadView,
     ChangePasswordView,
     LoginView,
     LogoutAllView,
@@ -23,6 +24,7 @@ urlpatterns = [
     path("token/", TokenPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", RefreshView.as_view(), name="token_refresh"),
     path("me/", MeView.as_view(), name="me"),
+    path("me/avatar/", AvatarUploadView.as_view(), name="me_avatar"),
     path("password/", ChangePasswordView.as_view(), name="change_password"),
     path("addresses/", AddressListCreateView.as_view(), name="address_list_create"),
     path("addresses/<int:pk>/", AddressDetailView.as_view(), name="address_detail"),

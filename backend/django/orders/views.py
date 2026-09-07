@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import datetime
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,6 +20,7 @@ from orders.serializers import (
     OrderSerializer,
     UpdateCartItemSerializer,
 )
+from orders.services import fulfill_cart_as_order
 from sec.ownership import acting_user
 
 
@@ -287,18 +290,24 @@ class CartItemDetailView(APIView):
         return Response(cart_serializer.data)
 
 
+class OrderListPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = None
+    max_page_size = 15
+
+
 class UserOrdersListView(APIView):
-    """فهرست سفارش‌های کاربر (سفارش‌های قبلی شناسنامه مرتع و جدید)."""
+    """فهرست سفارش‌های واقعی کاربر — هر صفحه ۱۵ خرید کامل."""
 
     permission_classes = [IsCustomerOrStaff]
 
     def get(self, request):
         user = acting_user(request)
-        _seed_demo_orders_for_user(user)
-
         orders = Order.objects.filter(user=user).prefetch_related("items").order_by("-created_at")
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data)
+        paginator = OrderListPagination()
+        page = paginator.paginate_queryset(orders, request, view=self)
+        serializer = OrderSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class OrderDetailView(APIView):
@@ -317,73 +326,30 @@ class OrderDetailView(APIView):
 
 
 class CheckoutOrderView(APIView):
-    """ثبت نهایی سفارش و تبدیل سبد خرید به یک سفارش واقعی در دیتابیس."""
+    """ثبت نهایی سفارش از سبد — برای جریان پرداخت استفاده می‌شود."""
 
     permission_classes = [IsCustomerOrStaff]
 
-    @transaction.atomic
     def post(self, request):
         user = acting_user(request)
-        cart = _get_or_create_user_cart(user)
-        cart_items = list(cart.items.all())
-
-        if not cart_items:
-            return Response(
-                {"detail": "سبد خرید شما خالی است و نمی‌توانید سفارشی ثبت کنید."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         serializer = CheckoutSerializer(data=request.data)
-        serializer.is_valid()
-        data = serializer.validated_data
-
-        receiver_name = data.get("receiver_name") or getattr(user, "customer_profile", None) and user.customer_profile.display_name or "همسفر گرامی"
-        receiver_phone = data.get("receiver_phone") or getattr(user, "customer_profile", None) and user.customer_profile.phone or "۰۹۳۷۹۱۴۶۱۳۰"
-        shipping_address = data.get("shipping_address") or "تهران، زعفرانیه، خیابان آصف، کوچه رز، پلاک ۱۲"
-
-        total_amount = cart.total_price_toman
-        discount_amount = 40000 if total_amount >= 500000 else 0
-        final_amount = max(0, total_amount - discount_amount)
-
-        now_str = datetime.datetime.now().strftime("%d شهریور ۱۴۰۵ - %H:%M")
-
-        new_order = Order.objects.create(
-            user=user,
-            status=Order.Status.PROCESSING,
-            pasture_name="مرتع ییلاقی اختصاصی البرز مرکزی",
-            altitude="۲,۴۰۰ متر از سطح دریا",
-            grazing_info="پوشش گیاهی بکر کوهستان و تغذیه ارگانیک",
-            vet_code="IR-99210 نظام دامپزشکی",
-            pack_date=now_str,
-            temperature_log="۲.۴°C (کنترل‌شده در زنجیره سرد)",
-            receiver_name=receiver_name,
-            receiver_phone=receiver_phone,
-            shipping_address=shipping_address,
-            total_amount_toman=total_amount,
-            discount_amount_toman=discount_amount,
-            final_amount_toman=final_amount,
-        )
-
-        for ci in cart_items:
-            OrderItem.objects.create(
-                order=new_order,
-                product_name=f"{ci.product_name} ({ci.portion})",
-                product_image=ci.product_image,
-                cut_type=ci.cut_type,
-                portion=ci.portion,
-                unit_price_toman=ci.unit_price_toman,
-                quantity=ci.quantity,
-                total_price_toman=ci.total_price_toman,
+        serializer.is_valid(raise_exception=False)
+        data = serializer.validated_data if getattr(serializer, "_validated_data", None) else {}
+        try:
+            new_order = fulfill_cart_as_order(
+                user,
+                receiver_name=data.get("receiver_name", "") if data else request.data.get("receiver_name", ""),
+                receiver_phone=data.get("receiver_phone", "") if data else request.data.get("receiver_phone", ""),
+                shipping_address=data.get("shipping_address", "") if data else request.data.get("shipping_address", ""),
             )
+        except DjangoValidationError as exc:
+            msg = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
+            return Response({"detail": msg}, status=status.HTTP_400_BAD_REQUEST)
 
-        # تخلیه سبد خرید بعد از ثبت موفق
-        cart.items.all().delete()
-
-        order_serializer = OrderSerializer(new_order)
         return Response(
             {
                 "message": f"سفارش شما با موفقیت ثبت شد و شناسه پیگیری #{new_order.order_number} تخصیص یافت.",
-                "order": order_serializer.data,
+                "order": OrderSerializer(new_order).data,
             },
             status=status.HTTP_201_CREATED,
         )

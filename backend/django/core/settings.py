@@ -132,6 +132,12 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = list(CORS_ALLOWED_ORIGINS)
 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID", "").strip()
+ZARINPAL_SANDBOX = env_bool("ZARINPAL_SANDBOX", default=True)
+PARSIAN_PIN = os.getenv("PARSIAN_PIN", "").strip()
+PARSIAN_SANDBOX = env_bool("PARSIAN_SANDBOX", default=True)
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "sec.middleware.DDoSMitigationMiddleware",

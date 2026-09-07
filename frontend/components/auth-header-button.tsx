@@ -10,6 +10,28 @@ interface AuthHeaderButtonProps {
   onItemClick?: () => void;
 }
 
+function AvatarMark({
+  name,
+  url,
+  className = "",
+}: {
+  name: string;
+  url?: string;
+  className?: string;
+}) {
+  const initial = (name || "ک").charAt(0).toUpperCase();
+  return (
+    <div className={`auth-user-avatar ${className}`.trim()} aria-hidden="true">
+      {url ? (
+        <img src={url} alt="" className="auth-user-avatar-img" />
+      ) : (
+        initial
+      )}
+      <span className="auth-avatar-ring" aria-hidden="true" />
+    </div>
+  );
+}
+
 export function AuthHeaderButton({
   className = "",
   variant = "desktop",
@@ -102,10 +124,7 @@ export function AuthHeaderButton({
       <div className={`auth-mobile-box ${className}`}>
         {/* Mobile User Card */}
         <div className="auth-mobile-user-card">
-          <div className="auth-user-avatar auth-user-avatar--mobile">
-            {displayName.charAt(0).toUpperCase()}
-            <span className="auth-avatar-ring" aria-hidden="true" />
-          </div>
+          <AvatarMark name={displayName} url={user.avatar_url} className="auth-user-avatar--mobile" />
           <div className="auth-user-meta">
             <div className="auth-user-title-row">
               <span className="auth-user-name">{displayName}</span>
@@ -241,10 +260,7 @@ export function AuthHeaderButton({
         aria-haspopup="true"
         aria-label={`پنل اختصاصی همسفر ${displayName}`}
       >
-        <div className="auth-user-avatar" aria-hidden="true">
-          {displayName.charAt(0).toUpperCase()}
-          <span className="auth-avatar-ring" />
-        </div>
+        <AvatarMark name={displayName} url={user.avatar_url} />
         <div className="auth-user-badge-wrap">
           <span className="auth-btn-text">{displayName}</span>
           <span className="auth-btn-sub">باشگاه راه سبز</span>
@@ -268,9 +284,7 @@ export function AuthHeaderButton({
           {/* Header Card with Green Way Membership Theme */}
           <div className="auth-dropdown-hero">
             <div className="auth-dropdown-hero-top">
-              <div className="auth-user-avatar auth-user-avatar--lg">
-                {displayName.charAt(0).toUpperCase()}
-              </div>
+              <AvatarMark name={displayName} url={user.avatar_url} className="auth-user-avatar--lg" />
               <div className="auth-dropdown-hero-meta">
                 <div className="auth-dropdown-name-row">
                   <span className="auth-dropdown-name">{displayName}</span>

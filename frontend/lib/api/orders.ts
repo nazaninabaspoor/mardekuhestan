@@ -108,10 +108,18 @@ export async function clearUserCart(): Promise<ApiCart> {
   });
 }
 
-export async function fetchUserOrders(): Promise<ApiOrder[]> {
-  return apiFetch<ApiOrder[]>("/api/orders/", {
+export type PaginatedOrders = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ApiOrder[];
+};
+
+export async function fetchUserOrders(page = 1): Promise<PaginatedOrders> {
+  return apiFetch<PaginatedOrders>("/api/orders/", {
     ...ordersInit,
     method: "GET",
+    searchParams: { page },
   });
 }
 

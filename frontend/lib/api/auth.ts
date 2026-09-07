@@ -8,6 +8,7 @@ export type AuthUser = {
   phone: string;
   email_verified: boolean;
   is_staff: boolean;
+  avatar_url?: string;
 };
 
 type AuthPayload = {
@@ -107,6 +108,17 @@ export async function updateProfile(data: {
     ...authInit,
     method: "PATCH",
     body: JSON.stringify(data),
+  });
+}
+
+export async function uploadAvatar(file: File): Promise<AuthUser> {
+  const body = new FormData();
+  body.append("avatar", file);
+  return await apiFetch<AuthUser>("/api/auth/me/avatar/", {
+    credentials: "include",
+    revalidate: false,
+    method: "POST",
+    body,
   });
 }
 

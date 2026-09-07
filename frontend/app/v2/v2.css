@@ -9958,6 +9958,15 @@ html.is-v2-bell-cursor textarea {
   font-size: 13px;
   font-weight: 800;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.auth-user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .auth-user-trigger:hover .auth-user-avatar,

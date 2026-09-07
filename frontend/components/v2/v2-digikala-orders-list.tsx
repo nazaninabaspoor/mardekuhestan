@@ -37,6 +37,11 @@ interface DigikalaOrdersListProps {
   };
   onDownloadPdf: (order: PastureOrderData) => void;
   onReorder: () => void;
+  totalCount?: number;
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
+  isLoading?: boolean;
 }
 
 function toPersianDigits(value: number | string) {
@@ -45,24 +50,35 @@ function toPersianDigits(value: number | string) {
 
 export function DigikalaOrdersList({
   orders,
-  buyerInfo,
+  buyerInfo: _buyerInfo,
   onDownloadPdf,
   onReorder,
+  totalCount,
+  currentPage = 1,
+  totalPages = 1,
+  onPageChange,
+  isLoading = false,
 }: DigikalaOrdersListProps) {
   const [activeFilter, setActiveFilter] = useState<"all" | "delivered" | "processing">("all");
-  const [currentPage, setCurrentPage] = useState(1);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
-  const ORDERS_PER_PAGE = 15;
-
   const filteredOrders = orders.filter((ord) => {
-    if (activeFilter === "processing") return false;
+    const status = (ord.status || "").toLowerCase();
+    if (activeFilter === "delivered") {
+      return status.includes("تحویل") || status.includes("delivered");
+    }
+    if (activeFilter === "processing") {
+      return status.includes("پردازش") || status.includes("تایید") || status.includes("confirmed") || status.includes("processing");
+    }
     return true;
   });
 
-  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / ORDERS_PER_PAGE));
-  const startIndex = (currentPage - 1) * ORDERS_PER_PAGE;
-  const paginatedOrders = filteredOrders.slice(startIndex, startIndex + ORDERS_PER_PAGE);
+  const allCount = totalCount ?? orders.length;
+  const pages = Math.max(1, totalPages);
+  const goToPage = (page: number) => {
+    setExpandedOrderId(null);
+    onPageChange?.(page);
+  };
 
   return (
     <motion.div
@@ -79,47 +95,55 @@ export function DigikalaOrdersList({
             className={`mk-filter-pill-btn${activeFilter === "all" ? " is-active" : ""}`}
             onClick={() => {
               setActiveFilter("all");
-              setCurrentPage(1);
             }}
           >
             <span>همه سفارش‌ها</span>
-            <span className="mk-filter-pill-badge">{toPersianDigits(orders.length)}</span>
+            <span className="mk-filter-pill-badge">{toPersianDigits(allCount)}</span>
           </button>
           <button
             type="button"
             className={`mk-filter-pill-btn${activeFilter === "delivered" ? " is-active" : ""}`}
             onClick={() => {
               setActiveFilter("delivered");
-              setCurrentPage(1);
             }}
           >
             <span>تحویل‌شده</span>
-            <span className="mk-filter-pill-badge">{toPersianDigits(orders.length)}</span>
+            <span className="mk-filter-pill-badge">{toPersianDigits(orders.filter((o) => (o.status || "").includes("تحویل") || (o.status || "").toLowerCase().includes("delivered")).length)}</span>
           </button>
           <button
             type="button"
             className={`mk-filter-pill-btn${activeFilter === "processing" ? " is-active" : ""}`}
             onClick={() => {
               setActiveFilter("processing");
-              setCurrentPage(1);
             }}
           >
             <span>در حال پردازش</span>
-            <span className="mk-filter-pill-badge">۰</span>
+            <span className="mk-filter-pill-badge">
+              {toPersianDigits(
+                orders.filter((o) => {
+                  const status = (o.status || "").toLowerCase();
+                  return status.includes("پردازش") || status.includes("تایید") || status.includes("confirmed") || status.includes("processing");
+                }).length,
+              )}
+            </span>
           </button>
         </div>
 
-        {totalPages > 1 && (
+        {pages > 1 && (
           <span className="mk-paging-indicator">
-            صفحه {toPersianDigits(currentPage)} از {toPersianDigits(totalPages)}
+            صفحه {toPersianDigits(currentPage)} از {toPersianDigits(pages)}
           </span>
         )}
       </div>
 
       {/* Orders Stack */}
-      {paginatedOrders.length > 0 ? (
+      {isLoading ? (
+        <div className="mk-empty-state-clean">
+          <h3>در حال بارگذاری سفارش‌ها…</h3>
+        </div>
+      ) : filteredOrders.length > 0 ? (
         <div className="mk-orders-cards-stack">
-          {paginatedOrders.map((ord, index) => {
+          {filteredOrders.map((ord, index) => {
             const isExpanded = expandedOrderId === ord.id;
             return (
               <motion.div
@@ -142,7 +166,7 @@ export function DigikalaOrdersList({
                       <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="3" fill="none">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      <span>تحویل‌شده</span>
+                      <span>{ord.status || "تایید شده"}</span>
                     </span>
                   </div>
 
@@ -281,25 +305,26 @@ export function DigikalaOrdersList({
       )}
 
       {/* Pagination Controls */}
-      {totalPages > 1 && (
+      {pages > 1 && onPageChange && (
         <div className="mk-pagination-row">
           <button
             type="button"
             className="mk-page-step-btn"
-            disabled={currentPage <= 1}
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1 || isLoading}
+            onClick={() => goToPage(Math.max(1, currentPage - 1))}
           >
-            صفحه قبلی
+            ۱۵ تای قبلی
           </button>
           <div className="mk-page-numbers-wrap">
-            {Array.from({ length: totalPages }).map((_, idx) => {
+            {Array.from({ length: pages }).map((_, idx) => {
               const pageNum = idx + 1;
               return (
                 <button
                   key={pageNum}
                   type="button"
                   className={`mk-page-number-btn${currentPage === pageNum ? " is-active" : ""}`}
-                  onClick={() => setCurrentPage(pageNum)}
+                  disabled={isLoading}
+                  onClick={() => goToPage(pageNum)}
                 >
                   {toPersianDigits(pageNum)}
                 </button>
@@ -309,10 +334,10 @@ export function DigikalaOrdersList({
           <button
             type="button"
             className="mk-page-step-btn"
-            disabled={currentPage >= totalPages}
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage >= pages || isLoading}
+            onClick={() => goToPage(Math.min(pages, currentPage + 1))}
           >
-            صفحه بعدی
+            ۱۵ تای بعدی
           </button>
         </div>
       )}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +14,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.constants import REFRESH_COOKIE_NAME
 from accounts.models import CustomerAddress
 from accounts.permissions import IsCustomerOrStaff
+from accounts.selectors import get_or_create_profile
 from accounts.serializers import (
     ChangePasswordSerializer,
     CustomerAddressSerializer,
@@ -21,7 +23,7 @@ from accounts.serializers import (
     ProfileUpdateSerializer,
     RefreshSerializer,
     RegisterSerializer,
-    UserMeSerializer,
+    serialize_user,
 )
 from accounts.services import (
     AuthError,
@@ -76,7 +78,7 @@ class RegisterView(APIView):
             return _django_validation_response(exc)
 
         access, refresh = issue_tokens(user)
-        body = {"user": UserMeSerializer().to_representation(user), "access": access}
+        body = {"user": serialize_user(user, request), "access": access}
         response = Response(body, status=status.HTTP_201_CREATED)
         set_auth_cookies(response, access=access, refresh=refresh)
         return response
@@ -102,7 +104,7 @@ class LoginView(APIView):
             return _django_validation_response(exc)
 
         access, refresh = issue_tokens(user)
-        body = {"user": UserMeSerializer().to_representation(user), "access": access}
+        body = {"user": serialize_user(user, request), "access": access}
         response = Response(body)
         set_auth_cookies(response, access=access, refresh=refresh)
         return response
@@ -131,7 +133,7 @@ class TokenPairView(APIView):
 
         access, refresh = issue_tokens(user)
         body = {
-            "user": UserMeSerializer().to_representation(user),
+            "user": serialize_user(user, request),
             "access": access,
             "refresh": refresh,
         }
@@ -199,7 +201,7 @@ class MeView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = acting_user(request)
-        return Response(UserMeSerializer().to_representation(user))
+        return Response(serialize_user(user, request))
 
     def patch(self, request, *args, **kwargs):
         reject_foreign_identity(request.data)
@@ -214,7 +216,39 @@ class MeView(APIView):
             )
         except DjangoValidationError as exc:
             return _django_validation_response(exc)
-        return Response(UserMeSerializer().to_representation(user))
+        return Response(serialize_user(user, request))
+
+
+class AvatarUploadView(APIView):
+    permission_classes = [IsCustomerOrStaff]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        uploaded = request.FILES.get("avatar")
+        if not uploaded:
+            return Response({"detail": "تصویر را انتخاب کنید."}, status=status.HTTP_400_BAD_REQUEST)
+        if uploaded.size > 5 * 1024 * 1024:
+            return Response({"detail": "حجم تصویر نباید بیشتر از ۵ مگابایت باشد."}, status=status.HTTP_400_BAD_REQUEST)
+        kind = (uploaded.content_type or "").lower()
+        name = (uploaded.name or "").lower()
+        allowed = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
+        if kind not in allowed:
+            if name.endswith((".jpg", ".jpeg")):
+                kind = "image/jpeg"
+            elif name.endswith(".png"):
+                kind = "image/png"
+            elif name.endswith(".webp"):
+                kind = "image/webp"
+        if kind not in allowed:
+            return Response({"detail": "فقط فایل JPG، PNG یا WebP پذیرفته می‌شود."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = acting_user(request)
+        profile = get_or_create_profile(user)
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+        profile.avatar = uploaded
+        profile.save(update_fields=["avatar", "updated_at"])
+        return Response(serialize_user(user, request))
 
 
 class ChangePasswordView(APIView):

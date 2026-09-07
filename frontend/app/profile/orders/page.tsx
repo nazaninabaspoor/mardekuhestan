@@ -1,26 +1,53 @@
 "use client";
 
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
-import { getUserAddresses } from "@/lib/api/auth";
-import { checkoutUserCart, fetchUserOrders, type ApiOrder } from "@/lib/api/orders";
+import { authErrorMessage, getUserAddresses } from "@/lib/api/auth";
+import { fetchUserOrders, type ApiOrder } from "@/lib/api/orders";
+import { startPayment, type PaymentGateway } from "@/lib/api/payments";
 import { DigikalaCart } from "@/components/v2/v2-digikala-cart";
-import { DigikalaOrdersList } from "@/components/v2/v2-digikala-orders-list";
-import {
-  handleDownloadOrderPdf,
-  PASTURE_ORDERS_DATABASE,
-  resolveProductImage,
-} from "@/app/profile/page";
+import { DigikalaOrdersList, type PastureOrderData } from "@/components/v2/v2-digikala-orders-list";
+import { handleDownloadOrderPdf, resolveProductImage } from "@/app/profile/page";
+
+const PAGE_SIZE = 15;
+
+function mapApiOrder(ord: ApiOrder): PastureOrderData {
+  const primaryItemName = ord.items[0]?.product_name
+    ? ord.items[0].product_name.split(" (")[0]
+    : "بسته سفارش مرتع";
+  return {
+    id: ord.order_number,
+    title: ord.items.length > 1 ? `${primaryItemName} و اقلام ییلاقی مرتع` : primaryItemName,
+    date: ord.pack_date,
+    pastureName: ord.pasture_name,
+    altitude: ord.altitude,
+    grazing: ord.grazing_info,
+    vetCode: ord.vet_code,
+    packDate: ord.pack_date,
+    tempLog: ord.temperature_log,
+    status: ord.status_display || "تایید شده",
+    items: ord.items.map((it) => ({
+      name: it.product_name,
+      image: resolveProductImage(it.product_name, it.product_image),
+      cut: it.cut_type || it.portion || "بسته‌بندی استریل مرتع",
+      price: `${it.total_price_toman.toLocaleString("fa-IR")} تومان`,
+    })),
+    totalAmount: `${ord.total_amount_toman.toLocaleString("fa-IR")} تومان`,
+    discount: `${ord.discount_amount_toman.toLocaleString("fa-IR")} تومان`,
+    finalPrice: `${ord.final_amount_toman.toLocaleString("fa-IR")} تومان`,
+  };
+}
 
 function OrdersRouteContent() {
   const { user, isLoading, openLoginModal } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
+  const paidParam = searchParams.get("paid");
 
   const {
     cart,
@@ -36,12 +63,30 @@ function OrdersRouteContent() {
     viewParam === "cart" || viewParam === "invoice" ? "invoice" : "book",
   );
   const [userOrders, setUserOrders] = useState<ApiOrder[]>([]);
+  const [ordersCount, setOrdersCount] = useState(0);
+  const [ordersPage, setOrdersPage] = useState(1);
+  const [ordersLoading, setOrdersLoading] = useState(false);
   const [addresses, setAddresses] = useState<
     Array<{ city: string; district: string; address_line: string }>
   >([]);
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
-  const [paySuccess, setPaySuccess] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+
+  const loadOrders = useCallback(async (page: number) => {
+    setOrdersLoading(true);
+    try {
+      const data = await fetchUserOrders(page);
+      setUserOrders(data.results || []);
+      setOrdersCount(data.count || 0);
+      setOrdersPage(page);
+    } catch {
+      setUserOrders([]);
+      setOrdersCount(0);
+    } finally {
+      setOrdersLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.add("is-orders-route");
@@ -52,57 +97,30 @@ function OrdersRouteContent() {
     if (viewParam === "cart" || viewParam === "invoice") {
       setDocViewMode("invoice");
     }
-  }, [viewParam]);
+    if (paidParam === "1") {
+      setDocViewMode("book");
+    }
+  }, [viewParam, paidParam]);
 
   useEffect(() => {
     if (!user) return;
-    fetchUserOrders()
-      .then(setUserOrders)
-      .catch(() => setUserOrders([]));
+    void loadOrders(1);
     getUserAddresses()
       .then((data) => {
         if (data?.length) setAddresses(data);
       })
       .catch(() => {});
-  }, [user]);
+  }, [user, loadOrders]);
 
-  const ordersList = useMemo(() => {
-    if (userOrders.length > 0) {
-      return userOrders.map((ord) => {
-        const primaryItemName = ord.items[0]?.product_name
-          ? ord.items[0].product_name.split(" (")[0]
-          : "بسته سفارش مرتع";
-        return {
-          id: ord.order_number,
-          title: ord.items.length > 1 ? `${primaryItemName} و اقلام ییلاقی مرتع` : primaryItemName,
-          date: ord.pack_date,
-          pastureName: ord.pasture_name,
-          altitude: ord.altitude,
-          grazing: ord.grazing_info,
-          vetCode: ord.vet_code,
-          packDate: ord.pack_date,
-          tempLog: ord.temperature_log,
-          status: ord.status_display || "تحویل‌شده با زنجیره سرد",
-          items: ord.items.map((it) => ({
-            name: it.product_name,
-            image: resolveProductImage(it.product_name, it.product_image),
-            cut: it.cut_type || it.portion || "بسته‌بندی استریل مرتع",
-            price: `${it.total_price_toman.toLocaleString("fa-IR")} تومان`,
-          })),
-          totalAmount: `${ord.total_amount_toman.toLocaleString("fa-IR")} تومان`,
-          discount: `${ord.discount_amount_toman.toLocaleString("fa-IR")} تومان`,
-          finalPrice: `${ord.final_amount_toman.toLocaleString("fa-IR")} تومان`,
-        };
-      });
-    }
-    return PASTURE_ORDERS_DATABASE.map((ord) => ({
-      ...ord,
-      items: ord.items.map((it) => ({
-        ...it,
-        image: resolveProductImage(it.name, it.image),
-      })),
-    }));
-  }, [userOrders]);
+  useEffect(() => {
+    if (!user || paidParam !== "1") return;
+    void refreshCart();
+    void loadOrders(1);
+    router.replace("/profile/orders", { scroll: false });
+  }, [user, paidParam, refreshCart, loadOrders, router]);
+
+  const ordersList = useMemo(() => userOrders.map(mapApiOrder), [userOrders]);
+  const ordersTotalPages = Math.max(1, Math.ceil(ordersCount / PAGE_SIZE));
 
   const buyerInfo = {
     name: user?.name || "کامیار جعفریان",
@@ -126,29 +144,24 @@ function OrdersRouteContent() {
     });
   };
 
-  const handleSimulatePayment = async () => {
+  const handleSelectGateway = async (gateway: PaymentGateway) => {
+    if (!cart?.items?.length) {
+      setPayError("سبد خرید خالی است.");
+      return;
+    }
     setIsPaying(true);
+    setPayError(null);
     try {
-      if (cart?.items?.length) {
-        await checkoutUserCart({
-          receiver_name: buyerInfo.name,
-          receiver_phone: buyerInfo.phone,
-          shipping_address: buyerInfo.address,
-        });
-        await refreshCart();
-        const updated = await fetchUserOrders();
-        setUserOrders(updated);
-      }
-    } catch {
-      /* keep success UI for demo */
-    } finally {
+      const started = await startPayment({
+        gateway,
+        receiver_name: buyerInfo.name,
+        receiver_phone: buyerInfo.phone,
+        shipping_address: buyerInfo.address,
+      });
+      window.location.assign(started.redirect_url);
+    } catch (err) {
+      setPayError(authErrorMessage(err));
       setIsPaying(false);
-      setPaySuccess(true);
-      setTimeout(() => {
-        setIsPayModalOpen(false);
-        setPaySuccess(false);
-        switchView("book");
-      }, 1800);
     }
   };
 
@@ -224,7 +237,7 @@ function OrdersRouteContent() {
           <div className="mk-doc-segmented-bar">
             <button
               type="button"
-              className={`mk-doc-tab-btn${docViewMode === "invoice" ? " is-active" : ""}`}
+              className={`mk-doc-tab-btn mk-doc-tab-btn--cart${docViewMode === "invoice" ? " is-active" : ""}`}
               onClick={() => switchView("invoice")}
             >
               <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2.2" fill="none">
@@ -245,7 +258,7 @@ function OrdersRouteContent() {
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
               <span>سفارش‌های قبلی من</span>
-              <span className="mk-neon-badge">{ordersList.length}</span>
+              <span className="mk-neon-badge">{ordersCount}</span>
             </button>
           </div>
 
@@ -253,6 +266,13 @@ function OrdersRouteContent() {
             <DigikalaOrdersList
               orders={ordersList}
               buyerInfo={buyerInfo}
+              totalCount={ordersCount}
+              currentPage={ordersPage}
+              totalPages={ordersTotalPages}
+              isLoading={ordersLoading}
+              onPageChange={(page) => {
+                void loadOrders(page);
+              }}
               onDownloadPdf={(order) => handleDownloadOrderPdf("book", order, buyerInfo)}
               onReorder={() => switchView("invoice")}
             />
@@ -266,7 +286,10 @@ function OrdersRouteContent() {
               onUpdateQuantity={(itemId, qty) => updateQuantity(itemId, qty)}
               onRemoveFromCart={(itemId) => removeFromCart(itemId)}
               onClearCart={() => clearCart()}
-              onCheckout={() => setIsPayModalOpen(true)}
+              onCheckout={() => {
+                setPayError(null);
+                setIsPayModalOpen(true);
+              }}
               onDownloadPdf={() => {
                 handleDownloadOrderPdf(
                   "invoice",
@@ -293,30 +316,60 @@ function OrdersRouteContent() {
 
       <AnimatePresence>
         {isPayModalOpen && (
-          <div className="mk-payment-modal-backdrop" onClick={() => !isPaying && setIsPayModalOpen(false)}>
+          <div
+            className="mk-payment-modal-backdrop"
+            onClick={() => !isPaying && setIsPayModalOpen(false)}
+          >
             <motion.div
-              className="mk-payment-card"
+              className="mk-gateway-picker"
               onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.94, y: 12 }}
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
             >
-              {!paySuccess ? (
-                <>
-                  <h3>پرداخت امن کوهستان</h3>
-                  <p>مبلغ قابل پرداخت: <strong>{payableLabel}</strong></p>
-                  <button
-                    type="button"
-                    className="mk-primary-checkout-btn"
-                    disabled={isPaying}
-                    onClick={handleSimulatePayment}
-                  >
-                    {isPaying ? "در حال پردازش…" : "تأیید و پرداخت"}
-                  </button>
-                </>
-              ) : (
-                <p>پرداخت با موفقیت انجام شد.</p>
-              )}
+              <p className="mk-gateway-kicker">پرداخت امن راه سبز</p>
+              <h3>با کدام درگاه پرداخت می‌کنید؟</h3>
+              <p className="mk-gateway-amount">
+                مبلغ قابل پرداخت: <strong>{payableLabel}</strong>
+              </p>
+              <p className="mk-gateway-note">
+                هر دو درگاه فعلاً در محیط آزمایشی (Sandbox) هستند تا Merchant ID واقعی ثبت شود.
+              </p>
+              {payError && <p className="mk-gateway-error">{payError}</p>}
+              <div className="mk-gateway-choices">
+                <button
+                  type="button"
+                  className="mk-gateway-choice mk-gateway-choice--zarinpal"
+                  disabled={isPaying}
+                  onClick={() => void handleSelectGateway("zarinpal")}
+                >
+                  <span className="mk-gateway-mark">زر</span>
+                  <span className="mk-gateway-choice-text">
+                    <strong>زرین‌پال</strong>
+                    <small>درگاه آزمایشی · پرداخت آنلاین</small>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="mk-gateway-choice mk-gateway-choice--parsian"
+                  disabled={isPaying}
+                  onClick={() => void handleSelectGateway("parsian")}
+                >
+                  <span className="mk-gateway-mark">پا</span>
+                  <span className="mk-gateway-choice-text">
+                    <strong>بانک پارسیان</strong>
+                    <small>درگاه آزمایشی · پرداخت بانکی</small>
+                  </span>
+                </button>
+              </div>
+              <button
+                type="button"
+                className="mk-gateway-cancel"
+                disabled={isPaying}
+                onClick={() => setIsPayModalOpen(false)}
+              >
+                انصراف
+              </button>
             </motion.div>
           </div>
         )}

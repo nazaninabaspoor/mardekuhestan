@@ -73,6 +73,7 @@ class Order(models.Model):
 
     class Status(models.TextChoices):
         PENDING = "pending", "در انتظار پرداخت"
+        CONFIRMED = "confirmed", "تایید شده"
         PROCESSING = "processing", "در حال آماده‌سازی در مرتع"
         SHIPPING = "shipping", "در مسیر تحویل (زنجیره سرد)"
         DELIVERED = "delivered", "تحویل‌شده با زنجیره سرد"
