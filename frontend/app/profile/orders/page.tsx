@@ -15,6 +15,30 @@ import { handleDownloadOrderPdf, resolveProductImage } from "@/app/profile/page"
 
 const PAGE_SIZE = 15;
 
+function parsianTokenFromUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname;
+    const isParsianHost =
+      host === "pec.shaparak.ir" ||
+      host === "sandbox.pec.ir" ||
+      (host === "sandbox.banktest.ir" && parsed.pathname.includes("/parsian/"));
+    if (!isParsianHost) return "";
+    const token = parsed.searchParams.get("Token") || parsed.searchParams.get("token") || "";
+    if (/^[1-9]\d{3,18}$/.test(token)) return token;
+    return "";
+  } catch {
+    return "";
+  }
+}
+
+function parsianPayUrl(token: string, sandbox = true) {
+  if (sandbox) {
+    return `https://sandbox.banktest.ir/parsian/pec.shaparak.ir/NewIPG/?Token=${token}`;
+  }
+  return `https://pec.shaparak.ir/NewIPG/?Token=${token}`;
+}
+
 function isOfficialGatewayUrl(url: string) {
   try {
     const parsed = new URL(url);
@@ -22,15 +46,12 @@ function isOfficialGatewayUrl(url: string) {
       const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
       return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("S");
     }
-    if (parsed.hostname === "sandbox.pec.ir") {
-      return parsed.pathname.includes("/NewIPG") && Boolean(parsed.searchParams.get("Token"));
+    if (parsed.hostname === "pec.shaparak.ir" || parsed.hostname === "sandbox.pec.ir" || parsed.hostname === "sandbox.banktest.ir") {
+      return Boolean(parsianTokenFromUrl(url));
     }
     if (parsed.hostname === "www.zarinpal.com" || parsed.hostname === "payment.zarinpal.com") {
       const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
       return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("A");
-    }
-    if (parsed.hostname === "pec.shaparak.ir") {
-      return Boolean(parsed.searchParams.get("Token"));
     }
     return false;
   } catch {
@@ -205,6 +226,13 @@ function OrdersRouteContent() {
         })();
         if (token.length === 36 && token.startsWith("S")) {
           window.location.replace(`https://sandbox.zarinpal.com/pg/StartPay/${token}/`);
+          return;
+        }
+      }
+      if (started.gateway === "parsian") {
+        const token = parsianTokenFromUrl(url);
+        if (token) {
+          window.location.replace(parsianPayUrl(token, started.sandbox !== false));
           return;
         }
       }
@@ -388,7 +416,7 @@ function OrdersRouteContent() {
                 مبلغ قابل پرداخت: <strong>{payableLabel}</strong>
               </p>
               <p className="mk-gateway-note">
-                با انتخاب درگاه وارد سندباکس رسمی زرین‌پال یا پارسیان می‌شوید. کارت و رمز را همان‌جا وارد می‌کنید.
+                با انتخاب درگاه وارد صفحهٔ پرداخت رسمی زرین‌پال یا پارسیان می‌شوید. کارت و رمز را همان‌جا وارد می‌کنید.
               </p>
               {payError && <p className="mk-gateway-error">{payError}</p>}
               <div className="mk-gateway-choices">
@@ -413,7 +441,7 @@ function OrdersRouteContent() {
                   <span className="mk-gateway-mark">پا</span>
                   <span className="mk-gateway-choice-text">
                     <strong>بانک پارسیان</strong>
-                    <small>سندباکس رسمی پارسیان</small>
+                    <small>سندباکس پارسیان</small>
                   </span>
                 </button>
               </div>

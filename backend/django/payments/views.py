@@ -99,13 +99,26 @@ class ParsianCallbackView(APIView):
         return self._go(request)
 
     def _go(self, request):
-        data = request.data if hasattr(request, "data") else {}
-        pid = request.GET.get("pid") or data.get("pid") or data.get("OrderId") or ""
+        data = {}
+        try:
+            if hasattr(request, "data"):
+                data = request.data if isinstance(request.data, dict) else {}
+        except Exception:
+            data = {}
+        post = getattr(request, "POST", {}) or {}
+        pid = (
+            request.GET.get("pid")
+            or data.get("pid")
+            or post.get("pid")
+            or ""
+        )
         token = (
             request.GET.get("Token")
             or request.GET.get("token")
             or data.get("Token")
             or data.get("token")
+            or post.get("Token")
+            or post.get("token")
             or ""
         )
         gw_status = (
@@ -113,6 +126,19 @@ class ParsianCallbackView(APIView):
             or request.GET.get("Status")
             or data.get("status")
             or data.get("Status")
+            or post.get("status")
+            or post.get("Status")
             or ""
         )
-        return HttpResponseRedirect(handle_parsian_callback(str(pid), str(token), str(gw_status)))
+        rrn = (
+            request.GET.get("RRN")
+            or request.GET.get("rrn")
+            or data.get("RRN")
+            or data.get("rrn")
+            or post.get("RRN")
+            or post.get("rrn")
+            or ""
+        )
+        return HttpResponseRedirect(
+            handle_parsian_callback(str(pid), str(token), str(gw_status), str(rrn))
+        )
