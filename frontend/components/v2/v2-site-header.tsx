@@ -11,7 +11,6 @@ import { HeaderCartButton } from "@/components/header-cart-button";
 import { AuthModal } from "@/components/auth-modal";
 import { HeaderAiGate, HeaderAiNavItem } from "@/components/header-ai-nav";
 import {
-  beginSectionCover,
   markSectionTravel,
   travelToSection,
   type TravelTarget,
@@ -54,7 +53,6 @@ export function V2SiteHeader() {
       return;
     }
     markSectionTravel(target);
-    beginSectionCover(target);
     router.push("/");
   };
   const [logoReady, setLogoReady] = useState(false);
