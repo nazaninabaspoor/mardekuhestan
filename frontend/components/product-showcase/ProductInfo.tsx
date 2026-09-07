@@ -11,6 +11,8 @@ import styles from "./ProductInfo.module.css";
 type ProductInfoProps = {
   category: ProductCategory;
   productName?: string | null;
+  productId?: string | null;
+  productImage?: string | null;
   onViewProduct?: (category: ProductCategory) => void;
   onPlayVideo?: (category: ProductCategory) => void;
 };
@@ -18,6 +20,8 @@ type ProductInfoProps = {
 export function ProductInfo({
   category,
   productName = null,
+  productId = null,
+  productImage = null,
   onViewProduct,
   onPlayVideo,
 }: ProductInfoProps) {
@@ -30,9 +34,9 @@ export function ProductInfo({
     e.stopPropagation();
     setIsQuickAdding(true);
     await addToCart({
-      product_id: category.id,
+      product_id: productId || category.id,
       product_name: headline,
-      product_image: category.heroImage || category.cardImage,
+      product_image: productImage || category.heroImage || category.cardImage,
       portion: "۱ کیلوگرم",
       cut_type: "سهمیه تازه مرتع",
       unit_price_toman: 480000,
@@ -65,9 +69,6 @@ export function ProductInfo({
               type="button"
               className={styles.primaryAction}
               onClick={() => onViewProduct?.(category)}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              transition={{ duration: 0.2 }}
             >
               <span>مشاهده و انتخاب برش</span>
             </motion.button>
@@ -77,9 +78,6 @@ export function ProductInfo({
               disabled={isQuickAdding}
               className={styles.quickCartAction}
               onClick={handleQuickAdd}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              transition={{ duration: 0.2 }}
               title="افزودن سریع به سبد خرید"
             >
               <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="1.8" fill="none" aria-hidden="true">
@@ -95,9 +93,6 @@ export function ProductInfo({
                 type="button"
                 className={styles.videoAction}
                 onClick={() => onPlayVideo?.(category)}
-                whileHover={reduceMotion ? undefined : { y: -2 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                transition={{ duration: 0.2 }}
               >
                 <svg className={styles.playIcon} viewBox="0 0 24 24" aria-hidden="true">
                   <path d="m9 7 8 5-8 5V7Z" />

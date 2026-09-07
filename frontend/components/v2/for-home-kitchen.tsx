@@ -294,7 +294,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
       cancelled = true;
       window.cancelAnimationFrame(frame);
     };
-  }, [focusProductId, focusTick, activeCategoryId, activeProducts]);
+  }, [focusTick, activeCategoryId]);
 
   useEffect(() => {
     if (!categories.some((category) => category.id === activeCategoryId)) {
@@ -372,6 +372,8 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
             <ProductInfo
               category={activeCategory}
               productName={focusProductId ? heroProduct?.name : null}
+              productId={heroProduct?.id}
+              productImage={heroProduct?.image ?? activeCategory.heroImage}
               onViewProduct={() => openProductDetail()}
               onPlayVideo={() => openProductDetail()}
             />
@@ -397,7 +399,9 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
             title={`انواع ${activeCategory.title}`}
             products={activeProducts as ReadonlyArray<ShowcaseProduct>}
             highlightId={focusProductId}
-            onProductClick={(p) => openProductDetail(p)}
+            onProductClick={(p) => {
+              setFocusProductId(p.id);
+            }}
           />
         ) : (
           <p className={styles.emptyCatalog}>

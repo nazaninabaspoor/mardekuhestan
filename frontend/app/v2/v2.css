@@ -14497,7 +14497,7 @@ html.is-kitchen-travel body {
 
 .site-header--v2 .v2-nav-icon,
 .site-header--v2 .auth-login-trigger .auth-btn-icon,
-.site-header--v2 .v2-cart-trigger .v2-cart-icon-wrapper {
+.site-header--v2 .v2-cart-trigger .v2-cart-svg {
   position: absolute !important;
   top: auto !important;
   right: auto !important;
@@ -14520,8 +14520,19 @@ html.is-kitchen-travel body {
 }
 
 .site-header--v2 .v2-cart-trigger .v2-cart-icon-wrapper {
-  width: 22px !important;
-  height: 22px !important;
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 1 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none;
 }
 
 .site-header--v2 .v2-nav-link:hover .v2-nav-icon,
@@ -14530,10 +14541,27 @@ html.is-kitchen-travel body {
 .site-header--v2 .v2-nav-ai:focus-visible .v2-nav-icon,
 .site-header--v2 .auth-login-trigger:hover .auth-btn-icon,
 .site-header--v2 .auth-login-trigger:focus-visible .auth-btn-icon,
-.site-header--v2 .v2-cart-trigger:hover .v2-cart-icon-wrapper,
-.site-header--v2 .v2-cart-trigger:focus-visible .v2-cart-icon-wrapper {
+.site-header--v2 .v2-cart-trigger:hover .v2-cart-svg,
+.site-header--v2 .v2-cart-trigger:focus-visible .v2-cart-svg {
   opacity: 1 !important;
   transform: translate(-50%, 0) scale(1) !important;
+}
+
+.site-header--v2 .v2-cart-trigger .v2-cart-badge {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 2 !important;
+  width: auto !important;
+  min-width: 18px;
+  height: 18px;
+  margin: 0 0 0 4px !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none;
+  filter: none;
 }
 
 .site-header--v2 .v2-mobile-panel .v2-nav-icon,
@@ -14549,10 +14577,19 @@ html.is-kitchen-travel body {
   transform: none !important;
 }
 
+.site-header--v2 .v2-mobile-panel .v2-cart-svg {
+  position: static !important;
+  width: 18px !important;
+  height: 18px !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-header--v2 .v2-nav-icon,
   .site-header--v2 .auth-login-trigger .auth-btn-icon,
-  .site-header--v2 .v2-cart-trigger .v2-cart-icon-wrapper {
+  .site-header--v2 .v2-cart-trigger .v2-cart-svg {
     transition: none;
   }
 }

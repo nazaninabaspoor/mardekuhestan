@@ -143,17 +143,40 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
+        const qty = input.quantity ?? 1;
+        const price = input.unit_price_toman * qty;
+        setCart((prev) => {
+          const nextCount = (prev?.total_items_count || 0) + qty;
+          const nextTotal = (prev?.total_price_toman || 0) + price;
+          const optimistic = prev
+            ? {
+                ...prev,
+                total_items_count: nextCount,
+                total_price_toman: nextTotal,
+              }
+            : {
+                id: 0,
+                items: [],
+                total_items_count: nextCount,
+                total_price_toman: nextTotal,
+                updated_at: new Date().toISOString(),
+              };
+          saveCartToCache(optimistic);
+          return optimistic;
+        });
+        triggerCartBump(`«${input.product_name}» به سبد خرید افزوده شد.`);
+
         const res = await addItemToCart(input);
         setCart(res.cart);
         saveCartToCache(res.cart);
-        triggerCartBump(res.message || `«${input.product_name}» به سبد خرید افزوده شد.`);
         return { success: true, message: res.message };
       } catch (err: any) {
         const msg = err?.message || "خطا در افزودن به سبد خرید.";
+        void refreshCart();
         return { success: false, message: msg };
       }
     },
-    [user, openLoginModal, triggerCartBump, saveCartToCache],
+    [user, openLoginModal, triggerCartBump, saveCartToCache, refreshCart],
   );
 
   const removeFromCart = useCallback(
@@ -241,8 +264,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCartNotice({ message: "", visible: false });
   }, []);
 
-  const itemsCount = cart?.total_items_count || (cart?.items ? cart.items.reduce((s, it) => s + it.quantity, 0) : 0);
-  const totalPriceToman = cart?.total_price_toman || (cart?.items ? cart.items.reduce((s, it) => s + it.total_price_toman, 0) : 0);
+  const itemsCount = cart?.total_items_count ?? (cart?.items ? cart.items.reduce((s, it) => s + it.quantity, 0) : 0);
+  const totalPriceToman = cart?.total_price_toman ?? (cart?.items ? cart.items.reduce((s, it) => s + it.total_price_toman, 0) : 0);
 
   return (
     <CartContext.Provider

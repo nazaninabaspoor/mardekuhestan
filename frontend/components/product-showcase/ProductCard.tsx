@@ -44,7 +44,7 @@ export function ProductCard({
         href={product.href}
         className={styles.link}
         onClick={handleClick}
-        aria-label={`مشاهده شناسنامه و جزئیات ${product.name}`}
+        aria-label={`انتخاب ${product.name}`}
       >
         <span className={styles.plate}>
           <Image src={product.image} alt={product.alt} fill sizes="150px" />
