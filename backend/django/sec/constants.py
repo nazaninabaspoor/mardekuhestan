@@ -25,6 +25,8 @@ RATE_SCOPE_AUTH_REGISTER: Final[str] = "auth_register"
 RATE_SCOPE_AUTH_REFRESH: Final[str] = "auth_refresh"
 RATE_SCOPE_PASSWORD_CHANGE: Final[str] = "auth_password_change"
 RATE_SCOPE_HEALTHCHECK: Final[str] = "healthcheck"
+RATE_SCOPE_PAYMENT_START: Final[str] = "payment_start"
+RATE_SCOPE_PAYMENT_CALLBACK: Final[str] = "payment_callback"
 
 RATE_LIMITS: Final[dict[str, tuple[int, int]]] = {
     # سقف عمومی هر IP در کل سایت (جلوگیری از حملات سیل‌آسا و L7 DDoS)
@@ -47,6 +49,9 @@ RATE_LIMITS: Final[dict[str, tuple[int, int]]] = {
     RATE_SCOPE_PASSWORD_CHANGE: (10, 300),
     # بررسی سلامت سرویس
     RATE_SCOPE_HEALTHCHECK: (120, 60),
+    # شروع پرداخت و بازگشت از درگاه — کوتاه تا ورکر و اپ گیر نکنند
+    RATE_SCOPE_PAYMENT_START: (8, 60),
+    RATE_SCOPE_PAYMENT_CALLBACK: (30, 60),
 }
 
 RATE_LIMIT_CACHE_PREFIX: Final[str] = "sec:rl:"

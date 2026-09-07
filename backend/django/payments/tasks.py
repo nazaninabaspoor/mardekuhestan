@@ -1,4 +1,5 @@
-﻿"""payments.tasks
+﻿"""پرداخت به صف Celery نمی‌رود.
 
-Part of Marde Kuhestan Django business domain.
+شروع و تأیید درگاه همزمان، با تایم‌اوت ۴ ثانیه و circuit breaker است.
+اگر زرین‌پال یا پارسیان قطع باشد تسک retry نمی‌شود تا صف ورکر پر نشود.
 """

@@ -3,16 +3,26 @@
 from __future__ import annotations
 
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsCustomerOrStaff
 from payments.models import Payment
-from payments.services import complete_sandbox_payment, start_payment
+from payments.services import (
+    handle_parsian_callback,
+    handle_zarinpal_callback,
+    start_payment,
+)
+from sec.decorators import rate_limit
 from sec.ownership import acting_user
 
 
+@method_decorator(rate_limit(scope="payment_start"), name="dispatch")
 class PaymentStartView(APIView):
     permission_classes = [IsCustomerOrStaff]
 
@@ -29,7 +39,8 @@ class PaymentStartView(APIView):
             )
         except DjangoValidationError as exc:
             msg = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
-            return Response({"detail": msg}, status=status.HTTP_400_BAD_REQUEST)
+            code = status.HTTP_503_SERVICE_UNAVAILABLE if "موقتاً" in msg else status.HTTP_400_BAD_REQUEST
+            return Response({"detail": msg}, status=code)
         return Response(payload)
 
 
@@ -54,15 +65,52 @@ class PaymentSandboxDetailView(APIView):
         )
 
 
-class PaymentSandboxCompleteView(APIView):
-    permission_classes = [IsCustomerOrStaff]
+@method_decorator(csrf_exempt, name="dispatch")
+@method_decorator(rate_limit(scope="payment_callback"), name="dispatch")
+class ZarinpalCallbackView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
-    def post(self, request, public_id: str):
-        user = acting_user(request)
-        outcome = (request.data.get("outcome") or "paid").strip()
-        try:
-            payload = complete_sandbox_payment(user, public_id, outcome)
-        except DjangoValidationError as exc:
-            msg = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
-            return Response({"detail": msg}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(payload)
+    def get(self, request):
+        return self._go(request)
+
+    def post(self, request):
+        return self._go(request)
+
+    def _go(self, request):
+        pid = request.GET.get("pid") or request.data.get("pid") or ""
+        authority = request.GET.get("Authority") or request.GET.get("authority") or ""
+        gw_status = request.GET.get("Status") or request.GET.get("status") or ""
+        return HttpResponseRedirect(handle_zarinpal_callback(pid, authority, gw_status))
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+@method_decorator(rate_limit(scope="payment_callback"), name="dispatch")
+class ParsianCallbackView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return self._go(request)
+
+    def post(self, request):
+        return self._go(request)
+
+    def _go(self, request):
+        data = request.data if hasattr(request, "data") else {}
+        pid = request.GET.get("pid") or data.get("pid") or data.get("OrderId") or ""
+        token = (
+            request.GET.get("Token")
+            or request.GET.get("token")
+            or data.get("Token")
+            or data.get("token")
+            or ""
+        )
+        gw_status = (
+            request.GET.get("status")
+            or request.GET.get("Status")
+            or data.get("status")
+            or data.get("Status")
+            or ""
+        )
+        return HttpResponseRedirect(handle_parsian_callback(str(pid), str(token), str(gw_status)))

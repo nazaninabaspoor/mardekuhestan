@@ -1,43 +1,31 @@
-﻿"""شروع و تکمیل پرداخت زرین‌پال / پارسیان (سندباکس تا دریافت Merchant)."""
+﻿"""شروع و تأیید پرداخت روی سندباکس رسمی زرین‌پال و پارسیان."""
 
 from __future__ import annotations
-
-import json
-import re
-import urllib.error
-import urllib.request
-import uuid
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from orders.models import Cart
 from orders.services import fulfill_cart_as_order
+from payments.circuit import CircuitOpen, GatewayTransportError
+from payments.gateways import (
+    GatewayRejected,
+    request_parsian,
+    request_zarinpal,
+    verify_parsian,
+    verify_zarinpal,
+)
 from payments.models import Payment
 
-_UUID = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+UNAVAILABLE = "درگاه پرداخت موقتاً در دسترس نیست. سفارش شما ثبت نشد و سایت باز است؛ کمی بعد دوباره تلاش کنید."
 
 
 def _frontend_url() -> str:
     return getattr(settings, "FRONTEND_URL", "http://localhost:3000").rstrip("/")
 
 
-def _zarinpal_merchant() -> str:
-    return (getattr(settings, "ZARINPAL_MERCHANT_ID", "") or "").strip()
-
-
-def _parsian_pin() -> str:
-    return (getattr(settings, "PARSIAN_PIN", "") or "").strip()
-
-
-def zarinpal_live_sandbox_ready() -> bool:
-    merchant = _zarinpal_merchant()
-    return bool(merchant and _UUID.match(merchant) and "xxxx" not in merchant.lower())
-
-
-def parsian_live_sandbox_ready() -> bool:
-    pin = _parsian_pin()
-    return bool(pin and pin.lower() not in {"", "sandbox", "change-me", "0"})
+def _backend_url() -> str:
+    return getattr(settings, "BACKEND_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
 
 
 def cart_payable_toman(user) -> int:
@@ -62,96 +50,102 @@ def start_payment(user, gateway: str, receiver_name: str, receiver_phone: str, s
         receiver_name=receiver_name,
         receiver_phone=receiver_phone,
         shipping_address=shipping_address,
-        authority=uuid.uuid4().hex[:32],
     )
 
-    local_url = f"{_frontend_url()}/pay/sandbox/{payment.public_id}?gateway={gateway}"
+    try:
+        if gateway == Payment.Gateway.ZARINPAL:
+            callback = f"{_backend_url()}/api/payments/callback/zarinpal/?pid={payment.public_id}"
+            authority, pay_url = request_zarinpal(
+                amount,
+                callback,
+                f"سفارش مرد کوهستان #{payment.public_id.hex[:8]}",
+            )
+        else:
+            callback = f"{_backend_url()}/api/payments/callback/parsian/?pid={payment.public_id}"
+            order_id = int(payment.public_id.int % (10**12))
+            authority, pay_url = request_parsian(amount, order_id, callback)
+    except CircuitOpen as exc:
+        payment.status = Payment.Status.FAILED
+        payment.save(update_fields=["status", "updated_at"])
+        raise ValidationError(UNAVAILABLE) from exc
+    except GatewayTransportError as exc:
+        payment.status = Payment.Status.FAILED
+        payment.save(update_fields=["status", "updated_at"])
+        raise ValidationError(UNAVAILABLE) from exc
+    except GatewayRejected as exc:
+        payment.status = Payment.Status.FAILED
+        payment.save(update_fields=["status", "updated_at"])
+        raise ValidationError(str(exc) or UNAVAILABLE) from exc
 
-    if gateway == Payment.Gateway.ZARINPAL and zarinpal_live_sandbox_ready():
-        remote = _zarinpal_request(payment)
-        if remote:
-            return remote
-
-    if gateway == Payment.Gateway.PARSIAN and parsian_live_sandbox_ready():
-        remote = _parsian_request(payment)
-        if remote:
-            return remote
-
-    payment.sandbox = True
-    payment.save(update_fields=["sandbox", "updated_at"])
+    payment.authority = authority
+    payment.save(update_fields=["authority", "updated_at"])
     return {
         "payment_id": str(payment.public_id),
         "gateway": gateway,
         "sandbox": True,
         "amount_toman": payment.amount_toman,
-        "redirect_url": local_url,
+        "redirect_url": pay_url,
     }
 
 
-def _zarinpal_request(payment: Payment) -> dict | None:
-    payload = json.dumps(
-        {
-            "merchant_id": _zarinpal_merchant(),
-            "amount": int(payment.amount_toman) * 10,
-            "callback_url": f"{_frontend_url()}/pay/callback/zarinpal?pid={payment.public_id}",
-            "description": f"سفارش مرد کوهستان #{payment.public_id.hex[:8]}",
-        }
-    ).encode("utf-8")
-    req = urllib.request.Request(
-        "https://sandbox.zarinpal.com/pg/v4/payment/request.json",
-        data=payload,
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            body = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
-        return None
-
-    data = (body or {}).get("data") or {}
-    authority = data.get("authority")
-    code = data.get("code")
-    if not authority or code not in (100, "100"):
-        return None
-    payment.authority = str(authority)
-    payment.save(update_fields=["authority", "updated_at"])
-    return {
-        "payment_id": str(payment.public_id),
-        "gateway": Payment.Gateway.ZARINPAL,
-        "sandbox": True,
-        "amount_toman": payment.amount_toman,
-        "redirect_url": f"https://sandbox.zarinpal.com/pg/StartPay/{authority}",
-    }
-
-
-def _parsian_request(payment: Payment) -> dict | None:
-    """پارسیان سندباکس بدون PIN معتبر به صفحهٔ محلی برمی‌گردد."""
-    return None
-
-
-def complete_sandbox_payment(user, public_id: str, outcome: str) -> dict:
-    try:
-        payment = Payment.objects.select_related("user").get(public_id=public_id, user=user)
-    except Payment.DoesNotExist as exc:
-        raise ValidationError("پرداخت یافت نشد.") from exc
-
+def _finish_paid(payment: Payment, ref_id: str) -> Payment:
     if payment.status == Payment.Status.PAID and payment.order_id:
-        return {"ok": True, "order_number": payment.order.order_number, "already": True}
-
-    if outcome != "paid":
-        payment.status = Payment.Status.CANCELED
-        payment.save(update_fields=["status", "updated_at"])
-        return {"ok": False, "canceled": True, "order_number": None}
-
+        return payment
     order = fulfill_cart_as_order(
-        user,
+        payment.user,
         receiver_name=payment.receiver_name,
         receiver_phone=payment.receiver_phone,
         shipping_address=payment.shipping_address,
     )
     payment.status = Payment.Status.PAID
     payment.order = order
-    payment.ref_id = f"SB-{order.order_number}"
+    payment.ref_id = str(ref_id)[:120]
     payment.save(update_fields=["status", "order", "ref_id", "updated_at"])
-    return {"ok": True, "order_number": order.order_number, "already": False}
+    return payment
+
+
+def handle_zarinpal_callback(public_id: str, authority: str, status: str) -> str:
+    payment = Payment.objects.select_related("user", "order").filter(public_id=public_id).first()
+    if not payment:
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=missing"
+    if (status or "").upper() != "OK":
+        payment.status = Payment.Status.CANCELED
+        payment.save(update_fields=["status", "updated_at"])
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=canceled"
+    if payment.authority and authority and payment.authority != authority:
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=mismatch"
+    try:
+        ref_id = verify_zarinpal(payment.amount_toman, authority or payment.authority)
+        _finish_paid(payment, ref_id)
+    except (CircuitOpen, GatewayTransportError):
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=unavailable"
+    except GatewayRejected:
+        payment.status = Payment.Status.FAILED
+        payment.save(update_fields=["status", "updated_at"])
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
+    except ValidationError:
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
+    return f"{_frontend_url()}/profile/orders?paid=1"
+
+
+def handle_parsian_callback(public_id: str, token: str, status: str) -> str:
+    payment = Payment.objects.select_related("user", "order").filter(public_id=public_id).first()
+    if not payment:
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=missing"
+    token = (token or payment.authority or "").strip()
+    if status not in {"", "0", "00"} and str(status) not in {"0", "00"}:
+        payment.status = Payment.Status.CANCELED
+        payment.save(update_fields=["status", "updated_at"])
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=canceled"
+    try:
+        ref_id = verify_parsian(token)
+        _finish_paid(payment, ref_id)
+    except (CircuitOpen, GatewayTransportError):
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=unavailable"
+    except GatewayRejected:
+        payment.status = Payment.Status.FAILED
+        payment.save(update_fields=["status", "updated_at"])
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
+    except ValidationError:
+        return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
+    return f"{_frontend_url()}/profile/orders?paid=1"
