@@ -14562,7 +14562,7 @@ html.is-kitchen-travel body {
   position: absolute;
   z-index: 5;
   right: clamp(20px, 4vw, 72px);
-  bottom: clamp(18px, 3.2vh, 34px);
+  bottom: clamp(64px, 8.5vh, 104px);
   left: auto;
   display: flex;
   flex-direction: column;
@@ -14663,6 +14663,7 @@ html.is-kitchen-travel body {
   .landing--v2 .landing-v2-dock {
     right: 16px;
     left: 16px;
+    bottom: clamp(40px, 6vh, 68px);
     width: auto;
     max-width: none;
     align-items: flex-start;
