@@ -62,7 +62,7 @@ def zarinpal_startpay_url(authority: str) -> str:
     auth = (authority or "").strip()
     if len(auth) != 36 or not auth.startswith("S"):
         raise GatewayRejected("کد پیگیری سندباکس زرین‌پال باید ۳۶ کاراکتر و با S شروع شود.")
-    return f"{_zarinpal_base()}/pg/StartPay/{auth}"
+    return f"{_zarinpal_base()}/pg/StartPay/{auth}/"
 
 
 def official_pay_url(gateway: str, authority: str, sandbox: bool = True) -> str:
@@ -71,10 +71,10 @@ def official_pay_url(gateway: str, authority: str, sandbox: bool = True) -> str:
         if sandbox:
             if len(auth) != 36 or not auth.startswith("S"):
                 return ""
-            return f"https://sandbox.zarinpal.com/pg/StartPay/{auth}"
+            return f"https://sandbox.zarinpal.com/pg/StartPay/{auth}/"
         if len(auth) != 36 or not auth.startswith("A"):
             return ""
-        return f"https://www.zarinpal.com/pg/StartPay/{auth}"
+        return f"https://www.zarinpal.com/pg/StartPay/{auth}/"
     if gateway == "parsian" and auth:
         if sandbox:
             return f"https://sandbox.pec.ir/NewIPG/?Token={auth}"

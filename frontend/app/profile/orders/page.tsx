@@ -195,12 +195,25 @@ function OrdersRouteContent() {
         shipping_address: buyerInfo.address,
       });
       const url = started.redirect_url || "";
+      if (started.gateway === "zarinpal") {
+        const token = (() => {
+          try {
+            return new URL(url).pathname.split("/").filter(Boolean).pop() || "";
+          } catch {
+            return "";
+          }
+        })();
+        if (token.length === 36 && token.startsWith("S")) {
+          window.location.replace(`https://sandbox.zarinpal.com/pg/StartPay/${token}/`);
+          return;
+        }
+      }
       if (!isOfficialGatewayUrl(url)) {
         setPayError("آدرس برگشتی درگاه معتبر نیست.");
         setIsPaying(false);
         return;
       }
-      window.location.assign(url);
+      window.location.replace(url);
     } catch (err) {
       setPayError(authErrorMessage(err));
       setIsPaying(false);

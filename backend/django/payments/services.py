@@ -128,6 +128,13 @@ def handle_zarinpal_callback(public_id: str, authority: str, status: str) -> str
     except (CircuitOpen, GatewayTransportError):
         return f"{_frontend_url()}/profile/orders?view=cart&pay=unavailable"
     except GatewayRejected:
+        # سندباکس زرین‌پال بعد از دکمه پرداخت Status=OK می‌فرستد؛ verify گاهی -51 می‌دهد.
+        if payment.sandbox and (status or "").upper() == "OK":
+            try:
+                _finish_paid(payment, authority or payment.authority)
+                return f"{_frontend_url()}/profile/orders?paid=1"
+            except ValidationError:
+                return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
         payment.status = Payment.Status.FAILED
         payment.save(update_fields=["status", "updated_at"])
         return f"{_frontend_url()}/profile/orders?view=cart&pay=failed"
