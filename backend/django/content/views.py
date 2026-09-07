@@ -1,5 +1,6 @@
 ﻿from django.db.models import Count, Q
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 
 from content.constants import ArticleStatus
@@ -15,9 +16,16 @@ from content.serializers import (
 )
 
 
+class ArticleListPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = "page_size"
+    max_page_size = 24
+
+
 class ArticleListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ArticleListSerializer
+    pagination_class = ArticleListPagination
 
     def get_queryset(self):
         qs = get_published_articles().prefetch_related("categories", "tags")

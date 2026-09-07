@@ -6,11 +6,14 @@ from content.services import seo_readiness_checklist
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    article_count = serializers.IntegerField(read_only=True, required=False, default=0)
+    article_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
         fields = ("id", "name", "slug", "description", "parent", "is_active", "article_count")
+
+    def get_article_count(self, obj: Category) -> int:
+        return int(getattr(obj, "article_count", 0) or 0)
 
 
 class TagSerializer(serializers.ModelSerializer):
