@@ -42,6 +42,20 @@ def start_payment(user, gateway: str, receiver_name: str, receiver_phone: str, s
         raise ValidationError("درگاه پرداخت نامعتبر است.")
 
     amount = cart_payable_toman(user)
+    if gateway == Payment.Gateway.ZARINPAL:
+        from payments.gateways import zarinpal_merchant
+        if not zarinpal_merchant():
+            raise ValidationError(
+                "برای سندباکس زرین‌پال از پنل رایگان sandbox.zarinpal.com یک Merchant ID بگیرید و در ZARINPAL_MERCHANT_ID بگذارید."
+            )
+    else:
+        from payments.gateways import parsian_pin
+        pin = parsian_pin()
+        if not pin or pin.lower() in {"sandbox", "change-me", "0"}:
+            raise ValidationError(
+                "برای سندباکس پارسیان PIN تست را از pec.ir بگیرید و در PARSIAN_PIN بگذارید."
+            )
+
     payment = Payment.objects.create(
         user=user,
         gateway=gateway,

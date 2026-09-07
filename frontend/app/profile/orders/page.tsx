@@ -48,6 +48,7 @@ function OrdersRouteContent() {
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
   const paidParam = searchParams.get("paid");
+  const payParam = searchParams.get("pay");
 
   const {
     cart,
@@ -100,7 +101,19 @@ function OrdersRouteContent() {
     if (paidParam === "1") {
       setDocViewMode("book");
     }
-  }, [viewParam, paidParam]);
+    if (payParam) {
+      setDocViewMode("invoice");
+      const messages: Record<string, string> = {
+        failed: "پرداخت در درگاه تأیید نشد.",
+        canceled: "پرداخت لغو شد.",
+        unavailable: "درگاه موقتاً قطع بود. سایت باز است؛ کمی بعد دوباره تلاش کنید.",
+        missing: "رسید پرداخت پیدا نشد.",
+        mismatch: "رسید درگاه با این سفارش همخوانی نداشت.",
+      };
+      setPayError(messages[payParam] || "پرداخت کامل نشد.");
+      setIsPayModalOpen(true);
+    }
+  }, [viewParam, paidParam, payParam]);
 
   useEffect(() => {
     if (!user) return;
@@ -158,9 +171,18 @@ function OrdersRouteContent() {
         receiver_phone: buyerInfo.phone,
         shipping_address: buyerInfo.address,
       });
-      router.push(`/pay/sandbox/${started.payment_id}?gateway=${gateway}`);
-      setIsPayModalOpen(false);
-      setIsPaying(false);
+      const url = started.redirect_url || "";
+      const allowed =
+        url.startsWith("https://sandbox.zarinpal.com/") ||
+        url.startsWith("https://payment.zarinpal.com/") ||
+        url.startsWith("https://sandbox.pec.ir/") ||
+        url.startsWith("https://pec.shaparak.ir/");
+      if (!allowed) {
+        setPayError("آدرس برگشتی درگاه معتبر نیست.");
+        setIsPaying(false);
+        return;
+      }
+      window.location.assign(url);
     } catch (err) {
       setPayError(authErrorMessage(err));
       setIsPaying(false);
@@ -335,7 +357,7 @@ function OrdersRouteContent() {
                 مبلغ قابل پرداخت: <strong>{payableLabel}</strong>
               </p>
               <p className="mk-gateway-note">
-                هر دو درگاه فعلاً در محیط آزمایشی (Sandbox) هستند تا Merchant ID واقعی ثبت شود.
+                با انتخاب درگاه وارد سندباکس رسمی زرین‌پال یا پارسیان می‌شوید. کارت و رمز را همان‌جا وارد می‌کنید.
               </p>
               {payError && <p className="mk-gateway-error">{payError}</p>}
               <div className="mk-gateway-choices">
@@ -348,7 +370,7 @@ function OrdersRouteContent() {
                   <span className="mk-gateway-mark">زر</span>
                   <span className="mk-gateway-choice-text">
                     <strong>زرین‌پال</strong>
-                    <small>درگاه آزمایشی · پرداخت آنلاین</small>
+                    <small>سندباکس رسمی زرین‌پال</small>
                   </span>
                 </button>
                 <button
@@ -360,7 +382,7 @@ function OrdersRouteContent() {
                   <span className="mk-gateway-mark">پا</span>
                   <span className="mk-gateway-choice-text">
                     <strong>بانک پارسیان</strong>
-                    <small>درگاه آزمایشی · پرداخت بانکی</small>
+                    <small>سندباکس رسمی پارسیان</small>
                   </span>
                 </button>
               </div>

@@ -41,7 +41,7 @@ app.conf.task_routes = {
     "notifications.tasks.*": {"queue": "high_priority"},
     "accounts.tasks.notify_*": {"queue": "high_priority"},
     "accounts.tasks.send_*": {"queue": "high_priority"},
-    # سفارش‌ها و پرداخت‌ها در صف استاندارد
+    # سفارش‌ها در صف استاندارد — پرداخت به صف نمی‌رود (circuit breaker در درخواست HTTP)
     "orders.tasks.*": {"queue": "default"},
     "payments.tasks.*": {"queue": "default"},
     "inventory.tasks.*": {"queue": "default"},
@@ -66,9 +66,11 @@ app.conf.worker_max_memory_per_child = 350000
 # توزیع عادلانه تسک‌ها بین پردازه‌ها بدون احتکار تسک
 app.conf.worker_prefetch_multiplier = 1
 
-# تایید تسک پس از اتمام موفق (در صورت کرش سیستم، تسک گم نمی‌شود)
 app.conf.task_acks_late = True
 app.conf.task_reject_on_worker_lost = True
+app.conf.task_annotations = {
+    "payments.tasks.*": {"max_retries": 0, "rate_limit": "20/m"},
+}
 
 # مهلت زمانی اجرای تسک‌ها (جلوگیری از تسک‌های بی‌پایان و اشغال ورکر)
 app.conf.task_soft_time_limit = 120  # ثانیه (سیگنال نرم)
