@@ -134,8 +134,12 @@ CSRF_TRUSTED_ORIGINS = list(CORS_ALLOWED_ORIGINS)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 BACKEND_PUBLIC_URL = os.getenv("BACKEND_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
-ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID", "").strip()
 ZARINPAL_SANDBOX = env_bool("ZARINPAL_SANDBOX", default=True)
+# در سندباکس زرین‌پال مرچنت می‌تواند هر UUID معتبر باشد؛ این مقدار فقط برای تست است.
+_ZARINPAL_SANDBOX_MERCHANT = "123e4567-e89b-12d3-a456-426614174000"
+ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID", "").strip()
+if not ZARINPAL_MERCHANT_ID and ZARINPAL_SANDBOX:
+    ZARINPAL_MERCHANT_ID = _ZARINPAL_SANDBOX_MERCHANT
 PARSIAN_PIN = os.getenv("PARSIAN_PIN", "").strip()
 PARSIAN_SANDBOX = env_bool("PARSIAN_SANDBOX", default=True)
 PAYMENT_GATEWAY_TIMEOUT_SECONDS = int(os.getenv("PAYMENT_GATEWAY_TIMEOUT_SECONDS", "4"))

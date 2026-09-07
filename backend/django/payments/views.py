@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsCustomerOrStaff
+from payments.gateways import official_pay_url
 from payments.models import Payment
 from payments.services import (
     handle_parsian_callback,
@@ -61,6 +62,7 @@ class PaymentSandboxDetailView(APIView):
                 "amount_toman": payment.amount_toman,
                 "sandbox": payment.sandbox,
                 "order_number": payment.order.order_number if payment.order_id else None,
+                "redirect_url": official_pay_url(payment.gateway, payment.authority, payment.sandbox),
             }
         )
 

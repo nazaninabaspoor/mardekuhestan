@@ -58,6 +58,30 @@ def _parsian_pay_url(token: str) -> str:
     return f"https://pec.shaparak.ir/NewIPG/?Token={token}"
 
 
+def zarinpal_startpay_url(authority: str) -> str:
+    auth = (authority or "").strip()
+    if len(auth) != 36 or not auth.startswith("S"):
+        raise GatewayRejected("کد پیگیری سندباکس زرین‌پال باید ۳۶ کاراکتر و با S شروع شود.")
+    return f"{_zarinpal_base()}/pg/StartPay/{auth}"
+
+
+def official_pay_url(gateway: str, authority: str, sandbox: bool = True) -> str:
+    auth = (authority or "").strip()
+    if gateway == "zarinpal":
+        if sandbox:
+            if len(auth) != 36 or not auth.startswith("S"):
+                return ""
+            return f"https://sandbox.zarinpal.com/pg/StartPay/{auth}"
+        if len(auth) != 36 or not auth.startswith("A"):
+            return ""
+        return f"https://www.zarinpal.com/pg/StartPay/{auth}"
+    if gateway == "parsian" and auth:
+        if sandbox:
+            return f"https://sandbox.pec.ir/NewIPG/?Token={auth}"
+        return f"https://pec.shaparak.ir/NewIPG/?Token={auth}"
+    return ""
+
+
 def zarinpal_merchant() -> str:
     return (getattr(settings, "ZARINPAL_MERCHANT_ID", "") or "").strip()
 
@@ -114,9 +138,7 @@ def _http_soap(url: str, envelope: str, soap_action: str, gateway: str) -> str:
 def request_zarinpal(amount_toman: int, callback_url: str, description: str) -> tuple[str, str]:
     merchant = zarinpal_merchant()
     if not merchant or not _UUID.match(merchant):
-        raise GatewayRejected(
-            "برای سندباکس زرین‌پال از پنل رایگان sandbox.zarinpal.com یک Merchant ID بگیرید و در ZARINPAL_MERCHANT_ID بگذارید."
-        )
+        raise GatewayRejected("Merchant ID زرین‌پال نامعتبر است.")
     payload = {
         "merchant_id": merchant,
         "amount": int(amount_toman) * 10,
@@ -133,8 +155,7 @@ def request_zarinpal(amount_toman: int, callback_url: str, description: str) -> 
         if isinstance(errors, dict):
             message = str(errors.get("message") or "")
         raise GatewayRejected(message or "زرین‌پال درخواست پرداخت را نپذیرفت.")
-    pay_url = f"{_zarinpal_base()}/pg/StartPay/{authority}"
-    return str(authority), pay_url
+    return str(authority).strip(), zarinpal_startpay_url(str(authority).strip())
 
 
 def verify_zarinpal(amount_toman: int, authority: str) -> str:

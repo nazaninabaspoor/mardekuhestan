@@ -15,6 +15,29 @@ import { handleDownloadOrderPdf, resolveProductImage } from "@/app/profile/page"
 
 const PAGE_SIZE = 15;
 
+function isOfficialGatewayUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "sandbox.zarinpal.com") {
+      const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
+      return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("S");
+    }
+    if (parsed.hostname === "sandbox.pec.ir") {
+      return parsed.pathname.includes("/NewIPG") && Boolean(parsed.searchParams.get("Token"));
+    }
+    if (parsed.hostname === "www.zarinpal.com" || parsed.hostname === "payment.zarinpal.com") {
+      const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
+      return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("A");
+    }
+    if (parsed.hostname === "pec.shaparak.ir") {
+      return Boolean(parsed.searchParams.get("Token"));
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function mapApiOrder(ord: ApiOrder): PastureOrderData {
   const primaryItemName = ord.items[0]?.product_name
     ? ord.items[0].product_name.split(" (")[0]
@@ -172,12 +195,7 @@ function OrdersRouteContent() {
         shipping_address: buyerInfo.address,
       });
       const url = started.redirect_url || "";
-      const allowed =
-        url.startsWith("https://sandbox.zarinpal.com/") ||
-        url.startsWith("https://payment.zarinpal.com/") ||
-        url.startsWith("https://sandbox.pec.ir/") ||
-        url.startsWith("https://pec.shaparak.ir/");
-      if (!allowed) {
+      if (!isOfficialGatewayUrl(url)) {
         setPayError("آدرس برگشتی درگاه معتبر نیست.");
         setIsPaying(false);
         return;

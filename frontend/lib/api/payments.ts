@@ -18,6 +18,7 @@ export type SandboxPayment = {
   amount_toman: number;
   sandbox: boolean;
   order_number: string | null;
+  redirect_url?: string;
 };
 
 export type PaymentComplete = {
