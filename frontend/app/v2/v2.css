@@ -1113,7 +1113,7 @@ html.is-v2-bell-cursor textarea {
 
 .landing--v2 .landing-v2-lead {
   margin: 16px 0 0;
-  max-width: 22rem;
+  max-width: none;
   font-size: clamp(15px, 1.3vw, 17px);
   font-weight: 600;
   line-height: 1.75;
@@ -4533,7 +4533,7 @@ html.is-v2-bell-cursor textarea {
 
 .landing--v2 .landing-v2-copy {
   align-items: flex-start;
-  transform: translateX(clamp(96px, 8vw, 152px));
+  transform: none;
 }
 
 .landing--v2 .landing-v2-copy h1 {
@@ -14554,5 +14554,103 @@ html.is-kitchen-travel body {
   .site-header--v2 .auth-login-trigger .auth-btn-icon,
   .site-header--v2 .v2-cart-trigger .v2-cart-icon-wrapper {
     transition: none;
+  }
+}
+
+/* Hero copy sits in the same right column as video 01 (خانواده) */
+.landing--v2 .landing-v2-dock {
+  position: absolute;
+  z-index: 5;
+  right: clamp(20px, 4vw, 72px);
+  bottom: clamp(18px, 3.2vh, 34px);
+  left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  width: max-content;
+  max-width: calc(100% - 2 * clamp(20px, 4vw, 72px));
+  direction: rtl;
+}
+
+.landing--v2 .landing-v2-copy {
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  transform: none !important;
+}
+
+.landing--v2 .landing-v2-copy h1 {
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  white-space: nowrap;
+  font-size: clamp(42px, 5.4vw, 68px);
+}
+
+.landing--v2 .landing-v2-lead {
+  width: max-content;
+  max-width: none;
+  margin-right: 0;
+  margin-left: 0;
+  font-size: clamp(18px, 1.85vw, 24px);
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.landing--v2 .landing-v2-cta {
+  align-self: flex-start;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.landing--v2 .landing-v2-playlist {
+  position: static;
+  right: auto;
+  left: auto;
+  bottom: auto;
+  z-index: 1;
+  transform: none;
+}
+
+.landing--v2 .landing-v2-playlist-track {
+  margin: 0;
+  justify-content: flex-start;
+}
+
+@media (max-width: 980px) {
+  .landing--v2 .landing-v2-dock {
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+    align-items: flex-start;
+  }
+
+  .landing--v2 .landing-v2-copy {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .landing--v2 .landing-v2-copy h1 {
+    font-size: clamp(32px, 8vw, 48px);
+    white-space: nowrap;
+  }
+
+  .landing--v2 .landing-v2-lead {
+    font-size: clamp(16px, 3.8vw, 20px);
+  }
+}
+
+@media (max-width: 520px) {
+  .landing--v2 .landing-v2-copy h1 {
+    white-space: normal;
   }
 }
