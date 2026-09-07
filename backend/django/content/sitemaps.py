@@ -15,4 +15,4 @@ class ArticleSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/articles/{obj.slug}/"
+        return f"/magazine/{obj.slug}/"

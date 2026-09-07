@@ -1,8 +1,10 @@
-﻿from rest_framework import generics
+﻿from django.db.models import Count, Q
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
+from content.constants import ArticleStatus
 from content.models import Category, ContentPillar, Tag, TopicCluster
-from content.selectors import get_published_article_by_slug, get_published_articles
+from content.selectors import get_published_article_by_slug, get_published_articles, search_published_articles
 from content.serializers import (
     ArticleDetailSerializer,
     ArticleListSerializer,
@@ -23,6 +25,7 @@ class ArticleListView(generics.ListAPIView):
         tag = self.request.query_params.get("tag")
         pillar = self.request.query_params.get("pillar")
         cluster = self.request.query_params.get("cluster")
+        query = self.request.query_params.get("q")
         if category:
             qs = qs.filter(categories__slug=category)
         if tag:
@@ -31,6 +34,8 @@ class ArticleListView(generics.ListAPIView):
             qs = qs.filter(pillar__slug=pillar)
         if cluster:
             qs = qs.filter(cluster__slug=cluster)
+        if query:
+            qs = search_published_articles(qs, query)
         return qs.distinct()
 
 
@@ -54,7 +59,13 @@ class ArticleDetailView(generics.RetrieveAPIView):
 class CategoryListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = CategorySerializer
-    queryset = Category.objects.filter(is_active=True)
+    queryset = Category.objects.filter(is_active=True).annotate(
+        article_count=Count(
+            "articles",
+            filter=Q(articles__status=ArticleStatus.PUBLISHED, articles__published_at__isnull=False),
+            distinct=True,
+        )
+    )
 
 
 class TagListView(generics.ListAPIView):

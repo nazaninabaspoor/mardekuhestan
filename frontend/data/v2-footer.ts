@@ -14,7 +14,8 @@ export const v2Footer = {
   ],
   pagesTitle: "صفحات",
   pages: [
-    { href: "/v2", label: "صفحه اصلی" },
+    { href: "/", label: "صفحه اصلی" },
+    { href: "/magazine", label: "مجله" },
     { href: "/chain", label: "مسیر غذا" },
     { href: "/way", label: "راه ما" },
     { href: "/stores", label: "فروشگاه‌ها" },

@@ -1045,6 +1045,7 @@ export const contactInfo = {
   email: "info@mardekuhestan.com",
   pages: [
     { href: "/", label: "صفحه اصلی" },
+    { href: "/magazine", label: "مجله" },
     { href: "/chain", label: "زنجیره" },
     { href: "/way", label: "راه‌ها" },
     { href: "/contact", label: "ارتباط با ما" },
