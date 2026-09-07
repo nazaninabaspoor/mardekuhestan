@@ -1556,3 +1556,195 @@ html.is-orders-route .site-canvas {
   opacity: 0.55;
   cursor: wait;
 }
+
+html.is-pay-sandbox .site-header,
+html.is-pay-sandbox .site-footer,
+html.is-pay-sandbox .brand-teaser,
+html.is-pay-sandbox .skip-link {
+  display: none !important;
+}
+
+html.is-pay-sandbox,
+html.is-pay-sandbox body,
+html.is-pay-sandbox .site-canvas {
+  background: #0f1a16 !important;
+  min-height: 100dvh;
+}
+
+.mk-psp {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px 48px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 214, 0, 0.16), transparent 42%),
+    #141414;
+}
+
+.mk-psp--parsian {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(32, 64, 120, 0.35), transparent 46%),
+    #071226;
+}
+
+.mk-psp-status {
+  color: #F4F0E8;
+  font-weight: 800;
+}
+
+.mk-psp-shell {
+  width: min(440px, 100%);
+  background: #fff;
+  color: #1D1D1B;
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+}
+
+.mk-psp-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mk-psp-brand {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #BE6516;
+  font-weight: 900;
+}
+
+.mk-psp--parsian .mk-psp-brand {
+  color: #204078;
+}
+
+.mk-psp-top h1 {
+  margin: 4px 0 0;
+  font-size: 22px;
+  color: #1D1D1B;
+}
+
+.mk-psp-sandbox-tag {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 900;
+  background: #F4F0E8;
+  color: #005B48;
+  border: 1px solid rgba(0, 91, 72, 0.2);
+}
+
+.mk-psp-merchant,
+.mk-psp-hint,
+.mk-psp-otp-note {
+  margin: 0;
+  color: #5D686E;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.mk-psp-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #005B48;
+  color: #F4F0E8;
+}
+
+.mk-psp--parsian .mk-psp-amount {
+  background: #204078;
+}
+
+.mk-psp-amount strong {
+  color: #D4A359;
+  font-size: 20px;
+}
+
+.mk-psp-error {
+  margin: 0;
+  color: #861309;
+  font-weight: 800;
+  font-size: 13.5px;
+}
+
+.mk-psp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mk-psp-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #005B48;
+}
+
+.mk-psp-form input,
+.mk-psp-form select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(0, 91, 72, 0.22);
+  background: #F4F0E8;
+  color: #1D1D1B;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.mk-psp-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.mk-psp-primary,
+.mk-psp-ghost {
+  min-height: 46px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.mk-psp-primary {
+  border: 0;
+  background: #005B48;
+  color: #F4F0E8;
+}
+
+.mk-psp--parsian .mk-psp-primary {
+  background: #204078;
+}
+
+.mk-psp-primary:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.mk-psp-ghost {
+  border: 0;
+  background: transparent;
+  color: #5D686E;
+}
+
+.mk-psp-done {
+  text-align: center;
+  padding: 18px 8px 8px;
+}
+
+.mk-psp-done p {
+  margin: 0 0 8px;
+  color: #005B48;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.mk-psp-done small {
+  color: #5D686E;
+}

@@ -158,7 +158,9 @@ function OrdersRouteContent() {
         receiver_phone: buyerInfo.phone,
         shipping_address: buyerInfo.address,
       });
-      window.location.assign(started.redirect_url);
+      router.push(`/pay/sandbox/${started.payment_id}?gateway=${gateway}`);
+      setIsPayModalOpen(false);
+      setIsPaying(false);
     } catch (err) {
       setPayError(authErrorMessage(err));
       setIsPaying(false);
