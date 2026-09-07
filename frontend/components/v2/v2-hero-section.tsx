@@ -95,12 +95,14 @@ export function V2HeroSection() {
           <div className="landing-v2-dock">
             <div className="landing-v2-copy">
               <h1 id="hero-title">این راه سبز است</h1>
-              <p className="landing-v2-lead">از مزرعه تا سفره؛ مسیری که با اعتماد ساخته می‌شود.</p>
-              <Link href="/#coming-soon" className="landing-v2-cta">
-                <span key={active.id} className="landing-v2-cta-label">
-                  {active.ctaLabel}
-                </span>
-              </Link>
+              <div className="landing-v2-row">
+                <p className="landing-v2-lead">از مزرعه تا سفره، مسیری که با اعتماد ساخته می‌شود.</p>
+                <Link href="/#coming-soon" className="landing-v2-cta">
+                  <span key={active.id} className="landing-v2-cta-label">
+                    {active.ctaLabel}
+                  </span>
+                </Link>
+              </div>
             </div>
 
             <div className="landing-v2-playlist" aria-label="انتخاب ویدیوی اصلی">
@@ -115,7 +117,17 @@ export function V2HeroSection() {
                       aria-pressed={selected}
                       onClick={() => selectVideo(video)}
                     >
-                      <video muted loop playsInline preload="none" poster={video.poster} aria-hidden="true">
+                      <video
+                        muted
+                        loop
+                        autoPlay
+                        playsInline
+                        preload="auto"
+                        aria-hidden="true"
+                        onLoadedData={(event) => {
+                          void event.currentTarget.play().catch(() => undefined);
+                        }}
+                      >
                         <source src={video.src} type="video/mp4" />
                       </video>
                       <span className="landing-v2-preview-shade" />
