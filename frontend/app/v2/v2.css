@@ -14596,8 +14596,9 @@ html.is-kitchen-travel body {
 }
 
 .landing--v2 .landing-v2-row {
-  display: flex;
-  flex-direction: row;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
   gap: 14px;
@@ -14617,9 +14618,31 @@ html.is-kitchen-travel body {
 }
 
 .landing--v2 .landing-v2-cta {
-  align-self: auto;
+  display: inline-flex !important;
+  align-self: center;
   flex-shrink: 0;
+  width: auto !important;
   margin: 0 !important;
+}
+
+.landing-v2-preview {
+  background: #0d2a24;
+}
+
+.landing-v2-preview video {
+  pointer-events: none;
+  object-fit: cover;
+  background: transparent;
+}
+
+.landing-v2-preview video::-webkit-media-controls,
+.landing-v2-preview video::-webkit-media-controls-enclosure,
+.landing-v2-preview video::-webkit-media-controls-start-playback-button,
+.landing-v2-preview video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  -webkit-appearance: none;
 }
 
 .landing--v2 .landing-v2-playlist {
