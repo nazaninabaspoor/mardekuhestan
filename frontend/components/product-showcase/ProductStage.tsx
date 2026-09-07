@@ -25,7 +25,6 @@ export function ProductStage({ category }: ProductStageProps) {
             transition={{ duration: reduceMotion ? 0.12 : 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image src={category.heroImage} alt={category.headline} fill sizes="(max-width: 700px) 78vw, 520px" priority className={styles.productImage} />
-            <span className={styles.plateHighlight} aria-hidden="true" />
           </motion.div>
         </AnimatePresence>
       </div>

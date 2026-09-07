@@ -82,7 +82,7 @@ export function ProductInfo({
               transition={{ duration: 0.2 }}
               title="افزودن سریع به سبد خرید"
             >
-              <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" strokeWidth="2.2" fill="none">
+              <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="1.8" fill="none" aria-hidden="true">
                 <circle cx="8" cy="21" r="1" />
                 <circle cx="19" cy="21" r="1" />
                 <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
@@ -99,10 +99,10 @@ export function ProductInfo({
                 whileTap={reduceMotion ? undefined : { scale: 0.98 }}
                 transition={{ duration: 0.2 }}
               >
+                <svg className={styles.playIcon} viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 7 8 5-8 5V7Z" />
+                </svg>
                 <span>مستند مرتع</span>
-                <span className={styles.playIcon} aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="m9 7 8 5-8 5V7Z" /></svg>
-                </span>
               </motion.button>
             )}
           </div>
