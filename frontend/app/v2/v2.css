@@ -15027,3 +15027,26 @@ html.is-kitchen-travel body {
   .pdetail-primary-action, .pdetail-text-action, .pdetail-play-icon { transition: none; }
   html { scroll-behavior: auto; }
 }
+
+/* Product-detail campaign header — page scoped, structure remains global. */
+body:has(.product-page-main) .site-header--v2 .v2-header-body {
+  height: 88px;
+  background: rgb(250 247 241 / 97%);
+  box-shadow: 0 5px 24px rgb(17 37 29 / 5%);
+  backdrop-filter: blur(10px);
+}
+
+body:has(.product-page-main) .site-header--v2 .v2-header-plate,
+body:has(.product-page-main) .site-header--v2 .v2-menubar {
+  height: 88px;
+}
+
+body:has(.product-page-main) .site-header--v2 .v2-nav-link,
+body:has(.product-page-main) .site-header--v2 .v2-menubar-actions > a,
+body:has(.product-page-main) .site-header--v2 .v2-menubar-actions > button {
+  color: #183d31 !important;
+}
+
+body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
+  background: rgb(10 85 64 / 8%);
+}
