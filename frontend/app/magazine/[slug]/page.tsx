@@ -55,8 +55,8 @@ function storyFromApi(article: ArticleDetail): MagStory {
   };
 }
 
-function readingMinutes(words: number, fallback = 4) {
-  return Math.max(fallback, Math.round(words / 180) || fallback);
+function readingMinutes(words: number) {
+  return Math.max(2, Math.round(words / 160) || 2);
 }
 
 export function generateStaticParams() {
@@ -76,7 +76,7 @@ function storyFromPin(slug: string): MagStory | null {
     image: pin.image,
     author: pin.author,
     date: pin.date,
-    minutes: readingMinutes(wordCount, pin.minutes),
+    minutes: readingMinutes(wordCount),
     wordCount,
     categorySlug: pin.categorySlug,
     categoryName: pin.categoryName,
