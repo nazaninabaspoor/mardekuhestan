@@ -1,0 +1,86 @@
+type StorySchema = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  image: string;
+  author: string;
+  date?: string;
+  publishedAt?: string;
+  updatedAt?: string;
+  minutes?: number;
+  wordCount?: number;
+  categoryName?: string;
+  categorySlug?: string;
+  faqs: Array<{ q: string; a: string }>;
+};
+
+const PUBLISHER = {
+  "@type": "Organization",
+  name: "مرد کوهستان",
+  url: "/",
+  logo: {
+    "@type": "ImageObject",
+    url: "/brand/logo.svg",
+  },
+};
+
+export function magazineArticleGraph(story: StorySchema) {
+  const url = `/magazine/${story.slug}`;
+  const article: Record<string, unknown> = {
+    "@type": "Article",
+    headline: story.title,
+    description: story.excerpt,
+    inLanguage: "fa-IR",
+    image: story.image,
+    author: {
+      "@type": "Organization",
+      name: story.author || "تحریریه مرد کوهستان",
+    },
+    publisher: PUBLISHER,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
+    },
+    isPartOf: {
+      "@type": "Periodical",
+      name: "مجله مرد کوهستان",
+    },
+  };
+
+  if (story.categoryName) article.articleSection = story.categoryName;
+  if (story.publishedAt) article.datePublished = story.publishedAt;
+  if (story.updatedAt) article.dateModified = story.updatedAt;
+  if (story.wordCount) article.wordCount = story.wordCount;
+  if (story.minutes) article.timeRequired = `PT${story.minutes}M`;
+
+  const crumbs = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "مجله", item: "/magazine" },
+      story.categoryName
+        ? {
+            "@type": "ListItem",
+            position: 2,
+            name: story.categoryName,
+            item: story.categorySlug ? `/magazine/category/${story.categorySlug}` : url,
+          }
+        : null,
+      { "@type": "ListItem", position: story.categoryName ? 3 : 2, name: story.title, item: url },
+    ].filter(Boolean),
+  };
+
+  const graph: unknown[] = [article, crumbs];
+
+  if (story.faqs.length) {
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: story.faqs.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
