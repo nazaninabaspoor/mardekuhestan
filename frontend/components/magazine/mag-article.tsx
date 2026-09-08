@@ -183,7 +183,7 @@ export function MagArticle({ story }: { story: MagStory }) {
             <p>
               محصولات مرد کوهستان همان راهی است که در این نوشته دیدید. انتخاب را در بخش محصولات صفحه اصلی تمام کنید.
             </p>
-            <Link href="/#for-home-kitchen">دیدن محصولات</Link>
+            <Link href="/#for-home-kitchen">دیدن همه محصولات</Link>
           </div>
         </aside>
 
