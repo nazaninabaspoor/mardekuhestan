@@ -220,8 +220,8 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
 .mk-posters {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 18px 14px;
-  padding: 0 0 28px;
+  gap: 22px 18px;
+  padding: 6px 8px 28px;
   align-items: stretch;
   scroll-margin-top: calc(var(--mk-header-h) + 16px);
 }
@@ -232,32 +232,128 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
   aspect-ratio: 3 / 4;
   color: inherit;
   isolation: isolate;
-  overflow: hidden;
-  border-radius: 28px;
+  overflow: visible;
+  border-start-start-radius: 8px;
+  border-end-start-radius: 8px;
+  border-start-end-radius: 22px;
+  border-end-end-radius: 22px;
+  filter: drop-shadow(0 14px 18px rgb(0 20 16 / 28%));
   transition: transform 220ms ease;
+}
+
+.mk-poster-pages {
+  position: absolute;
+  z-index: 0;
+  inset-block: 4px;
+  inset-inline-start: 10px;
+  inset-inline-end: -6px;
+  border-start-end-radius: 4px;
+  border-end-end-radius: 4px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to left,
+    #f4f0e8 0 1px,
+    #efe6d6 1px 2px,
+    #e4d8c4 2px 3px
+  );
+  box-shadow:
+    1px 0 0 rgb(63 31 20 / 18%),
+    inset -1px 0 1px rgb(0 0 0 / 10%);
+}
+
+.mk-poster-spine {
+  position: absolute;
+  z-index: 6;
+  inset-block: 3px;
+  inset-inline-start: -5px;
+  width: 9px;
+  pointer-events: none;
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
+  border-start-end-radius: 1px;
+  border-end-end-radius: 1px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgb(255 255 255 / 10%) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(
+      90deg,
+      rgb(0 0 0 / 28%) 0%,
+      rgb(255 255 255 / 16%) 42%,
+      rgb(0 0 0 / 22%) 100%
+    );
+  box-shadow:
+    inset 1px 0 1px rgb(255 255 255 / 22%),
+    inset -2px 0 4px rgb(0 0 0 / 35%),
+    -2px 4px 8px rgb(0 0 0 / 22%);
+}
+
+.mk-poster-spine::after {
+  content: "";
+  position: absolute;
+  inset: 12% 22% 12% 28%;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0 18%,
+    rgb(0 0 0 / 28%) 18% 21%,
+    rgb(255 255 255 / 14%) 21% 24%,
+    transparent 24% 48%
+  );
 }
 
 .mk-poster-stage {
   position: absolute;
   inset: 0;
-  border-radius: 28px;
-  z-index: 0;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 14%),
+    inset -10px 0 14px -12px rgb(0 0 0 / 28%);
+}
+
+.mk-poster-face {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-start-start-radius: 8px;
+  border-end-start-radius: 8px;
+  border-start-end-radius: 22px;
+  border-end-end-radius: 22px;
 }
 
 .mk-poster--forest .mk-poster-stage {
   background: var(--mk-forest);
 }
 
+.mk-poster--forest .mk-poster-spine {
+  background-color: #00362b;
+}
+
 .mk-poster--gold .mk-poster-stage {
   background: var(--mk-gold);
+}
+
+.mk-poster--gold .mk-poster-spine {
+  background-color: #8a5414;
 }
 
 .mk-poster--earth .mk-poster-stage {
   background: var(--mk-earth);
 }
 
+.mk-poster--earth .mk-poster-spine {
+  background-color: #6a2418;
+}
+
 .mk-poster--sage .mk-poster-stage {
   background: var(--mk-sage);
+}
+
+.mk-poster--sage .mk-poster-spine {
+  background-color: #2f7a2a;
 }
 
 .mk-poster-well {
@@ -762,7 +858,16 @@ a.mk-folio-btn:focus-visible {
 
   .mk-posters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 10px;
+    gap: 18px 14px;
+  }
+
+  .mk-poster-spine {
+    width: 7px;
+    inset-inline-start: -4px;
+  }
+
+  .mk-poster-pages {
+    inset-inline-end: -4px;
   }
 
   .mk-issue {
