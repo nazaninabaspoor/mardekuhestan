@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { MagReadMood } from "@/components/magazine/mag-read-mood";
 import { MagShare } from "@/components/magazine/mag-share";
 import { MagToc, type MagTocItem } from "@/components/magazine/mag-toc";
 import type { MagPinData, MagTone } from "@/lib/content/magazine-feed";
+
+const AUTHOR_MARK = "/brand/mardekoohestan-seal.png";
 
 export type MagStory = {
   slug: string;
@@ -56,21 +59,19 @@ function headingsFrom(html: string): MagTocItem[] {
     .filter((item) => item.text);
 }
 
-function IconClock() {
+function AuthorMark({ size }: { size: number }) {
   return (
-    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-      <circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M12 8.2v4.1l2.6 1.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
+    <span className="mk-read-avatar" aria-hidden="true">
+      <Image src={AUTHOR_MARK} alt="" width={size} height={size} />
+    </span>
   );
 }
 
-function IconCal() {
+function MetaEmo({ symbol }: { symbol: string }) {
   return (
-    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-      <rect x="4" y="6" width="16" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M8 4v4M16 4v4M4 10h16" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
+    <span className="mk-read-emo" aria-hidden="true">
+      {symbol}
+    </span>
   );
 }
 
@@ -82,9 +83,11 @@ export function MagArticle({ story }: { story: MagStory }) {
     ...headingsFrom(body),
     ...(story.faqs.length ? [{ id: "faq", text: faqTitle }] : []),
   ];
+  const published = story.date || story.updatedLabel || "";
+  const updated = story.updatedLabel || story.date || published;
   const minutes = story.minutes
     ? `${story.minutes.toLocaleString("fa-IR")} دقیقه مطالعه`
-    : null;
+    : "۲ دقیقه مطالعه";
 
   return (
     <article className="mk-read" itemScope itemType="https://schema.org/Article">
@@ -116,34 +119,36 @@ export function MagArticle({ story }: { story: MagStory }) {
             </h1>
             <ul className="mk-read-meta">
               <li itemProp="author" itemScope itemType="https://schema.org/Organization">
-                <span className="mk-read-avatar" aria-hidden="true">
-                  {author.slice(0, 1)}
-                </span>
+                <AuthorMark size={24} />
                 <span itemProp="name">{author}</span>
               </li>
-              {story.date ? (
+              {published ? (
                 <li>
-                  <IconCal />
+                  <MetaEmo symbol="📅" />
                   {story.publishedAt ? (
                     <time itemProp="datePublished" dateTime={story.publishedAt}>
-                      {story.date}
+                      {published}
                     </time>
                   ) : (
-                    <span>{story.date}</span>
+                    <span>{published}</span>
                   )}
                 </li>
               ) : null}
-              {story.updatedLabel ? (
+              {updated ? (
                 <li>
-                  بروزرسانی: {story.updatedLabel}
+                  <MetaEmo symbol="✨" />
+                  <span>بروزرسانی {updated}</span>
                 </li>
               ) : null}
-              {minutes ? (
-                <li>
-                  <IconClock />
-                  {minutes}
-                </li>
-              ) : null}
+              <li>
+                <MetaEmo symbol="⏳" />
+                {minutes}
+              </li>
+              <li>
+                <MetaEmo symbol="💬" />
+                {(0).toLocaleString("fa-IR")} نظر
+              </li>
+              <MagReadMood slug={story.slug} />
             </ul>
             <ul className="mk-read-chips">
               {story.categoryName && story.categorySlug ? (
@@ -211,9 +216,7 @@ export function MagArticle({ story }: { story: MagStory }) {
           <MagShare title={story.headline} />
 
           <aside className="mk-read-author">
-            <span className="mk-read-avatar" aria-hidden="true">
-              {author.slice(0, 1)}
-            </span>
+            <AuthorMark size={36} />
             <div>
               <p>{author}</p>
               <p>
