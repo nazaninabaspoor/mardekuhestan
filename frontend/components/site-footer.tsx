@@ -7,8 +7,8 @@ import { FooterSceneImage } from "@/components/footer-scene-image";
 export function SiteFooter() {
   const pathname = usePathname();
 
-  // Hide footer on /profile page as requested
-  if (pathname?.startsWith("/profile")) {
+  // Hide footer on /profile and magazine pages
+  if (pathname?.startsWith("/profile") || pathname?.startsWith("/magazine")) {
     return null;
   }
 

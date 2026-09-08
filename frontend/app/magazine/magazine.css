@@ -4,12 +4,6 @@ html.is-magazine-route .site-canvas {
   background: #F4F0E8 !important;
 }
 
-html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-label,
-html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
-  color: #005B48;
-  opacity: 1;
-}
-
 .mk-mag {
   --mk-forest: #005B48;
   --mk-forest-deep: #00362B;
@@ -23,7 +17,7 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
   color: var(--mk-ink);
   background: var(--mk-cream);
   min-height: 100dvh;
-  padding: 0 0 96px;
+  padding: 18px 0 96px;
 }
 
 .mk-mag * {
@@ -171,15 +165,15 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
 }
 
 .mk-idea-thumb img {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .mk-posters {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 22px 16px;
+  gap: 18px 14px;
   padding: 12px 0 24px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .mk-poster {
@@ -193,7 +187,7 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
 .mk-poster-stage {
   position: absolute;
   inset: 0;
-  border-radius: 32px;
+  border-radius: 28px;
   z-index: 0;
 }
 
@@ -215,7 +209,7 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
 
 .mk-poster-blob {
   position: absolute;
-  inset: 6% 7% 18% 7%;
+  inset: 7% 9% 8% 9%;
   z-index: 1;
   overflow: visible;
 }
@@ -228,101 +222,104 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
   position: absolute;
   z-index: 4;
   top: 11%;
-  inset-inline: 16% 14%;
+  inset-inline: 16%;
   color: #f4f0e8;
+  text-align: center;
 }
 
 .mk-poster-copy p {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--mk-gold);
+  letter-spacing: 0.14em;
   font-weight: 700;
+}
+
+.mk-poster--forest .mk-poster-copy p,
+.mk-poster--forest .mk-poster-cta,
+.mk-poster--forest .mk-spark {
+  color: #50af47;
+}
+
+.mk-poster--gold .mk-poster-copy p,
+.mk-poster--gold .mk-poster-cta,
+.mk-poster--gold .mk-spark {
+  color: #d4a359;
+}
+
+.mk-poster--earth .mk-poster-copy p,
+.mk-poster--earth .mk-poster-cta,
+.mk-poster--earth .mk-spark {
+  color: #e8b089;
+}
+
+.mk-poster--sage .mk-poster-copy p,
+.mk-poster--sage .mk-poster-cta,
+.mk-poster--sage .mk-spark {
+  color: #b7e08a;
 }
 
 .mk-poster-copy h3 {
-  margin: 0;
-  font-size: clamp(1.15rem, 1.5vw, 1.7rem);
-  line-height: 1.25;
-}
-
-.mk-poster-copy span {
-  display: none;
-}
-
-.mk-poster-copy em {
-  display: inline-block;
-  margin-top: 10px;
-  font-style: normal;
-  font-size: 13px;
+  margin: 0 auto;
+  max-width: 11ch;
+  font-size: clamp(1.15rem, 1.45vw, 1.55rem);
+  line-height: 1.2;
   font-weight: 700;
-  color: var(--mk-gold);
-  border-bottom: 1px solid currentColor;
 }
 
-.mk-poster-photo {
+.mk-poster-png {
   position: absolute;
   z-index: 3;
-  width: 78%;
-  aspect-ratio: 1;
-  bottom: 2%;
-  inset-inline-end: 6%;
-  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.42));
+  left: 18%;
+  right: 18%;
+  bottom: 16%;
+  height: 40%;
+  pointer-events: none;
 }
 
-.mk-poster-photo img {
-  object-fit: cover;
-  border-radius: 48% 42% 50% 38% / 42% 50% 38% 52%;
+.mk-poster-png img {
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.45));
 }
 
-.mk-poster--v2 .mk-poster-photo {
-  width: 86%;
-  aspect-ratio: 5 / 4;
-  bottom: -4%;
-  inset-inline: 4% auto;
-  border-radius: 0;
-}
-
-.mk-poster--v2 .mk-poster-photo img {
-  border-radius: 38% 22% 46% 28% / 30% 44% 26% 50%;
-}
-
-.mk-poster--v3 .mk-poster-photo {
-  width: 72%;
-  bottom: 8%;
-  inset-inline-start: -6%;
-  inset-inline-end: auto;
-}
-
-.mk-poster--v4 .mk-poster-photo {
-  width: 92%;
-  aspect-ratio: 4 / 3;
-  bottom: -8%;
-  inset-inline: 4%;
-}
-
-.mk-poster--v4 .mk-poster-photo img {
-  border-radius: 28px 28px 40% 40%;
+.mk-poster-cta {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 11%;
+  display: block;
+  text-align: center;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .mk-spark {
   position: absolute;
   z-index: 5;
-  width: 18px;
-  height: 18px;
-  color: var(--mk-gold);
+  width: 14px;
+  height: 14px;
 }
 
 .mk-spark--a {
-  top: 7%;
-  inset-inline-start: 10%;
+  top: 5%;
+  inset-inline-start: 8%;
 }
 
 .mk-spark--b {
-  top: 38%;
-  inset-inline-end: 8%;
-  width: 12px;
-  height: 12px;
+  top: 36%;
+  inset-inline-end: 6%;
+  width: 10px;
+  height: 10px;
+}
+
+.mk-spark--c {
+  bottom: 28%;
+  inset-inline-start: 7%;
+  width: 8px;
+  height: 8px;
 }
 
 .mk-poster:hover {
@@ -394,7 +391,8 @@ html.is-magazine-route .site-header--v2 .v2-nav-link.is-active .v2-nav-icon {
 }
 
 .mk-mag-article-hero img {
-  object-fit: cover;
+  object-fit: contain;
+  padding: 24px 18px 36px;
 }
 
 .mk-mag-article-head {

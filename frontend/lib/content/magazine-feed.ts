@@ -8,6 +8,7 @@ export type MagPinData = {
   href: string;
   title: string;
   image: string;
+  goods: string[];
   stack?: string;
   aspect: string;
   category?: string;
@@ -16,6 +17,27 @@ export type MagPinData = {
   tone: MagTone;
   variant: 1 | 2 | 3 | 4;
 };
+
+const PACK_FALLBACKS = [
+  "/magazine/png/png-lamb-chops.png",
+  "/magazine/png/png-bread.png",
+  "/magazine/png/png-honeycomb.png",
+  "/magazine/png/png-fish.png",
+  "/magazine/png/png-stew.png",
+  "/magazine/png/png-cheese.png",
+  "/magazine/png/png-sheep.png",
+  "/magazine/png/png-yogurt.png",
+] as const;
+
+function goodsForArticle(article: ArticleListItem): string[] {
+  const cover = article.cover_image || "";
+  if (cover && !cover.includes("/magazine/shots/")) {
+    return [articleCover(cover, article.id)];
+  }
+  const first = PACK_FALLBACKS[Math.abs(article.id) % PACK_FALLBACKS.length];
+  const second = PACK_FALLBACKS[(Math.abs(article.id) + 3) % PACK_FALLBACKS.length];
+  return first === second ? [first] : [first, second];
+}
 
 const HEIGHTS = ["tall", "mid", "wide"] as const;
 const ASPECTS = ["3 / 4", "1 / 1", "4 / 3"] as const;
@@ -36,10 +58,12 @@ export function posterVariant(key: string): 1 | 2 | 3 | 4 {
 
 export function articleToPin(article: ArticleListItem): MagPinData {
   const height = HEIGHTS[Math.abs(article.id) % 3];
+  const goods = goodsForArticle(article);
   return {
     href: `/magazine/${article.slug}`,
     title: article.title,
-    image: articleCover(article.cover_image, article.id),
+    image: goods[0],
+    goods,
     category: article.categories[0]?.name,
     excerpt: article.excerpt,
     height,
@@ -50,10 +74,12 @@ export function articleToPin(article: ArticleListItem): MagPinData {
 }
 
 export function issueToPin(pin: MagazinePin): MagPinData {
+  const goods = pin.goods?.length ? pin.goods : [pin.image];
   return {
     href: `/magazine/${pin.slug}`,
     title: pin.title,
     image: pin.image,
+    goods,
     stack: pin.stack,
     category: pin.categoryName,
     excerpt: pin.excerpt,

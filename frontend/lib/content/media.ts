@@ -1,9 +1,9 @@
 import { getApiBaseUrl } from "@/lib/api/config";
 
 const FALLBACKS = [
-  "/magazine/hero-pasture.png",
-  "/magazine/still-table.png",
-  "/magazine/path-walker.png",
+  "/magazine/png/png-way-green.png",
+  "/magazine/png/png-bread.png",
+  "/magazine/png/png-honeycomb.png",
 ] as const;
 
 export function resolveMediaUrl(path: string | null | undefined): string {
