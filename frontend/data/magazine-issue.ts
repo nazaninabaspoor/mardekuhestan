@@ -49,7 +49,7 @@ export const magazineBoards: MagazineBoard[] = [
   {
     slug: "rah-ma",
     name: "راه ما",
-    description: "ارتفاع، آرامش، و همان مسیری که از کوه می‌آید.",
+    description: "ارتفاع و آرامش و همان مسیری که از کوه می‌آید.",
     image: PNG.way,
   },
   {
@@ -61,13 +61,13 @@ export const magazineBoards: MagazineBoard[] = [
   {
     slug: "zendegi-khane",
     name: "زندگی خانگی",
-    description: "صبحانه، جمعه، و نوری که روی میز می‌نشیند.",
+    description: "صبحانه و جمعه و نوری که روی میز می‌نشیند.",
     image: PNG.bread,
   },
   {
     slug: "mazraeh",
     name: "مزرعه و مرتع",
-    description: "مه، پشم، و زمینی که عجله ندارد.",
+    description: "مه و پشم و زمینی که عجله ندارد.",
     image: PNG.sheep,
   },
 ];
@@ -84,7 +84,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "this-way-is-green",
     title: "این راه سبز است",
-    excerpt: "آرامش، ارتفاع، وضوح — و اعتماد روی سفره.",
+    excerpt: "آرامش و ارتفاع و وضوح و اعتماد روی سفره.",
     body: "<p>راه مرد کوهستان از شعار شروع نمی‌شود. از مه صبح، از سنگی که خیس است، و از خانواده‌ای که مسیر غذا را می‌بیند.</p><p>سبز اینجا رنگ ویترین نیست. رنگ ارتفاع است؛ جایی که هوا صاف می‌ماند و طعم واقعی می‌ماند.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
@@ -99,7 +99,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "from-pasture-to-table",
     title: "از مرتع تا سفره",
-    excerpt: "مسیر روشن — از چراگاه تا آماده‌سازی و بعد به خانه.",
+    excerpt: "مسیر روشن از چراگاه تا آماده‌سازی و بعد به خانه.",
     body: "<p>مرتع اول دیده می‌شود، بعد غذا. این ترتیب را عوض نمی‌کنیم.</p><p>هر بسته که به خانه می‌رسد باید همان راه را در خودش داشته باشد: ارتفاع، حوصله، و دقت.</p>",
     categorySlug: "masir-ghaza",
     categoryName: "مسیر غذا",
@@ -114,7 +114,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "morning-at-home",
     title: "صبحانه‌ای که ریشه دارد",
-    excerpt: "نان، ماست، عسل — مسیری که می‌توان دید.",
+    excerpt: "نان و ماست و عسل مسیری که می‌توان دید.",
     body: "<p>صبح خانه باید ساده باشد. نان، پنیر، نوری که از پنجره می‌آید.</p><p>ریشه یعنی بدانیم شیر از کجا آمده و چرا طعمش آرام است.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
@@ -129,7 +129,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "flock-in-the-mist",
     title: "گله در مه",
-    excerpt: "سلامت از حوصله می‌آید؛ از عجله نمی‌آید.",
+    excerpt: "سلامت از حوصله می‌آید نه از عجله.",
     body: "<p>مه صبح یعنی هنوز کسی عجله ندارد. گله در ارتفاع، همان تصویر آرامش است.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -144,7 +144,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "honey-of-altitude",
     title: "عسل ارتفاع",
-    excerpt: "شیرینی که از عجله نیامده؛ از گل و هوا آمده.",
+    excerpt: "شیرینی که از عجله نیامده از گل و هوا آمده.",
     body: "<p>عسل کوهستان را نباید با شربت قاطی کرد. طعمش باید بوی همان ارتفاع را بدهد.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -159,7 +159,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "walker-on-the-path",
     title: "کسی که راه می‌رود",
-    excerpt: "مسیر را باید رفت؛ نمی‌شود فقط درباره‌اش نوشت.",
+    excerpt: "مسیر را باید رفت. نمی‌شود فقط درباره‌اش نوشت.",
     body: "<p>مرد کوهستان نام یک آدم روی پوستر نیست. نام راهی است که باید پیموده شود.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
@@ -174,7 +174,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "prepared-with-care",
     title: "با حوصله درست شده",
-    excerpt: "غذایی که وقت آشپزخانه را کم می‌کند، نه طعم خانه را.",
+    excerpt: "غذایی که وقت آشپزخانه را کم می‌کند نه طعم خانه را.",
     body: "<p>حوصله در کارخانه یعنی دقت در مواد، نه شعار روی بسته.</p>",
     categorySlug: "masir-ghaza",
     categoryName: "مسیر غذا",
@@ -189,7 +189,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "wool-and-weather",
     title: "پشم و هوا",
-    excerpt: "لمس زمین، قبل از اینکه غذا به خانه برسد.",
+    excerpt: "لمس زمین قبل از اینکه غذا به خانه برسد.",
     body: "<p>پشم خیس، علف، دست کار. کیفیت را اول در لمس می‌شود شناخت.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -204,7 +204,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "spring-in-the-moss",
     title: "چشمه در خزه‌",
-    excerpt: "آب سرد، سایهٔ جنگل، و راهی که عجله ندارد.",
+    excerpt: "آب سرد و سایهٔ جنگل و راهی که عجله ندارد.",
     body: "<p>چشمه را نمی‌شود بسته‌بندی کرد. فقط می‌شود کنارش ایستاد و فهمید غذا از کجا می‌آید.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -219,7 +219,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "shepherd-at-dusk",
     title: "چوپان در غروب",
-    excerpt: "نگاه به دره، وقتی روز تمام می‌شود.",
+    excerpt: "نگاه به دره وقتی روز تمام می‌شود.",
     body: "<p>غروب مرتع یعنی کار تمام نشده؛ یعنی حوصله هنوز هست.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
@@ -234,7 +234,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "cheese-at-breakfast",
     title: "پنیر برای هر صبح",
-    excerpt: "از شیر تا پنیر — مسیر کوتاه و قابل فهم.",
+    excerpt: "از شیر تا پنیر مسیر کوتاه و قابل فهم.",
     body: "<p>پنیر صبح، غذای نمایشی نیست. غذای هر روز است؛ اگر مسیرش روشن باشد.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
@@ -249,7 +249,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "meadow-after-rain",
     title: "مرتع بعد از باران",
-    excerpt: "قطره‌ها روی علف؛ همان سبزی که در شعار نیست.",
+    excerpt: "قطره‌ها روی علف همان سبزی که در شعار نیست.",
     body: "<p>باران را روی علف می‌شود دید. بعد روی سفره باید همان تازگی بماند.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -264,7 +264,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "yogurt-and-honey",
     title: "ماست و عسل",
-    excerpt: "ساده، خانگی، بدون ویترین.",
+    excerpt: "ساده و خانگی و بدون ویترین.",
     body: "<p>یک کاسه کافی است. اگر طعمش از ارتفاع آمده باشد.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
@@ -279,7 +279,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "valley-after-rain",
     title: "دره بعد از باران",
-    excerpt: "لایه‌های کوه، وقتی هوا تازه شده.",
+    excerpt: "لایه‌های کوه وقتی هوا تازه شده.",
     body: "<p>دره را باید وسیع دید. عجله در این مقیاس معنی ندارد.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
@@ -294,7 +294,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "table-light",
     title: "نوری که روی میز می‌نشیند",
-    excerpt: "چراغ کوچک، نان، و پنجره‌ای به غروب.",
+    excerpt: "چراغ کوچک و نان و پنجره‌ای به غروب.",
     body: "<p>کیفیت را روی میز می‌شود دید: نان، چای، دست‌هایی که جمع می‌شوند.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
@@ -324,7 +324,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "autumn-pomegranate",
     title: "انار پاییز",
-    excerpt: "دانه‌های سرخ؛ طعمی که از باغ دامنه می‌آید.",
+    excerpt: "دانه‌های سرخ طعمی که از باغ دامنه می‌آید.",
     body: "<p>انار را وقتی باز می‌کنی، مسیر باغ معلوم می‌شود. سرخی‌اش از عجله نیست؛ از فصل است.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
@@ -339,7 +339,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "olives-of-the-slope",
     title: "زیتون دامنه",
-    excerpt: "تلخ و آرام؛ از درخت تا سفره.",
+    excerpt: "تلخ و آرام از درخت تا سفره.",
     body: "<p>زیتون دامنه را نباید با زیتون ویترین یکی دانست. طعمش کمی تلخ است و همین صداقت است.</p>",
     categorySlug: "masir-ghaza",
     categoryName: "مسیر غذا",
@@ -354,7 +354,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "evening-tea",
     title: "چای عصر",
-    excerpt: "استکان باریک، و نوری که روی میز می‌ماند.",
+    excerpt: "استکان باریک و نوری که روی میز می‌ماند.",
     body: "<p>چای عصر شلوغ نیست. یک استکان، یک نعلبکی، و وقتی که هنوز کسی عجله ندارد.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
@@ -369,7 +369,7 @@ export const magazinePins: MagazinePin[] = [
   {
     slug: "forest-walnuts",
     title: "گردوی جنگل",
-    excerpt: "مغز سخت؛ طعمی که با حوصله باز می‌شود.",
+    excerpt: "مغز سخت طعمی که با حوصله باز می‌شود.",
     body: "<p>گردو را باید شکست. این کار عجله برنمی‌دارد؛ مثل خود راه سبز.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",

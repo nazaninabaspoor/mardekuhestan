@@ -39,6 +39,7 @@ export function MagPin({ pin, priority = false }: { pin: MagPinData; priority?: 
           <div className="mk-poster-copy">
             {pin.category ? <p>{pin.category}</p> : null}
             <h3>{pin.title}</h3>
+            {pin.excerpt ? <span className="mk-poster-excerpt">{pin.excerpt}</span> : null}
           </div>
           <div className="mk-poster-png">
             <Image src={src} alt="" width={800} height={800} priority={priority} sizes="(max-width: 700px) 46vw, 18vw" />

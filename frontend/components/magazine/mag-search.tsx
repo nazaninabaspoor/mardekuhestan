@@ -17,7 +17,7 @@ export function MagSearch({
       <input
         name="q"
         defaultValue={query}
-        placeholder={isHero ? "در مجله بگردید؛ یک مسیر، یک طعم، یک نوشته…" : "جستجو در مجله…"}
+        placeholder={isHero ? "در مجله بگردید یک مسیر و یک طعم و یک نوشته" : "جستجو در مجله"}
         aria-label="جستجو در مجله"
         autoComplete="off"
       />

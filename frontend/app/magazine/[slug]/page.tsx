@@ -10,7 +10,7 @@ import { ApiError } from "@/lib/api/client";
 import { getArticleBySlug } from "@/lib/api/content";
 import type { ArticleDetail } from "@/lib/api/content.types";
 import { articleCover, faqPairs, formatFaDate, resolveMediaUrl } from "@/lib/content/media";
-import { articleToPin, issueToPin, type MagPinData } from "@/lib/content/magazine-feed";
+import { articleToPin, issueToPin, plainMagazineCopy, type MagPinData } from "@/lib/content/magazine-feed";
 
 type Params = { slug: string };
 
@@ -47,7 +47,7 @@ function storyFromApi(article: ArticleDetail): MagStory {
   return {
     slug: article.slug,
     title: article.title,
-    excerpt: article.excerpt,
+    excerpt: plainMagazineCopy(article.excerpt),
     body: article.body || "",
     image: articleCover(article.cover_image, article.id),
     author: article.author_name,
@@ -70,7 +70,7 @@ function storyFromPin(slug: string): MagStory | null {
   return {
     slug: pin.slug,
     title: pin.title,
-    excerpt: pin.excerpt,
+    excerpt: plainMagazineCopy(pin.excerpt),
     body: pin.body,
     image: pin.image,
     author: pin.author,

@@ -56,6 +56,22 @@ export function posterVariant(key: string): 1 | 2 | 3 | 4 {
   return ((n % 4) + 1) as 1 | 2 | 3 | 4;
 }
 
+export function plainMagazineCopy(value = "") {
+  return value
+    .replace(/[—–―]/g, " ")
+    .replace(/--+/g, " ")
+    .replace(/[؛;]/g, ". ")
+    .replace(/،\s*و/g, " و")
+    .replace(/,\s*و/g, " و")
+    .replace(/[،,]/g, " و ")
+    .replace(/[…]+/g, "")
+    .replace(/\.{3,}/g, ".")
+    .replace(/(?:\s*و){2,}/g, " و")
+    .replace(/\s+\./g, ".")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export function articleToPin(article: ArticleListItem): MagPinData {
   const height = HEIGHTS[Math.abs(article.id) % 3];
   const goods = goodsForArticle(article);
@@ -65,7 +81,7 @@ export function articleToPin(article: ArticleListItem): MagPinData {
     image: goods[0],
     goods,
     category: article.categories[0]?.name,
-    excerpt: article.excerpt,
+    excerpt: plainMagazineCopy(article.excerpt),
     height,
     aspect: ASPECTS[Math.abs(article.id) % 3],
     tone: toneForCategory(article.categories[0]?.slug),
@@ -82,7 +98,7 @@ export function issueToPin(pin: MagazinePin): MagPinData {
     goods,
     stack: pin.stack,
     category: pin.categoryName,
-    excerpt: pin.excerpt,
+    excerpt: plainMagazineCopy(pin.excerpt),
     height: pin.height,
     aspect: pin.aspect,
     tone: toneForCategory(pin.categorySlug),
