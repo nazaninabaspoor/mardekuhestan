@@ -31,7 +31,7 @@ export function MagPin({ pin, priority = false }: { pin: MagPinData; priority?: 
           <h3>{pin.title}</h3>
         </div>
         <div className="mk-poster-png">
-          <Image src={src} alt="" fill priority={priority} sizes="(max-width: 700px) 46vw, 18vw" />
+          <Image src={src} alt="" width={800} height={800} priority={priority} sizes="(max-width: 700px) 46vw, 18vw" />
         </div>
         <em className="mk-poster-cta">خواندن</em>
       </div>
