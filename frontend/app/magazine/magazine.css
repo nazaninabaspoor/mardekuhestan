@@ -54,7 +54,7 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
 
 .mk-issue {
   position: relative;
-  padding: calc(var(--mk-header-h) + 48px) 0 36px;
+  padding: calc(var(--mk-header-h) + 48px) 0 0;
   color: #f4f0e8;
   text-align: center;
   background: transparent;
@@ -73,7 +73,6 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
 
 .mk-issue p,
 .mk-issue h1,
-.mk-issue span,
 .mk-issue form {
   position: relative;
   z-index: 2;
@@ -93,14 +92,6 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
   line-height: 1.1;
   max-width: 12ch;
   text-shadow: 0 10px 28px rgb(0 20 16 / 32%);
-}
-
-.mk-issue span {
-  display: block;
-  margin: 12px auto 0;
-  max-width: 36ch;
-  line-height: 1.8;
-  color: rgba(244, 240, 232, 0.88);
 }
 
 .mk-mag-search {
@@ -140,62 +131,97 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
 
 .mk-ideas {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 10px;
-  padding: 22px 0 8px;
+  gap: 18px;
+  padding: calc(20px - 0.2cm) 0 30px;
 }
 
-.mk-idea {
-  display: inline-flex;
+.mk-mag-shell > .mk-ideas {
+  padding: calc(18px - 0.2cm) 0 30px;
+}
+
+.mk-story {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 0 14px 0 6px;
-  border-radius: 999px;
-  background: #1d1d1b;
+  width: 84px;
+  color: rgba(244, 240, 232, 0.78);
+  text-align: center;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.mk-story:hover,
+.mk-story.is-active {
   color: #f4f0e8;
-  font-weight: 700;
-  font-size: 13px;
 }
 
-.mk-idea--forest.is-active,
-.mk-idea--forest:hover {
-  background: var(--mk-forest);
+.mk-story-ring {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  padding: 3px;
+  border-radius: 50%;
+  background: rgba(244, 240, 232, 0.22);
+  transition: transform 180ms ease, background 180ms ease;
 }
 
-.mk-idea--gold {
-  background: var(--mk-gold);
-  color: #1d1d1b;
+.mk-story:hover .mk-story-ring,
+.mk-story.is-active .mk-story-ring {
+  transform: translateY(-2px);
 }
 
-.mk-idea--earth {
-  background: var(--mk-earth);
+.mk-story--forest.is-active .mk-story-ring,
+.mk-story--forest:hover .mk-story-ring {
+  background: conic-gradient(from 200deg, #50af47, #d4a359, #005b48, #50af47);
 }
 
-.mk-idea--sage {
-  background: var(--mk-sage);
-  color: #1d1d1b;
+.mk-story--gold.is-active .mk-story-ring,
+.mk-story--gold:hover .mk-story-ring {
+  background: conic-gradient(from 200deg, #d4a359, #f4f0e8, #be6516, #d4a359);
 }
 
-.mk-idea-thumb {
+.mk-story--earth.is-active .mk-story-ring,
+.mk-story--earth:hover .mk-story-ring {
+  background: conic-gradient(from 200deg, #903828, #d4a359, #861309, #903828);
+}
+
+.mk-story--sage.is-active .mk-story-ring,
+.mk-story--sage:hover .mk-story-ring {
+  background: conic-gradient(from 200deg, #50af47, #86c2eb, #005b48, #50af47);
+}
+
+.mk-story-avatar {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   border-radius: 50%;
-  background: #333;
+  background: #123f34;
+  box-shadow: inset 0 0 0 3px #0a5540;
 }
 
-.mk-idea-thumb img {
+.mk-story-avatar img {
   object-fit: contain;
+  padding: 8px;
+}
+
+.mk-story em {
+  margin: 0;
+  max-width: 7.2em;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .mk-posters {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px 14px;
-  padding: 12px 0 28px;
+  padding: 0 0 28px;
   align-items: stretch;
   scroll-margin-top: calc(var(--mk-header-h) + 16px);
 }
@@ -740,7 +766,25 @@ a.mk-folio-btn:focus-visible {
   }
 
   .mk-issue {
-    padding: calc(var(--mk-header-h) + 28px) 0 28px;
+    padding: calc(var(--mk-header-h) + 28px) 0 0;
+  }
+
+  .mk-ideas {
+    gap: 12px;
+    padding: calc(16px - 0.2cm) 0 26px;
+  }
+
+  .mk-story {
+    width: 72px;
+  }
+
+  .mk-story-ring {
+    width: 64px;
+    height: 64px;
+  }
+
+  .mk-story em {
+    font-size: 11px;
   }
 
   .mk-folio-tray {

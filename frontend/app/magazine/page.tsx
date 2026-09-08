@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MagBoards } from "@/components/magazine/mag-boards";
 import { MagMasonry } from "@/components/magazine/mag-card";
 import { MagPager } from "@/components/magazine/mag-pager";
 import { MagToday } from "@/components/magazine/mag-today";
@@ -43,9 +42,8 @@ export default async function MagazinePage({
 
   return (
     <>
-      <MagToday query={q} />
+      <MagToday query={q} boards={magazineBoards} active="all" />
       <div className="mk-mag-shell">
-        <MagBoards boards={magazineBoards} active="all" />
         {leaf.total ? (
           <>
             <MagMasonry pins={leaf.items} feed />
