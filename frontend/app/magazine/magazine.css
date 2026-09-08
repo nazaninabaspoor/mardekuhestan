@@ -863,10 +863,28 @@ html.is-magazine-route:has(.mk-read) .site-canvas {
 }
 
 .mk-toc--rail {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   padding: 16px 14px;
   border: 1px solid rgb(0 91 72 / 12%);
   border-radius: 12px;
   background: rgb(255 255 255 / 55%);
+  overflow: hidden;
+}
+
+.mk-toc--rail > p {
+  flex-shrink: 0;
+}
+
+.mk-toc--rail ol {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 91 72 / 35%) transparent;
 }
 
 .mk-toc--rail a {
@@ -1140,11 +1158,12 @@ html.is-magazine-route:has(.mk-read) .site-canvas {
   flex-direction: column;
   gap: 14px;
   max-height: calc(100dvh - var(--mk-header-h) - 28px);
-  overflow: auto;
+  overflow: hidden;
   padding-top: 0;
 }
 
 .mk-read-cta {
+  flex: 0 0 auto;
   padding: 16px 14px 18px;
   border-radius: 12px;
   background: var(--mk-forest);
@@ -1392,6 +1411,15 @@ a.mk-folio-turn:focus-visible {
     max-height: none;
     overflow: visible;
     display: flex;
+  }
+
+  .mk-toc--rail {
+    flex: none;
+    overflow: visible;
+  }
+
+  .mk-toc--rail ol {
+    overflow: visible;
   }
 
   .mk-read-related ul {
