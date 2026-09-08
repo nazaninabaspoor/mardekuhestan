@@ -1,6 +1,7 @@
 type StorySchema = {
   slug: string;
   title: string;
+  headline?: string;
   excerpt: string;
   image: string;
   author: string;
@@ -33,7 +34,7 @@ export function magazineArticleGraph(story: StorySchema) {
   const article: Record<string, unknown> = {
     "@type": "Article",
     "@id": `${url}#article`,
-    headline: story.title,
+    headline: story.headline || story.title,
     description: story.excerpt,
     inLanguage: "fa-IR",
     url,
@@ -66,16 +67,17 @@ export function magazineArticleGraph(story: StorySchema) {
   const crumbs = {
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "مجله", item: "/magazine" },
+      { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
+      { "@type": "ListItem", position: 2, name: "مجله", item: "/magazine" },
       story.categoryName
         ? {
             "@type": "ListItem",
-            position: 2,
+            position: 3,
             name: story.categoryName,
             item: story.categorySlug ? `/magazine/category/${story.categorySlug}` : url,
           }
         : null,
-      { "@type": "ListItem", position: story.categoryName ? 3 : 2, name: story.title, item: url },
+      { "@type": "ListItem", position: story.categoryName ? 4 : 3, name: story.headline || story.title, item: url },
     ].filter(Boolean),
   };
 

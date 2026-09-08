@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 
 import { MagArticle, type MagStory } from "@/components/magazine/mag-article";
 import { MagReadProgress } from "@/components/magazine/mag-chrome";
-import { pinArticleFaqs, pinArticleHtml } from "@/data/magazine-reading";
+import { pinArticleFaqs, pinArticleHeadline, pinArticleHtml } from "@/data/magazine-reading";
 import { magazinePins, pinBySlug, relatedPins } from "@/data/magazine-issue";
 import { ApiError } from "@/lib/api/client";
 import { getArticleBySlug } from "@/lib/api/content";
 import type { ArticleDetail } from "@/lib/api/content.types";
 import { articleCover, faqPairs, formatFaDate, resolveMediaUrl } from "@/lib/content/media";
-import { articleToPin, issueToPin, plainMagazineCopy, toneForCategory } from "@/lib/content/magazine-feed";
+import { articleToPin, issueToPin, toneForCategory } from "@/lib/content/magazine-feed";
 import { magazineArticleGraph } from "@/lib/content/magazine-schema";
 
 type Params = { slug: string };
@@ -33,7 +33,9 @@ function storyFromApi(article: ArticleDetail): MagStory {
   return {
     slug: article.slug,
     title: article.title,
-    excerpt: plainMagazineCopy(article.excerpt),
+    headline: article.title,
+    excerpt: article.excerpt || article.geo_summary,
+    updatedLabel: formatFaDate(article.updated_at) || undefined,
     body,
     image: articleCover(article.cover_image, article.id),
     author: article.author_name,
@@ -71,7 +73,8 @@ function storyFromPin(slug: string): MagStory | null {
   return {
     slug: pin.slug,
     title: pin.title,
-    excerpt: plainMagazineCopy(pin.excerpt),
+    headline: pinArticleHeadline(pin),
+    excerpt: pin.excerpt,
     body,
     image: pin.image,
     author: pin.author,
@@ -129,20 +132,21 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   }
   const pin = pinBySlug(slug);
   if (!pin) return { title: "نوشته پیدا نشد | مرد کوهستان" };
-  const title = `${pin.title} | مجله مرد کوهستان`;
-  const description = plainMagazineCopy(pin.excerpt);
+  const headline = pinArticleHeadline(pin);
+  const title = `${headline} | مجله مرد کوهستان`;
+  const description = pin.excerpt;
   return {
     title,
     description,
     keywords: [pin.title, pin.categoryName, "مجله مرد کوهستان", "این راه سبز است", "غذای کوهستان"],
     alternates: { canonical: `/magazine/${pin.slug}` },
     openGraph: {
-      title: pin.title,
+      title: headline,
       description,
       type: "article",
       locale: "fa_IR",
       siteName: "مرد کوهستان",
-      images: [{ url: pin.image, alt: pin.title }],
+      images: [{ url: pin.image, alt: headline }],
     },
     twitter: {
       card: "summary_large_image",
