@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { MagPinData } from "@/lib/content/magazine-feed";
 
 const BLOB =
-  "M28 42C10 78 14 168 32 236C52 308 118 332 168 292C214 256 214 168 188 96C164 32 86 8 28 42Z";
+  "M24 22C8 48 10 110 18 188C28 268 70 322 110 328C158 334 198 292 208 214C218 132 204 52 164 24C118 -2 58 0 24 22Z";
 
 function Diamond({ className }: { className: string }) {
   return (
@@ -19,20 +19,22 @@ export function MagPin({ pin, priority = false }: { pin: MagPinData; priority?: 
   return (
     <Link href={pin.href} className={`mk-poster mk-poster--${pin.tone}`}>
       <span className="mk-poster-stage" />
-      <svg className="mk-poster-blob" viewBox="0 0 220 340" preserveAspectRatio="none" aria-hidden="true">
-        <path d={BLOB} />
-      </svg>
       <Diamond className="mk-spark mk-spark--a" />
       <Diamond className="mk-spark mk-spark--b" />
       <Diamond className="mk-spark mk-spark--c" />
-      <div className="mk-poster-copy">
-        {pin.category ? <p>{pin.category}</p> : null}
-        <h3>{pin.title}</h3>
+      <div className="mk-poster-well">
+        <svg className="mk-poster-blob" viewBox="0 0 220 340" preserveAspectRatio="none" aria-hidden="true">
+          <path d={BLOB} />
+        </svg>
+        <div className="mk-poster-copy">
+          {pin.category ? <p>{pin.category}</p> : null}
+          <h3>{pin.title}</h3>
+        </div>
+        <div className="mk-poster-png">
+          <Image src={src} alt="" fill priority={priority} sizes="(max-width: 700px) 46vw, 18vw" />
+        </div>
+        <em className="mk-poster-cta">خواندن</em>
       </div>
-      <div className="mk-poster-png">
-        <Image src={src} alt="" fill priority={priority} sizes="(max-width: 700px) 46vw, 18vw" />
-      </div>
-      <em className="mk-poster-cta">خواندن</em>
     </Link>
   );
 }

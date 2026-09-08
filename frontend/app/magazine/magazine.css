@@ -172,16 +172,19 @@ html.is-magazine-route .site-canvas {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px 14px;
-  padding: 12px 0 24px;
+  padding: 12px 0 28px;
   align-items: stretch;
 }
 
 .mk-poster {
   position: relative;
   display: block;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 3 / 4;
   color: inherit;
   isolation: isolate;
+  overflow: hidden;
+  border-radius: 28px;
+  transition: transform 220ms ease;
 }
 
 .mk-poster-stage {
@@ -207,11 +210,26 @@ html.is-magazine-route .site-canvas {
   background: var(--mk-sage);
 }
 
+.mk-poster-well {
+  position: absolute;
+  inset: 7% 10% 8% 10%;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 11% 10% 8%;
+  text-align: center;
+}
+
 .mk-poster-blob {
   position: absolute;
-  inset: 7% 9% 8% 9%;
-  z-index: 1;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
   overflow: visible;
+  pointer-events: none;
 }
 
 .mk-poster-blob path {
@@ -219,16 +237,16 @@ html.is-magazine-route .site-canvas {
 }
 
 .mk-poster-copy {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  top: 11%;
-  inset-inline: 16%;
+  flex: 0 0 auto;
+  width: 100%;
   color: #f4f0e8;
   text-align: center;
 }
 
 .mk-poster-copy p {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-size: 11px;
   letter-spacing: 0.14em;
   font-weight: 700;
@@ -260,40 +278,37 @@ html.is-magazine-route .site-canvas {
 
 .mk-poster-copy h3 {
   margin: 0 auto;
-  max-width: 11ch;
-  font-size: clamp(1.15rem, 1.45vw, 1.55rem);
+  max-width: 12ch;
+  font-size: clamp(1.12rem, 1.4vw, 1.5rem);
   line-height: 1.2;
   font-weight: 700;
 }
 
 .mk-poster-png {
-  position: absolute;
+  position: relative;
   z-index: 3;
-  left: 18%;
-  right: 18%;
-  bottom: 16%;
-  height: 40%;
+  flex: 1 1 auto;
+  width: 92%;
+  min-height: 0;
+  margin-top: 4px;
   pointer-events: none;
 }
 
 .mk-poster-png img {
   object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.45));
+  object-position: center top;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.36));
 }
 
 .mk-poster-cta {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  left: 0;
-  right: 0;
-  bottom: 11%;
-  display: block;
-  text-align: center;
+  flex: 0 0 auto;
+  margin: 2px 0 0;
   font-style: normal;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .mk-spark {
@@ -324,10 +339,6 @@ html.is-magazine-route .site-canvas {
 
 .mk-poster:hover {
   transform: translateY(-6px);
-}
-
-.mk-poster {
-  transition: transform 220ms ease;
 }
 
 .mk-shelf-head {
