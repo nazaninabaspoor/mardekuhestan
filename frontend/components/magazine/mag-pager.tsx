@@ -19,24 +19,53 @@ function pageWindow(page: number, pageCount: number) {
   return out;
 }
 
-function Arrow({ dir }: { dir: "next" | "prev" }) {
+function PeakMark() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-      {dir === "next" ? (
-        <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-      ) : (
-        <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-      )}
+    <svg className="mk-folio-peak" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        d="M3.4 19.2 12 4.8 20.6 19.2Z"
+      />
     </svg>
   );
 }
 
-function LockMark() {
+function Leaf({
+  n,
+  current,
+  href,
+}: {
+  n: number;
+  current: boolean;
+  href?: string;
+}) {
+  const inner = (
+    <>
+      <span className="mk-folio-leaf-pages" aria-hidden="true" />
+      <span className="mk-folio-leaf-spine" aria-hidden="true" />
+      <span className="mk-folio-leaf-face">
+        <PeakMark />
+        <b>{fa(n)}</b>
+      </span>
+    </>
+  );
+
+  if (current) {
+    return (
+      <span className="mk-folio-leaf is-current" aria-current="page">
+        {inner}
+      </span>
+    );
+  }
+
   return (
-    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-      <rect x="6.5" y="11" width="11" height="8.5" rx="2" fill="none" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M8.8 11V8.6a3.2 3.2 0 0 1 6.4 0V11" fill="none" stroke="currentColor" strokeWidth="1.7" />
-    </svg>
+    <Link className="mk-folio-leaf" href={href || "#"}>
+      {inner}
+    </Link>
   );
 }
 
@@ -56,53 +85,36 @@ export function MagPager({
 
   return (
     <nav className="mk-folio" aria-label="برگ‌های مجله">
-      <div className="mk-folio-tray">
+      <div className="mk-folio-shelf">
         {prev ? (
-          <Link className="mk-folio-btn" href={prev} rel="prev">
-            <Arrow dir="prev" />
+          <Link className="mk-folio-turn" href={prev} rel="prev">
             قبلی
           </Link>
         ) : (
-          <span className="mk-folio-btn is-locked" aria-disabled="true">
-            <LockMark />
-            قبلی
-          </span>
+          <span className="mk-folio-turn is-quiet">قبلی</span>
         )}
 
         <ol className="mk-folio-pages">
           {pageWindow(page, pageCount).map((item, index) =>
             item === "gap" ? (
-              <li key={`gap-${index}`} className="mk-folio-gap" aria-hidden="true">
-                …
-              </li>
+              <li key={`gap-${index}`} className="mk-folio-gap" aria-hidden="true" />
             ) : (
               <li key={item}>
-                {item === page ? (
-                  <span className="mk-folio-num is-current" aria-current="page">
-                    {fa(item)}
-                  </span>
-                ) : (
-                  <Link className="mk-folio-num" href={hrefFor(item)}>
-                    {fa(item)}
-                  </Link>
-                )}
+                <Leaf n={item} current={item === page} href={hrefFor(item)} />
               </li>
             ),
           )}
         </ol>
 
         {next ? (
-          <Link className="mk-folio-btn" href={next} rel="next">
+          <Link className="mk-folio-turn" href={next} rel="next">
             بعدی
-            <Arrow dir="next" />
           </Link>
         ) : (
-          <span className="mk-folio-btn is-locked" aria-disabled="true">
-            بعدی
-            <LockMark />
-          </span>
+          <span className="mk-folio-turn is-quiet">بعدی</span>
         )}
       </div>
+
       <p className="mk-folio-status">
         برگ {fa(page)} از {fa(pageCount)}
       </p>
