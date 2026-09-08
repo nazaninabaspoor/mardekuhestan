@@ -92,7 +92,7 @@ export function MagArticle({ story }: { story: MagStory }) {
       {story.updatedAt ? <meta itemProp="dateModified" content={story.updatedAt} /> : null}
 
       <div className="mk-read-frame">
-        <div className="mk-read-main">
+        <div className="mk-read-lead">
           <nav className="mk-read-crumbs" aria-label="مسیر صفحه">
             <ol>
               <li>
@@ -173,11 +173,21 @@ export function MagArticle({ story }: { story: MagStory }) {
             />
             <figcaption>{story.imageCaption || story.title}</figcaption>
           </figure>
+        </div>
 
-          <div className="mk-read-tocbox">
-            <MagToc items={toc} title="آنچه در این مقاله می‌خوانید" variant="box" />
+        <aside className="mk-read-rail">
+          <MagToc items={toc} />
+          <div className="mk-read-cta">
+            <p>بعد از دیدن مسیر</p>
+            <p className="mk-read-cta-title">از سفره خانه انتخاب کنید</p>
+            <p>
+              محصولات مرد کوهستان همان راهی است که در این نوشته دیدید. انتخاب را در بخش محصولات صفحه اصلی تمام کنید.
+            </p>
+            <Link href="/#for-home-kitchen">دیدن محصولات</Link>
           </div>
+        </aside>
 
+        <div className="mk-read-main">
           {story.geo ? <p className="mk-read-geo">{story.geo}</p> : null}
 
           <div
@@ -234,10 +244,6 @@ export function MagArticle({ story }: { story: MagStory }) {
             </section>
           ) : null}
         </div>
-
-        <aside className="mk-read-rail">
-          <MagToc items={toc} />
-        </aside>
       </div>
     </article>
   );
