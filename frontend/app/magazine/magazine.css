@@ -569,21 +569,6 @@ html.is-magazine-route:has(.mk-read) .site-canvas {
   font-weight: 700;
 }
 
-.mk-mag-progress {
-  position: sticky;
-  top: var(--mk-header-h);
-  z-index: 30;
-  height: 3px;
-  background: rgba(0, 91, 72, 0.12);
-}
-
-.mk-mag-progress > span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--mk-forest), var(--mk-sage) 62%, var(--mk-gold));
-}
-
 .mk-read-frame {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;

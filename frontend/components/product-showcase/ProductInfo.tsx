@@ -15,6 +15,7 @@ type ProductInfoProps = {
   productImage?: string | null;
   onViewProduct?: (category: ProductCategory) => void;
   onPlayVideo?: (category: ProductCategory) => void;
+  onAddedToCart?: (product: { id: string; name: string; image?: string | null }) => void;
 };
 
 export function ProductInfo({
@@ -24,6 +25,7 @@ export function ProductInfo({
   productImage = null,
   onViewProduct,
   onPlayVideo,
+  onAddedToCart,
 }: ProductInfoProps) {
   const reduceMotion = useReducedMotion();
   const headline = productName?.trim() || category.headline;
@@ -33,7 +35,7 @@ export function ProductInfo({
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsQuickAdding(true);
-    await addToCart({
+    const result = await addToCart({
       product_id: productId || category.id,
       product_name: headline,
       product_image: productImage || category.heroImage || category.cardImage,
@@ -43,6 +45,13 @@ export function ProductInfo({
       quantity: 1,
     });
     setIsQuickAdding(false);
+    if (result.success) {
+      onAddedToCart?.({
+        id: productId || category.id,
+        name: headline,
+        image: productImage || category.heroImage || category.cardImage,
+      });
+    }
   };
 
   return (

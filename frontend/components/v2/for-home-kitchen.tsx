@@ -8,6 +8,7 @@ import { ProductInfo } from "@/components/product-showcase/ProductInfo";
 import { ProductStage } from "@/components/product-showcase/ProductStage";
 import { ProductTabs } from "@/components/product-showcase/ProductTabs";
 import { ProductDetailModal } from "@/components/product-detail/product-detail-modal";
+import { KitchenCompanion } from "@/components/v2/kitchen-companion";
 import { getProductDetail, type ProductDetailData } from "@/lib/catalog/product-details";
 import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
 import {
@@ -26,6 +27,8 @@ import {
 import { normalizeFa } from "@/lib/catalog/normalize-fa";
 import type { V2KitchenCatalogPayload } from "@/lib/catalog/v2-kitchen";
 import { playCategoryBell } from "@/lib/v2-bell-audio";
+import { trackProductInsight } from "@/lib/api/insights";
+import type { KitchenCompanionSeed } from "@/lib/catalog/kitchen-companions";
 
 import styles from "./for-home-kitchen.module.css";
 
@@ -145,6 +148,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
   const [pinnedProduct, setPinnedProduct] = useState<ShowcaseProduct | null>(null);
   const [detailProduct, setDetailProduct] = useState<ProductDetailData | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [companion, setCompanion] = useState<KitchenCompanionSeed | null>(null);
   const focusTimerRef = useRef<number | null>(null);
 
   const categories = catalog?.categories ?? productCategories;
@@ -337,13 +341,42 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
     setIsDetailOpen(true);
   };
 
+  const openCompanion = (product: { id: string; name: string; image?: string | null }) => {
+    setCompanion({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      categoryId: activeCategoryId,
+    });
+    setIsDetailOpen(false);
+    void trackProductInsight({
+      event_type: "add_to_cart",
+      product_key: product.id,
+      product_name: product.name,
+      category_key: activeCategoryId,
+      payload: { source: "kitchen" },
+    });
+    void trackProductInsight({
+      event_type: "companion_open",
+      product_key: product.id,
+      product_name: product.name,
+      category_key: activeCategoryId,
+    });
+    window.setTimeout(() => {
+      document.getElementById("kitchen-companion")?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 80);
+  };
+
   if (!activeCategory) return null;
 
   return (
     <section
       ref={rootRef}
       id="for-home-kitchen"
-      className={`${styles.section}${visible ? ` ${styles.visible}` : ""}`}
+      className={`${styles.section}${visible ? ` ${styles.visible}` : ""}${companion ? ` ${styles.withCompanion}` : ""}`}
       data-category={activeCategoryId}
       data-catalog-source={catalog?.source ?? "static"}
       aria-labelledby="product-showcase-title"
@@ -376,6 +409,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
               productImage={heroProduct?.image ?? activeCategory.heroImage}
               onViewProduct={() => openProductDetail()}
               onPlayVideo={() => openProductDetail()}
+              onAddedToCart={openCompanion}
             />
           </div>
 
@@ -395,14 +429,40 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
         </div>
 
         {activeProducts.length ? (
-          <ProductCards
-            title={`انواع ${activeCategory.title}`}
-            products={activeProducts as ReadonlyArray<ShowcaseProduct>}
-            highlightId={focusProductId}
-            onProductClick={(p) => {
-              setFocusProductId(p.id);
-            }}
-          />
+          <div className={styles.catalogBlock}>
+            <ProductCards
+              title={`انواع ${activeCategory.title}`}
+              products={activeProducts as ReadonlyArray<ShowcaseProduct>}
+              highlightId={focusProductId}
+              onProductClick={(p) => {
+                setFocusProductId(p.id);
+                void trackProductInsight({
+                  event_type: "product_focus",
+                  product_key: p.id,
+                  product_name: p.name,
+                  category_key: activeCategoryId,
+                });
+              }}
+            />
+            {companion ? (
+              <KitchenCompanion
+                seed={companion}
+                productsByCategory={productsByCategory}
+                onClose={() => {
+                  void trackProductInsight({
+                    event_type: "companion_close",
+                    product_key: companion.id,
+                    product_name: companion.name,
+                    category_key: companion.categoryId,
+                  });
+                  setCompanion(null);
+                }}
+                onFocusProduct={(product) => {
+                  setFocusProductId(product.id);
+                }}
+              />
+            ) : null}
+          </div>
         ) : (
           <p className={styles.emptyCatalog}>
             {catalog?.apiReachable
@@ -416,6 +476,7 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
         isOpen={isDetailOpen}
         product={detailProduct}
         onClose={() => setIsDetailOpen(false)}
+        onAddedToCart={openCompanion}
       />
     </section>
   );

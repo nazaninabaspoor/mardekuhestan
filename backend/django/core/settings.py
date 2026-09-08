@@ -565,6 +565,18 @@ UNFOLD = {
                         "link": reverse_lazy("admin:product_productimage_changelist"),
                         "permission": "core.admin_ui.staff_ok",
                     },
+                    {
+                        "title": "تحلیل رفتار",
+                        "icon": "monitoring",
+                        "link": reverse_lazy("admin:product_productinsightevent_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "نظر محصول",
+                        "icon": "rate_review",
+                        "link": reverse_lazy("admin:product_productopinion_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
                 ],
             },
             {

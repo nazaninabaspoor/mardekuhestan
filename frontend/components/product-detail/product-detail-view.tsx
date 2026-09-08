@@ -10,12 +10,14 @@ interface ProductDetailViewProps {
   product: ProductDetailData;
   onClose?: () => void;
   isModal?: boolean;
+  onAddedToCart?: (product: { id: string; name: string; image?: string | null }) => void;
 }
 
 export function ProductDetailView({
   product,
   onClose,
   isModal = false,
+  onAddedToCart,
 }: ProductDetailViewProps) {
   const [selectedPortion, setSelectedPortion] = useState(
     product.portionOptions[0] || "۱ کیلوگرم",
@@ -53,6 +55,11 @@ export function ProductDetailView({
     setIsAdding(false);
     if (result.success) {
       setAddedToCart(true);
+      onAddedToCart?.({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+      });
       setTimeout(() => setAddedToCart(false), 3500);
     }
   };

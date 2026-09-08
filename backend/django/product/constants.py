@@ -471,6 +471,49 @@ class ProductEvent:
     AVAILABILITY_CHANGED = "product.availability.changed"
 
 
+class InsightEventType:
+    """رفتار کاربر روی فروشگاه — برای پنل ادمین."""
+
+    ADD_TO_CART = "add_to_cart"
+    COMPANION_OPEN = "companion_open"
+    RELATED_CLICK = "related_click"
+    RELATED_ADD = "related_add"
+    COMPANION_CLOSE = "companion_close"
+    OPINION_SUBMIT = "opinion_submit"
+    PRODUCT_FOCUS = "product_focus"
+
+    CHOICES = (
+        (ADD_TO_CART, "افزودن به سبد"),
+        (COMPANION_OPEN, "باز شدن پیشنهاد مسیر"),
+        (RELATED_CLICK, "کلیک محصول مرتبط"),
+        (RELATED_ADD, "افزودن محصول مرتبط"),
+        (COMPANION_CLOSE, "بستن پیشنهاد مسیر"),
+        (OPINION_SUBMIT, "ثبت نظر محصول"),
+        (PRODUCT_FOCUS, "تمرکز روی محصول"),
+    )
+
+
+class OpinionMeal:
+    BREAKFAST = "breakfast"
+    LUNCH = "lunch"
+    DINNER = "dinner"
+    GATHERING = "gathering"
+
+    CHOICES = (
+        (BREAKFAST, "صبحانه"),
+        (LUNCH, "ناهار"),
+        (DINNER, "شام"),
+        (GATHERING, "مهمانی"),
+    )
+
+
+INSIGHT_VISITOR_MAX_LENGTH: Final[int] = 64
+INSIGHT_PRODUCT_KEY_MAX_LENGTH: Final[int] = 80
+INSIGHT_PRODUCT_NAME_MAX_LENGTH: Final[int] = 160
+INSIGHT_CATEGORY_KEY_MAX_LENGTH: Final[int] = 64
+INSIGHT_COMMENT_MAX_LENGTH: Final[int] = 800
+
+
 PRODUCT_KAFKA_TOPIC: Final[str] = "mardekuhestan.product.events"
 
 # ---------------------------------------------------------------------------

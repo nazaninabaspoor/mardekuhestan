@@ -19,7 +19,7 @@ from product.constants import (
     ProductStatus,
     ProductVisibility,
 )
-from product.models import Category, Product, ProductImage, ProductVariant
+from product.models import Category, Product, ProductImage, ProductInsightEvent, ProductOpinion, ProductVariant
 from product.utils import (
     domain_label_fa,
     format_rial,
@@ -869,3 +869,77 @@ class ProductImageAdmin(ModelAdmin):
                 obj.alt_text,
             )
         return "—"
+
+
+@admin.register(ProductInsightEvent)
+class ProductInsightEventAdmin(ModelAdmin):
+    list_display = (
+        "created_at",
+        "event_type",
+        "product_name",
+        "category_key",
+        "user",
+        "visitor_id",
+    )
+    list_filter = ("event_type", "category_key", "created_at")
+    search_fields = ("product_name", "product_key", "visitor_id", "user__username", "user__email")
+    readonly_fields = (
+        "user",
+        "visitor_id",
+        "event_type",
+        "product_key",
+        "product_name",
+        "category_key",
+        "payload",
+        "created_at",
+    )
+    date_hierarchy = "created_at"
+    list_fullwidth = True
+    ordering = ("-created_at",)
+
+    def has_add_permission(self, request) -> bool:
+        return False
+
+    def has_change_permission(self, request, obj=None) -> bool:
+        return False
+
+
+@admin.register(ProductOpinion)
+class ProductOpinionAdmin(ModelAdmin):
+    list_display = (
+        "created_at",
+        "product_name",
+        "rating",
+        "meal",
+        "user",
+        "comment_preview",
+    )
+    list_filter = ("rating", "meal", "category_key", "created_at")
+    search_fields = ("product_name", "product_key", "comment", "visitor_id", "user__username", "user__email")
+    readonly_fields = (
+        "user",
+        "visitor_id",
+        "product_key",
+        "product_name",
+        "category_key",
+        "rating",
+        "meal",
+        "comment",
+        "created_at",
+    )
+    date_hierarchy = "created_at"
+    list_fullwidth = True
+    ordering = ("-created_at",)
+
+    def has_add_permission(self, request) -> bool:
+        return False
+
+    def has_change_permission(self, request, obj=None) -> bool:
+        return False
+
+    @admin.display(description="نظر")
+    def comment_preview(self, obj: ProductOpinion) -> str:
+        text = (obj.comment or "").strip()
+        if not text:
+            return "—"
+        return text[:72] + ("…" if len(text) > 72 else "")

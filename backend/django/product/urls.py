@@ -15,6 +15,7 @@ from product.views import (
     ProductSearchView,
     ProductVariantAdminViewSet,
 )
+from product.insight_views import InsightEventCreateView, ProductOpinionCreateView
 
 app_name = "product"
 
@@ -60,6 +61,8 @@ urlpatterns = [
         name="admin-image-detail",
     ),
     # Storefront (public)
+    path("insights/events/", InsightEventCreateView.as_view(), name="insight-event-create"),
+    path("insights/opinions/", ProductOpinionCreateView.as_view(), name="insight-opinion-create"),
     path("domains/", CatalogDomainListAPIView.as_view(), name="domain-list"),
     path("search/", ProductSearchView.as_view(), name="product-search"),
     path(

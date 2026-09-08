@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MagArticle, type MagStory } from "@/components/magazine/mag-article";
-import { MagReadProgress } from "@/components/magazine/mag-chrome";
 import { pinArticleFaqs, pinArticleHeadline, pinArticleHtml, pinArticlePack } from "@/data/magazine-reading";
 import { magazinePins, pinBySlug, relatedPins } from "@/data/magazine-issue";
 import { ApiError } from "@/lib/api/client";
@@ -215,7 +214,6 @@ export default async function MagazineArticlePage({ params }: { params: Promise<
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(magazineArticleGraph(story)) }}
       />
-      <MagReadProgress />
       <MagArticle story={story} />
     </>
   );

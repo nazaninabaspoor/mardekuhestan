@@ -8,12 +8,14 @@ interface ProductDetailModalProps {
   product: ProductDetailData | null;
   isOpen: boolean;
   onClose: () => void;
+  onAddedToCart?: (product: { id: string; name: string; image?: string | null }) => void;
 }
 
 export function ProductDetailModal({
   product,
   isOpen,
   onClose,
+  onAddedToCart,
 }: ProductDetailModalProps) {
   useEffect(() => {
     if (!isOpen) return;
@@ -42,7 +44,7 @@ export function ProductDetailModal({
       role="dialog"
     >
       <div className="pdetail-modal-card">
-        <ProductDetailView product={product} onClose={onClose} isModal={true} />
+        <ProductDetailView product={product} onClose={onClose} isModal={true} onAddedToCart={onAddedToCart} />
       </div>
     </div>
   );

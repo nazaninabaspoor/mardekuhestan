@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -23,6 +24,8 @@ from product.constants import (
     PackagingType,
     PricingStrategy,
     ProductDomain,
+    InsightEventType,
+    OpinionMeal,
     ProductImageRole,
     ProductStatus,
     ProductVisibility,
@@ -280,3 +283,68 @@ class ProductImage(PublicUUIDMixin, models.Model):
 
     def __str__(self) -> str:
         return f"{self.product.name} [{self.role}]"
+
+
+class ProductInsightEvent(models.Model):
+    """رد رفتار کاربر روی محصول — سبد، پیشنهاد مرتبط، نظر."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="کاربر",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="product_insight_events",
+    )
+    visitor_id = models.CharField("شناسه بازدید", max_length=64, db_index=True)
+    event_type = models.CharField("نوع رفتار", max_length=32, choices=InsightEventType.CHOICES, db_index=True)
+    product_key = models.CharField("شناسه محصول", max_length=80, db_index=True)
+    product_name = models.CharField("نام محصول", max_length=160)
+    category_key = models.CharField("دسته", max_length=64, blank=True, db_index=True)
+    payload = models.JSONField("جزئیات", default=dict, blank=True)
+    created_at = models.DateTimeField("زمان", auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = "رفتار کاربر روی محصول"
+        verbose_name_plural = "تحلیل رفتار کاربر"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["event_type", "-created_at"]),
+            models.Index(fields=["product_key", "-created_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.get_event_type_display()} · {self.product_name}"
+
+
+class ProductOpinion(models.Model):
+    """نظرسنجی محصول روی فروشگاه."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="کاربر",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="product_opinions",
+    )
+    visitor_id = models.CharField("شناسه بازدید", max_length=64, db_index=True)
+    product_key = models.CharField("شناسه محصول", max_length=80, db_index=True)
+    product_name = models.CharField("نام محصول", max_length=160)
+    category_key = models.CharField("دسته", max_length=64, blank=True, db_index=True)
+    rating = models.PositiveSmallIntegerField("امتیاز")
+    meal = models.CharField("وعده", max_length=16, choices=OpinionMeal.CHOICES, blank=True)
+    comment = models.TextField("نظر", blank=True)
+    created_at = models.DateTimeField("زمان", auto_now_add=True, db_index=True)
+
+    class Meta:
+        verbose_name = "نظر محصول"
+        verbose_name_plural = "نظرهای محصول"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["product_key", "-created_at"]),
+            models.Index(fields=["rating", "-created_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.product_name} · {self.rating}"
