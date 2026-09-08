@@ -16,6 +16,7 @@ export async function listArticles(params: {
   cluster?: string;
   q?: string;
   page?: number;
+  pageSize?: number;
 } = {}): Promise<PaginatedContent<ArticleListItem>> {
   return apiFetch<PaginatedContent<ArticleListItem>>("/api/content/articles/", {
     searchParams: {
@@ -25,7 +26,7 @@ export async function listArticles(params: {
       cluster: params.cluster,
       q: params.q,
       page: params.page ?? 1,
-      page_size: PAGE_SIZE,
+      page_size: params.pageSize ?? PAGE_SIZE,
     },
     revalidate: 60,
   });

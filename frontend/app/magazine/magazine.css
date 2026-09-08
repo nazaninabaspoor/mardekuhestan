@@ -1,7 +1,7 @@
 html.is-magazine-route,
 html.is-magazine-route body,
 html.is-magazine-route .site-canvas {
-  background: #F4F0E8 !important;
+  background: #005B48 !important;
 }
 
 .mk-mag {
@@ -13,11 +13,18 @@ html.is-magazine-route .site-canvas {
   --mk-slate: #5D686E;
   --mk-gold: #D4A359;
   --mk-sage: #50AF47;
+  --mk-header-h: 128px;
+  --mk-page:
+    radial-gradient(42% 58% at 50% 18%, rgb(29 29 27 / 22%), transparent 70%),
+    radial-gradient(90% 70% at 12% 8%, rgb(80 175 71 / 34%), transparent 56%),
+    radial-gradient(80% 64% at 88% 10%, rgb(212 163 89 / 24%), transparent 52%),
+    radial-gradient(70% 58% at 78% 88%, rgb(144 56 40 / 22%), transparent 54%),
+    linear-gradient(180deg, #003f32 0%, var(--mk-forest) 28%, #0a5540 72%, #0a4a3c 100%);
   direction: rtl;
-  color: var(--mk-ink);
-  background: var(--mk-cream);
+  color: var(--mk-cream);
+  background: var(--mk-page);
   min-height: 100dvh;
-  padding: 18px 0 96px;
+  padding: 0 0 72px;
 }
 
 .mk-mag * {
@@ -27,26 +34,41 @@ html.is-magazine-route .site-canvas {
 .mk-mag-shell {
   width: min(1680px, calc(100% - 28px));
   margin-inline: auto;
+  padding-top: calc(var(--mk-header-h) + 10px);
+}
+
+.mk-mag:has(> .mk-issue) .mk-mag-shell {
+  padding-top: 0;
+}
+
+.mk-mag:has(.mk-mag-article-hero) {
+  color: var(--mk-ink);
+  background: var(--mk-cream);
+}
+
+html.is-magazine-route:has(.mk-mag-article-hero),
+html.is-magazine-route:has(.mk-mag-article-hero) body,
+html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
+  background: #F4F0E8 !important;
 }
 
 .mk-issue {
   position: relative;
-  padding: 36px 28px 42px;
-  background: var(--mk-forest);
+  padding: calc(var(--mk-header-h) + 48px) 0 36px;
   color: #f4f0e8;
-  overflow: hidden;
+  text-align: center;
+  background: transparent;
 }
 
-.mk-issue::before {
-  content: "";
-  position: absolute;
-  inset-inline-end: -8%;
-  top: -30%;
-  width: min(46vw, 560px);
-  height: 160%;
-  background: #1d1d1b;
-  clip-path: polygon(18% 8%, 72% 0%, 100% 28%, 86% 78%, 42% 100%, 0% 62%);
-  pointer-events: none;
+.mk-issue-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1680px, calc(100% - 28px));
+  margin-inline: auto;
+  text-align: center;
 }
 
 .mk-issue p,
@@ -54,7 +76,7 @@ html.is-magazine-route .site-canvas {
 .mk-issue span,
 .mk-issue form {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .mk-issue p {
@@ -66,15 +88,16 @@ html.is-magazine-route .site-canvas {
 }
 
 .mk-issue h1 {
-  margin: 8px 0 0;
+  margin: 10px auto 0;
   font-size: clamp(2.4rem, 6vw, 4.4rem);
   line-height: 1.1;
   max-width: 12ch;
+  text-shadow: 0 10px 28px rgb(0 20 16 / 32%);
 }
 
 .mk-issue span {
   display: block;
-  margin-top: 12px;
+  margin: 12px auto 0;
   max-width: 36ch;
   line-height: 1.8;
   color: rgba(244, 240, 232, 0.88);
@@ -85,7 +108,7 @@ html.is-magazine-route .site-canvas {
   align-items: center;
   width: min(520px, 100%);
   height: 56px;
-  margin-top: 22px;
+  margin: 22px auto 0;
   padding: 5px;
   border-radius: 999px;
   background: #fff;
@@ -174,6 +197,7 @@ html.is-magazine-route .site-canvas {
   gap: 18px 14px;
   padding: 12px 0 28px;
   align-items: stretch;
+  scroll-margin-top: calc(var(--mk-header-h) + 16px);
 }
 
 .mk-poster {
@@ -357,18 +381,18 @@ html.is-magazine-route .site-canvas {
   margin: 0;
   font-size: 12px;
   letter-spacing: 0.14em;
-  color: var(--mk-forest);
+  color: var(--mk-gold);
   font-weight: 700;
 }
 
 .mk-shelf-head h2 {
   margin: 0;
   font-size: 1.45rem;
-  color: var(--mk-forest-deep);
+  color: var(--mk-cream);
 }
 
 .mk-shelf-head span {
-  color: var(--mk-slate);
+  color: rgba(244, 240, 232, 0.78);
   font-size: 14px;
 }
 
@@ -379,7 +403,12 @@ html.is-magazine-route .site-canvas {
 
 .mk-mag-empty h2 {
   margin: 0 0 10px;
-  color: var(--mk-forest);
+  color: var(--mk-cream);
+}
+
+.mk-mag-empty .mk-mag-read {
+  color: var(--mk-gold);
+  border-bottom-color: var(--mk-gold);
 }
 
 .mk-mag-crumbs {
@@ -439,7 +468,7 @@ html.is-magazine-route .site-canvas {
 
 .mk-mag-progress {
   position: sticky;
-  top: 0;
+  top: var(--mk-header-h);
   z-index: 30;
   height: 3px;
   background: rgba(0, 91, 72, 0.12);
@@ -578,6 +607,116 @@ html.is-magazine-route .site-canvas {
   font-size: 14px;
 }
 
+.mk-folio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 12px;
+  padding: 28px 0 8px;
+}
+
+.mk-folio-peak {
+  width: 84px;
+  height: 22px;
+  background: var(--mk-gold);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.mk-folio-tray {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--mk-forest);
+  box-shadow: 0 18px 36px rgba(0, 35, 28, 0.2);
+}
+
+.mk-folio-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border-radius: 999px;
+  background: rgba(244, 240, 232, 0.1);
+}
+
+.mk-folio-pages li {
+  display: flex;
+}
+
+.mk-folio-num {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: #f4f0e8;
+  font-weight: 700;
+  font-size: 15px;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+a.mk-folio-num:hover,
+a.mk-folio-num:focus-visible {
+  background: rgba(244, 240, 232, 0.16);
+  outline: none;
+}
+
+.mk-folio-num.is-current {
+  background: var(--mk-gold);
+  color: var(--mk-ink);
+  box-shadow: 0 0 0 4px rgba(212, 163, 89, 0.28);
+}
+
+.mk-folio-gap {
+  width: 22px;
+  color: rgba(244, 240, 232, 0.55);
+  text-align: center;
+  font-weight: 700;
+  line-height: 42px;
+}
+
+.mk-folio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--mk-cream);
+  color: var(--mk-forest-deep);
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+a.mk-folio-btn:hover,
+a.mk-folio-btn:focus-visible {
+  background: var(--mk-gold);
+  color: var(--mk-ink);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.mk-folio-btn.is-locked {
+  background: rgba(244, 240, 232, 0.12);
+  color: rgba(244, 240, 232, 0.42);
+  cursor: not-allowed;
+}
+
+.mk-folio-status {
+  margin: 0;
+  color: rgba(244, 240, 232, 0.72);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 @media (max-width: 1280px) {
   .mk-posters {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -591,13 +730,34 @@ html.is-magazine-route .site-canvas {
 }
 
 @media (max-width: 700px) {
+  .mk-mag {
+    --mk-header-h: 96px;
+  }
+
   .mk-posters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px 10px;
   }
 
   .mk-issue {
-    padding: 28px 18px 32px;
+    padding: calc(var(--mk-header-h) + 28px) 0 28px;
+  }
+
+  .mk-folio-tray {
+    flex-wrap: wrap;
+    width: min(100%, 420px);
+    border-radius: 28px;
+    padding: 12px;
+  }
+
+  .mk-folio-btn {
+    min-height: 42px;
+    padding: 0 14px;
+  }
+
+  .mk-folio-num {
+    width: 38px;
+    height: 38px;
   }
 }
 

@@ -3,17 +3,24 @@ import { notFound } from "next/navigation";
 
 import { MagBoards } from "@/components/magazine/mag-boards";
 import { MagMasonry } from "@/components/magazine/mag-card";
+import { MagPager } from "@/components/magazine/mag-pager";
 import { boardBySlug, magazineBoards } from "@/data/magazine-issue";
 import { listArticles, listCategories, unwrapResults } from "@/lib/api/content";
-import { mergeCategoryPins } from "@/lib/content/magazine-feed";
+import {
+  magazineListHref,
+  mergeCategoryPins,
+  paginatePins,
+  parseMagazinePage,
+} from "@/lib/content/magazine-feed";
 
 type Params = { slug: string };
+type Search = { page?: string };
 
 async function loadCategory(slug: string) {
   try {
     const [categoriesPayload, articles] = await Promise.all([
       listCategories(),
-      listArticles({ category: slug, page: 1 }),
+      listArticles({ category: slug, page: 1, pageSize: 80 }),
     ]);
     return {
       categories: unwrapResults(categoriesPayload),
@@ -48,16 +55,20 @@ export async function generateMetadata({
 
 export default async function MagazineCategoryPage({
   params,
+  searchParams,
 }: {
   params: Promise<Params>;
+  searchParams: Promise<Search>;
 }) {
   const { slug } = await params;
+  const { page } = await searchParams;
   const payload = await loadCategory(slug);
   const board = boardBySlug(slug);
   const apiCategory = payload.categories.find((item) => item.slug === slug) || null;
   if (!board && !apiCategory) notFound();
 
   const pins = mergeCategoryPins(payload.articles, slug);
+  const leaf = paginatePins(pins, parseMagazinePage(page));
   const name = board?.name || apiCategory?.name || "";
   const description = board?.description || apiCategory?.description || "";
 
@@ -69,7 +80,16 @@ export default async function MagazineCategoryPage({
         {description ? <span>{description}</span> : null}
       </header>
       <MagBoards boards={magazineBoards} active={slug} />
-      {pins.length ? <MagMasonry pins={pins} /> : null}
+      {leaf.total ? (
+        <>
+          <MagMasonry pins={leaf.items} feed />
+          <MagPager
+            page={leaf.page}
+            pageCount={leaf.pageCount}
+            hrefFor={(nextPage) => magazineListHref({ page: nextPage, category: slug, hash: "#mk-feed" })}
+          />
+        </>
+      ) : null}
     </div>
   );
 }

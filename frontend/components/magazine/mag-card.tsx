@@ -39,9 +39,9 @@ export function MagPin({ pin, priority = false }: { pin: MagPinData; priority?: 
   );
 }
 
-export function MagMasonry({ pins }: { pins: MagPinData[] }) {
+export function MagMasonry({ pins, feed = false }: { pins: MagPinData[]; feed?: boolean }) {
   return (
-    <div className="mk-posters">
+    <div className="mk-posters" id={feed ? "mk-feed" : undefined}>
       {pins.map((pin, index) => (
         <MagPin key={pin.href} pin={pin} priority={index < 5} />
       ))}

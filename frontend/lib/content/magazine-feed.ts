@@ -112,3 +112,40 @@ export function mergeCategoryPins(apiArticles: ArticleListItem[], categorySlug: 
 export function articleDateLabel(article: ArticleListItem) {
   return formatFaDate(article.published_at);
 }
+
+export const MAG_PAGE_SIZE = 10;
+
+export function parseMagazinePage(value?: string) {
+  const n = Number.parseInt(value || "1", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+}
+
+export function paginatePins<T>(items: T[], page: number, size = MAG_PAGE_SIZE) {
+  const pageCount = Math.max(1, Math.ceil(items.length / size));
+  const current = Math.min(Math.max(1, page), pageCount);
+  const start = (current - 1) * size;
+  return {
+    items: items.slice(start, start + size),
+    page: current,
+    pageCount,
+    total: items.length,
+    hasPrev: current > 1,
+    hasNext: current < pageCount,
+  };
+}
+
+export function magazineListHref(opts: {
+  page?: number;
+  q?: string;
+  category?: string;
+  path?: string;
+  hash?: string;
+}) {
+  const params = new URLSearchParams();
+  if (opts.q) params.set("q", opts.q);
+  if (opts.page && opts.page > 1) params.set("page", String(opts.page));
+  const base = opts.path || (opts.category ? `/magazine/category/${opts.category}` : "/magazine");
+  const qs = params.toString();
+  const href = qs ? `${base}?${qs}` : base;
+  return opts.hash ? `${href}${opts.hash}` : href;
+}
