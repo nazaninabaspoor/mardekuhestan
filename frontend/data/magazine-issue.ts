@@ -13,6 +13,7 @@ export type MagazinePin = {
   categorySlug: string;
   categoryName: string;
   image: string;
+  goods: string[];
   stack?: string;
   aspect: string;
   author: string;
@@ -21,30 +22,48 @@ export type MagazinePin = {
   height: "tall" | "mid" | "wide";
 };
 
+const PNG = {
+  walker: "/brand/v2/mountain-man-cutout.png",
+  sitting: "/brand/v2/mountain-man-sitting.png",
+  dairy: "/brand/home-dairy.png",
+  meat: "/brand/home-meat.png",
+  seafood: "/brand/home-seafood.png",
+  ready: "/brand/home-ready.png",
+  steak: "/brand/v2/products/prod-25.png",
+  cubes: "/brand/v2/products/prod-18.png",
+  schnitzel: "/brand/v2/products/prod-24.png",
+  burger: "/brand/v2/products/prod-01.png",
+  mince: "/brand/v2/products/prod-22.png",
+  fillet: "/brand/v2/products/prod-08.png",
+  nugget: "/brand/v2/products/prod-19.png",
+  wings: "/brand/v2/products/prod-15.png",
+  chops: "/brand/v2/products/prod-12.png",
+} as const;
+
 export const magazineBoards: MagazineBoard[] = [
   {
     slug: "rah-ma",
     name: "راه ما",
     description: "ارتفاع، آرامش، و همان مسیری که از کوه می‌آید.",
-    image: "/magazine/shots/shot-walker-back.png",
+    image: PNG.walker,
   },
   {
     slug: "masir-ghaza",
     name: "مسیر غذا",
     description: "از مرتع و آب تا سفرهٔ خانه.",
-    image: "/magazine/shots/shot-copper-stew.png",
+    image: PNG.steak,
   },
   {
     slug: "zendegi-khane",
     name: "زندگی خانگی",
     description: "صبحانه، جمعه، و نوری که روی میز می‌نشیند.",
-    image: "/magazine/shots/shot-bread-morning.png",
+    image: PNG.dairy,
   },
   {
     slug: "mazraeh",
     name: "مزرعه و مرتع",
     description: "مه، پشم، و زمینی که عجله ندارد.",
-    image: "/magazine/shots/shot-flock-dew.png",
+    image: PNG.sitting,
   },
 ];
 
@@ -64,7 +83,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>راه مرد کوهستان از شعار شروع نمی‌شود. از مه صبح، از سنگی که خیس است، و از خانواده‌ای که مسیر غذا را می‌بیند.</p><p>سبز اینجا رنگ ویترین نیست. رنگ ارتفاع است؛ جایی که هوا صاف می‌ماند و طعم واقعی می‌ماند.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
-    image: "/magazine/shots/shot-ridge-mist.png",
+    image: PNG.walker,
+    goods: [PNG.walker],
     aspect: "9 / 16",
     author: "تحریریه مرد کوهستان",
     minutes: 6,
@@ -78,7 +98,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>مرتع اول دیده می‌شود، بعد غذا. این ترتیب را عوض نمی‌کنیم.</p><p>هر بسته که به خانه می‌رسد باید همان راه را در خودش داشته باشد: ارتفاع، حوصله، و دقت.</p>",
     categorySlug: "masir-ghaza",
     categoryName: "مسیر غذا",
-    image: "/magazine/shots/shot-pasture-road.png",
+    image: PNG.steak,
+    goods: [PNG.steak, PNG.cubes],
     stack: "/magazine/shots/shot-copper-stew.png",
     aspect: "16 / 9",
     author: "تحریریه مرد کوهستان",
@@ -93,7 +114,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>صبح خانه باید ساده باشد. نان، پنیر، نوری که از پنجره می‌آید.</p><p>ریشه یعنی بدانیم شیر از کجا آمده و چرا طعمش آرام است.</p>",
     categorySlug: "zendegi-khane",
     categoryName: "زندگی خانگی",
-    image: "/magazine/shots/shot-bread-morning.png",
+    image: PNG.dairy,
+    goods: [PNG.dairy, PNG.burger],
     stack: "/magazine/shots/shot-yogurt-honey.png",
     aspect: "4 / 3",
     author: "تحریریه مرد کوهستان",
@@ -108,7 +130,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>مه صبح یعنی هنوز کسی عجله ندارد. گله در ارتفاع، همان تصویر آرامش است.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
-    image: "/magazine/shots/shot-flock-dew.png",
+    image: PNG.sitting,
+    goods: [PNG.sitting],
     aspect: "3 / 4",
     author: "تحریریه مرد کوهستان",
     minutes: 5,
@@ -122,7 +145,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>عسل کوهستان را نباید با شربت قاطی کرد. طعمش باید بوی همان ارتفاع را بدهد.</p>",
     categorySlug: "mazraeh",
     categoryName: "مزرعه و مرتع",
-    image: "/magazine/shots/shot-honey-comb.png",
+    image: PNG.dairy,
+    goods: [PNG.dairy],
     aspect: "3 / 4",
     author: "تحریریه مرد کوهستان",
     minutes: 4,
@@ -136,7 +160,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>مرد کوهستان نام یک آدم روی پوستر نیست. نام راهی است که باید پیموده شود.</p>",
     categorySlug: "rah-ma",
     categoryName: "راه ما",
-    image: "/magazine/shots/shot-walker-back.png",
+    image: PNG.walker,
+    goods: [PNG.walker],
     aspect: "3 / 4",
     author: "تحریریه مرد کوهستان",
     minutes: 5,
@@ -150,7 +175,8 @@ export const magazinePins: MagazinePin[] = [
     body: "<p>حوصله در کارخانه یعنی دقت در مواد، نه شعار روی بسته.</p>",
     categorySlug: "masir-ghaza",
     categoryName: "مسیر غذا",
-    image: "/magazine/shots/shot-copper-stew.png",
+    image: PNG.schnitzel,
+    goods: [PNG.schnitzel, PNG.nugget],
     aspect: "3 / 4",
     author: "تحریریه مرد کوهستان",
     minutes: 4,
