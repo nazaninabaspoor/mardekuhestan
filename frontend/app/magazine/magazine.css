@@ -221,7 +221,7 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 22px 18px;
-  padding: 6px 8px 28px;
+  padding: 6px 8px 16px;
   align-items: stretch;
   scroll-margin-top: calc(var(--mk-header-h) + 16px);
 }
@@ -761,8 +761,8 @@ html.is-magazine-route:has(.mk-mag-article-hero) .site-canvas {
   flex-direction: column;
   align-items: center;
   gap: 0;
-  margin: 28px 0 0;
-  padding: 18px 0 28px;
+  margin: 6px 0 0;
+  padding: 4px 0 24px;
 }
 
 .mk-folio-shelf {
