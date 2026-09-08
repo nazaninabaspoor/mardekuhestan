@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 
 import { MagArticle, type MagStory } from "@/components/magazine/mag-article";
 import { MagReadProgress } from "@/components/magazine/mag-chrome";
-import { pinArticleHtml } from "@/data/magazine-reading";
-import { pinBySlug, relatedPins } from "@/data/magazine-issue";
+import { pinArticleFaqs, pinArticleHtml } from "@/data/magazine-reading";
+import { magazinePins, pinBySlug, relatedPins } from "@/data/magazine-issue";
 import { ApiError } from "@/lib/api/client";
 import { getArticleBySlug } from "@/lib/api/content";
 import type { ArticleDetail } from "@/lib/api/content.types";
@@ -47,15 +47,27 @@ function storyFromApi(article: ArticleDetail): MagStory {
     geo: article.geo_summary,
     faqs: faqPairs(article.geo_faq),
     tags: article.tags.map((tag) => ({ slug: tag.slug, name: tag.name })),
-    related: (article.related || []).map(articleToPin),
+    related:
+      (article.related || []).length
+        ? (article.related || []).map(articleToPin)
+        : relatedPins(article.slug, category?.slug || "").map(issueToPin),
     tone: toneForCategory(category?.slug),
   };
+}
+
+function readingMinutes(words: number, fallback = 4) {
+  return Math.max(fallback, Math.round(words / 180) || fallback);
+}
+
+export function generateStaticParams() {
+  return magazinePins.map((pin) => ({ slug: pin.slug }));
 }
 
 function storyFromPin(slug: string): MagStory | null {
   const pin = pinBySlug(slug);
   if (!pin) return null;
   const body = pinArticleHtml(pin);
+  const wordCount = countWords(body);
   return {
     slug: pin.slug,
     title: pin.title,
@@ -64,12 +76,12 @@ function storyFromPin(slug: string): MagStory | null {
     image: pin.image,
     author: pin.author,
     date: pin.date,
-    minutes: pin.minutes,
-    wordCount: countWords(body),
+    minutes: readingMinutes(wordCount, pin.minutes),
+    wordCount,
     categorySlug: pin.categorySlug,
     categoryName: pin.categoryName,
-    faqs: [],
-    tags: [],
+    faqs: pinArticleFaqs(pin),
+    tags: [{ slug: pin.categorySlug, name: pin.categoryName }],
     related: relatedPins(pin.slug, pin.categorySlug).map(issueToPin),
     tone: toneForCategory(pin.categorySlug),
   };
@@ -101,6 +113,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
         description: article.og_description || description,
         type: "article",
         locale: "fa_IR",
+        siteName: "مرد کوهستان",
         publishedTime: article.published_at || undefined,
         modifiedTime: article.updated_at,
         authors: article.author_name ? [article.author_name] : undefined,
@@ -121,12 +134,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title,
     description,
+    keywords: [pin.title, pin.categoryName, "مجله مرد کوهستان", "این راه سبز است", "غذای کوهستان"],
     alternates: { canonical: `/magazine/${pin.slug}` },
     openGraph: {
       title: pin.title,
       description,
       type: "article",
       locale: "fa_IR",
+      siteName: "مرد کوهستان",
       images: [{ url: pin.image, alt: pin.title }],
     },
     twitter: {

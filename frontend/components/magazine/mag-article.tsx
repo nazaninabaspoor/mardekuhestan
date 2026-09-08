@@ -25,9 +25,9 @@ export type MagStory = {
   tone: MagTone;
 };
 
-function Peak() {
+function Peak({ className = "mk-read-peak" }: { className?: string }) {
   return (
-    <svg className="mk-read-peak" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
       <path
         fill="none"
         stroke="currentColor"
@@ -40,7 +40,29 @@ function Peak() {
   );
 }
 
+function withHeadingIds(html: string) {
+  let index = 0;
+  return html.replace(/<h2(\s[^>]*)?>/gi, (full, attrs = "") => {
+    if (/\sid=/i.test(attrs)) return full;
+    index += 1;
+    return `<h2${attrs} id="s-${index}">`;
+  });
+}
+
+function headingsFrom(html: string) {
+  return [...html.matchAll(/<h2\b([^>]*)>([\s\S]*?)<\/h2>/gi)].map((match, index) => {
+    const attrs = match[1] || "";
+    const idMatch = attrs.match(/\sid=["']([^"']+)["']/i);
+    return {
+      id: idMatch?.[1] || `s-${index + 1}`,
+      text: match[2].replace(/<[^>]+>/g, "").trim(),
+    };
+  }).filter((item) => item.text);
+}
+
 export function MagArticle({ story }: { story: MagStory }) {
+  const body = withHeadingIds(story.body || "");
+  const headings = headingsFrom(body);
   const minutes = story.minutes
     ? `${story.minutes.toLocaleString("fa-IR")} دقیقه خواندن`
     : null;
@@ -50,6 +72,9 @@ export function MagArticle({ story }: { story: MagStory }) {
 
   return (
     <article className="mk-read" itemScope itemType="https://schema.org/Article">
+      <meta itemProp="inLanguage" content="fa-IR" />
+      {story.updatedAt ? <meta itemProp="dateModified" content={story.updatedAt} /> : null}
+
       <div className="mk-read-shell">
         <nav className="mk-read-crumbs" aria-label="مسیر صفحه">
           <ol>
@@ -67,8 +92,13 @@ export function MagArticle({ story }: { story: MagStory }) {
 
         <header className="mk-read-spread">
           <div className="mk-read-copy">
-            <p className="mk-read-kicker">{story.categoryName || "مجله مرد کوهستان"}</p>
-            <h1 itemProp="headline">{story.title}</h1>
+            <p className="mk-read-kicker">
+              <Peak className="mk-read-kicker-peak" />
+              {story.categoryName || "مجله مرد کوهستان"}
+            </p>
+            <h1 id="hero-title" itemProp="headline">
+              {story.title}
+            </h1>
             {story.excerpt ? (
               <p className="mk-read-dek" itemProp="description">
                 {story.excerpt}
@@ -97,28 +127,48 @@ export function MagArticle({ story }: { story: MagStory }) {
           </div>
 
           <figure className={`mk-read-plate mk-read-plate--${story.tone}`}>
+            <span className="mk-read-plate-pages" aria-hidden="true" />
             <span className="mk-read-plate-spine" aria-hidden="true" />
-            <Peak />
-            <Peak />
-            <Image
-              src={story.image}
-              alt={story.title}
-              width={900}
-              height={900}
-              priority
-              sizes="(max-width: 800px) 70vw, 32vw"
-              itemProp="image"
-            />
+            <span className="mk-read-plate-face">
+              <Peak className="mk-read-peak mk-read-peak--a" />
+              <Peak className="mk-read-peak mk-read-peak--b" />
+              <Image
+                src={story.image}
+                alt={story.title}
+                width={900}
+                height={900}
+                priority
+                sizes="(max-width: 800px) 58vw, 28vw"
+                itemProp="image"
+              />
+            </span>
+            <figcaption className="sr-only">{story.title}</figcaption>
           </figure>
         </header>
       </div>
 
+      <div className="mk-read-ridge" aria-hidden="true" />
+
       <div className="mk-read-prose">
+        {headings.length > 1 ? (
+          <nav className="mk-read-toc" aria-label="بخش‌های نوشته">
+            <p>در این نوشته</p>
+            <ol>
+              {headings.map((heading) => (
+                <li key={heading.id}>
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        ) : null}
+
         {story.geo ? <p className="mk-read-geo">{story.geo}</p> : null}
+
         <div
           className="mk-mag-body mk-read-body"
           itemProp="articleBody"
-          dangerouslySetInnerHTML={{ __html: story.body || "" }}
+          dangerouslySetInnerHTML={{ __html: body }}
         />
 
         {story.faqs.length ? (

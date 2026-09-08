@@ -16,6 +16,7 @@ type StorySchema = {
 
 const PUBLISHER = {
   "@type": "Organization",
+  "@id": "/#organization",
   name: "مرد کوهستان",
   url: "/",
   logo: {
@@ -26,12 +27,21 @@ const PUBLISHER = {
 
 export function magazineArticleGraph(story: StorySchema) {
   const url = `/magazine/${story.slug}`;
+  const published = story.publishedAt;
+  const modified = story.updatedAt || story.publishedAt;
+
   const article: Record<string, unknown> = {
     "@type": "Article",
+    "@id": `${url}#article`,
     headline: story.title,
     description: story.excerpt,
     inLanguage: "fa-IR",
-    image: story.image,
+    url,
+    image: {
+      "@type": "ImageObject",
+      url: story.image,
+      caption: story.title,
+    },
     author: {
       "@type": "Organization",
       name: story.author || "تحریریه مرد کوهستان",
@@ -48,8 +58,8 @@ export function magazineArticleGraph(story: StorySchema) {
   };
 
   if (story.categoryName) article.articleSection = story.categoryName;
-  if (story.publishedAt) article.datePublished = story.publishedAt;
-  if (story.updatedAt) article.dateModified = story.updatedAt;
+  if (published) article.datePublished = published;
+  if (modified) article.dateModified = modified;
   if (story.wordCount) article.wordCount = story.wordCount;
   if (story.minutes) article.timeRequired = `PT${story.minutes}M`;
 
