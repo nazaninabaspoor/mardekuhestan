@@ -721,6 +721,83 @@ html.is-magazine-route:has(.mk-read) .site-canvas {
   text-align: center;
 }
 
+.mk-read-hero--photo {
+  background: #10251f;
+}
+
+.mk-read-hero--photo img {
+  max-height: 460px;
+  object-fit: cover;
+  padding: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.mk-read-fig {
+  margin: 1.8em 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #10251f;
+}
+
+.mk-read-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.mk-read-fig figcaption {
+  margin: 0;
+  padding: 10px 14px 14px;
+  background: rgb(255 255 255 / 58%);
+  color: var(--mk-slate);
+  font-size: 13px;
+  line-height: 1.75;
+  text-align: right;
+}
+
+.mk-read-facts {
+  margin: 0 0 1.6em;
+  padding: 16px 18px;
+  border-right: 3px solid var(--mk-forest);
+  background: rgb(255 255 255 / 55%);
+  border-radius: 0 12px 12px 0;
+}
+
+.mk-read-facts > p {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--mk-forest-deep);
+}
+
+.mk-read-facts ul {
+  margin: 0;
+}
+
+.mk-read-body table {
+  width: 100%;
+  margin: 0 0 1.6em;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.mk-read-body th,
+.mk-read-body td {
+  border: 1px solid rgb(0 91 72 / 14%);
+  padding: 10px 12px;
+  text-align: right;
+}
+
+.mk-read-body th {
+  background: rgb(0 91 72 / 8%);
+  color: var(--mk-forest-deep);
+}
+
+.mk-read-body ol {
+  margin: 0 0 1.3em;
+  padding: 0 1.2em 0 0;
+}
+
 .mk-read-tocbox {
   margin-bottom: 28px;
 }

@@ -13,6 +13,7 @@ type StorySchema = {
   categoryName?: string;
   categorySlug?: string;
   faqs: Array<{ q: string; a: string }>;
+  images?: string[];
 };
 
 const PUBLISHER = {
@@ -38,11 +39,18 @@ export function magazineArticleGraph(story: StorySchema) {
     description: story.excerpt,
     inLanguage: "fa-IR",
     url,
-    image: {
-      "@type": "ImageObject",
-      url: story.image,
-      caption: story.title,
-    },
+    image:
+      story.images && story.images.length
+        ? story.images.map((url) => ({
+            "@type": "ImageObject",
+            url,
+            caption: story.headline || story.title,
+          }))
+        : {
+            "@type": "ImageObject",
+            url: story.image,
+            caption: story.title,
+          },
     author: {
       "@type": "Organization",
       name: story.author || "تحریریه مرد کوهستان",

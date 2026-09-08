@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { MagArticle, type MagStory } from "@/components/magazine/mag-article";
 import { MagReadProgress } from "@/components/magazine/mag-chrome";
-import { pinArticleFaqs, pinArticleHeadline, pinArticleHtml } from "@/data/magazine-reading";
+import { pinArticleFaqs, pinArticleHeadline, pinArticleHtml, pinArticlePack } from "@/data/magazine-reading";
 import { magazinePins, pinBySlug, relatedPins } from "@/data/magazine-issue";
 import { ApiError } from "@/lib/api/client";
 import { getArticleBySlug } from "@/lib/api/content";
@@ -68,30 +68,78 @@ export function generateStaticParams() {
 function storyFromPin(slug: string): MagStory | null {
   const pin = pinBySlug(slug);
   if (!pin) return null;
+  const pack = pinArticlePack(pin);
   const body = pinArticleHtml(pin);
   const wordCount = countWords(body);
   return {
     slug: pin.slug,
     title: pin.title,
     headline: pinArticleHeadline(pin),
-    excerpt: pin.excerpt,
+    excerpt: pack?.excerpt || pin.excerpt,
     body,
-    image: pin.image,
+    image: pack?.hero || pin.image,
+    imageAlt: pack?.heroAlt,
+    imageCaption: pack?.heroCaption,
+    imagePhoto: Boolean(pack?.hero),
     author: pin.author,
     date: pin.date,
+    publishedAt: pack?.publishedAt,
+    updatedAt: pack?.updatedAt,
+    updatedLabel: pack?.updatedAt ? formatFaDate(pack.updatedAt) : undefined,
     minutes: readingMinutes(wordCount),
     wordCount,
     categorySlug: pin.categorySlug,
     categoryName: pin.categoryName,
+    geo: pack?.geo,
     faqs: pinArticleFaqs(pin),
-    tags: [{ slug: pin.categorySlug, name: pin.categoryName }],
+    faqTitle: pack ? "سوالات متداول درباره راه سبز" : undefined,
+    tags: pack?.tags || [{ slug: pin.categorySlug, name: pin.categoryName }],
+    keywords: pack?.keywords,
+    images: pack?.images,
     related: relatedPins(pin.slug, pin.categorySlug).map(issueToPin),
     tone: toneForCategory(pin.categorySlug),
   };
 }
 
+async function resolveStory(slug: string) {
+  const pin = pinBySlug(slug);
+  if (pin && pinArticlePack(pin)) return storyFromPin(slug);
+  const article = await loadArticle(slug);
+  if (article) return storyFromApi(article);
+  return storyFromPin(slug);
+}
+
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
+  const pin = pinBySlug(slug);
+  const pack = pin ? pinArticlePack(pin) : null;
+  if (pin && pack) {
+    const headline = pinArticleHeadline(pin);
+    const title = pack.seoTitle;
+    const description = pack.seoDescription;
+    return {
+      title,
+      description,
+      keywords: pack.keywords,
+      alternates: { canonical: `/magazine/${pin.slug}` },
+      openGraph: {
+        title: headline,
+        description,
+        type: "article",
+        locale: "fa_IR",
+        siteName: "مرد کوهستان",
+        publishedTime: pack.publishedAt,
+        modifiedTime: pack.updatedAt,
+        images: [{ url: pack.hero, alt: pack.heroAlt }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [pack.hero],
+      },
+    };
+  }
   const article = await loadArticle(slug);
   if (article) {
     const title = article.seo_title || `${article.title} | مجله مرد کوهستان`;
@@ -130,7 +178,6 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       },
     };
   }
-  const pin = pinBySlug(slug);
   if (!pin) return { title: "نوشته پیدا نشد | مرد کوهستان" };
   const headline = pinArticleHeadline(pin);
   const title = `${headline} | مجله مرد کوهستان`;
@@ -159,8 +206,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function MagazineArticlePage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const article = await loadArticle(slug);
-  const story = article ? storyFromApi(article) : storyFromPin(slug);
+  const story = await resolveStory(slug);
   if (!story) notFound();
 
   return (

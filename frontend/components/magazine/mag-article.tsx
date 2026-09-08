@@ -26,6 +26,12 @@ export type MagStory = {
   tags: Array<{ slug: string; name: string }>;
   related: MagPinData[];
   tone: MagTone;
+  imageAlt?: string;
+  imageCaption?: string;
+  imagePhoto?: boolean;
+  keywords?: string[];
+  images?: string[];
+  faqTitle?: string;
 };
 
 function withHeadingIds(html: string) {
@@ -71,9 +77,10 @@ function IconCal() {
 export function MagArticle({ story }: { story: MagStory }) {
   const author = story.author || "تحریریه مرد کوهستان";
   const body = withHeadingIds(story.body || "");
+  const faqTitle = story.faqTitle || `سوالات متداول درباره ${story.title}`;
   const toc: MagTocItem[] = [
     ...headingsFrom(body),
-    ...(story.faqs.length ? [{ id: "faq", text: `سوالات متداول درباره ${story.title}` }] : []),
+    ...(story.faqs.length ? [{ id: "faq", text: faqTitle }] : []),
   ];
   const minutes = story.minutes
     ? `${story.minutes.toLocaleString("fa-IR")} دقیقه مطالعه`
@@ -154,17 +161,17 @@ export function MagArticle({ story }: { story: MagStory }) {
             </ul>
           </header>
 
-          <figure className={`mk-read-hero mk-read-hero--${story.tone}`}>
+          <figure className={`mk-read-hero${story.imagePhoto ? " mk-read-hero--photo" : ` mk-read-hero--${story.tone}`}`}>
             <Image
               src={story.image}
-              alt={story.headline}
+              alt={story.imageAlt || story.headline}
               width={1200}
               height={675}
               priority
               sizes="(max-width: 900px) 92vw, 760px"
               itemProp="image"
             />
-            <figcaption>{story.title}</figcaption>
+            <figcaption>{story.imageCaption || story.title}</figcaption>
           </figure>
 
           <div className="mk-read-tocbox">
@@ -181,7 +188,7 @@ export function MagArticle({ story }: { story: MagStory }) {
 
           {story.faqs.length ? (
             <section className="mk-read-faq" id="faq">
-              <h2>سوالات متداول درباره {story.title}</h2>
+              <h2>{faqTitle}</h2>
               {story.faqs.map((item, index) => (
                 <div key={item.q} className="mk-read-qa">
                   <h3 id={`faq-${index + 1}`}>{item.q}</h3>
