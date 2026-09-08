@@ -56,7 +56,6 @@ export function MagPager({
 
   return (
     <nav className="mk-folio" aria-label="برگ‌های مجله">
-      <div className="mk-folio-peak" aria-hidden="true" />
       <div className="mk-folio-tray">
         {prev ? (
           <Link className="mk-folio-btn" href={prev} rel="prev">
