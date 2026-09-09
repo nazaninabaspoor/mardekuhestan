@@ -14,31 +14,31 @@ export const UNVEIL_FUTURE_PRODUCTS = [
     id: "eggs",
     name: "تخم‌مرغ مرتع",
     src: "/brand/v2/unveil-product-eggs.png",
-    invite: "از مرتع می‌آید. خبرت کنم؟",
+    invite: "از مرتع می‌آید…",
   },
   {
     id: "ghee",
     name: "عسل گون کوهستان",
     src: "/brand/v2/unveil-product-ghee.png",
-    invite: "عسل گون هنوز توی کوه است. خبرت کنم؟",
+    invite: "عسل گون هنوز توی کوه است…",
   },
   {
     id: "spring",
     name: "آب چشمهٔ کوهستان",
     src: "/brand/v2/unveil-product-spring.png",
-    invite: "آب چشمه در راه است. خبرت کنم؟",
+    invite: "آب چشمه در راه است…",
   },
   {
     id: "rosejam",
     name: "مربای گل محمدی",
     src: "/brand/v2/unveil-product-rosejam.png",
-    invite: "برای صبحانهٔ خانه. خبرت کنم؟",
+    invite: "برای صبحانهٔ خانه…",
   },
   {
     id: "thyme",
     name: "دمنوش آویشن کوهی",
     src: "/brand/v2/unveil-product-thyme.png",
-    invite: "آویشن کوهی. خبرت کنم؟",
+    invite: "آویشن کوهی، با حوصله…",
   },
 ] as const;
 

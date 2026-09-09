@@ -1112,40 +1112,45 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
 
   return (
     <Html
-      position={[0, 2.3, 0.12]}
+      position={[0, 2.42, 0.14]}
       zIndexRange={[40, 8]}
       style={{ pointerEvents: "auto" }}
     >
-      <button
-        type="button"
-        className={`${styles.peakTalk} ${east ? styles.peakTalkEast : styles.peakTalkWest}`}
+      <div
+        className={`${styles.thought} ${east ? styles.thoughtEast : styles.thoughtWest}`}
         dir="rtl"
-        onClick={(event) => {
-          event.stopPropagation();
-          if (!user) {
-            openLoginModal({ next: "/#product-unveil" });
-            return;
-          }
-          const next = { ...readWatchList(), [product.id]: true };
-          setWatched(next);
-          try {
-            window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
-          } catch {
-            /* waitlist backend comes later */
-          }
-        }}
       >
-        <svg className={styles.peakTalkShape} viewBox="0 0 176 108" aria-hidden="true">
-          <path
-            fill="#F4F0E8"
-            stroke="#D4A359"
-            strokeWidth="2"
-            strokeLinejoin="round"
-            d="M88 6 L118 34 H146 C164 34 170 52 156 62 C168 68 164 88 142 90 H34 C12 88 8 68 20 62 C6 52 12 34 30 34 H58 Z"
-          />
-        </svg>
-        <span>{saved ? "باشه، یادم می‌ماند." : product.invite}</span>
-      </button>
+        <div className={styles.thoughtCloud}>
+          <p>{saved ? "باشه، یادم می‌ماند." : product.invite}</p>
+          {saved ? (
+            <span className={styles.thoughtSaved}>یادم ماند</span>
+          ) : (
+            <button
+              type="button"
+              className={styles.thoughtCta}
+              onClick={(event) => {
+                event.stopPropagation();
+                if (!user) {
+                  openLoginModal({ next: "/#product-unveil" });
+                  return;
+                }
+                const next = { ...readWatchList(), [product.id]: true };
+                setWatched(next);
+                try {
+                  window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
+                } catch {
+                  /* waitlist backend comes later */
+                }
+              }}
+            >
+              خبرم کن
+            </button>
+          )}
+        </div>
+        <span className={styles.thoughtPuff} aria-hidden="true" />
+        <span className={`${styles.thoughtPuff} ${styles.thoughtPuffMid}`} aria-hidden="true" />
+        <span className={`${styles.thoughtPuff} ${styles.thoughtPuffSmall}`} aria-hidden="true" />
+      </div>
     </Html>
   );
 }

@@ -118,45 +118,160 @@
   min-height: clamp(120px, 14vw, 168px);
 }
 
-.peakTalk {
-  position: relative;
-  display: block;
-  width: 168px;
-  min-height: 92px;
-  margin: 0;
-  padding: 30px 16px 12px;
-  border: 0;
-  background: transparent;
-  color: #005b48;
-  text-align: center;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.55;
-  cursor: pointer;
-  filter: drop-shadow(0 8px 16px rgb(0 20 14 / 28%));
-}
-
-.peakTalkEast {
-  transform: translate(14px, -78%);
-}
-
-.peakTalkWest {
-  transform: translate(calc(-100% - 14px), -78%);
-}
-
-.peakTalkShape {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.thought {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 172px;
   pointer-events: none;
 }
 
-.peakTalk span {
+.thoughtEast {
+  transform: translate(8px, calc(-100% - 6px));
+}
+
+.thoughtWest {
+  transform: translate(calc(-100% - 8px), calc(-100% - 6px));
+}
+
+.thoughtCloud {
   position: relative;
-  z-index: 1;
+  width: 100%;
+  padding: 14px 16px 12px;
+  border: 1.5px solid #d4a359;
+  border-radius: 46px 40px 48px 38px;
+  background: #f4f0e8;
+  box-shadow: 0 10px 22px rgb(0 18 12 / 24%);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.thoughtCloud::before,
+.thoughtCloud::after {
+  content: "";
+  position: absolute;
+  border: 1.5px solid #d4a359;
+  background: #f4f0e8;
+  border-radius: 50%;
+}
+
+.thoughtCloud::before {
+  top: -10px;
+  right: 22px;
+  width: 28px;
+  height: 22px;
+}
+
+.thoughtCloud::after {
+  top: -8px;
+  left: 26px;
+  width: 22px;
+  height: 18px;
+}
+
+.thoughtCloud p {
+  margin: 0;
+  color: #1d1d1b;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.thoughtCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 5px 14px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: #005b48;
+  color: #f4f0e8;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 2px 0 #00382e;
+  cursor: pointer;
+}
+
+.thoughtCta:hover {
+  background: #0a6b55;
+}
+
+.thoughtSaved {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgb(0 91 72 / 10%);
+  color: #005b48;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.thoughtPuff {
   display: block;
+  width: 14px;
+  height: 14px;
+  margin-top: 5px;
+  border: 1.5px solid #d4a359;
+  border-radius: 50%;
+  background: #f4f0e8;
+  box-shadow: 0 4px 10px rgb(0 18 12 / 16%);
+}
+
+.thoughtPuffMid {
+  width: 10px;
+  height: 10px;
+  margin-top: 4px;
+}
+
+.thoughtPuffSmall {
+  width: 7px;
+  height: 7px;
+  margin-top: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .thoughtCloud {
+    animation: thought-float 2.8s ease-in-out infinite;
+  }
+
+  .thoughtPuff {
+    animation: thought-pop 2.4s ease-in-out infinite;
+  }
+
+  .thoughtPuffMid {
+    animation-delay: 0.15s;
+  }
+
+  .thoughtPuffSmall {
+    animation-delay: 0.3s;
+  }
+}
+
+@keyframes thought-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes thought-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.92);
+  }
 }
 
 @media (max-width: 900px) {
