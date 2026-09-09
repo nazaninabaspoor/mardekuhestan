@@ -1,3 +1,8 @@
+import {
+  SearchLensMark,
+  SearchMountainMark,
+} from "@/components/search-brand-decoration";
+
 type CatalogSearchFormProps = {
   className?: string;
   placeholder?: string;
@@ -10,7 +15,8 @@ export function CatalogSearchForm({
   defaultValue = "",
 }: CatalogSearchFormProps) {
   return (
-    <form className={className} action="/products" role="search">
+    <form className={`mk-search-shell ${className}`.trim()} action="/products" role="search">
+      <SearchMountainMark />
       <input
         type="search"
         name="q"
@@ -19,24 +25,10 @@ export function CatalogSearchForm({
         autoComplete="off"
         aria-label="جستجو در محصولات"
         enterKeyHint="search"
+        className="mk-search-input"
       />
-      <button type="submit" aria-label="جستجو">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle
-            cx="11"
-            cy="11"
-            r="6.2"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          />
-          <path
-            d="M20 20l-3.4-3.4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          />
-        </svg>
+      <button type="submit" aria-label="جستجو" className="mk-search-button">
+        <SearchLensMark />
       </button>
     </form>
   );

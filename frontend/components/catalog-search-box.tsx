@@ -15,6 +15,10 @@ import { createPortal } from "react-dom";
 
 import styles from "@/components/catalog-search-box.module.css";
 import {
+  SearchLensMark,
+  SearchMountainMark,
+} from "@/components/search-brand-decoration";
+import {
   catalogResultsPageUrl,
   navigateCatalogHit,
 } from "@/lib/catalog/navigate-hit";
@@ -303,16 +307,17 @@ export function CatalogSearchBox({
     <>
       <div
         ref={rootRef}
-        className={`${styles.root} ${styles[`root--${variant}`]} catalog-search catalog-search--${variant} ${className}`.trim()}
+        className={`${styles.root} ${styles[`root--${variant}`]} mk-search-shell catalog-search catalog-search--${variant} ${className}`.trim()}
         onPointerDown={() => {
           inputRef.current?.focus();
           updatePanelRect();
         }}
       >
+        <SearchMountainMark />
         <input
           ref={inputRef}
           type="text"
-          className={`${styles.input} ${inputClassName}`.trim()}
+          className={`${styles.input} mk-search-input ${inputClassName}`.trim()}
           value={query}
           placeholder={placeholder}
           autoComplete="off"
@@ -335,15 +340,12 @@ export function CatalogSearchBox({
         />
         <button
           type="button"
-          className={styles.button}
+          className={`${styles.button} mk-search-button`}
           aria-label="جستجو"
           onPointerDown={(event) => event.stopPropagation()}
           onClick={goToResultsPage}
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
-            <path d="M20 20l-3.4-3.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
-          </svg>
+          <SearchLensMark />
         </button>
       </div>
       {mounted && panel ? createPortal(panel, document.body) : null}
