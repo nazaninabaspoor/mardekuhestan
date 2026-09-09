@@ -1,0 +1,123 @@
+.section {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: max(780px, calc(100svh - var(--v2-header-h, 88px)));
+  margin-top: -2px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(212 163 89 / 16%), transparent 42%),
+    linear-gradient(180deg, #0a5540 0%, #084735 28%, #063a2c 58%, #042f24 100%);
+  color: #f4f0e8;
+}
+
+.section :global(.v2-section-edge) {
+  z-index: 6;
+}
+
+.atmosphere {
+  position: absolute;
+  z-index: 1;
+  inset: -4%;
+  pointer-events: none;
+  background:
+    url("/brand/v2/unveil-exhibition-empty.png") center 42% / cover no-repeat;
+  filter: blur(12px) saturate(0.86) brightness(0.78);
+  transform: scale(1.04);
+}
+
+.depth {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 62%, rgb(10 85 64 / 8%), transparent 52%),
+    linear-gradient(180deg, rgb(10 85 64 / 34%) 0%, rgb(6 58 44 / 16%) 38%, rgb(3 37 28 / 42%) 100%);
+}
+
+.stage {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+}
+
+.stage canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.copy {
+  position: relative;
+  z-index: 4;
+  width: min(720px, calc(100% - 40px));
+  margin: 0 auto;
+  padding-top: clamp(3.6rem, 7vh, 5.4rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+.copy p {
+  margin: 0 0 8px;
+  color: #d4a359;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.copy h2 {
+  margin: 0;
+  color: #f4f0e8;
+  font-size: clamp(1.55rem, 2.7vw, 2.15rem);
+  font-weight: 800;
+}
+
+.copy span {
+  display: block;
+  margin-top: 10px;
+  color: rgb(244 240 232 / 78%);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.slots {
+  position: absolute;
+  z-index: 5;
+  right: 10%;
+  bottom: 22%;
+  left: 10%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(12px, 1.8vw, 28px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.unveiled .slots {
+  pointer-events: auto;
+}
+
+.slot {
+  min-height: clamp(120px, 14vw, 168px);
+}
+
+@media (max-width: 900px) {
+  .slots {
+    right: 5%;
+    left: 5%;
+    bottom: 18%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .slot:nth-child(4),
+  .slot:nth-child(5) {
+    display: none;
+  }
+
+  .copy {
+    padding-top: 4.2rem;
+  }
+}

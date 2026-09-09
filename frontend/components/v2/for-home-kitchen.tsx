@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ProductCards } from "@/components/product-showcase/ProductCards";
 import { ProductInfo } from "@/components/product-showcase/ProductInfo";
@@ -136,10 +136,25 @@ type ForHomeKitchenProps = {
   catalog?: V2KitchenCatalogPayload;
 };
 
+function KitchenSearchFocus({
+  onFocus,
+}: {
+  onFocus: (cat: string | null, productId: string | null, productName: string | null) => void;
+}) {
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const cat = searchParams.get("cat");
+    const productId = searchParams.get("p");
+    const productName = searchParams.get("n");
+    if (!cat && !productId && !productName) return;
+    onFocus(cat, productId, productName);
+  }, [searchParams, onFocus]);
+  return null;
+}
+
 export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
   const rootRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [visible, setVisible] = useState(false);
   const [focusProductId, setFocusProductId] = useState<string | null>(null);
   const [focusTick, setFocusTick] = useState(0);
@@ -239,14 +254,6 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
     },
     [activeCategoryId, categories, productsByCategory],
   );
-
-  useEffect(() => {
-    const cat = searchParams.get("cat");
-    const productId = searchParams.get("p");
-    const productName = searchParams.get("n");
-    if (!cat && !productId && !productName) return;
-    applyFocus(cat, productId, productName);
-  }, [searchParams, applyFocus]);
 
   useEffect(() => {
     const onFocus = (event: Event) => {
@@ -370,6 +377,9 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
       data-catalog-source={catalog?.source ?? "static"}
       aria-labelledby="product-showcase-title"
     >
+      <Suspense fallback={null}>
+        <KitchenSearchFocus onFocus={applyFocus} />
+      </Suspense>
       <div className={styles.landscape} aria-hidden="true" />
       <div className={styles.vignette} aria-hidden="true" />
       <div className={styles.mountainFog} aria-hidden="true" />
