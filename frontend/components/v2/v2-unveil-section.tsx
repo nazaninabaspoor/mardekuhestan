@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
-import type { UnveilManState } from "./v2-unveil-shared";
+import { UNVEIL_FUTURE_PRODUCTS, manSlotX, type UnveilManState } from "./v2-unveil-shared";
 import { UnveilProductSlot } from "./v2-unveil-products";
 import styles from "./v2-unveil-section.module.css";
 
@@ -13,7 +13,8 @@ const V2UnveilCanvas = dynamic(
 );
 
 const INITIAL_MAN: UnveilManState = {
-  x: -4.35,
+  x: manSlotX(0) - 0.28,
+  originX: manSlotX(0) - 0.28,
   facing: 1,
   walking: true,
   stride: 0,
@@ -23,6 +24,8 @@ const INITIAL_MAN: UnveilManState = {
   profile: 1,
   accel: 1,
   windup: 0,
+  gait: 0,
+  foot: 0,
 };
 
 export function V2UnveilSection() {
@@ -42,6 +45,7 @@ export function V2UnveilSection() {
       cloth.current = [1, 1, 1, 1, 1];
       man.current = {
         x: 0,
+        originX: 0,
         facing: 1,
         walking: false,
         stride: 0,
@@ -51,6 +55,8 @@ export function V2UnveilSection() {
         profile: 0,
         accel: 0,
         windup: 0,
+        gait: 0,
+        foot: 0,
       };
       setUnveiled(true);
     }
@@ -85,6 +91,7 @@ export function V2UnveilSection() {
       <span className="v2-section-edge v2-section-edge--top" aria-hidden="true" />
       <div className={styles.atmosphere} aria-hidden="true" />
       <div className={styles.depth} aria-hidden="true" />
+      <div className={styles.fog} aria-hidden="true" />
       <div className={styles.stage}>
         {ready ? <V2UnveilCanvas cloth={cloth} man={man} active={active} /> : null}
       </div>
@@ -96,8 +103,8 @@ export function V2UnveilSection() {
       </div>
 
       <ul className={styles.slots} aria-hidden={unveiled ? undefined : true}>
-        {[1, 2, 3, 4, 5].map((index) => (
-          <li key={index} className={styles.slot}>
+        {UNVEIL_FUTURE_PRODUCTS.map((product, index) => (
+          <li key={product.id} className={styles.slot}>
             <UnveilProductSlot index={index} />
           </li>
         ))}

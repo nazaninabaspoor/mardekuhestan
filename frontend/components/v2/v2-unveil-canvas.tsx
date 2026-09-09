@@ -1,14 +1,15 @@
 "use client";
 
-import { ContactShadows, PerspectiveCamera, useTexture } from "@react-three/drei";
+import { ContactShadows, Html, PerspectiveCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import {
   CanvasTexture,
+  ClampToEdgeWrapping,
   DoubleSide,
   LinearFilter,
-  LinearMipmapLinearFilter,
   PlaneGeometry,
+  RepeatWrapping,
   SRGBColorSpace,
   type Group,
   type Mesh,
@@ -17,7 +18,18 @@ import {
   type Texture,
 } from "three";
 
-import { UNVEIL_SLOT_X, type UnveilManState } from "./v2-unveil-shared";
+import { useAuth } from "@/lib/auth-context";
+
+import {
+  UNVEIL_CAM_Z,
+  UNVEIL_MAN_Z,
+  UNVEIL_PEDESTAL_Z,
+  UNVEIL_FUTURE_PRODUCTS,
+  UNVEIL_SLOT_X,
+  manSlotX,
+  type UnveilManState,
+} from "./v2-unveil-shared";
+import styles from "./v2-unveil-section.module.css";
 
 const WALK_SRCS = [
   "/brand/v2/walk-r-contact.png",
@@ -26,16 +38,71 @@ const WALK_SRCS = [
   "/brand/v2/walk-l-passing.png",
 ];
 const STAND_SRC = "/brand/profile/soon-mountain-man-stand.png";
-const MAN_Z = -0.88;
-const PEDESTAL_Z = 0.92;
-const WALK_SPEED = 0.58;
-const HOLD_TIME = 2.2;
-const CYCLE_LEN = 1.48;
-const WINDUP = 0.42;
-const WALK_CELL_W = 900;
+const FACTORY_SRC = "/brand/v2/pedestal-factory.png";
+const BOX_SRC = "/brand/v2/unveil-open-crate.png";
+const PRODUCT_SRCS = UNVEIL_FUTURE_PRODUCTS.map((item) => item.src);
+const WATCH_KEY = "mk-unveil-watch";
+const FACTORY_ASPECT = 3 / 4;
+const SHAFT_HEIGHT = 0.74;
+const SHAFT_RADIUS_TOP = 0.34;
+const SHAFT_RADIUS_BOT = 0.42;
+const SHAFT_RADIUS_MID = (SHAFT_RADIUS_TOP + SHAFT_RADIUS_BOT) / 2;
+const FACTORY_WRAP_X = (Math.PI * 2 * SHAFT_RADIUS_MID) / (FACTORY_ASPECT * SHAFT_HEIGHT);
+const PEDESTAL_TOP_Y = 1.186;
+const PEDESTAL_SETS: Array<Array<{ sku: number; x: number; z: number; scale: number; sink: number }>> = [
+  [
+    { sku: 0, x: -0.08, z: 0.1, scale: 1, sink: 0.058 },
+    { sku: 0, x: 0.08, z: 0.04, scale: 0.88, sink: 0.052 },
+  ],
+  [
+    { sku: 1, x: -0.09, z: 0.1, scale: 1, sink: 0.02 },
+    { sku: 1, x: 0.09, z: 0.06, scale: 0.9, sink: 0.018 },
+    { sku: 1, x: 0.0, z: 0.0, scale: 0.8, sink: 0.016 },
+  ],
+  [
+    { sku: 2, x: -0.08, z: 0.1, scale: 1, sink: 0.02 },
+    { sku: 2, x: 0.09, z: 0.06, scale: 0.9, sink: 0.018 },
+    { sku: 2, x: 0.0, z: 0.0, scale: 0.82, sink: 0.016 },
+  ],
+  [
+    { sku: 3, x: -0.09, z: 0.1, scale: 1, sink: 0.02 },
+    { sku: 3, x: 0.09, z: 0.06, scale: 0.9, sink: 0.018 },
+    { sku: 3, x: 0.0, z: 0.0, scale: 0.8, sink: 0.016 },
+  ],
+  [
+    { sku: 4, x: -0.09, z: 0.1, scale: 1, sink: 0.02 },
+    { sku: 4, x: 0.09, z: 0.06, scale: 0.9, sink: 0.018 },
+    { sku: 4, x: 0.0, z: 0.0, scale: 0.82, sink: 0.016 },
+  ],
+];
+const MAN_Z = UNVEIL_MAN_Z;
+const PEDESTAL_Z = UNVEIL_PEDESTAL_Z;
+const WALK_HEIGHT = 2.58;
+const STEP_RATIO = 0.543;
+const DISTANCE_PER_CYCLE = WALK_HEIGHT * STEP_RATIO * 2;
+const CYCLE_SECONDS = 1.32;
+const WALK_SPEED = DISTANCE_PER_CYCLE / CYCLE_SECONDS;
+const STEP_DIST = DISTANCE_PER_CYCLE / 2;
+const CONTACT_TIME = 0.12;
+const ARRIVE_PLANT = 2 / 60;
+const ARRIVE_QUARTER = 2 / 60;
+const ARRIVE_ALMOST = 2 / 60;
+const ARRIVE_SUM = ARRIVE_PLANT + ARRIVE_QUARTER + ARRIVE_ALMOST;
+const PRESENT_TIME = 4.2;
+const LEAVE_ALMOST = 2 / 60;
+const LEAVE_QUARTER = 2 / 60;
+const LEAVE_PLANT = 2 / 60;
+const LEAVE_SUM = LEAVE_ALMOST + LEAVE_QUARTER + LEAVE_PLANT;
+const HOLD_TIME = ARRIVE_SUM + PRESENT_TIME + LEAVE_SUM;
+const PLANT_SRC = "/brand/v2/stop-profile-gather.png";
+const QUARTER_SRC = "/brand/v2/stop-three-quarter.png";
+const ALMOST_SRC = "/brand/v2/stop-almost-front.png";
+const WALK_CELL_W = 1600;
 const WALK_CELL_H = 2000;
 const WALK_ASPECT = WALK_CELL_W / WALK_CELL_H;
-const WALK_HEIGHT = 2.58;
+const POSE_SRCS = [...WALK_SRCS, PLANT_SRC, QUARTER_SRC, ALMOST_SRC, STAND_SRC];
+const POSE_KINDS: Array<"walk" | "stand"> = ["walk", "walk", "walk", "walk", "stand", "stand", "stand", "stand"];
+const POSE_BLEND = 2;
 
 type SceneRefs = {
   cloth: MutableRefObject<number[]>;
@@ -47,54 +114,98 @@ function smoothstep(edge0: number, edge1: number, x: number) {
   return t * t * (3 - 2 * t);
 }
 
-function keyStudioBackground(data: Uint8ClampedArray, w: number, h: number) {
+function inWristBand(x: number, y: number, w: number, h: number) {
+  const y0 = Math.floor(h * 0.36);
+  const y1 = Math.floor(h * 0.64);
+  const xBand = Math.floor(w * 0.24);
+  return y >= y0 && y < y1 && (x <= xBand || x >= w - xBand);
+}
+
+function morphDilate(body: Uint8Array, w: number, h: number, roiOnly: boolean) {
+  const next = Uint8Array.from(body);
+  for (let y = 1; y < h - 1; y += 1) {
+    for (let x = 1; x < w - 1; x += 1) {
+      if (roiOnly && !inWristBand(x, y, w, h)) continue;
+      const i = y * w + x;
+      if (body[i]) continue;
+      if (body[i - 1] || body[i + 1] || body[i - w] || body[i + w]) next[i] = 1;
+    }
+  }
+  body.set(next);
+}
+
+function morphErode(body: Uint8Array, w: number, h: number, roiOnly: boolean) {
+  const next = Uint8Array.from(body);
+  for (let y = 1; y < h - 1; y += 1) {
+    for (let x = 1; x < w - 1; x += 1) {
+      if (roiOnly && !inWristBand(x, y, w, h)) continue;
+      const i = y * w + x;
+      if (!body[i]) continue;
+      if (!body[i - 1] || !body[i + 1] || !body[i - w] || !body[i + w]) next[i] = 0;
+    }
+  }
+  body.set(next);
+}
+
+function floodOutside(body: Uint8Array, w: number, h: number) {
   const n = w * h;
-  const body = new Uint8Array(n);
-  let hasCutout = false;
-  for (let i = 0; i < n; i += 1) {
-    if (data[i * 4 + 3] < 250) hasCutout = true;
-  }
-
-  for (let i = 0; i < n; i += 1) {
-    const o = i * 4;
-    const r = data[o];
-    const g = data[o + 1];
-    const b = data[o + 2];
-    const maxc = Math.max(r, g, b);
-    const chroma = maxc - Math.min(r, g, b);
-    if (maxc >= 16 || chroma >= 10 || (hasCutout && data[o + 3] > 40)) body[i] = 1;
-  }
-
   const outside = new Uint8Array(n);
   const stack: number[] = [];
-  const seedOut = (idx: number) => {
+  const seed = (idx: number) => {
     if (idx < 0 || idx >= n || outside[idx] || body[idx]) return;
     outside[idx] = 1;
     stack.push(idx);
   };
   for (let x = 0; x < w; x += 1) {
-    seedOut(x);
-    seedOut((h - 1) * w + x);
+    seed(x);
+    seed((h - 1) * w + x);
   }
   for (let y = 0; y < h; y += 1) {
-    seedOut(y * w);
-    seedOut(y * w + w - 1);
+    seed(y * w);
+    seed(y * w + w - 1);
   }
   while (stack.length) {
     const i = stack.pop()!;
     const x = i % w;
-    if (x > 0) seedOut(i - 1);
-    if (x + 1 < w) seedOut(i + 1);
-    if (i >= w) seedOut(i - w);
-    if (i + w < n) seedOut(i + w);
+    if (x > 0) seed(i - 1);
+    if (x + 1 < w) seed(i + 1);
+    if (i >= w) seed(i - w);
+    if (i + w < n) seed(i + w);
   }
-  for (let i = 0; i < n; i += 1) {
-    if (!outside[i]) body[i] = 1;
-  }
+  return outside;
+}
 
+function fillSmallHoles(body: Uint8Array, outside: Uint8Array, w: number, h: number, maxSize: number) {
+  const n = w * h;
+  const seen = new Uint8Array(n);
+  const stack: number[] = [];
+  for (let i = 0; i < n; i += 1) {
+    if (body[i] || outside[i] || seen[i]) continue;
+    stack.length = 0;
+    const cells: number[] = [];
+    seen[i] = 1;
+    stack.push(i);
+    while (stack.length) {
+      const j = stack.pop()!;
+      cells.push(j);
+      const x = j % w;
+      const next = [x > 0 ? j - 1 : -1, x + 1 < w ? j + 1 : -1, j >= w ? j - w : -1, j + w < n ? j + w : -1];
+      for (const nb of next) {
+        if (nb < 0 || body[nb] || outside[nb] || seen[nb]) continue;
+        seen[nb] = 1;
+        stack.push(nb);
+      }
+    }
+    if (cells.length > maxSize) continue;
+    for (const j of cells) body[j] = 1;
+  }
+}
+
+function keepBodyIslands(body: Uint8Array, w: number, h: number, minSize: number) {
+  const n = w * h;
   const labels = new Int32Array(n);
-  let best = 0;
-  let bestSize = 0;
+  const sizes: number[] = [0];
+  const stack: number[] = [];
   let label = 0;
   for (let i = 0; i < n; i += 1) {
     if (!body[i] || labels[i]) continue;
@@ -114,99 +225,164 @@ function keyStudioBackground(data: Uint8ClampedArray, w: number, h: number) {
         stack.push(nb);
       }
     }
-    if (size > bestSize) {
-      bestSize = size;
-      best = label;
-    }
+    sizes[label] = size;
   }
   for (let i = 0; i < n; i += 1) {
-    body[i] = labels[i] === best ? 1 : 0;
+    body[i] = sizes[labels[i]] >= minSize ? 1 : 0;
+  }
+}
+
+function applyCutout(data: Uint8ClampedArray, body: Uint8Array, w: number, h: number) {
+  const n = w * h;
+  const bleed = new Uint8Array(n * 3);
+  const colored = Uint8Array.from(body);
+  for (let i = 0; i < n; i += 1) {
+    const o = i * 4;
+    bleed[i * 3] = data[o];
+    bleed[i * 3 + 1] = data[o + 1];
+    bleed[i * 3 + 2] = data[o + 2];
+  }
+  for (let pass = 0; pass < 2; pass += 1) {
+    const next = Uint8Array.from(bleed);
+    const nextColored = Uint8Array.from(colored);
+    for (let y = 1; y < h - 1; y += 1) {
+      for (let x = 1; x < w - 1; x += 1) {
+        const i = y * w + x;
+        if (colored[i]) continue;
+        const nbs = [i - 1, i + 1, i - w, i + w];
+        let src = -1;
+        for (const nb of nbs) {
+          if (colored[nb]) {
+            src = nb;
+            break;
+          }
+        }
+        if (src < 0) continue;
+        next[i * 3] = bleed[src * 3];
+        next[i * 3 + 1] = bleed[src * 3 + 1];
+        next[i * 3 + 2] = bleed[src * 3 + 2];
+        nextColored[i] = 1;
+      }
+    }
+    bleed.set(next);
+    colored.set(nextColored);
+  }
+  for (let i = 0; i < n; i += 1) {
+    const o = i * 4;
+    if (body[i]) {
+      data[o + 3] = 255;
+      continue;
+    }
+    data[o] = bleed[i * 3];
+    data[o + 1] = bleed[i * 3 + 1];
+    data[o + 2] = bleed[i * 3 + 2];
+    data[o + 3] = 0;
+  }
+}
+
+function keyStudioBackground(
+  data: Uint8ClampedArray,
+  w: number,
+  h: number,
+  kind: "walk" | "stand" = "walk",
+) {
+  const n = w * h;
+  const body = new Uint8Array(n);
+  let hasCutout = false;
+  for (let i = 0; i < n; i += 1) {
+    if (data[i * 4 + 3] < 250) hasCutout = true;
   }
 
-  const canGrow = (idx: number) => {
-    const o = idx * 4;
+  for (let i = 0; i < n; i += 1) {
+    const o = i * 4;
     const r = data[o];
     const g = data[o + 1];
     const b = data[o + 2];
     const maxc = Math.max(r, g, b);
     const chroma = maxc - Math.min(r, g, b);
-    if (hasCutout && data[o + 3] === 0) return false;
-    if (maxc < 8) return false;
-    return maxc < 42 || chroma >= 6;
-  };
-
-  const footY = Math.floor(h * 0.72);
-  for (let pass = 0; pass < 12; pass += 1) {
-    const next = Uint8Array.from(body);
-    for (let y = Math.max(1, footY); y < h; y += 1) {
-      for (let x = 0; x < w; x += 1) {
-        const i = y * w + x;
-        if (body[i] || !body[i - w] || !canGrow(i)) continue;
-        next[i] = 1;
-      }
-    }
-    body.set(next);
+    if (maxc >= 20 || chroma >= 12 || (hasCutout && data[o + 3] > 40)) body[i] = 1;
   }
 
-  const soleY = Math.floor(h * 0.8);
-  for (let pass = 0; pass < 5; pass += 1) {
-    const next = Uint8Array.from(body);
-    for (let y = soleY; y < h; y += 1) {
+  const outside = floodOutside(body, w, h);
+  fillSmallHoles(body, outside, w, h, kind === "stand" ? 700 : 2400);
+
+  if (kind === "stand") {
+    for (let pass = 0; pass < 4; pass += 1) morphDilate(body, w, h, false);
+    for (let pass = 0; pass < 4; pass += 1) morphErode(body, w, h, false);
+  } else {
+    for (let pass = 0; pass < 14; pass += 1) morphDilate(body, w, h, true);
+    for (let pass = 0; pass < 14; pass += 1) morphErode(body, w, h, true);
+  }
+
+  keepBodyIslands(body, w, h, Math.max(140, Math.floor(n * 0.00045)));
+
+  if (kind === "stand") {
+    const rim = floodOutside(body, w, h);
+    const peeled = Uint8Array.from(body);
+    for (let y = 1; y < h - 1; y += 1) {
       for (let x = 1; x < w - 1; x += 1) {
         const i = y * w + x;
-        if (body[i] || !(body[i - 1] || body[i + 1]) || !canGrow(i)) continue;
-        next[i] = 1;
+        if (!body[i]) continue;
+        if (!(rim[i - 1] || rim[i + 1] || rim[i - w] || rim[i + w])) continue;
+        const o = i * 4;
+        const maxc = Math.max(data[o], data[o + 1], data[o + 2]);
+        const chroma = maxc - Math.min(data[o], data[o + 1], data[o + 2]);
+        if (maxc < 28 && chroma < 14) peeled[i] = 0;
       }
     }
-    body.set(next);
+    body.set(peeled);
   }
 
-  for (let y = 1; y < h - 1; y += 1) {
-    for (let x = 1; x < w - 1; x += 1) {
-      const i = y * w + x;
-      if (body[i]) continue;
-      let fg = 0;
-      for (let dy = -1; dy <= 1; dy += 1) {
-        for (let dx = -1; dx <= 1; dx += 1) {
-          if (!dx && !dy) continue;
-          if (body[(y + dy) * w + (x + dx)]) fg += 1;
+  const canGrow = (idx: number) => {
+    const o = idx * 4;
+    const maxc = Math.max(data[o], data[o + 1], data[o + 2]);
+    const chroma = maxc - Math.min(data[o], data[o + 1], data[o + 2]);
+    if (hasCutout && data[o + 3] === 0) return false;
+    return maxc < 36 || chroma >= 8;
+  };
+
+  const footY = Math.floor(h * 0.78);
+  if (kind === "walk") {
+    for (let pass = 0; pass < 8; pass += 1) {
+      const next = Uint8Array.from(body);
+      for (let y = Math.max(1, footY); y < h; y += 1) {
+        for (let x = 0; x < w; x += 1) {
+          const i = y * w + x;
+          if (body[i] || !body[i - w] || !canGrow(i)) continue;
+          next[i] = 1;
         }
       }
-      if (fg >= 6) body[i] = 1;
+      body.set(next);
     }
   }
 
-  const peeled = Uint8Array.from(body);
-  const floorY = Math.floor(h * 0.93);
-  for (let y = 1; y < h - 1; y += 1) {
-    for (let x = 1; x < w - 1; x += 1) {
-      const i = y * w + x;
-      if (!body[i]) continue;
-      if (body[i - 1] && body[i + 1] && body[i - w] && body[i + w]) continue;
-      const o = i * 4;
-      const maxc = Math.max(data[o], data[o + 1], data[o + 2]);
-      const chroma = maxc - Math.min(data[o], data[o + 1], data[o + 2]);
-      const soleUnderBody = y >= floorY && body[i - w] && maxc < 18;
-      if (soleUnderBody) continue;
-      if (maxc < 20 && chroma < 11) peeled[i] = 0;
+  if (kind === "walk") {
+    const peeled = Uint8Array.from(body);
+    const handLeft = Math.floor(w * 0.22);
+    const handRight = Math.ceil(w * 0.78);
+    const handTop = Math.floor(h * 0.28);
+    const handBot = Math.floor(h * 0.68);
+    const footBand = Math.floor(h * 0.82);
+    for (let y = 1; y < h - 1; y += 1) {
+      for (let x = 1; x < w - 1; x += 1) {
+        const i = y * w + x;
+        if (!body[i]) continue;
+        if (body[i - 1] && body[i + 1] && body[i - w] && body[i + w]) continue;
+        if (y >= footBand) continue;
+        if ((x <= handLeft || x >= handRight) && y >= handTop && y <= handBot) continue;
+        const o = i * 4;
+        const maxc = Math.max(data[o], data[o + 1], data[o + 2]);
+        const chroma = maxc - Math.min(data[o], data[o + 1], data[o + 2]);
+        if (maxc < 24 && chroma < 12) peeled[i] = 0;
+      }
     }
+    body.set(peeled);
   }
-  body.set(peeled);
 
-  for (let i = 0; i < n; i += 1) {
-    data[i * 4 + 3] = body[i] ? 255 : 0;
-  }
+  applyCutout(data, body, w, h);
 }
 
-function walkFrameAt(phase: number) {
-  const t = ((phase % 1) + 1) % 1;
-  if (t < 0.4) return 0;
-  if (t < 0.5) return 1;
-  if (t < 0.9) return 2;
-  return 3;
-}
-
-function opaqueImageData(source: Texture) {
+function opaqueImageData(source: Texture, kind: "walk" | "stand" = "walk") {
   const image = source.image as HTMLImageElement | ImageBitmap | HTMLCanvasElement | undefined;
   if (!image || !("width" in image) || !image.width) return null;
 
@@ -217,29 +393,31 @@ function opaqueImageData(source: Texture) {
   if (!ctx) return null;
   ctx.drawImage(image as CanvasImageSource, 0, 0);
   const pixels = ctx.getImageData(0, 0, src.width, src.height);
-  keyStudioBackground(pixels.data, src.width, src.height);
+  keyStudioBackground(pixels.data, src.width, src.height, kind);
   ctx.putImageData(pixels, 0, 0);
   return { canvas: src, data: pixels.data, w: src.width, h: src.height };
 }
 
-function feetBaseline(data: Uint8ClampedArray, w: number, h: number) {
+function feetBaseline(data: Uint8ClampedArray, w: number, h: number, minAlpha = 180) {
+  const need = Math.max(8, Math.floor(w * 0.03));
   for (let y = h - 1; y >= 0; y -= 1) {
     let hits = 0;
     for (let x = 0; x < w; x += 1) {
-      if (data[(y * w + x) * 4 + 3] > 48) hits += 1;
+      if (data[(y * w + x) * 4 + 3] > minAlpha) hits += 1;
     }
-    if (hits > w * 0.035) return y;
+    if (hits > need) return y;
   }
   return h - 1;
 }
 
-function headTop(data: Uint8ClampedArray, w: number, h: number) {
+function headTop(data: Uint8ClampedArray, w: number, h: number, minAlpha = 48) {
+  const need = Math.max(4, Math.floor(w * 0.016));
   for (let y = 0; y < h; y += 1) {
     let hits = 0;
     for (let x = 0; x < w; x += 1) {
-      if (data[(y * w + x) * 4 + 3] > 48) hits += 1;
+      if (data[(y * w + x) * 4 + 3] > minAlpha) hits += 1;
     }
-    if (hits > w * 0.02) return y;
+    if (hits > need) return y;
   }
   return 0;
 }
@@ -247,16 +425,132 @@ function headTop(data: Uint8ClampedArray, w: number, h: number) {
 function makeWalkTexture(canvas: HTMLCanvasElement) {
   const map = new CanvasTexture(canvas);
   map.colorSpace = SRGBColorSpace;
-  map.generateMipmaps = true;
-  map.minFilter = LinearMipmapLinearFilter;
+  map.generateMipmaps = false;
+  map.minFilter = LinearFilter;
   map.magFilter = LinearFilter;
-  map.anisotropy = 16;
+  map.anisotropy = 4;
   map.needsUpdate = true;
   return map;
 }
 
-function normalizeWalkCycle(sources: Texture[]) {
-  const prepared = sources.map((source) => opaqueImageData(source)).filter(Boolean) as {
+function isMatteBackground(r: number, g: number, b: number, a: number) {
+  if (a < 20) return true;
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+  if (g > 148 && g > r + 32 && g > b + 32) return true;
+  if (r > 242 && g > 242 && b > 242) return true;
+  if (chroma < 14 && lum > 168) {
+    if (r - b > 16 && r > 198) return false;
+    return true;
+  }
+  return false;
+}
+
+function packProductSprite(source: Texture) {
+  const image = source.image as HTMLImageElement | ImageBitmap | HTMLCanvasElement | undefined;
+  if (!image || !("width" in image) || !image.width) return source;
+
+  const src = document.createElement("canvas");
+  src.width = image.width;
+  src.height = image.height;
+  const ctx = src.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return source;
+  ctx.drawImage(image as CanvasImageSource, 0, 0);
+  const pixels = ctx.getImageData(0, 0, src.width, src.height);
+  const data = pixels.data;
+  const w = src.width;
+  const h = src.height;
+  const n = w * h;
+
+  const seen = new Uint8Array(n);
+  const queue: number[] = [];
+  const enqueue = (x: number, y: number) => {
+    if (x < 0 || y < 0 || x >= w || y >= h) return;
+    const i = y * w + x;
+    if (seen[i]) return;
+    const o = i * 4;
+    if (!isMatteBackground(data[o], data[o + 1], data[o + 2], data[o + 3])) return;
+    seen[i] = 1;
+    queue.push(i);
+  };
+  for (let x = 0; x < w; x += 1) {
+    enqueue(x, 0);
+    enqueue(x, h - 1);
+  }
+  for (let y = 0; y < h; y += 1) {
+    enqueue(0, y);
+    enqueue(w - 1, y);
+  }
+  while (queue.length) {
+    const i = queue.pop() as number;
+    const x = i % w;
+    const y = (i / w) | 0;
+    enqueue(x - 1, y);
+    enqueue(x + 1, y);
+    enqueue(x, y - 1);
+    enqueue(x, y + 1);
+  }
+  for (let i = 0; i < n; i += 1) {
+    if (!seen[i]) continue;
+    data[i * 4 + 3] = 0;
+  }
+
+  let minX = w;
+  let minY = h;
+  let maxX = 0;
+  let maxY = 0;
+  for (let y = 0; y < h; y += 1) {
+    for (let x = 0; x < w; x += 1) {
+      if (data[(y * w + x) * 4 + 3] < 28) continue;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX <= minX || maxY <= minY) {
+    ctx.putImageData(pixels, 0, 0);
+    return makeWalkTexture(src);
+  }
+
+  const need = Math.max(8, Math.floor((maxX - minX) * 0.08));
+  for (let y = maxY; y >= minY; y -= 1) {
+    let hits = 0;
+    for (let x = minX; x <= maxX; x += 1) {
+      if (data[(y * w + x) * 4 + 3] > 150) hits += 1;
+    }
+    if (hits > need) {
+      maxY = y;
+      break;
+    }
+  }
+
+  const pad = 1;
+  minX = Math.max(0, minX - pad);
+  minY = Math.max(0, minY - pad);
+  maxX = Math.min(w - 1, maxX + pad);
+  maxY = Math.min(h - 1, maxY);
+  const cropW = maxX - minX + 1;
+  const cropH = maxY - minY + 1;
+  const crop = document.createElement("canvas");
+  crop.width = cropW;
+  crop.height = cropH;
+  const cropCtx = crop.getContext("2d");
+  if (!cropCtx) {
+    ctx.putImageData(pixels, 0, 0);
+    return makeWalkTexture(src);
+  }
+  ctx.putImageData(pixels, 0, 0);
+  cropCtx.drawImage(src, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+  const map = makeWalkTexture(crop);
+  map.userData.aspect = cropW / cropH;
+  return map;
+}
+
+function normalizeWalkCycle(sources: Texture[], kinds?: Array<"walk" | "stand">) {
+  const prepared = sources
+    .map((source, index) => opaqueImageData(source, kinds?.[index] ?? "walk"))
+    .filter(Boolean) as {
     canvas: HTMLCanvasElement;
     data: Uint8ClampedArray;
     w: number;
@@ -264,24 +558,43 @@ function normalizeWalkCycle(sources: Texture[]) {
   }[];
   if (prepared.length !== sources.length) return sources;
 
-  const metrics = prepared.map((item) => {
-    const feet = feetBaseline(item.data, item.w, item.h);
-    const head = headTop(item.data, item.w, item.h);
+  const metrics = prepared.map((item, index) => {
+    const standLike = (kinds?.[index] ?? "walk") === "stand";
+    let feet = feetBaseline(item.data, item.w, item.h, standLike ? 170 : 180);
+    let head = headTop(item.data, item.w, item.h, standLike ? 36 : 48);
+    const rawH = Math.max(1, feet - head);
+    const inset = standLike ? Math.max(2, Math.round(rawH * 0.006)) : 0;
+    head += inset;
+    feet -= inset;
     let minX = item.w;
     let maxX = 0;
+    let hipX = 0;
+    let hipN = 0;
+    const hipY0 = head + Math.floor((feet - head) * 0.22);
+    const hipY1 = head + Math.floor((feet - head) * 0.5);
     for (let y = head; y <= feet; y += 1) {
       for (let x = 0; x < item.w; x += 1) {
         if (item.data[(y * item.w + x) * 4 + 3] < 20) continue;
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
+        if (y >= hipY0 && y <= hipY1) {
+          hipX += x;
+          hipN += 1;
+        }
       }
     }
-    return { feet, head, minX, maxX, height: Math.max(1, feet - head) };
+    const cx = hipN > 0 ? hipX / hipN : (minX + maxX) / 2;
+    return { feet, head, minX, maxX, cx, height: Math.max(1, feet - head) };
   });
 
-  const bodyH = Math.max(...metrics.map((item) => item.height));
-  const fit = (WALK_CELL_H - 140) / bodyH;
-  const ground = WALK_CELL_H - 56;
+  const targetH = WALK_CELL_H - 224;
+  const ground = WALK_CELL_H - 64;
+  const genAvg =
+    metrics.length >= 7
+      ? (metrics[4].height + metrics[5].height + metrics[6].height) / 3
+      : targetH;
+  const expectedStand =
+    metrics.length >= 8 ? (genAvg / prepared[6].h) * prepared[7].h : genAvg;
 
   return prepared.map((item, index) => {
     const m = metrics[index];
@@ -290,17 +603,22 @@ function normalizeWalkCycle(sources: Texture[]) {
     cell.height = WALK_CELL_H;
     const ctx = cell.getContext("2d");
     if (!ctx) return makeWalkTexture(item.canvas);
+    const usedH =
+      index === 7 ? Math.max(m.height, expectedStand) : index >= 4 ? genAvg : m.height;
+    const fit = targetH / usedH;
     const drawW = item.w * fit;
-    const cx = (m.minX + m.maxX) / 2;
-    const dx = WALK_CELL_W / 2 - cx * fit;
+    const drawH = item.h * fit;
+    const dx = WALK_CELL_W / 2 - m.cx * fit;
     const dy = ground - m.feet * fit;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     ctx.clearRect(0, 0, WALK_CELL_W, WALK_CELL_H);
-    ctx.drawImage(item.canvas, 0, 0, item.w, item.h, dx, dy, drawW, item.h * fit);
+    ctx.drawImage(item.canvas, 0, 0, item.w, item.h, dx, dy, drawW, drawH);
     return makeWalkTexture(cell);
   });
 }
 
-function knockoutAndCrop(source: Texture) {
+function knockoutAndCrop(source: Texture, kind: "walk" | "stand" = "stand") {
   const image = source.image as HTMLImageElement | ImageBitmap | HTMLCanvasElement | undefined;
   if (!image || !("width" in image) || !image.width) return source;
 
@@ -315,7 +633,7 @@ function knockoutAndCrop(source: Texture) {
   const data = pixels.data;
   const w = src.width;
   const h = src.height;
-  keyStudioBackground(data, w, h);
+  keyStudioBackground(data, w, h, kind);
 
   let minX = w;
   let minY = h;
@@ -331,10 +649,10 @@ function knockoutAndCrop(source: Texture) {
     }
   }
 
-  minX = Math.max(0, minX - 18);
-  minY = Math.max(0, minY - 18);
-  maxX = Math.min(w - 1, maxX + 18);
-  maxY = Math.min(h - 1, maxY + 36);
+  minX = Math.max(0, minX - 6);
+  minY = Math.max(0, minY - 6);
+  maxX = Math.min(w - 1, maxX + 6);
+  maxY = Math.min(h - 1, maxY + 10);
   const cw = Math.max(1, maxX - minX + 1);
   const ch = Math.max(1, maxY - minY + 1);
   const cropped = document.createElement("canvas");
@@ -347,39 +665,59 @@ function knockoutAndCrop(source: Texture) {
 
   const map = new CanvasTexture(cropped);
   map.colorSpace = SRGBColorSpace;
-  map.generateMipmaps = true;
-  map.minFilter = LinearMipmapLinearFilter;
+  map.generateMipmaps = false;
+  map.minFilter = LinearFilter;
   map.magFilter = LinearFilter;
-  map.anisotropy = 16;
+  map.anisotropy = 4;
   map.needsUpdate = true;
   return map;
 }
 
-function useKnockoutTexture(src: string) {
+function useKnockoutTexture(src: string, kind: "walk" | "stand" = "stand") {
   const loaded = useTexture(src);
   const [map, setMap] = useState<Texture | null>(null);
   useEffect(() => {
     loaded.colorSpace = SRGBColorSpace;
-    setMap(knockoutAndCrop(loaded));
-  }, [loaded]);
+    setMap(knockoutAndCrop(loaded, kind));
+  }, [loaded, kind]);
   return map;
 }
 
-function useWalkCycleTextures(srcs: string[]) {
-  const loaded = useTexture(srcs);
+function useManPoses() {
+  const loaded = useTexture(POSE_SRCS);
   const [maps, setMaps] = useState<Texture[] | null>(null);
   useEffect(() => {
     const list = (Array.isArray(loaded) ? loaded : [loaded]) as Texture[];
     list.forEach((tex) => {
       tex.colorSpace = SRGBColorSpace;
     });
-    setMaps(normalizeWalkCycle(list));
+    setMaps(normalizeWalkCycle(list, POSE_KINDS));
   }, [loaded]);
   return maps;
 }
 
 function slotX(slot: number) {
-  return UNVEIL_SLOT_X[slot];
+  return manSlotX(slot);
+}
+
+function peekNextSlot(slot: number, dir: 1 | -1, last: number) {
+  if (dir === 1 && slot >= last) return last - 1;
+  if (dir === -1 && slot <= 0) return 1;
+  return slot + dir;
+}
+
+type StopPose = "plant" | "quarter" | "almost" | "stand";
+
+function poseDuringHold(hold: number): StopPose {
+  const elapsed = HOLD_TIME - hold;
+  if (elapsed < ARRIVE_PLANT) return "plant";
+  if (elapsed < ARRIVE_PLANT + ARRIVE_QUARTER) return "quarter";
+  if (elapsed < ARRIVE_SUM) return "almost";
+  if (hold > LEAVE_SUM) return "stand";
+  const leaveElapsed = LEAVE_SUM - hold;
+  if (leaveElapsed < LEAVE_ALMOST) return "almost";
+  if (leaveElapsed < LEAVE_ALMOST + LEAVE_QUARTER) return "quarter";
+  return "plant";
 }
 
 function makeLinenMap() {
@@ -514,7 +852,54 @@ function Cloth({
   );
 }
 
-function Pedestal({ x, index, man }: { x: number; index: number; man: MutableRefObject<UnveilManState> }) {
+function useFactoryMap() {
+  const map = useTexture(FACTORY_SRC);
+  useLayoutEffect(() => {
+    map.colorSpace = SRGBColorSpace;
+    map.wrapS = RepeatWrapping;
+    map.wrapT = ClampToEdgeWrapping;
+    map.anisotropy = 8;
+    map.repeat.set(FACTORY_WRAP_X, 1);
+    map.offset.set(0.5, 0);
+    map.needsUpdate = true;
+  }, [map]);
+  return map;
+}
+
+function useFutureProductMaps() {
+  const loaded = useTexture(PRODUCT_SRCS);
+  const [maps, setMaps] = useState<Texture[] | null>(null);
+  useEffect(() => {
+    const list = (Array.isArray(loaded) ? loaded : [loaded]) as Texture[];
+    list.forEach((tex) => {
+      tex.colorSpace = SRGBColorSpace;
+    });
+    setMaps(list.map((tex) => packProductSprite(tex)));
+  }, [loaded]);
+  return maps;
+}
+
+function useBoxMap() {
+  const loaded = useTexture(BOX_SRC);
+  const [map, setMap] = useState<Texture | null>(null);
+  useEffect(() => {
+    loaded.colorSpace = SRGBColorSpace;
+    setMap(packProductSprite(loaded));
+  }, [loaded]);
+  return map;
+}
+
+function Pedestal({
+  x,
+  index,
+  man,
+  factoryMap,
+}: {
+  x: number;
+  index: number;
+  man: MutableRefObject<UnveilManState>;
+  factoryMap: Texture;
+}) {
   const spot = useRef<SpotLightImpl>(null);
 
   useFrame(() => {
@@ -536,27 +921,29 @@ function Pedestal({ x, index, man }: { x: number; index: number; man: MutableRef
         decay={1.35}
       />
       <mesh position={[0, 0.08, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.54, 0.58, 0.16, 8]} />
-        <meshStandardMaterial color="#005040" roughness={0.42} metalness={0.08} />
+        <cylinderGeometry args={[0.54, 0.58, 0.16, 48]} />
+        <meshStandardMaterial color="#063a2c" roughness={0.46} metalness={0.08} />
       </mesh>
       <mesh position={[0, 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.5, 0.028, 10, 32]} />
         <meshStandardMaterial color="#d4a359" roughness={0.22} metalness={0.72} emissive="#d4a359" emissiveIntensity={0.28} />
       </mesh>
       <mesh position={[0, 0.24, 0]} receiveShadow>
-        <cylinderGeometry args={[0.45, 0.48, 0.1, 8]} />
+        <cylinderGeometry args={[0.45, 0.48, 0.1, 48]} />
         <meshStandardMaterial color="#903828" roughness={0.62} metalness={0.04} />
       </mesh>
       <mesh position={[0, 0.66, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.34, 0.42, 0.74, 8]} />
-        <meshStandardMaterial color="#005B48" roughness={0.36} metalness={0.1} />
-      </mesh>
-      <mesh position={[0, 0.62, 0.4]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.13, 0.24, 3]} />
-        <meshStandardMaterial color="#d4a359" roughness={0.28} metalness={0.68} />
+        <cylinderGeometry args={[SHAFT_RADIUS_TOP, SHAFT_RADIUS_BOT, SHAFT_HEIGHT, 64]} />
+        <meshStandardMaterial
+          map={factoryMap}
+          color="#ffffff"
+          roughness={0.38}
+          metalness={0.08}
+          toneMapped={false}
+        />
       </mesh>
       <mesh position={[0, 1.04, 0]}>
-        <cylinderGeometry args={[0.4, 0.36, 0.08, 8]} />
+        <cylinderGeometry args={[0.4, 0.36, 0.08, 48]} />
         <meshStandardMaterial color="#F4F0E8" roughness={0.48} metalness={0.06} />
       </mesh>
       <mesh position={[0, 1.11, 0]} rotation={[Math.PI / 2, 0, 0]}>
@@ -571,6 +958,198 @@ function Pedestal({ x, index, man }: { x: number; index: number; man: MutableRef
   );
 }
 
+function fitClusterItem(aspect: number, scale: number, kind: "item" | "box") {
+  if (kind === "box") {
+    let height = 0.3 * scale;
+    let width = height * aspect;
+    if (width > 0.36 * scale) {
+      width = 0.36 * scale;
+      height = width / aspect;
+    }
+    return { width, height };
+  }
+  const wide = aspect > 1.05;
+  const maxH = (wide ? 0.22 : 0.36) * scale;
+  const maxW = (wide ? 0.4 : 0.25) * scale;
+  let height = maxH;
+  let width = height * aspect;
+  if (width > maxW) {
+    width = maxW;
+    height = width / aspect;
+  }
+  return { width, height };
+}
+
+function FutureProduct({
+  cloth,
+  slot,
+  map,
+  place,
+  kind,
+}: {
+  cloth: MutableRefObject<number[]>;
+  slot: number;
+  map: Texture;
+  place: { x: number; z: number; scale: number; sink: number };
+  kind: "item" | "box";
+}) {
+  const group = useRef<Group>(null);
+  const mesh = useRef<Mesh>(null);
+  const shadow = useRef<Mesh>(null);
+  const geo = useMemo(() => {
+    const plane = new PlaneGeometry(1, 1);
+    plane.translate(0, 0.5, 0);
+    return plane;
+  }, []);
+  const aspect = typeof map.userData.aspect === "number" ? map.userData.aspect : FACTORY_ASPECT;
+  const fitted = useMemo(() => fitClusterItem(aspect, place.scale, kind), [aspect, place.scale, kind]);
+
+  useFrame(() => {
+    if (!group.current || !mesh.current || !shadow.current) return;
+    const reveal = smoothstep(0.12, 0.55, cloth.current[slot] ?? 0);
+    const material = mesh.current.material as MeshBasicMaterial;
+    material.opacity = reveal;
+    group.current.visible = reveal > 0.03;
+    mesh.current.scale.set(fitted.width, fitted.height, 1);
+    const shadowMat = shadow.current.material as MeshBasicMaterial;
+    shadowMat.opacity = 0.28 * reveal;
+    shadow.current.scale.set(fitted.width * 0.7, fitted.width * 0.4, 1);
+  });
+
+  return (
+    <group ref={group} position={[place.x, -place.sink, place.z]} visible={false}>
+      <mesh ref={shadow} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.003, 0.01]} renderOrder={2}>
+        <circleGeometry args={[1, 24]} />
+        <meshBasicMaterial color="#05140f" transparent opacity={0} depthWrite={false} />
+      </mesh>
+      <mesh ref={mesh} geometry={geo} position={[0, 0, 0.03]} renderOrder={2}>
+        <meshBasicMaterial
+          map={map}
+          transparent
+          alphaTest={0.06}
+          depthTest
+          depthWrite={false}
+          toneMapped={false}
+          opacity={0}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+function ProductCluster({
+  x,
+  index,
+  cloth,
+  maps,
+  boxMap,
+}: {
+  x: number;
+  index: number;
+  cloth: MutableRefObject<number[]>;
+  maps: Texture[];
+  boxMap: Texture;
+}) {
+  const boxPlace = {
+    x: index % 2 === 0 ? 0.18 : -0.18,
+    z: 0.07,
+    scale: 1,
+    sink: 0.05,
+  };
+
+  return (
+    <group position={[x, PEDESTAL_TOP_Y, PEDESTAL_Z]}>
+      <FutureProduct cloth={cloth} slot={index} map={boxMap} place={boxPlace} kind="box" />
+      {PEDESTAL_SETS[index].map((place, item) => (
+        <FutureProduct
+          key={`${index}-${item}`}
+          cloth={cloth}
+          slot={index}
+          map={maps[place.sku]}
+          place={place}
+          kind="item"
+        />
+      ))}
+    </group>
+  );
+}
+
+function readWatchList() {
+  try {
+    const raw = window.localStorage.getItem(WATCH_KEY);
+    if (!raw) return {} as Record<string, boolean>;
+    const parsed = JSON.parse(raw) as Record<string, boolean>;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {} as Record<string, boolean>;
+  }
+}
+
+function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
+  const { user, openLoginModal } = useAuth();
+  const [talk, setTalk] = useState({ open: false, slot: 0, facing: 1 });
+  const [watched, setWatched] = useState<Record<string, boolean>>({});
+  const last = useRef("");
+
+  useEffect(() => {
+    setWatched(readWatchList());
+  }, []);
+
+  useFrame(() => {
+    const state = man.current;
+    const elapsed = HOLD_TIME - state.hold;
+    const showing = !state.walking && state.hold > LEAVE_SUM && elapsed >= ARRIVE_SUM;
+    const key = `${showing ? 1 : 0}:${state.slot}:${state.facing >= 0 ? 1 : 0}`;
+    if (key === last.current) return;
+    last.current = key;
+    setTalk({ open: showing, slot: state.slot, facing: state.facing });
+  });
+
+  const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
+  if (!talk.open || !product) return null;
+  const saved = Boolean(watched[product.id]);
+  const east = talk.facing >= 0;
+
+  return (
+    <Html
+      position={[0, 2.3, 0.12]}
+      zIndexRange={[40, 8]}
+      style={{ pointerEvents: "auto" }}
+    >
+      <button
+        type="button"
+        className={`${styles.peakTalk} ${east ? styles.peakTalkEast : styles.peakTalkWest}`}
+        dir="rtl"
+        onClick={(event) => {
+          event.stopPropagation();
+          if (!user) {
+            openLoginModal({ next: "/#product-unveil" });
+            return;
+          }
+          const next = { ...readWatchList(), [product.id]: true };
+          setWatched(next);
+          try {
+            window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
+          } catch {
+            /* waitlist backend comes later */
+          }
+        }}
+      >
+        <svg className={styles.peakTalkShape} viewBox="0 0 176 108" aria-hidden="true">
+          <path
+            fill="#F4F0E8"
+            stroke="#D4A359"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            d="M88 6 L118 34 H146 C164 34 170 52 156 62 C168 68 164 88 142 90 H34 C12 88 8 68 20 62 C6 52 12 34 30 34 H58 Z"
+          />
+        </svg>
+        <span>{saved ? "باشه، یادم می‌ماند." : product.invite}</span>
+      </button>
+    </Html>
+  );
+}
+
 function MountainMan({
   man,
   cloth,
@@ -580,11 +1159,11 @@ function MountainMan({
   cloth: MutableRefObject<number[]>;
   active: boolean;
 }) {
-  const walks = useWalkCycleTextures(WALK_SRCS);
-  const stand = useKnockoutTexture(STAND_SRC);
+  const poses = useManPoses();
   const group = useRef<Group>(null);
-  const mesh = useRef<Mesh>(null);
-  const frameRef = useRef(-1);
+  const meshA = useRef<Mesh>(null);
+  const meshB = useRef<Mesh>(null);
+  const fade = useRef({ from: 0, to: 0, t: 1 });
   const walkGeo = useMemo(() => {
     const geo = new PlaneGeometry(1, 1);
     geo.translate(0, 0.5, 0);
@@ -592,18 +1171,25 @@ function MountainMan({
   }, []);
 
   useFrame((_, delta) => {
-    if (!group.current || !mesh.current || !walks || !stand) return;
+    if (!group.current || !meshA.current || !meshB.current || !poses) return;
     const dt = Math.min(delta, 1 / 24);
+    const tick = Math.min(delta, 1 / 60);
     const state = man.current;
     const last = UNVEIL_SLOT_X.length - 1;
 
     if (active) {
       if (state.hold > 0) {
         state.walking = false;
-        state.accel = 0;
         state.x = slotX(state.slot);
-        state.hold -= dt;
-        cloth.current[state.slot] = Math.min(1, cloth.current[state.slot] + dt * 0.72);
+        state.hold -= tick;
+        const pose = poseDuringHold(Math.max(0, state.hold));
+        if (pose === "stand") {
+          cloth.current[state.slot] = Math.min(1, cloth.current[state.slot] + dt * 0.72);
+        }
+        if (state.hold <= LEAVE_SUM) {
+          const upcoming = peekNextSlot(state.slot, state.dir, last);
+          state.facing = slotX(upcoming) >= state.x ? 1 : -1;
+        }
         if (state.hold <= 0) {
           if (state.dir === 1 && state.slot >= last) {
             state.dir = -1;
@@ -615,76 +1201,125 @@ function MountainMan({
             state.slot += state.dir;
           }
           state.facing = state.dir;
-          state.windup = WINDUP;
+          state.originX = state.x;
+          state.stride = 0;
+          state.windup = 0;
+          state.gait = 0;
+          state.foot = 0;
         }
-      } else if (state.windup > 0) {
-        const target = slotX(state.slot);
-        state.facing = target >= state.x ? 1 : -1;
-        state.walking = false;
-        state.accel = 0;
-        state.windup -= dt;
       } else {
         const target = slotX(state.slot);
         const dist = Math.abs(target - state.x);
         state.facing = target >= state.x ? 1 : -1;
-        const cruise = WALK_SPEED * (0.32 + 0.68 * smoothstep(0.05, 1.0, dist));
-        const step = Math.min(dist, cruise * dt);
-        if (dist <= 0.06) {
+        const arrive = () => {
           state.x = target;
           state.walking = false;
-          state.accel = 0;
           state.hold = HOLD_TIME;
+          state.stride = 0;
           state.windup = 0;
+          state.gait = 0;
+        };
+        if (dist <= 0.05 && state.gait === 0) {
+          arrive();
+        } else if (state.gait === 0) {
+          state.walking = true;
+          state.windup += dt;
+          if (state.windup >= CONTACT_TIME) {
+            if (dist <= 0.08) arrive();
+            else {
+              state.gait = 1;
+              state.stride = 0;
+            }
+          }
         } else {
           state.walking = true;
-          state.accel = cruise / WALK_SPEED;
-          state.x += state.facing * step;
-          state.stride += step;
+          const swinging = fade.current.to === state.foot * 2 + 1;
+          if (swinging) {
+            const step = Math.min(dist, STEP_DIST - state.stride, WALK_SPEED * dt);
+            state.x += state.facing * step;
+            state.stride += step;
+          }
+          if (state.stride >= STEP_DIST - 0.001 || dist <= 0.05) {
+            if (Math.abs(target - state.x) <= 0.08) arrive();
+            else if (swinging && state.stride >= STEP_DIST - 0.001) {
+              state.gait = 0;
+              state.windup = 0;
+              state.foot = state.foot === 0 ? 1 : 0;
+              state.stride = 0;
+            }
+          }
         }
       }
     }
 
-    const presenting = state.hold > 0.38 && state.hold < HOLD_TIME - 0.42;
-    const cycling = state.walking;
-    const phase = (((state.stride / CYCLE_LEN) % 1) + 1) % 1;
-    const frame = cycling ? walkFrameAt(phase) : 0;
-    const map = presenting ? stand : walks[frame];
-    const image = map.image as { width: number; height: number };
-    const standAspect = image?.width && image?.height ? image.width / image.height : 0.4;
-    const height = presenting ? 2.62 : WALK_HEIGHT;
-    const aspect = presenting ? standAspect : WALK_ASPECT;
-    const bob = cycling ? -Math.cos(phase * Math.PI * 4) * 0.01 : 0;
-    const flip = presenting ? 1 : state.facing;
-    const visualKey = presenting ? -1 : frame;
-
-    const material = mesh.current.material as MeshBasicMaterial;
-    if (frameRef.current !== visualKey) {
-      material.map = map;
-      material.needsUpdate = true;
-      frameRef.current = visualKey;
+    const holding = state.hold > 0;
+    const stopPose = holding ? poseDuringHold(state.hold) : "plant";
+    const walkFrame = state.foot * 2 + (state.gait === 1 ? 1 : 0);
+    const poseIndex = { plant: 4, quarter: 5, almost: 6, stand: 7 } as const;
+    const visualKey = holding ? poseIndex[stopPose] : walkFrame;
+    const snapWalk = visualKey < 4 && fade.current.to < 4;
+    if (visualKey !== fade.current.to) {
+      fade.current.from = fade.current.to;
+      fade.current.to = visualKey;
+      fade.current.t = snapWalk ? 1 : 0;
+    } else {
+      fade.current.t = Math.min(1, fade.current.t + 1 / POSE_BLEND);
     }
 
+    const toMap = poses[fade.current.to];
+    const fromMap = poses[fade.current.from];
+    const flipOf = (key: number) => (key >= 5 ? 1 : state.facing);
+    const bob = state.gait === 1 && !holding ? -Math.cos((state.stride / STEP_DIST) * Math.PI) * 0.012 : 0;
+    const matA = meshA.current.material as MeshBasicMaterial;
+    const matB = meshB.current.material as MeshBasicMaterial;
+    if (matA.map !== toMap) {
+      matA.map = toMap;
+      matA.needsUpdate = true;
+    }
+    if (matB.map !== fromMap) {
+      matB.map = fromMap;
+      matB.needsUpdate = true;
+    }
+    const u = fade.current.t;
+    const ease = u * u * (3 - 2 * u);
+    matA.opacity = ease;
+    matB.opacity = 1 - ease;
+    meshB.current.visible = fade.current.t < 0.999;
+
     group.current.position.set(state.x, bob, MAN_Z);
-    mesh.current.scale.set(height * aspect * flip, height, 1);
-    mesh.current.position.set(0, 0, 0);
-    material.opacity = 1;
-    mesh.current.visible = true;
+    meshA.current.scale.set(WALK_HEIGHT * WALK_ASPECT * flipOf(fade.current.to), WALK_HEIGHT, 1);
+    meshB.current.scale.set(WALK_HEIGHT * WALK_ASPECT * flipOf(fade.current.from), WALK_HEIGHT, 1);
+    meshA.current.position.set(0, 0, 0);
+    meshB.current.position.set(0, 0, 0.001);
   });
 
-  if (!walks || !stand) return null;
+  if (!poses) return null;
 
   return (
     <group ref={group} position={[man.current.x, 0, MAN_Z]}>
-      <mesh ref={mesh} geometry={walkGeo} renderOrder={0}>
+      <mesh ref={meshA} geometry={walkGeo} renderOrder={1}>
         <meshBasicMaterial
-          map={stand}
+          map={poses[7]}
           transparent
+          alphaTest={0}
           depthTest
           depthWrite={false}
           toneMapped={false}
           opacity={1}
         />
       </mesh>
+      <mesh ref={meshB} geometry={walkGeo} renderOrder={0} visible={false}>
+        <meshBasicMaterial
+          map={poses[4]}
+          transparent
+          alphaTest={0}
+          depthTest
+          depthWrite={false}
+          toneMapped={false}
+          opacity={0}
+        />
+      </mesh>
+      <PeakTalk man={man} />
     </group>
   );
 }
@@ -701,14 +1336,30 @@ function Hall() {
 }
 
 function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
+  const factoryMap = useFactoryMap();
+  const productMaps = useFutureProductMaps();
+  const boxMap = useBoxMap();
+
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.55, 6.7]} fov={32} near={0.1} far={42} />
+      <PerspectiveCamera makeDefault position={[0, 1.55, UNVEIL_CAM_Z]} fov={32} near={0.1} far={42} />
       <Hall />
       <MountainMan man={man} cloth={cloth} active={active} />
       {UNVEIL_SLOT_X.map((x, index) => (
-        <Pedestal key={`p-${x}`} x={x} index={index} man={man} />
+        <Pedestal key={`p-${x}`} x={x} index={index} man={man} factoryMap={factoryMap} />
       ))}
+      {productMaps && boxMap
+        ? UNVEIL_SLOT_X.map((x, index) => (
+            <ProductCluster
+              key={`prod-${x}`}
+              x={x}
+              index={index}
+              cloth={cloth}
+              maps={productMaps}
+              boxMap={boxMap}
+            />
+          ))
+        : null}
       {UNVEIL_SLOT_X.map((x, index) => (
         <Cloth key={`c-${x}`} x={x} index={index} cloth={cloth} />
       ))}
@@ -724,6 +1375,7 @@ export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { acti
       shadows
       frameloop={active ? "always" : "demand"}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      style={{ pointerEvents: "auto" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#063a2c", 0);
         gl.toneMappingExposure = 1.12;

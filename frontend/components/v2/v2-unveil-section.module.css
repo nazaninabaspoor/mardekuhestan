@@ -18,12 +18,12 @@
 .atmosphere {
   position: absolute;
   z-index: 1;
-  inset: -4%;
+  inset: 0;
   pointer-events: none;
   background:
-    url("/brand/v2/unveil-exhibition-empty.png") center 42% / cover no-repeat;
-  filter: blur(12px) saturate(0.86) brightness(0.78);
-  transform: scale(1.04);
+    linear-gradient(180deg, #0a5540 0%, rgb(10 85 64 / 94%) 1.5%, rgb(8 71 53 / 42%) 9%, rgb(6 58 44 / 13%) 18%, transparent 25%),
+    linear-gradient(rgb(3 37 28 / 18%), rgb(2 27 21 / 24%)),
+    url("/brand/v2/unveil-exhibition-empty.png") center center / cover no-repeat;
 }
 
 .depth {
@@ -32,8 +32,22 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 62%, rgb(10 85 64 / 8%), transparent 52%),
-    linear-gradient(180deg, rgb(10 85 64 / 34%) 0%, rgb(6 58 44 / 16%) 38%, rgb(3 37 28 / 42%) 100%);
+    linear-gradient(90deg, rgb(0 10 8 / 22%), transparent 34%, transparent 70%, rgb(0 10 8 / 16%)),
+    linear-gradient(180deg, transparent 0%, transparent 55%, rgb(0 8 6 / 34%));
+}
+
+.fog {
+  position: absolute;
+  z-index: 1;
+  right: 19%;
+  top: 26%;
+  width: 38%;
+  height: 25%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgb(91 133 108 / 8%), transparent 70%);
+  filter: blur(72px);
+  opacity: 0.24;
 }
 
 .stage {
@@ -102,6 +116,47 @@
 
 .slot {
   min-height: clamp(120px, 14vw, 168px);
+}
+
+.peakTalk {
+  position: relative;
+  display: block;
+  width: 168px;
+  min-height: 92px;
+  margin: 0;
+  padding: 30px 16px 12px;
+  border: 0;
+  background: transparent;
+  color: #005b48;
+  text-align: center;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 16px rgb(0 20 14 / 28%));
+}
+
+.peakTalkEast {
+  transform: translate(14px, -78%);
+}
+
+.peakTalkWest {
+  transform: translate(calc(-100% - 14px), -78%);
+}
+
+.peakTalkShape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.peakTalk span {
+  position: relative;
+  z-index: 1;
+  display: block;
 }
 
 @media (max-width: 900px) {
