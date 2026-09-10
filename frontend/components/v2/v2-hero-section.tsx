@@ -151,7 +151,7 @@ export function V2HeroSection() {
               <h1 id="hero-title">این راه سبز است</h1>
               <div className="landing-v2-row">
                 <p className="landing-v2-lead">از مزرعه تا سفره، مسیری که با اعتماد ساخته می‌شود.</p>
-                <Link href="/#coming-soon" className="landing-v2-cta">
+                <Link href="/#product-unveil" className="landing-v2-cta">
                   <span key={active.id} className="landing-v2-cta-label">
                     {active.ctaLabel}
                   </span>

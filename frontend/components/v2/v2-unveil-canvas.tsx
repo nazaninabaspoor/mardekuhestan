@@ -38,7 +38,7 @@ const WALK_SRCS = [
   "/brand/v2/walk-l-passing.png",
 ];
 const STAND_SRC = "/brand/profile/soon-mountain-man-stand.png";
-const FACTORY_SRC = "/brand/v2/pedestal-factory.png";
+const FACTORY_SRC = "/brand/v2/pedestal-factory-wrap.png";
 const BOX_SRC = "/brand/v2/unveil-open-crate.png";
 const PRODUCT_SRCS = UNVEIL_FUTURE_PRODUCTS.map((item) => item.src);
 const WATCH_KEY = "mk-unveil-watch";
@@ -46,8 +46,6 @@ const FACTORY_ASPECT = 3 / 4;
 const SHAFT_HEIGHT = 0.74;
 const SHAFT_RADIUS_TOP = 0.34;
 const SHAFT_RADIUS_BOT = 0.42;
-const SHAFT_RADIUS_MID = (SHAFT_RADIUS_TOP + SHAFT_RADIUS_BOT) / 2;
-const FACTORY_WRAP_X = Math.round((Math.PI * 2 * SHAFT_RADIUS_MID) / (FACTORY_ASPECT * SHAFT_HEIGHT));
 const PEDESTAL_TOP_Y = 1.186;
 const PEDESTAL_SETS: Array<Array<{ sku: number; x: number; z: number; scale: number; sink: number }>> = [
   [
@@ -864,7 +862,7 @@ function useFactoryMap() {
     map.wrapS = RepeatWrapping;
     map.wrapT = ClampToEdgeWrapping;
     map.anisotropy = 8;
-    map.repeat.set(FACTORY_WRAP_X, 1);
+    map.repeat.set(1, 1);
     map.offset.set(0.5, 0);
     map.needsUpdate = true;
   }, [map]);
