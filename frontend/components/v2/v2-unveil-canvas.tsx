@@ -81,8 +81,8 @@ const WALK_HEIGHT = 2.58;
 /** Face height; default cloud sits to the left of the head. */
 const MAN_HEAD_Y = 2.38;
 const TALK_GAP_X = -0.8;
-/** Leftmost column only: origin just to the right of the skull. */
-const TALK_FLIP_X = 0.36;
+/** Leftmost column only: origin to the right of the skull. */
+const TALK_FLIP_X = 1.15;
 const STEP_RATIO = 0.543;
 const DISTANCE_PER_CYCLE = WALK_HEIGHT * STEP_RATIO * 2;
 const CYCLE_SECONDS = 1.32;
@@ -1117,7 +1117,7 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   return (
     <Html
       position={[cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18]}
-      zIndexRange={[40, 8]}
+      zIndexRange={[55, 16]}
       style={{
         pointerEvents: talk.open ? "auto" : "none",
         opacity: talk.open ? 1 : 0,
