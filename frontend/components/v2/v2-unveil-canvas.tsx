@@ -78,6 +78,9 @@ const PEDESTAL_SETS: Array<Array<{ sku: number; x: number; z: number; scale: num
 const MAN_Z = UNVEIL_MAN_Z;
 const PEDESTAL_Z = UNVEIL_PEDESTAL_Z;
 const WALK_HEIGHT = 2.58;
+/** Face height; cloud sits a few centimeters to the man's right. */
+const MAN_HEAD_Y = 2.38;
+const TALK_RIGHT_X = 0;
 const STEP_RATIO = 0.543;
 const DISTANCE_PER_CYCLE = WALK_HEIGHT * STEP_RATIO * 2;
 const CYCLE_SECONDS = 1.32;
@@ -1087,7 +1090,7 @@ function readWatchList() {
 
 function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const { user, openLoginModal } = useAuth();
-  const [talk, setTalk] = useState({ open: false, slot: 0, facing: 1 });
+  const [talk, setTalk] = useState({ open: false, slot: 0 });
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const last = useRef("");
 
@@ -1099,58 +1102,59 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
     const state = man.current;
     const elapsed = HOLD_TIME - state.hold;
     const showing = !state.walking && state.hold > LEAVE_SUM && elapsed >= ARRIVE_SUM;
-    const key = `${showing ? 1 : 0}:${state.slot}:${state.facing >= 0 ? 1 : 0}`;
+    const key = `${showing ? 1 : 0}:${state.slot}`;
     if (key === last.current) return;
     last.current = key;
-    setTalk({ open: showing, slot: state.slot, facing: state.facing });
+    setTalk({ open: showing, slot: state.slot });
   });
 
   const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
-  if (!talk.open || !product) return null;
-  const saved = Boolean(watched[product.id]);
-  const east = talk.facing >= 0;
+  const saved = Boolean(product && watched[product.id]);
 
   return (
     <Html
-      position={[0, 2.42, 0.14]}
+      position={[TALK_RIGHT_X, MAN_HEAD_Y, 0.18]}
       zIndexRange={[40, 8]}
-      style={{ pointerEvents: "auto" }}
+      style={{
+        pointerEvents: talk.open ? "auto" : "none",
+        opacity: talk.open ? 1 : 0,
+        visibility: talk.open ? "visible" : "hidden",
+      }}
     >
-      <div
-        className={`${styles.thought} ${east ? styles.thoughtEast : styles.thoughtWest}`}
-        dir="rtl"
-      >
-        <div className={styles.thoughtCloud}>
-          <p>{saved ? "باشه، یادم می‌ماند." : product.invite}</p>
-          {saved ? (
-            <span className={styles.thoughtSaved}>یادم ماند</span>
-          ) : (
-            <button
-              type="button"
-              className={styles.thoughtCta}
-              onClick={(event) => {
-                event.stopPropagation();
-                if (!user) {
-                  openLoginModal({ next: "/#product-unveil" });
-                  return;
-                }
-                const next = { ...readWatchList(), [product.id]: true };
-                setWatched(next);
-                try {
-                  window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
-                } catch {
-                  /* waitlist backend comes later */
-                }
-              }}
-            >
-              خبرم کن
-            </button>
-          )}
-        </div>
-        <span className={styles.thoughtPuff} aria-hidden="true" />
-        <span className={`${styles.thoughtPuff} ${styles.thoughtPuffMid}`} aria-hidden="true" />
-        <span className={`${styles.thoughtPuff} ${styles.thoughtPuffSmall}`} aria-hidden="true" />
-      </div>
+        {product ? (
+          <div className={styles.thought} dir="rtl" aria-hidden={talk.open ? undefined : true}>
+            <div className={styles.thoughtCloud}>
+              <p>{saved ? "باشه، یادم می‌ماند." : product.invite}</p>
+              {saved ? (
+                <span className={styles.thoughtSaved}>یادم ماند</span>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.thoughtCta}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (!user) {
+                      openLoginModal({ next: "/#product-unveil" });
+                      return;
+                    }
+                    const next = { ...readWatchList(), [product.id]: true };
+                    setWatched(next);
+                    try {
+                      window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
+                    } catch {
+                      /* waitlist backend comes later */
+                    }
+                  }}
+                >
+                  خبرم کن
+                </button>
+              )}
+            </div>
+            <span className={styles.thoughtPuff} aria-hidden="true" />
+            <span className={`${styles.thoughtPuff} ${styles.thoughtPuffMid}`} aria-hidden="true" />
+            <span className={`${styles.thoughtPuff} ${styles.thoughtPuffSmall}`} aria-hidden="true" />
+          </div>
+        ) : null}
     </Html>
   );
 }

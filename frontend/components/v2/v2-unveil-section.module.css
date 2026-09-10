@@ -72,27 +72,20 @@
   pointer-events: none;
 }
 
-.copy p {
-  margin: 0 0 8px;
-  color: #d4a359;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
 .copy h2 {
   margin: 0;
   color: #f4f0e8;
-  font-size: clamp(1.55rem, 2.7vw, 2.15rem);
+  font-size: clamp(1.9rem, 3.4vw, 2.65rem);
   font-weight: 800;
 }
 
 .copy span {
   display: block;
-  margin-top: 10px;
-  color: rgb(244 240 232 / 78%);
-  font-size: 0.92rem;
+  margin-top: 12px;
+  color: rgb(244 240 232 / 82%);
+  font-size: clamp(1.05rem, 1.6vw, 1.22rem);
   font-weight: 400;
+  line-height: 1.7;
 }
 
 .slots {
@@ -120,25 +113,19 @@
 
 .thought {
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   align-items: center;
-  gap: 0;
-  width: 172px;
+  gap: 3px;
+  width: max-content;
   pointer-events: none;
-}
-
-.thoughtEast {
-  transform: translate(8px, calc(-100% - 6px));
-}
-
-.thoughtWest {
-  transform: translate(calc(-100% - 8px), calc(-100% - 6px));
+  transform: translate(2px, -50%);
 }
 
 .thoughtCloud {
   position: relative;
-  width: 100%;
-  padding: 14px 16px 12px;
+  flex: 0 0 auto;
+  width: 158px;
+  padding: 11px 13px 10px;
   border: 1.5px solid #d4a359;
   border-radius: 46px 40px 48px 38px;
   background: #f4f0e8;
@@ -215,9 +202,10 @@
 
 .thoughtPuff {
   display: block;
-  width: 14px;
-  height: 14px;
-  margin-top: 5px;
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  margin: 8px 0 0;
   border: 1.5px solid #d4a359;
   border-radius: 50%;
   background: #f4f0e8;
@@ -225,15 +213,15 @@
 }
 
 .thoughtPuffMid {
-  width: 10px;
-  height: 10px;
-  margin-top: 4px;
+  width: 7px;
+  height: 7px;
+  margin: 12px 0 0;
 }
 
 .thoughtPuffSmall {
-  width: 7px;
-  height: 7px;
-  margin-top: 3px;
+  width: 5px;
+  height: 5px;
+  margin: 16px 0 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -97,7 +97,6 @@ export function V2UnveilSection() {
       </div>
 
       <div className={styles.copy}>
-        <p>از راه سبز</p>
         <h2>روی میز خانه</h2>
         <span>نمایش تازهٔ محصولاتی که به‌زودی روی سفره می‌آیند</span>
       </div>
