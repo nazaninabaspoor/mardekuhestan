@@ -78,9 +78,11 @@ const PEDESTAL_SETS: Array<Array<{ sku: number; x: number; z: number; scale: num
 const MAN_Z = UNVEIL_MAN_Z;
 const PEDESTAL_Z = UNVEIL_PEDESTAL_Z;
 const WALK_HEIGHT = 2.58;
-/** Face height; cloud sits a few centimeters to the man's right. */
+/** Face height; default cloud sits to the left of the head. */
 const MAN_HEAD_Y = 2.38;
-const TALK_RIGHT_X = 0;
+const TALK_GAP_X = -0.8;
+/** Leftmost column only: origin just to the right of the skull. */
+const TALK_FLIP_X = 0.36;
 const STEP_RATIO = 0.543;
 const DISTANCE_PER_CYCLE = WALK_HEIGHT * STEP_RATIO * 2;
 const CYCLE_SECONDS = 1.32;
@@ -1110,10 +1112,11 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
 
   const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
   const saved = Boolean(product && watched[product.id]);
+  const cloudRight = talk.slot === 0;
 
   return (
     <Html
-      position={[TALK_RIGHT_X, MAN_HEAD_Y, 0.18]}
+      position={[cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18]}
       zIndexRange={[40, 8]}
       style={{
         pointerEvents: talk.open ? "auto" : "none",
@@ -1122,8 +1125,12 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
       }}
     >
         {product ? (
-          <div className={styles.thought} dir="rtl" aria-hidden={talk.open ? undefined : true}>
-            <div className={styles.thoughtCloud}>
+          <div
+            className={`${styles.thought} ${cloudRight ? styles.thoughtEast : styles.thoughtWest}`}
+            dir="ltr"
+            aria-hidden={talk.open ? undefined : true}
+          >
+            <div className={styles.thoughtCloud} dir="rtl">
               <p>{saved ? "باشه، یادم می‌ماند." : product.invite}</p>
               {saved ? (
                 <span className={styles.thoughtSaved}>یادم ماند</span>

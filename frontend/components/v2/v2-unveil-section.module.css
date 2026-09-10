@@ -113,12 +113,20 @@
 
 .thought {
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
   gap: 3px;
   width: max-content;
   pointer-events: none;
-  transform: translate(2px, -50%);
+}
+
+.thoughtWest {
+  flex-direction: row;
+  transform: translate(-100%, -50%);
+}
+
+.thoughtEast {
+  flex-direction: row-reverse;
+  transform: translate(0, -50%);
 }
 
 .thoughtCloud {
