@@ -47,7 +47,7 @@ const SHAFT_HEIGHT = 0.74;
 const SHAFT_RADIUS_TOP = 0.34;
 const SHAFT_RADIUS_BOT = 0.42;
 const SHAFT_RADIUS_MID = (SHAFT_RADIUS_TOP + SHAFT_RADIUS_BOT) / 2;
-const FACTORY_WRAP_X = (Math.PI * 2 * SHAFT_RADIUS_MID) / (FACTORY_ASPECT * SHAFT_HEIGHT);
+const FACTORY_WRAP_X = Math.round((Math.PI * 2 * SHAFT_RADIUS_MID) / (FACTORY_ASPECT * SHAFT_HEIGHT));
 const PEDESTAL_TOP_Y = 1.186;
 const PEDESTAL_SETS: Array<Array<{ sku: number; x: number; z: number; scale: number; sink: number }>> = [
   [
@@ -942,8 +942,8 @@ function Pedestal({
         <meshStandardMaterial
           map={factoryMap}
           color="#ffffff"
-          roughness={0.38}
-          metalness={0.08}
+          roughness={0.4}
+          metalness={0.04}
           toneMapped={false}
         />
       </mesh>
