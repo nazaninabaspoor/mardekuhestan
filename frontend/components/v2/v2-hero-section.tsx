@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { heroVideos, type HeroVideo } from "@/lib/v2-videos";
 
-function HeroPreviewClip({ src }: { src: string }) {
+function HeroPreviewClip({ src, warm }: { src: string; warm: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -20,6 +20,17 @@ function HeroPreviewClip({ src }: { src: string }) {
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
 
+    if (!warm) {
+      video.removeAttribute("src");
+      video.load();
+      return;
+    }
+
+    if (video.getAttribute("src") !== src) {
+      video.setAttribute("src", src);
+      video.load();
+    }
+
     const tryPlay = () => {
       void video.play().catch(() => undefined);
     };
@@ -27,30 +38,20 @@ function HeroPreviewClip({ src }: { src: string }) {
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     video.addEventListener("canplay", tryPlay);
-    video.addEventListener("playing", tryPlay);
-
-    const onVisible = () => {
-      if (document.visibilityState === "visible") tryPlay();
-    };
-    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       video.removeEventListener("loadeddata", tryPlay);
       video.removeEventListener("canplay", tryPlay);
-      video.removeEventListener("playing", tryPlay);
-      document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [src]);
+  }, [src, warm]);
 
   return (
     <video
       ref={ref}
-      src={src}
       muted
       loop
-      autoPlay
       playsInline
-      preload="auto"
+      preload="none"
       controls={false}
       disablePictureInPicture
       disableRemotePlayback
@@ -62,10 +63,24 @@ function HeroPreviewClip({ src }: { src: string }) {
 export function V2HeroSection() {
   const [active, setActive] = useState<HeroVideo>(heroVideos[0]);
   const [previous, setPrevious] = useState<HeroVideo | null>(null);
-  const [videoReady, setVideoReady] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
+  const [mediaArmed, setMediaArmed] = useState(false);
+  const [warmPreviewId, setWarmPreviewId] = useState<string | null>(null);
   const activeVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    const timeoutId = window.setTimeout(() => {
+      if (!cancelled) setMediaArmed(true);
+    }, 320);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mediaArmed) return;
     const video = activeVideoRef.current;
     if (!video) return;
 
@@ -79,7 +94,7 @@ export function V2HeroSection() {
     playPromise?.catch(() => {
       // Muted autoplay is requested again by the media events below.
     });
-  }, [active.id]);
+  }, [active.id, mediaArmed]);
 
   useEffect(() => {
     if (!previous || !videoReady) return;
@@ -89,6 +104,7 @@ export function V2HeroSection() {
 
   function selectVideo(video: HeroVideo) {
     if (video.id === active.id) return;
+    setMediaArmed(true);
     setPrevious(active);
     setVideoReady(false);
     setActive(video);
@@ -98,7 +114,7 @@ export function V2HeroSection() {
     <section className="landing landing--v2" aria-labelledby="hero-title">
       <div className="landing-v2-stage">
         <div className="landing-v2-media">
-          {active.id === "product" ? (
+          {mediaArmed && active.id === "product" ? (
             <video
               key="product-ambient"
               className="landing-v2-video landing-v2-video--product-ambient"
@@ -112,7 +128,7 @@ export function V2HeroSection() {
               <source src={active.src} type="video/mp4" />
             </video>
           ) : null}
-          {previous ? (
+          {mediaArmed && previous ? (
             <video
               key={`previous-${previous.id}`}
               className={`landing-v2-video${previous.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? " is-leaving" : ""}`}
@@ -126,23 +142,35 @@ export function V2HeroSection() {
               <source src={previous.src} type="video/mp4" />
             </video>
           ) : null}
-          <video
-            key={active.id}
-            ref={activeVideoRef}
-            className={`landing-v2-video${active.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? (previous ? " is-entering" : "") : " is-waiting"}`}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster={active.poster}
-            onLoadedData={() => setVideoReady(true)}
-            onCanPlay={() => setVideoReady(true)}
-            onPlaying={() => setVideoReady(true)}
-            aria-label={`مرد کوهستان؛ ${active.label}`}
-          >
-            <source src={active.src} type="video/mp4" />
-          </video>
+          {mediaArmed ? (
+            <video
+              key={active.id}
+              ref={activeVideoRef}
+              className={`landing-v2-video${active.id === "product" ? " landing-v2-video--product" : ""}${videoReady ? (previous ? " is-entering" : "") : " is-waiting"}`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={active.poster}
+              onLoadedData={() => setVideoReady(true)}
+              onCanPlay={() => setVideoReady(true)}
+              onPlaying={() => setVideoReady(true)}
+              aria-label={`مرد کوهستان؛ ${active.label}`}
+            >
+              <source src={active.src} type="video/mp4" />
+            </video>
+          ) : (
+            // Poster first — arm video after idle so first paint stays light.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className="landing-v2-video"
+              src={active.poster}
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+            />
+          )}
           <div className="landing-v2-veil" aria-hidden="true" />
         </div>
 
@@ -163,6 +191,7 @@ export function V2HeroSection() {
               <div className="landing-v2-playlist-track">
                 {heroVideos.map((video, index) => {
                   const selected = video.id === active.id;
+                  const warm = mediaArmed && (selected || warmPreviewId === video.id);
                   return (
                     <button
                       key={video.id}
@@ -170,8 +199,10 @@ export function V2HeroSection() {
                       className={`landing-v2-preview${selected ? " is-active" : ""}`}
                       aria-pressed={selected}
                       onClick={() => selectVideo(video)}
+                      onMouseEnter={() => setWarmPreviewId(video.id)}
+                      onFocus={() => setWarmPreviewId(video.id)}
                     >
-                      <HeroPreviewClip src={video.src} />
+                      <HeroPreviewClip src={video.src} warm={warm} />
                       <span className="landing-v2-preview-shade" />
                       <span className="landing-v2-preview-index">{String(index + 1).padStart(2, "0")}</span>
                       <span className="landing-v2-preview-label">{video.label}</span>

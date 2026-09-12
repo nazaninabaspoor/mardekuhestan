@@ -26,12 +26,23 @@ class SupportHub:
     async def startup(self) -> None:
         settings = get_settings()
         try:
-            self._redis = Redis.from_url(settings.REDIS_URL, decode_responses=True)
-            await self._redis.ping()
+            client = Redis.from_url(
+                settings.REDIS_URL,
+                decode_responses=True,
+                socket_connect_timeout=1.5,
+                socket_timeout=1.5,
+            )
+            await asyncio.wait_for(client.ping(), timeout=2.0)
+            self._redis = client
             self._listener_task = asyncio.create_task(self._listen_redis())
             logger.info("support hub started on channel=%s", settings.SUPPORT_REDIS_CHANNEL)
         except Exception:  # noqa: BLE001
             logger.exception("Redis unavailable — support hub runs local-only (single worker)")
+            if self._redis is not None:
+                try:
+                    await self._redis.aclose()
+                except Exception:  # noqa: BLE001
+                    pass
             self._redis = None
             self._listener_task = None
 
@@ -73,7 +84,14 @@ class SupportHub:
         if self._redis is None:
             await self._dispatch_local(event)
             return
-        await self._redis.publish(settings.SUPPORT_REDIS_CHANNEL, payload)
+        try:
+            await asyncio.wait_for(
+                self._redis.publish(settings.SUPPORT_REDIS_CHANNEL, payload),
+                timeout=1.5,
+            )
+        except Exception:  # noqa: BLE001
+            logger.exception("redis publish failed — falling back to local fanout")
+            await self._dispatch_local(event)
 
     async def _listen_redis(self) -> None:
         assert self._redis is not None
@@ -92,9 +110,16 @@ class SupportHub:
                 except json.JSONDecodeError:
                     continue
                 await self._dispatch_local(event)
+        except asyncio.CancelledError:
+            raise
+        except Exception:  # noqa: BLE001
+            logger.exception("redis listener stopped")
         finally:
-            await pubsub.unsubscribe(settings.SUPPORT_REDIS_CHANNEL)
-            await pubsub.aclose()
+            try:
+                await pubsub.unsubscribe(settings.SUPPORT_REDIS_CHANNEL)
+                await pubsub.aclose()
+            except Exception:  # noqa: BLE001
+                pass
 
     async def _dispatch_local(self, event: dict[str, Any]) -> None:
         customer_id = event.get("customer_id")

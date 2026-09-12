@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import BigInteger, DateTime, ForeignKey, String, Text, func
+from sqlalchemy import BigInteger, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+
+def utcnow() -> datetime:
+    """Django auto_now(_add) has no DB default — set timestamps in Python."""
+    return datetime.now(timezone.utc)
 
 
 class SupportConversation(Base):
@@ -22,9 +27,9 @@ class SupportConversation(Base):
     last_message_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     customer_last_read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     staff_last_read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
     messages: Mapped[list[SupportMessage]] = relationship(
@@ -48,7 +53,7 @@ class SupportMessage(Base):
     body: Mapped[str] = mapped_column(Text, nullable=False)
     client_message_id: Mapped[str] = mapped_column(String(64), default="", nullable=False)
     whatsapp_notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     conversation: Mapped[SupportConversation] = relationship(back_populates="messages")
 

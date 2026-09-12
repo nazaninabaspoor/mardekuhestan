@@ -625,13 +625,15 @@ function knockoutAndCrop(source: Texture, kind: "walk" | "stand" = "stand") {
   const image = source.image as HTMLImageElement | ImageBitmap | HTMLCanvasElement | undefined;
   if (!image || !("width" in image) || !image.width) return source;
 
+  const maxEdge = kind === "stand" ? 900 : 720;
+  const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
   const src = document.createElement("canvas");
-  src.width = image.width;
-  src.height = image.height;
+  src.width = Math.max(1, Math.round(image.width * scale));
+  src.height = Math.max(1, Math.round(image.height * scale));
   const ctx = src.getContext("2d", { willReadFrequently: true });
   if (!ctx) return source;
 
-  ctx.drawImage(image as CanvasImageSource, 0, 0);
+  ctx.drawImage(image as CanvasImageSource, 0, 0, src.width, src.height);
   const pixels = ctx.getImageData(0, 0, src.width, src.height);
   const data = pixels.data;
   const w = src.width;
@@ -671,7 +673,7 @@ function knockoutAndCrop(source: Texture, kind: "walk" | "stand" = "stand") {
   map.generateMipmaps = false;
   map.minFilter = LinearFilter;
   map.magFilter = LinearFilter;
-  map.anisotropy = 4;
+  map.anisotropy = 2;
   map.needsUpdate = true;
   return map;
 }
@@ -1343,7 +1345,7 @@ function Hall() {
     <>
       <hemisphereLight color="#7ea58f" groundColor="#1a241c" intensity={0.55} />
       <ambientLight color="#005B48" intensity={0.42} />
-      <directionalLight position={[3.4, 6.8, 4.2]} intensity={1.05} color="#ffe1a8" castShadow />
+      <directionalLight position={[3.4, 6.8, 4.2]} intensity={1.05} color="#ffe1a8" />
       <directionalLight position={[-5.2, 2.8, 1.6]} intensity={0.25} color="#50AF47" />
     </>
   );
@@ -1377,7 +1379,16 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
       {UNVEIL_SLOT_X.map((x, index) => (
         <Cloth key={`c-${x}`} x={x} index={index} cloth={cloth} />
       ))}
-      <ContactShadows position={[0, 0.012, 0.35]} opacity={0.38} scale={14} blur={2.2} far={5} color="#05140f" />
+      <ContactShadows
+        position={[0, 0.012, 0.35]}
+        opacity={0.28}
+        scale={14}
+        blur={1.6}
+        far={4}
+        resolution={256}
+        frames={1}
+        color="#05140f"
+      />
     </>
   );
 }
@@ -1385,10 +1396,17 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { active?: boolean }) {
   return (
     <Canvas
-      dpr={[1, 2]}
-      shadows
+      dpr={[1, 1.35]}
+      shadows={false}
       frameloop={active ? "always" : "demand"}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      performance={{ min: 0.5 }}
+      gl={{
+        antialias: false,
+        alpha: true,
+        powerPreference: "high-performance",
+        stencil: false,
+        depth: true,
+      }}
       style={{ pointerEvents: "auto" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#063a2c", 0);

@@ -40,7 +40,15 @@ export function V2PageEffects() {
     window.addEventListener("resize", onResize);
 
     const disarmBell = armWelcomeBellOnGesture();
-    void playWelcomeBell();
+    let bellIdle = 0;
+    const startBell = () => {
+      void playWelcomeBell();
+    };
+    if ("requestIdleCallback" in window) {
+      bellIdle = window.requestIdleCallback(startBell, { timeout: 2500 });
+    } else {
+      bellIdle = window.setTimeout(startBell, 900);
+    }
 
     let travelTimer = 0;
     const pendingTravel = consumeSectionTravel();
@@ -57,6 +65,11 @@ export function V2PageEffects() {
     return () => {
       window.clearTimeout(travelTimer);
       window.removeEventListener("resize", onResize);
+      if ("cancelIdleCallback" in window) {
+        window.cancelIdleCallback(bellIdle);
+      } else {
+        window.clearTimeout(bellIdle);
+      }
       root.style.removeProperty("--v2-header-h");
       disarmBell();
       root.classList.remove(

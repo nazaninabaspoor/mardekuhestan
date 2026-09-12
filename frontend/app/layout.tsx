@@ -9,11 +9,6 @@ import { CartProvider } from "@/lib/cart-context";
 
 import "./globals.css";
 import "./v2/v2.css";
-import "./profile/workspace.css";
-import "./profile/workspace-ai.css";
-import "./profile/workspace-personal.css";
-import "./profile/workspace-orders.css";
-import "./profile/workspace-soon.css";
 
 const mardeKuhestan = localFont({
   src: [

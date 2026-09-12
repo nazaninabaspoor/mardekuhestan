@@ -18,6 +18,7 @@ import {
   updateProfile,
 } from "@/lib/api/auth";
 import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
+import { closeSupportSession } from "@/lib/support-chat";
 
 type AuthModalTab = "login" | "register";
 export type AuthReason = "ai" | null;
@@ -145,6 +146,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    try {
+      await closeSupportSession();
+    } catch {
+      // ignore
+    }
     setUser(null);
     try {
       await logoutAccount();
