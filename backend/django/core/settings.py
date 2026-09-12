@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "logistics",
     "content.apps.ContentConfig",
     "notifications",
+    "support.apps.SupportConfig",
     "sec",
 ]
 
@@ -134,6 +135,8 @@ CSRF_TRUSTED_ORIGINS = list(CORS_ALLOWED_ORIGINS)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 BACKEND_PUBLIC_URL = os.getenv("BACKEND_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
+FASTAPI_BASE_URL = os.getenv("FASTAPI_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
+SUPPORT_INTERNAL_TOKEN = os.getenv("SUPPORT_INTERNAL_TOKEN", "").strip()
 ZARINPAL_SANDBOX = env_bool("ZARINPAL_SANDBOX", default=True)
 # در سندباکس زرین‌پال مرچنت می‌تواند هر UUID معتبر باشد؛ این مقدار فقط برای تست است.
 _ZARINPAL_SANDBOX_MERCHANT = "123e4567-e89b-12d3-a456-426614174000"
@@ -607,6 +610,25 @@ UNFOLD = {
                         "title": "گروه‌ها",
                         "icon": "admin_panel_settings",
                         "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+            {
+                "title": "پشتیبانی",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "گفتگوهای چت",
+                        "icon": "chat",
+                        "link": reverse_lazy("admin:support_supportconversation_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "پیام‌ها",
+                        "icon": "forum",
+                        "link": reverse_lazy("admin:support_supportmessage_changelist"),
                         "permission": "core.admin_ui.staff_ok",
                     },
                 ],

@@ -1,0 +1,13 @@
+MESSAGE_MAX_LENGTH = 4000
+STATUS_OPEN = "open"
+STATUS_WAITING = "waiting_staff"
+STATUS_CLOSED = "closed"
+ROLE_CUSTOMER = "customer"
+ROLE_STAFF = "staff"
+ROLE_SYSTEM = "system"
+WS_ACTION_SEND = "send_message"
+WS_ACTION_PING = "ping"
+WS_ACTION_CLOSE = "close_session"
+EVENT_MESSAGE = "support.message"
+EVENT_CONVERSATION = "support.conversation"
+EVENT_ERROR = "support.error"

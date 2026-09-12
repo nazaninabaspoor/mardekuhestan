@@ -74,7 +74,12 @@ def clear_login_failures(email: str) -> None:
 
 def issue_tokens(user) -> tuple[str, str]:
     refresh = RefreshToken.for_user(user)
-    return str(refresh.access_token), str(refresh)
+    refresh["is_staff"] = bool(user.is_staff)
+    refresh["is_superuser"] = bool(user.is_superuser)
+    access = refresh.access_token
+    access["is_staff"] = bool(user.is_staff)
+    access["is_superuser"] = bool(user.is_superuser)
+    return str(access), str(refresh)
 
 
 def blacklist_refresh(raw: str | None) -> None:

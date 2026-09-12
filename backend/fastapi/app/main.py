@@ -5,13 +5,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import get_settings
+from app.modules.support.hub import support_hub
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # startup
-    yield
-    # shutdown
+    await support_hub.startup()
+    try:
+        yield
+    finally:
+        await support_hub.shutdown()
 
 
 def create_app() -> FastAPI:
@@ -38,6 +41,7 @@ def create_app() -> FastAPI:
             "service": settings.APP_NAME,
             "env": settings.ENV,
             "docs": "/docs",
+            "support_ws": f"{settings.API_V1_PREFIX}/support/ws",
         }
 
     return app
