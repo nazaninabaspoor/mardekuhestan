@@ -1,16 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
+import { V2UnveilCanvas } from "./v2-unveil-canvas";
 import { UNVEIL_FUTURE_PRODUCTS, manSlotX, type UnveilManState } from "./v2-unveil-shared";
 import { UnveilProductSlot } from "./v2-unveil-products";
 import styles from "./v2-unveil-section.module.css";
-
-const V2UnveilCanvas = dynamic(
-  () => import("./v2-unveil-canvas").then((mod) => mod.V2UnveilCanvas),
-  { ssr: false },
-);
 
 const INITIAL_MAN: UnveilManState = {
   x: manSlotX(0) - 0.28,
@@ -32,9 +27,8 @@ export function V2UnveilSection() {
   const rootRef = useRef<HTMLElement | null>(null);
   const cloth = useRef([0, 0, 0, 0, 0]);
   const man = useRef<UnveilManState>({ ...INITIAL_MAN });
-  const [ready, setReady] = useState(false);
-  const [unveiled, setUnveiled] = useState(false);
   const [active, setActive] = useState(true);
+  const [unveiled, setUnveiled] = useState(false);
 
   useEffect(() => {
     const node = rootRef.current;
@@ -59,25 +53,23 @@ export function V2UnveilSection() {
         foot: 0,
       };
       setUnveiled(true);
+      setActive(false);
     }
 
     const measure = () => {
       const rect = node.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const visible = rect.bottom > 40 && rect.top < vh - 20;
+      const visible = rect.bottom > -vh * 0.25 && rect.top < vh * 1.25;
       setActive(reduced ? false : visible);
       if (cloth.current.every((value) => value >= 0.98)) setUnveiled(true);
     };
 
     measure();
-    setReady(true);
     window.addEventListener("scroll", measure, { passive: true });
     window.addEventListener("resize", measure);
-    const poll = window.setInterval(measure, 400);
     return () => {
       window.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
-      window.clearInterval(poll);
     };
   }, []);
 
@@ -93,7 +85,7 @@ export function V2UnveilSection() {
       <div className={styles.depth} aria-hidden="true" />
       <div className={styles.fog} aria-hidden="true" />
       <div className={styles.stage}>
-        {ready ? <V2UnveilCanvas cloth={cloth} man={man} active={active} /> : null}
+        <V2UnveilCanvas cloth={cloth} man={man} active={active} />
       </div>
 
       <div className={styles.copy}>

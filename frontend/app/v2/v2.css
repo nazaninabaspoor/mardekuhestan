@@ -1060,6 +1060,56 @@ html.is-v2-bell-cursor textarea {
   object-position: center 38%;
 }
 
+.landing--v2 .landing-v2-video--poster {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #0a5540;
+}
+
+.landing--v2 .landing-v2-video--plate {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgb(10 107 85 / 55%), transparent 58%),
+    linear-gradient(160deg, #0a6b55 0%, #005b48 48%, #00382e 100%);
+}
+
+.landing--v2 .landing-v2-video:not(.landing-v2-video--poster):not(.landing-v2-video--plate) {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.landing--v2 .landing-v2-video.is-waiting {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+.landing--v2 .landing-v2-video.is-live,
+.landing--v2 .landing-v2-video.is-entering {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 180ms ease;
+}
+
+.landing--v2 .landing-v2-preview img {
+  opacity: 1;
+}
+
+.landing--v2 .landing-v2-preview img.is-ready {
+  opacity: 1;
+}
+
+.landing--v2 .landing-v2-preview video {
+  opacity: 0;
+}
+
+.landing--v2 .landing-v2-preview video.is-ready {
+  opacity: 1;
+}
+
 .landing--v2 .landing-v2-veil {
   position: absolute;
   inset: 0;
@@ -4346,7 +4396,8 @@ html.is-v2-bell-cursor textarea {
 }
 
 .landing--v2 .landing-v2-video.is-waiting {
-  opacity: 0;
+  opacity: 0 !important;
+  visibility: hidden;
 }
 
 .landing--v2 .landing-v2-video.is-leaving {
@@ -4407,6 +4458,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .landing-v2-preview video,
+.landing-v2-preview img,
 .landing-v2-preview-shade {
   position: absolute;
   inset: 0;
@@ -4414,13 +4466,16 @@ html.is-v2-bell-cursor textarea {
   height: 100%;
 }
 
-.landing-v2-preview video {
+.landing-v2-preview video,
+.landing-v2-preview img {
   object-fit: cover;
   transition: transform 700ms ease;
 }
 
 .landing-v2-preview:hover video,
-.landing-v2-preview:focus-visible video {
+.landing-v2-preview:focus-visible video,
+.landing-v2-preview:hover img,
+.landing-v2-preview:focus-visible img {
   transform: scale(1.045);
 }
 
@@ -6319,7 +6374,7 @@ html.is-v2-bell-cursor textarea {
 .site-header--v2 .v2-logo.is-entering .v2-logo-img {
   position: relative;
   z-index: 4;
-  animation: v2-navbar-logo-settle 1400ms cubic-bezier(0.2, 0.72, 0.2, 1) both;
+  animation: v2-navbar-logo-settle 880ms cubic-bezier(0.22, 0.78, 0.2, 1) both;
   will-change: transform, opacity, filter;
 }
 
@@ -6327,22 +6382,17 @@ html.is-v2-bell-cursor textarea {
   0% {
     opacity: 0;
     filter: brightness(0.96);
-    transform: translate(-36vw, 32vh) scale(2.12);
+    transform: translate(-28vw, 26vh) scale(1.78);
   }
-  18% {
+  14% {
     opacity: 1;
     filter: brightness(1);
-    transform: translate(-36vw, 32vh) scale(2.25);
+    transform: translate(-28vw, 26vh) scale(1.9);
   }
-  36% {
+  22% {
     opacity: 1;
     filter: brightness(1);
-    transform: translate(-36vw, 32vh) scale(2.25);
-  }
-  86% {
-    opacity: 1;
-    filter: brightness(1.02);
-    transform: translate(-1.2vw, 0.6vh) scale(1.02);
+    transform: translate(-28vw, 26vh) scale(1.9);
   }
   100% {
     opacity: 1;
@@ -6356,18 +6406,13 @@ html.is-v2-bell-cursor textarea {
     0% {
       opacity: 0;
       filter: brightness(0.96);
-      transform: translate(-28vw, 26vh) scale(2.05);
+      transform: translate(-22vw, 24vh) scale(1.72);
     }
-    18%,
-    36% {
+    14%,
+    22% {
       opacity: 1;
       filter: brightness(1);
-      transform: translate(-28vw, 26vh) scale(2.2);
-    }
-    86% {
-      opacity: 1;
-      filter: brightness(1.02);
-      transform: translate(-1vw, 0.5vh) scale(1.02);
+      transform: translate(-22vw, 24vh) scale(1.84);
     }
     100% {
       opacity: 1;

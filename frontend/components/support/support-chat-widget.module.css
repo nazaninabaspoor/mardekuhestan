@@ -67,17 +67,17 @@
   place-items: center;
   width: 44px;
   height: 44px;
+  overflow: hidden;
   border-radius: 50%;
   border: 1.5px solid #d4a359;
-  background:
-    radial-gradient(circle at 50% 30%, rgb(134 194 235 / 35%), transparent 46%),
-    linear-gradient(180deg, #0a6b55, #00382e);
-  box-shadow: inset 0 0 0 3px rgb(244 240 232 / 8%);
+  background: #00382e;
+  box-shadow: inset 0 0 0 2px rgb(244 240 232 / 8%);
 }
 
-.avatarSvg {
-  width: 26px;
-  height: 26px;
+.avatarImg {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
 }
 
 .headCopy .kicker {
@@ -105,13 +105,19 @@
 .close {
   width: 34px;
   height: 34px;
-  border: 0;
+  border: 1px solid rgb(244 240 232 / 22%);
   border-radius: 999px;
-  background: rgb(244 240 232 / 12%);
+  background: rgb(244 240 232 / 10%);
   color: #f4f0e8;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;
+}
+
+.close:hover,
+.close:focus-visible {
+  background: rgb(244 240 232 / 18%);
+  border-color: rgb(212 163 89 / 55%);
 }
 
 .list {
@@ -246,122 +252,62 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
   pointer-events: auto;
+  filter: drop-shadow(0 14px 28px rgb(0 24 18 / 36%));
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.fabRing {
+.fab:hover,
+.fab:focus-visible {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.fabGlow {
   position: absolute;
-  inset: 0;
+  inset: -6px;
   border-radius: 50%;
-  border: 1.5px solid rgb(212 163 89 / 70%);
-  box-shadow:
-    0 0 0 6px rgb(212 163 89 / 10%),
-    0 14px 30px rgb(0 24 18 / 34%);
+  border: 1px solid rgb(212 163 89 / 42%);
+  box-shadow: 0 0 0 5px rgb(212 163 89 / 10%);
   animation: support-orbit 3.2s ease-in-out infinite;
+  pointer-events: none;
 }
 
-.fabRing::after {
-  content: "";
-  position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  border: 1px solid rgb(212 163 89 / 35%);
-  animation: support-ripple 2.4s ease-out infinite;
-}
-
-.fabCore {
+.fabSeal {
   position: relative;
   z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 22%, rgb(134 194 235 / 28%), transparent 42%),
-    linear-gradient(160deg, #0a6b55 0%, #005b48 55%, #00382e 100%);
-  color: #f4f0e8;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 16%);
-}
-
-.fabOpen .fabCore {
-  background: linear-gradient(160deg, #a04532 0%, #861309 80%);
-}
-
-.fabPeak {
-  width: 28px;
-  height: 28px;
-}
-
-.fabX {
-  font-size: 1.55rem;
-  line-height: 1;
-  font-weight: 400;
-}
-
-.fabLabel {
-  position: absolute;
-  right: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 8px 12px;
-  border: 1px solid rgb(212 163 89 / 45%);
-  border-radius: 999px;
-  background: #f4f0e8;
-  color: #005b48;
-  font-size: 0.78rem;
-  font-weight: 800;
-  white-space: nowrap;
-  box-shadow: 0 10px 22px rgb(0 24 18 / 18%);
-  animation: support-label 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  object-fit: cover;
 }
 
 @keyframes support-orbit {
   0%,
   100% {
-    transform: scale(0.96);
-    opacity: 0.75;
+    transform: scale(0.97);
+    opacity: 0.7;
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.06);
     opacity: 1;
-  }
-}
-
-@keyframes support-ripple {
-  0% {
-    transform: scale(0.92);
-    opacity: 0.55;
-  }
-  100% {
-    transform: scale(1.35);
-    opacity: 0;
-  }
-}
-
-@keyframes support-label {
-  from {
-    opacity: 0;
-    transform: translateY(-50%) translateX(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .panel,
-  .fabRing,
-  .fabRing::after,
-  .fabLabel {
+  .fabGlow {
     animation: none;
+  }
+
+  .fab:hover,
+  .fab:focus-visible {
+    transform: none;
   }
 }
 
@@ -369,9 +315,5 @@
   .panel {
     width: min(100vw - 20px, 372px);
     height: min(70svh, 540px);
-  }
-
-  .fabLabel {
-    display: none;
   }
 }

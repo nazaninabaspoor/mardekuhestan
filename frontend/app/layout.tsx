@@ -46,7 +46,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="preload" as="image" href="/brand/orginal-clear.png" />
+        <link rel="preload" as="image" href="/brand/orginal-clear.png" fetchPriority="high" />
+        <link rel="preload" as="image" href="/brand/perf/poster-family.jpg" />
+        <link
+          rel="preload"
+          as="video"
+          href="/videos/hero-family.mp4"
+          type="video/mp4"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var h=document.documentElement;h.classList.add("is-home-v2","is-logo-intro-done");if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}})();`,

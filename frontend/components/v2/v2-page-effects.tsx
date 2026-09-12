@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { armWelcomeBellOnGesture, playWelcomeBell } from "@/lib/v2-bell-audio";
+import { armWelcomeBellOnGesture } from "@/lib/v2-bell-audio";
 import { consumeSectionTravel, travelToSection } from "@/lib/travel-to-kitchen";
 
 function measureV2HeaderHeight(): number {
@@ -40,15 +40,7 @@ export function V2PageEffects() {
     window.addEventListener("resize", onResize);
 
     const disarmBell = armWelcomeBellOnGesture();
-    let bellIdle = 0;
-    const startBell = () => {
-      void playWelcomeBell();
-    };
-    if ("requestIdleCallback" in window) {
-      bellIdle = window.requestIdleCallback(startBell, { timeout: 2500 });
-    } else {
-      bellIdle = window.setTimeout(startBell, 900);
-    }
+    // No autoplay bell on load — keeps first second silent and smooth for demos.
 
     let travelTimer = 0;
     const pendingTravel = consumeSectionTravel();
@@ -65,11 +57,6 @@ export function V2PageEffects() {
     return () => {
       window.clearTimeout(travelTimer);
       window.removeEventListener("resize", onResize);
-      if ("cancelIdleCallback" in window) {
-        window.cancelIdleCallback(bellIdle);
-      } else {
-        window.clearTimeout(bellIdle);
-      }
       root.style.removeProperty("--v2-header-h");
       disarmBell();
       root.classList.remove(

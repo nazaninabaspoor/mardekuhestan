@@ -1,45 +1,108 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 type Props = {
   minHeight: string;
-  rootMargin?: string;
+  /** How many viewports ahead to start mounting (IntersectionObserver only accepts px/%). */
+  leadVh?: number;
+  /** How many viewports behind to keep mounted before unload (nearby mode). */
+  trailVh?: number;
+  /**
+   * nearby = unmount when far away (frees GPU for hero/kitchen).
+   * once = stay mounted after first visit.
+   */
+  mode?: "once" | "nearby";
+  placeholderStyle?: CSSProperties;
   children: ReactNode;
 };
 
-/** Mount heavy homepage sections only when they approach the viewport. */
+function isNearViewport(rect: DOMRectReadOnly, vh: number, lead: number, trail: number) {
+  return rect.bottom > -trail && rect.top < vh + lead;
+}
+
+/** Mount heavy homepage sections near the viewport; optionally unload when far. */
 export function LazyWhenVisible({
   minHeight,
-  rootMargin = "96px 0px",
+  leadVh = 0.7,
+  trailVh = 1.15,
+  mode = "once",
+  placeholderStyle,
   children,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
+  const seenRef = useRef(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || ready) return;
+    if (!node) return;
 
     if (!("IntersectionObserver" in window)) {
       setReady(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
+    const sync = () => {
+      if (mode === "once" && seenRef.current) return;
+      const vh = window.innerHeight || 1;
+      const lead = Math.round(vh * leadVh);
+      const trail = Math.round(vh * trailVh);
+      const rect = node.getBoundingClientRect();
+      const near = isNearViewport(rect, vh, lead, trail);
+      if (near) {
+        seenRef.current = true;
         setReady(true);
-        observer.disconnect();
-      },
-      { rootMargin, threshold: 0.01 },
-    );
+        return;
+      }
+      if (mode === "nearby" && seenRef.current) {
+        setReady(false);
+      }
+    };
+
+    const makeMargin = () => {
+      const vh = window.innerHeight || 1;
+      const lead = Math.round(vh * leadVh);
+      const trail = Math.round(vh * trailVh);
+      // CSS rootMargin: top right bottom left — expand root so we load early.
+      return `${lead}px 0px ${trail}px 0px`;
+    };
+
+    sync();
+    let observer = new IntersectionObserver(() => sync(), {
+      rootMargin: makeMargin(),
+      threshold: [0, 0.01],
+    });
     observer.observe(node);
-    return () => observer.disconnect();
-  }, [ready, rootMargin]);
+
+    const onResize = () => {
+      observer.disconnect();
+      observer = new IntersectionObserver(() => sync(), {
+        rootMargin: makeMargin(),
+        threshold: [0, 0.01],
+      });
+      observer.observe(node);
+      sync();
+    };
+
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", onResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [leadVh, mode, trailVh]);
 
   return (
-    <div ref={ref} style={{ minHeight: ready ? undefined : minHeight }}>
+    <div
+      ref={ref}
+      style={{
+        minHeight: ready ? undefined : minHeight,
+        background: "#F4F0E8",
+        ...placeholderStyle,
+      }}
+    >
       {ready ? children : null}
     </div>
   );

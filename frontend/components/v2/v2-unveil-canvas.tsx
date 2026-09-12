@@ -1,7 +1,7 @@
 "use client";
 
-import { ContactShadows, Html, PerspectiveCamera, useTexture } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Html, PerspectiveCamera, useTexture } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import {
   CanvasTexture,
@@ -14,7 +14,6 @@ import {
   type Group,
   type Mesh,
   type MeshBasicMaterial,
-  type SpotLight as SpotLightImpl,
   type Texture,
 } from "three";
 
@@ -38,7 +37,7 @@ const WALK_SRCS = [
   "/brand/v2/walk-l-passing.png",
 ];
 const STAND_SRC = "/brand/profile/soon-mountain-man-stand.png";
-const FACTORY_SRC = "/brand/v2/pedestal-factory-wrap.png";
+const FACTORY_SRC = "/brand/perf/pedestal-factory.jpg";
 const BOX_SRC = "/brand/v2/unveil-open-crate.png";
 const PRODUCT_SRCS = UNVEIL_FUTURE_PRODUCTS.map((item) => item.src);
 const WATCH_KEY = "mk-unveil-watch";
@@ -695,8 +694,19 @@ function useManPoses() {
     const list = (Array.isArray(loaded) ? loaded : [loaded]) as Texture[];
     list.forEach((tex) => {
       tex.colorSpace = SRGBColorSpace;
+      tex.generateMipmaps = false;
+      tex.minFilter = LinearFilter;
+      tex.magFilter = LinearFilter;
+      tex.needsUpdate = true;
     });
-    setMaps(normalizeWalkCycle(list, POSE_KINDS));
+    // Cut out studio matte + normalize height so walk frames stay PNG-clean and correctly scaled.
+    const ready = () => setMaps(normalizeWalkCycle(list, POSE_KINDS));
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(ready, { timeout: 280 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = window.setTimeout(ready, 0);
+    return () => window.clearTimeout(timer);
   }, [loaded]);
   return maps;
 }
@@ -726,12 +736,15 @@ function poseDuringHold(hold: number): StopPose {
 }
 
 function makeLinenMap() {
-  const size = 512;
+  const size = 320;
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
+  if (!ctx) {
+    const fallback = new CanvasTexture(document.createElement("canvas"));
+    return fallback;
+  }
 
   ctx.fillStyle = "#e9dfcf";
   ctx.fillRect(0, 0, size, size);
@@ -745,39 +758,49 @@ function makeLinenMap() {
     ctx.fillRect(x, 0, 1, size);
   }
 
-  for (let i = 0; i < 1400; i += 1) {
+  for (let i = 0; i < 720; i += 1) {
     const seed = (i * 1103515245 + 12345) >>> 0;
-    const px = (seed % size);
+    const px = seed % size;
     const py = ((seed * 16807) >>> 8) % size;
     ctx.fillStyle = seed & 1 ? "rgba(144, 56, 40, 0.05)" : "rgba(29, 29, 27, 0.04)";
     ctx.fillRect(px, py, 1.2, 1.2);
   }
 
-  const hem = 22;
+  const hem = 18;
   ctx.strokeStyle = "#005B48";
-  ctx.lineWidth = 7;
+  ctx.lineWidth = 6;
   ctx.strokeRect(hem, hem, size - hem * 2, size - hem * 2);
   ctx.strokeStyle = "#d4a359";
-  ctx.lineWidth = 1.6;
-  ctx.strokeRect(hem + 8, hem + 8, size - hem * 2 - 16, size - hem * 2 - 16);
+  ctx.lineWidth = 1.4;
+  ctx.strokeRect(hem + 7, hem + 7, size - hem * 2 - 14, size - hem * 2 - 14);
 
   ctx.fillStyle = "#d4a359";
   ctx.beginPath();
-  ctx.moveTo(size - 58, size - 42);
-  ctx.lineTo(size - 42, size - 70);
-  ctx.lineTo(size - 26, size - 42);
+  ctx.moveTo(size - 52, size - 36);
+  ctx.lineTo(size - 38, size - 62);
+  ctx.lineTo(size - 24, size - 36);
   ctx.closePath();
   ctx.fill();
 
   const map = new CanvasTexture(canvas);
   map.colorSpace = SRGBColorSpace;
-  map.anisotropy = 8;
+  map.anisotropy = 2;
+  map.generateMipmaps = false;
+  map.minFilter = LinearFilter;
+  map.magFilter = LinearFilter;
   map.needsUpdate = true;
   return map;
 }
 
+let sharedLinenMap: Texture | null = null;
+function getSharedLinenMap() {
+  if (!sharedLinenMap) sharedLinenMap = makeLinenMap();
+  return sharedLinenMap;
+}
+
 function createDrapeGeometry() {
-  const geo = new PlaneGeometry(0.82, 0.82, 28, 28);
+  // 16×16 keeps the draped tray look without the old 28×28 cost.
+  const geo = new PlaneGeometry(0.82, 0.82, 16, 16);
   geo.rotateX(-Math.PI / 2);
   const pos = geo.attributes.position;
   for (let i = 0; i < pos.count; i += 1) {
@@ -805,11 +828,18 @@ function Cloth({
 }) {
   const mesh = useRef<Mesh>(null);
   const geometry = useMemo(() => createDrapeGeometry(), []);
-  const linen = useMemo(() => makeLinenMap(), []);
+  const linen = useMemo(() => getSharedLinenMap(), []);
   const slide = index % 2 === 0 ? 1 : -1;
 
   useFrame(({ clock }) => {
+    if (!mesh.current) return;
     const progress = cloth.current[index] ?? 0;
+    if (progress >= 0.94) {
+      mesh.current.visible = false;
+      return;
+    }
+    mesh.current.visible = true;
+
     const rest = geometry.userData.rest as Float32Array;
     const pos = geometry.attributes.position;
     const arr = pos.array as Float32Array;
@@ -828,9 +858,10 @@ function Cloth({
     }
 
     pos.needsUpdate = true;
-    if (lift > 0.002) geometry.computeVertexNormals();
-    if (!mesh.current) return;
-    mesh.current.visible = progress < 0.94;
+    if (lift > 0.002 && (clock.elapsedTime * 30 | 0) % 2 === 0) {
+      geometry.computeVertexNormals();
+    }
+
     const material = mesh.current.material as MeshBasicMaterial & { opacity: number };
     material.opacity = 1 - smoothstep(0.62, 0.94, progress);
   });
@@ -841,17 +872,15 @@ function Cloth({
       geometry={geometry}
       position={[x, 1.22, PEDESTAL_Z]}
       rotation={[0, 0.06 * slide, 0]}
-      castShadow
-      renderOrder={3}
+      renderOrder={4}
     >
-      <meshStandardMaterial
+      <meshBasicMaterial
         map={linen}
         color="#f4f0e8"
-        roughness={0.86}
-        metalness={0.04}
-        side={DoubleSide}
         transparent
-        opacity={1}
+        depthWrite={false}
+        side={DoubleSide}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -863,7 +892,10 @@ function useFactoryMap() {
     map.colorSpace = SRGBColorSpace;
     map.wrapS = RepeatWrapping;
     map.wrapT = ClampToEdgeWrapping;
-    map.anisotropy = 8;
+    map.anisotropy = 1;
+    map.generateMipmaps = false;
+    map.minFilter = LinearFilter;
+    map.magFilter = LinearFilter;
     map.repeat.set(1, 1);
     map.offset.set(0.5, 0);
     map.needsUpdate = true;
@@ -878,8 +910,26 @@ function useFutureProductMaps() {
     const list = (Array.isArray(loaded) ? loaded : [loaded]) as Texture[];
     list.forEach((tex) => {
       tex.colorSpace = SRGBColorSpace;
+      tex.generateMipmaps = false;
+      tex.minFilter = LinearFilter;
+      tex.magFilter = LinearFilter;
+      tex.needsUpdate = true;
     });
-    setMaps(list.map((tex) => packProductSprite(tex)));
+    const ready = () => {
+      const packed = list.map((tex) => packProductSprite(tex));
+      packed.forEach((tex) => {
+        if (tex.image && "width" in tex.image && tex.image.width) {
+          tex.userData.aspect = tex.image.width / Math.max(1, tex.image.height);
+        }
+      });
+      setMaps(packed);
+    };
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(ready, { timeout: 220 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = window.setTimeout(ready, 0);
+    return () => window.clearTimeout(timer);
   }, [loaded]);
   return maps;
 }
@@ -889,7 +939,23 @@ function useBoxMap() {
   const [map, setMap] = useState<Texture | null>(null);
   useEffect(() => {
     loaded.colorSpace = SRGBColorSpace;
-    setMap(packProductSprite(loaded));
+    loaded.generateMipmaps = false;
+    loaded.minFilter = LinearFilter;
+    loaded.magFilter = LinearFilter;
+    loaded.needsUpdate = true;
+    const ready = () => {
+      const packed = packProductSprite(loaded);
+      if (packed.image && "width" in packed.image && packed.image.width) {
+        packed.userData.aspect = packed.image.width / Math.max(1, packed.image.height);
+      }
+      setMap(packed);
+    };
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(ready, { timeout: 220 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const timer = window.setTimeout(ready, 0);
+    return () => window.clearTimeout(timer);
   }, [loaded]);
   return map;
 }
@@ -905,59 +971,48 @@ function Pedestal({
   man: MutableRefObject<UnveilManState>;
   factoryMap: Texture;
 }) {
-  const spot = useRef<SpotLightImpl>(null);
+  const glowMesh = useRef<Mesh>(null);
 
   useFrame(() => {
-    if (!spot.current) return;
+    const material = glowMesh.current?.material as MeshBasicMaterial | undefined;
+    if (!material) return;
     const here = !man.current.walking && man.current.slot === index;
-    spot.current.intensity = here ? 26 : 11;
-    spot.current.lookAt(x, 1.12, PEDESTAL_Z);
+    material.opacity = here ? 0.55 : 0.18;
   });
 
   return (
     <group position={[x, 0, PEDESTAL_Z]} renderOrder={2}>
-      <spotLight
-        ref={spot}
-        position={[0, 4.6, 1.9]}
-        color="#d4a359"
-        angle={0.28}
-        penumbra={0.8}
-        distance={12}
-        decay={1.35}
-      />
-      <mesh position={[0, 0.08, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.54, 0.58, 0.16, 48]} />
-        <meshStandardMaterial color="#063a2c" roughness={0.46} metalness={0.08} />
+      <mesh position={[0, 0.08, 0]}>
+        <cylinderGeometry args={[0.54, 0.58, 0.16, 12]} />
+        <meshBasicMaterial color="#063a2c" />
       </mesh>
       <mesh position={[0, 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.5, 0.028, 10, 32]} />
-        <meshStandardMaterial color="#d4a359" roughness={0.22} metalness={0.72} emissive="#d4a359" emissiveIntensity={0.28} />
+        <torusGeometry args={[0.5, 0.028, 6, 16]} />
+        <meshBasicMaterial color="#d4a359" />
       </mesh>
-      <mesh position={[0, 0.24, 0]} receiveShadow>
-        <cylinderGeometry args={[0.45, 0.48, 0.1, 48]} />
-        <meshStandardMaterial color="#903828" roughness={0.62} metalness={0.04} />
+      <mesh position={[0, 0.24, 0]}>
+        <cylinderGeometry args={[0.45, 0.48, 0.1, 12]} />
+        <meshBasicMaterial color="#903828" />
       </mesh>
-      <mesh position={[0, 0.66, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[SHAFT_RADIUS_TOP, SHAFT_RADIUS_BOT, SHAFT_HEIGHT, 64]} />
-        <meshStandardMaterial
-          map={factoryMap}
-          color="#ffffff"
-          roughness={0.4}
-          metalness={0.04}
-          toneMapped={false}
-        />
+      <mesh position={[0, 0.66, 0]}>
+        <cylinderGeometry args={[SHAFT_RADIUS_TOP, SHAFT_RADIUS_BOT, SHAFT_HEIGHT, 16]} />
+        <meshBasicMaterial map={factoryMap} toneMapped={false} />
       </mesh>
       <mesh position={[0, 1.04, 0]}>
-        <cylinderGeometry args={[0.4, 0.36, 0.08, 48]} />
-        <meshStandardMaterial color="#F4F0E8" roughness={0.48} metalness={0.06} />
+        <cylinderGeometry args={[0.4, 0.36, 0.08, 12]} />
+        <meshBasicMaterial color="#F4F0E8" />
       </mesh>
       <mesh position={[0, 1.11, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.4, 0.022, 10, 40]} />
-        <meshStandardMaterial color="#d4a359" roughness={0.24} metalness={0.7} emissive="#d4a359" emissiveIntensity={0.22} />
+        <torusGeometry args={[0.4, 0.022, 6, 16]} />
+        <meshBasicMaterial color="#d4a359" />
       </mesh>
-      <mesh position={[0, 1.18, 0]} receiveShadow>
-        <cylinderGeometry args={[0.39, 0.39, 0.07, 48]} />
-        <meshStandardMaterial color="#e7dfcf" roughness={0.28} metalness={0.18} />
+      <mesh position={[0, 1.18, 0]}>
+        <cylinderGeometry args={[0.39, 0.39, 0.07, 12]} />
+        <meshBasicMaterial color="#e7dfcf" />
+      </mesh>
+      <mesh ref={glowMesh} position={[0, 1.22, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.42, 16]} />
+        <meshBasicMaterial color="#d4a359" transparent opacity={0.18} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -1343,10 +1398,8 @@ function MountainMan({
 function Hall() {
   return (
     <>
-      <hemisphereLight color="#7ea58f" groundColor="#1a241c" intensity={0.55} />
-      <ambientLight color="#005B48" intensity={0.42} />
-      <directionalLight position={[3.4, 6.8, 4.2]} intensity={1.05} color="#ffe1a8" />
-      <directionalLight position={[-5.2, 2.8, 1.6]} intensity={0.25} color="#50AF47" />
+      <ambientLight color="#f4f0e8" intensity={1.15} />
+      <hemisphereLight color="#9ec4b0" groundColor="#1a241c" intensity={0.35} />
     </>
   );
 }
@@ -1379,27 +1432,24 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
       {UNVEIL_SLOT_X.map((x, index) => (
         <Cloth key={`c-${x}`} x={x} index={index} cloth={cloth} />
       ))}
-      <ContactShadows
-        position={[0, 0.012, 0.35]}
-        opacity={0.28}
-        scale={14}
-        blur={1.6}
-        far={4}
-        resolution={256}
-        frames={1}
-        color="#05140f"
-      />
     </>
   );
+}
+
+function KickFrames({ active }: { active: boolean }) {
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    if (active) invalidate();
+  }, [active, invalidate]);
+  return null;
 }
 
 export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { active?: boolean }) {
   return (
     <Canvas
-      dpr={[1, 1.35]}
+      dpr={1}
       shadows={false}
       frameloop={active ? "always" : "demand"}
-      performance={{ min: 0.5 }}
       gl={{
         antialias: false,
         alpha: true,
@@ -1410,10 +1460,11 @@ export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { acti
       style={{ pointerEvents: "auto" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#063a2c", 0);
-        gl.toneMappingExposure = 1.12;
+        gl.toneMappingExposure = 1.05;
       }}
     >
       <Suspense fallback={null}>
+        <KickFrames active={active} />
         <World cloth={cloth} man={man} active={active} />
       </Suspense>
     </Canvas>

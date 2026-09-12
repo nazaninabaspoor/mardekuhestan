@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { useAuth } from "@/lib/auth-context";
@@ -231,26 +232,17 @@ export function SupportChatWidget() {
         >
           <header className={styles.head}>
             <div className={styles.avatar} aria-hidden="true">
-              <svg viewBox="0 0 48 48" className={styles.avatarSvg}>
-                <path
-                  d="M8 34 L24 12 L40 34 Z"
-                  fill="none"
-                  stroke="#D4A359"
-                  strokeWidth="2.2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M16 34 L24 22 L32 34"
-                  fill="none"
-                  stroke="#F4F0E8"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Image
+                src="/brand/support-fab-seal.png"
+                alt=""
+                width={40}
+                height={40}
+                className={styles.avatarImg}
+              />
             </div>
             <div className={styles.headCopy}>
               <p className={styles.kicker}>این راه سبز است</p>
-              <h2 id={panelId}>پشتیبانی مرد کوهستان</h2>
+              <h2 id={panelId}>گفتگوی مرد کوهستان</h2>
               <p>{hint}</p>
             </div>
             <button
@@ -278,7 +270,7 @@ export function SupportChatWidget() {
             ) : rows.length === 0 ? (
               <div className={styles.empty}>
                 <div className={styles.emptyPeak} aria-hidden="true" />
-                <p>اولین پیام را بنویس؛ سریع به پشتیبانی می‌رسد.</p>
+                <p>اولین پیام را بنویس؛ سریع پاسخ می‌دهیم.</p>
               </div>
             ) : (
               rows.map((row) => (
@@ -331,40 +323,26 @@ export function SupportChatWidget() {
         </section>
       ) : null}
 
-      <button
-        type="button"
-        className={`${styles.fab}${open ? ` ${styles.fabOpen}` : ""}`}
-        onClick={toggleOpen}
-        aria-expanded={open}
-        aria-controls={panelId}
-        aria-label={open ? "بستن پشتیبانی" : "باز کردن پشتیبانی مرد کوهستان"}
-      >
-        <span className={styles.fabRing} aria-hidden="true" />
-        <span className={styles.fabCore} aria-hidden="true">
-          {open ? (
-            <span className={styles.fabX}>×</span>
-          ) : (
-            <svg viewBox="0 0 48 48" className={styles.fabPeak}>
-              <path
-                d="M6 36 L24 10 L42 36 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M16 36 L24 22 L32 36"
-                fill="none"
-                stroke="#D4A359"
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-              />
-              <circle cx="24" cy="18" r="1.6" fill="#D4A359" />
-            </svg>
-          )}
-        </span>
-        {!open ? <span className={styles.fabLabel}>پشتیبانی</span> : null}
-      </button>
+      {!open ? (
+        <button
+          type="button"
+          className={styles.fab}
+          onClick={toggleOpen}
+          aria-expanded={false}
+          aria-controls={panelId}
+          aria-label="باز کردن گفتگوی مرد کوهستان"
+        >
+          <span className={styles.fabGlow} aria-hidden="true" />
+          <Image
+            src="/brand/support-fab-seal.png"
+            alt=""
+            width={64}
+            height={64}
+            className={styles.fabSeal}
+            priority
+          />
+        </button>
+      ) : null}
     </div>
   );
 }

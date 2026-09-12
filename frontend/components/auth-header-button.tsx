@@ -72,25 +72,17 @@ export function AuthHeaderButton({
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className={`auth-header-loading ${className}`} aria-hidden="true">
-        <span className="auth-skeleton-btn" />
-      </div>
-    );
-  }
-
-  // Not logged in -> Show Login / Register button
   if (!user) {
     return (
       <button
         type="button"
-        className={`v2-tool-link auth-login-trigger ${className}`}
+        className={`v2-tool-link auth-login-trigger ${className}${isLoading ? " is-checking" : ""}`}
         onClick={() => {
           openLoginModal();
           onItemClick?.();
         }}
         aria-label="ورود یا ثبت‌نام در باشگاه راه سبز مرد کوهستان"
+        aria-busy={isLoading || undefined}
       >
         <svg
           viewBox="0 0 24 24"

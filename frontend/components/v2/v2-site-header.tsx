@@ -95,7 +95,7 @@ export function V2SiteHeader() {
 
       const offsetX = window.innerWidth / 2 - (rect.left + rect.width / 2);
       const offsetY = window.innerHeight * 0.48 - (rect.top + rect.height / 2);
-      const introTransform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.05)`;
+      const introTransform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.78)`;
 
       clone = logo.cloneNode(true) as HTMLImageElement;
       clone.removeAttribute("class");
@@ -125,11 +125,11 @@ export function V2SiteHeader() {
       animation = clone.animate(
         [
           { opacity: 0, filter: "brightness(0.96)", transform: introTransform, offset: 0 },
-          { opacity: 1, filter: "brightness(1.03)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.18)`, offset: 0.22 },
-          { opacity: 1, filter: "brightness(1)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.18)`, offset: 0.34 },
+          { opacity: 1, filter: "brightness(1.02)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.92)`, offset: 0.14 },
+          { opacity: 1, filter: "brightness(1)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.92)`, offset: 0.22 },
           { opacity: 1, filter: "brightness(1)", transform: "translate3d(0, 0, 0) scale(1)", offset: 1 },
         ],
-        { duration: 1900, easing: "cubic-bezier(0.2, 0.72, 0.2, 1)", fill: "forwards" },
+        { duration: 920, easing: "cubic-bezier(0.22, 0.78, 0.2, 1)", fill: "forwards" },
       );
 
       animation.finished.then(() => {
