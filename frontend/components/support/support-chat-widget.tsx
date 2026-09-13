@@ -197,13 +197,7 @@ export function SupportChatWidget() {
         if (!token || cancelled || !mountedRef.current) return;
         const conversation = await fetchSupportConversation(token);
         if (cancelled || !mountedRef.current) return;
-        setRows((prev) => {
-          let next = prev;
-          for (const message of conversation.messages) {
-            next = upsertMessage(next, toRow(message));
-          }
-          return next;
-        });
+        setRows(conversation.messages.map(toRow));
       } catch {
         // keep existing rows; live socket may still work
       }

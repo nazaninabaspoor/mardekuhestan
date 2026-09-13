@@ -18,14 +18,23 @@ logger = logging.getLogger(__name__)
 
 def purge_customer_chats(user_id: int) -> int:
     """حذف کامل گفتگوها و پیام‌های یک مشتری (با لاگ‌اوت)."""
-    from support.models import SupportConversation
+    from support.models import SupportConversation, SupportMessage
 
-    qs = SupportConversation.objects.filter(customer_id=user_id)
-    count = qs.count()
-    if count:
-        qs.delete()
-        logger.info("purged support chats user_id=%s conversations=%s", user_id, count)
-    return count
+    conversation_ids = list(
+        SupportConversation.objects.filter(customer_id=user_id).values_list("id", flat=True)
+    )
+    if not conversation_ids:
+        return 0
+    # صریح: پیام‌ها بعد گفتگو — تا از پنل ادمین هم کامل پاک شود
+    SupportMessage.objects.filter(conversation_id__in=conversation_ids).delete()
+    deleted, _ = SupportConversation.objects.filter(id__in=conversation_ids).delete()
+    logger.info(
+        "purged support chats user_id=%s conversations=%s delete_result=%s",
+        user_id,
+        len(conversation_ids),
+        deleted,
+    )
+    return len(conversation_ids)
 
 
 def _message_payload(message: SupportMessage) -> dict:

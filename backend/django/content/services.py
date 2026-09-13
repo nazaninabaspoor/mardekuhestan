@@ -55,7 +55,7 @@ def apply_seo_defaults(article) -> None:
 
 
 def build_article_schema(article, *, site_url: str = "https://mardekuhestan.com") -> dict:
-    page_url = article.canonical_url or f"{site_url.rstrip('/')}/articles/{article.slug}/"
+    page_url = article.canonical_url or f"{site_url.rstrip('/')}/magazine/{article.slug}"
     graph = [
         {
             "@type": "Article",

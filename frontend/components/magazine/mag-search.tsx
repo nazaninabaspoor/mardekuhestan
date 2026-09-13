@@ -7,12 +7,16 @@ export function MagSearch({
   query = "",
   size = "hero",
   className = "",
+  placeholder,
 }: {
   query?: string;
   size?: "hero" | "header";
   className?: string;
+  placeholder?: string;
 }) {
   const isHero = size === "hero";
+  const heroPlaceholder =
+    placeholder || "در مجله بگردید یک مسیر و یک طعم و یک نوشته";
   return (
     <form
       className={`${isHero ? "mk-mag-search" : `v2-header-search ${className}`} mk-search-shell`.trim()}
@@ -23,7 +27,7 @@ export function MagSearch({
       <input
         name="q"
         defaultValue={query}
-        placeholder={isHero ? "در مجله بگردید یک مسیر و یک طعم و یک نوشته" : "جستجو در مجله"}
+        placeholder={isHero ? heroPlaceholder : "جستجو در مجله"}
         aria-label="جستجو در مجله"
         autoComplete="off"
         className="mk-search-input"

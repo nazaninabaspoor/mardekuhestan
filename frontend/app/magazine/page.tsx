@@ -4,7 +4,6 @@ import Link from "next/link";
 import { MagMasonry } from "@/components/magazine/mag-card";
 import { MagPager } from "@/components/magazine/mag-pager";
 import { MagToday } from "@/components/magazine/mag-today";
-import { magazineBoards } from "@/data/magazine-issue";
 import { listArticles } from "@/lib/api/content";
 import {
   magazineListHref,
@@ -12,6 +11,7 @@ import {
   paginatePins,
   parseMagazinePage,
 } from "@/lib/content/magazine-feed";
+import { loadMagazineBoards, loadMagazinePage } from "@/lib/content/magazine-page";
 
 type Search = { q?: string; page?: string };
 
@@ -36,13 +36,17 @@ export default async function MagazinePage({
 }) {
   const params = await searchParams;
   const q = (params.q || "").trim();
-  const articles = await loadIndex(q);
+  const [articles, boards, page] = await Promise.all([
+    loadIndex(q),
+    loadMagazineBoards(),
+    loadMagazinePage(),
+  ]);
   const pins = mergeMagazinePins(articles, q);
   const leaf = paginatePins(pins, parseMagazinePage(params.page));
 
   return (
     <>
-      <MagToday query={q} boards={magazineBoards} active="all" />
+      <MagToday query={q} boards={boards} active="all" page={page} />
       <div className="mk-mag-shell">
         {leaf.total ? (
           <>
@@ -50,7 +54,7 @@ export default async function MagazinePage({
             <MagPager
               page={leaf.page}
               pageCount={leaf.pageCount}
-              hrefFor={(page) => magazineListHref({ page, q, hash: "#mk-feed" })}
+              hrefFor={(pageNum) => magazineListHref({ page: pageNum, q, hash: "#mk-feed" })}
             />
           </>
         ) : (

@@ -14,6 +14,8 @@ import {
   getCurrentUser,
   loginAccount,
   logoutAccount,
+  purgeMySupportChats,
+  refreshAccountSession,
   registerAccount,
   updateProfile,
 } from "@/lib/api/auth";
@@ -151,6 +153,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    // Fresh access token so Django can identify the user and wipe chats.
+    try {
+      await refreshAccountSession();
+    } catch {
+      // may still have a valid access token in memory
+    }
+    try {
+      await purgeMySupportChats();
+    } catch {
+      // logout endpoint also purges as fallback
+    }
     try {
       await closeSupportSession();
     } catch {

@@ -3,9 +3,20 @@ export type ContentCategory = {
   name: string;
   slug: string;
   description: string;
+  seo_title?: string;
   parent: number | null;
   is_active: boolean;
+  sort_order?: number;
+  show_on_magazine?: boolean;
+  image?: string;
   article_count?: number;
+};
+
+export type MagazinePageSettings = {
+  hero_eyebrow: string;
+  hero_title: string;
+  search_placeholder: string;
+  updated_at?: string;
 };
 
 export type ContentTag = {

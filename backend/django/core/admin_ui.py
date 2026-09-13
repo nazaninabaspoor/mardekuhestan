@@ -92,7 +92,15 @@ def admin_dashboard_callback(request, context):
 
 
 def studio_dashboard_callback(request, context):
-    from content.models import Article, Category, ContentPillar, RedirectRule, Tag, TopicCluster
+    from content.models import (
+        Article,
+        Category,
+        ContentPillar,
+        MagazinePageSettings,
+        RedirectRule,
+        Tag,
+        TopicCluster,
+    )
 
     context.update(
         {
@@ -121,6 +129,14 @@ def studio_dashboard_callback(request, context):
                     "url": _url("content_studio:content_category_changelist", "/studio/content/category/"),
                     "title": "دسته‌بندی مجله",
                     "hint": f"{_count(Category.objects.all())} دسته",
+                },
+                {
+                    "url": _url(
+                        "content_studio:content_magazinepagesettings_changelist",
+                        "/studio/content/magazinepagesettings/",
+                    ),
+                    "title": "صفحه مجله",
+                    "hint": "عنوان و جستجو",
                 },
                 {
                     "url": _url("content_studio:content_tag_changelist", "/studio/content/tag/"),

@@ -4,13 +4,14 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 
 from content.constants import ArticleStatus
-from content.models import Category, ContentPillar, Tag, TopicCluster
+from content.models import Category, ContentPillar, MagazinePageSettings, Tag, TopicCluster
 from content.selectors import get_published_article_by_slug, get_published_articles, search_published_articles
 from content.serializers import (
     ArticleDetailSerializer,
     ArticleListSerializer,
     CategorySerializer,
     ContentPillarSerializer,
+    MagazinePageSerializer,
     TagSerializer,
     TopicClusterSerializer,
 )
@@ -19,7 +20,7 @@ from content.serializers import (
 class ArticleListPagination(PageNumberPagination):
     page_size = 12
     page_size_query_param = "page_size"
-    max_page_size = 24
+    max_page_size = 100
 
 
 class ArticleListView(generics.ListAPIView):
@@ -67,13 +68,28 @@ class ArticleDetailView(generics.RetrieveAPIView):
 class CategoryListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = CategorySerializer
-    queryset = Category.objects.filter(is_active=True).annotate(
-        article_count=Count(
-            "articles",
-            filter=Q(articles__status=ArticleStatus.PUBLISHED, articles__published_at__isnull=False),
-            distinct=True,
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = Category.objects.filter(is_active=True).annotate(
+            article_count=Count(
+                "articles",
+                filter=Q(articles__status=ArticleStatus.PUBLISHED, articles__published_at__isnull=False),
+                distinct=True,
+            )
         )
-    )
+        magazine_only = self.request.query_params.get("magazine")
+        if magazine_only in {"1", "true", "yes"}:
+            qs = qs.filter(show_on_magazine=True)
+        return qs.order_by("sort_order", "name")
+
+
+class MagazinePageView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = MagazinePageSerializer
+
+    def get_object(self):
+        return MagazinePageSettings.load()
 
 
 class TagListView(generics.ListAPIView):

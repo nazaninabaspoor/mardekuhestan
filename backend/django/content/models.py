@@ -41,6 +41,12 @@ class Category(models.Model):
     name = models.CharField("نام دسته", max_length=120)
     slug = models.SlugField("آدرس صفحه", max_length=140, unique=True, blank=True, allow_unicode=True)
     description = models.TextField("توضیحات", blank=True)
+    seo_title = models.CharField(
+        "عنوان SEO دسته",
+        max_length=SEO_TITLE_MAX_LENGTH,
+        blank=True,
+        help_text="اگر خالی باشد همان نام دسته برای گوگل استفاده می‌شود",
+    )
     parent = models.ForeignKey(
         "self",
         verbose_name="دسته والد",
@@ -49,13 +55,37 @@ class Category(models.Model):
         blank=True,
         related_name="children",
     )
+    sort_order = models.PositiveIntegerField(
+        "ترتیب نمایش در مجله",
+        default=100,
+        db_index=True,
+        help_text="عدد کوچکتر زودتر در حلقه‌های مجله دیده می‌شود",
+    )
+    show_on_magazine = models.BooleanField(
+        "نمایش در حلقه‌های مجله",
+        default=True,
+        help_text="اگر خاموش باشد فقط برای فیلتر مقاله می‌ماند و در صفحه مجله دیده نمی‌شود",
+    )
+    magazine_image = models.ImageField(
+        "عکس حلقه مجله",
+        upload_to="magazine/categories/",
+        blank=True,
+        null=True,
+        help_text="اگر خالی باشد از مسیر ثابت زیر استفاده می‌شود",
+    )
+    magazine_image_path = models.CharField(
+        "مسیر عکس ثابت",
+        max_length=255,
+        blank=True,
+        help_text="مثال: /magazine/png/png-sheep.png",
+    )
     is_active = models.BooleanField("فعال", default=True)
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
 
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی‌ها"
-        ordering = ["name"]
+        ordering = ["sort_order", "name"]
 
     def __str__(self) -> str:
         return self.name
@@ -64,6 +94,12 @@ class Category(models.Model):
         if not self.slug:
             self.slug = _unique_slug(Category, self.name, instance_pk=self.pk)
         super().save(*args, **kwargs)
+
+    @property
+    def board_image_url(self) -> str:
+        if self.magazine_image:
+            return self.magazine_image.url
+        return (self.magazine_image_path or "").strip()
 
 
 class Tag(models.Model):
@@ -259,7 +295,7 @@ class Article(models.Model):
         "لینک به صفحه‌های دیگر سایت",
         default=list,
         blank=True,
-        help_text='هر تعداد لینک؛ مثال: [{"عنوان":"راه سبز","آدرس":"/articles/rah-sabz/"}]',
+        help_text='هر تعداد لینک؛ مثال: [{"عنوان":"راه سبز","آدرس":"/magazine/this-way-is-green"}]',
     )
 
     cover_image = models.ImageField("عکس بالای مقاله", upload_to="articles/covers/", blank=True, null=True)
@@ -302,6 +338,10 @@ class Article(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def get_absolute_url(self) -> str:
+        """لینک مشاهده روی سایت برای SEO کار در استودیو."""
+        return f"/magazine/{self.slug}"
+
     def clean(self):
         super().clean()
         validate_string_list(self.geo_key_facts, field_name="حقایق کلیدی")
@@ -314,9 +354,50 @@ class Article(models.Model):
         super().save(*args, **kwargs)
 
 
+class MagazinePageSettings(models.Model):
+    """تنظیمات بالای صفحه /magazine — قابل ویرایش توسط SEO."""
+
+    hero_eyebrow = models.CharField(
+        "خط بالای عنوان",
+        max_length=120,
+        default="مجله مرد کوهستان",
+    )
+    hero_title = models.CharField(
+        "عنوان اصلی مجله",
+        max_length=180,
+        default="این راه سبز است",
+    )
+    search_placeholder = models.CharField(
+        "متن داخل جستجو",
+        max_length=200,
+        default="در مجله بگردید یک مسیر و یک طعم و یک نوشته",
+    )
+    updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True)
+
+    class Meta:
+        verbose_name = "صفحه مجله"
+        verbose_name_plural = "صفحه مجله"
+
+    def __str__(self) -> str:
+        return "تنظیمات صفحه مجله"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # singleton — قابل حذف از پنل نیست
+        return
+
+    @classmethod
+    def load(cls) -> "MagazinePageSettings":
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
 class RedirectRule(models.Model):
     from_path = models.CharField("آدرس قدیمی", max_length=255, unique=True, help_text="مثال: /old-article/")
-    to_path = models.CharField("آدرس جدید", max_length=255, help_text="مثال: /articles/new-slug/")
+    to_path = models.CharField("آدرس جدید", max_length=255, help_text="مثال: /magazine/new-slug")
     status_code = models.PositiveSmallIntegerField(
         "نوع هدایت",
         default=301,

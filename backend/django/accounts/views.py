@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.constants import REFRESH_COOKIE_NAME
+from accounts.constants import ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME
 from accounts.models import CustomerAddress
 from accounts.permissions import IsCustomerOrStaff
 from accounts.selectors import get_or_create_profile
@@ -35,6 +35,7 @@ from accounts.services import (
     register_customer,
     update_profile,
 )
+from accounts.authentication import CookieJWTAuthentication
 from accounts.utils import clear_auth_cookies, set_auth_cookies
 from sec.ownership import acting_user, reject_foreign_identity
 from sec.throttling import AuthLoginThrottle, AuthRefreshThrottle, AuthRegisterThrottle
@@ -143,26 +144,54 @@ class TokenPairView(APIView):
 
 
 class LogoutView(APIView):
+    """خروج: اول چت‌های پشتیبانی همان کاربر پاک می‌شود، بعد توکن باطل."""
+
     permission_classes = [AllowAny]
     throttle_classes = [AuthRefreshThrottle]
     throttle_scope = "auth_refresh"
-    authentication_classes = []
+    authentication_classes = [CookieJWTAuthentication]
 
     def post(self, request):
+        import logging
+
+        log = logging.getLogger(__name__)
         raw = request.COOKIES.get(REFRESH_COOKIE_NAME) or request.data.get("refresh")
-        user_id = _logout_user_id(request, raw)
-        blacklist_refresh(raw)
+        user_id = None
+        if getattr(request.user, "is_authenticated", False):
+            user_id = int(request.user.id)
+        if user_id is None:
+            user_id = _logout_user_id(request, raw)
+
         if user_id is not None:
             try:
                 from support.services import purge_customer_chats
 
-                purge_customer_chats(int(user_id))
-            except Exception:  # noqa: BLE001
-                # logout must still succeed even if chat wipe fails
-                pass
+                deleted = purge_customer_chats(int(user_id))
+                log.warning("logout support purge user_id=%s deleted=%s", user_id, deleted)
+            except Exception:
+                log.exception("logout support purge FAILED user_id=%s", user_id)
+
+        blacklist_refresh(raw)
         response = Response(status=status.HTTP_204_NO_CONTENT)
         clear_auth_cookies(response)
         return response
+
+
+class PurgeMySupportChatsView(APIView):
+    """حذف عمدی همهٔ چت‌های پشتیبانی کاربر لاگین‌شده (قبل از logout)."""
+
+    permission_classes = [IsCustomerOrStaff]
+
+    def delete(self, request):
+        import logging
+
+        log = logging.getLogger(__name__)
+        user = acting_user(request)
+        from support.services import purge_customer_chats
+
+        deleted = purge_customer_chats(int(user.id))
+        log.warning("explicit support purge user_id=%s deleted=%s", user.id, deleted)
+        return Response({"ok": True, "purged": deleted})
 
 
 def _logout_user_id(request, refresh_raw: str | None) -> int | None:
@@ -175,9 +204,15 @@ def _logout_user_id(request, refresh_raw: str | None) -> int | None:
         except Exception:  # noqa: BLE001
             pass
 
+    candidates: list[str] = []
     auth = request.META.get("HTTP_AUTHORIZATION") or ""
     if auth.lower().startswith("bearer "):
-        token = auth.split(" ", 1)[1].strip()
+        candidates.append(auth.split(" ", 1)[1].strip())
+    access_cookie = request.COOKIES.get(ACCESS_COOKIE_NAME) or ""
+    if access_cookie:
+        candidates.append(access_cookie)
+
+    for token in candidates:
         try:
             from rest_framework_simplejwt.tokens import AccessToken
 
@@ -185,7 +220,7 @@ def _logout_user_id(request, refresh_raw: str | None) -> int | None:
             if uid is not None:
                 return int(uid)
         except Exception:  # noqa: BLE001
-            pass
+            continue
     return None
 
 

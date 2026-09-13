@@ -70,6 +70,7 @@ async def get_my_conversation(session: AsyncSession, user: AuthUser) -> Conversa
 async def close_my_session(session: AsyncSession, user: AuthUser) -> dict:
     """Logout: wipe all chats for this customer so the next login starts clean."""
     deleted = await repo.purge_customer_chats(session, user.id)
+    logger.info("support session close purged user_id=%s conversations=%s", user.id, deleted)
     await support_hub.publish(
         {
             "type": "support.conversation",

@@ -10,6 +10,7 @@ from content.models import (
     Article,
     Category,
     ContentPillar,
+    MagazinePageSettings,
     RedirectRule,
     Tag,
     TopicCluster,
@@ -42,20 +43,64 @@ class TopicClusterInline(TabularInline):
 
 @admin.register(Category, site=content_studio)
 class CategoryAdmin(ModelAdmin):
-    list_display = ("name", "slug", "parent", "is_active")
-    list_filter = ("is_active",)
-    search_fields = ("name", "slug", "description")
+    list_display = ("name", "slug", "sort_order", "show_on_magazine", "is_active", "parent")
+    list_editable = ("sort_order", "show_on_magazine", "is_active")
+    list_filter = ("is_active", "show_on_magazine")
+    search_fields = ("name", "slug", "description", "seo_title")
     prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("parent",)
     list_fullwidth = True
     compressed_fields = True
     list_filter_sheet = True
+    ordering = ("sort_order", "name")
     fieldsets = (
         (
             "اطلاعات دسته",
             {
-                "fields": ("name", "slug", "parent", "description", "is_active"),
-                "description": "دسته‌ها کمک می‌کنند مقاله در مجله پیدا شود.",
+                "fields": (
+                    "name",
+                    "slug",
+                    "seo_title",
+                    "parent",
+                    "description",
+                    "is_active",
+                ),
+                "description": "نام دسته را SEOمحور بنویسید. آدرس صفحه (slug) را بی‌دلیل عوض نکنید تا لینک‌ها نشکنند.",
+            },
+        ),
+        (
+            "حلقه مجله",
+            {
+                "fields": (
+                    "show_on_magazine",
+                    "sort_order",
+                    "magazine_image",
+                    "magazine_image_path",
+                ),
+                "description": "همین‌ها روی صفحه /magazine کنار «همه نوشته‌ها» دیده می‌شوند. می‌توانید دسته اضافه یا حذف کنید.",
+            },
+        ),
+    )
+
+
+@admin.register(MagazinePageSettings, site=content_studio)
+class MagazinePageSettingsAdmin(ModelAdmin):
+    list_display = ("hero_title", "hero_eyebrow", "updated_at")
+    list_fullwidth = True
+    compressed_fields = True
+
+    def has_add_permission(self, request):
+        return not MagazinePageSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    fieldsets = (
+        (
+            "بالای صفحه مجله",
+            {
+                "fields": ("hero_eyebrow", "hero_title", "search_placeholder"),
+                "description": "متن هیرو و جستجوی /magazine را اینجا عوض کنید؛ بعد از ذخیره روی سایت می‌آید.",
             },
         ),
     )
@@ -171,7 +216,7 @@ class ArticleAdmin(ModelAdmin):
         "readiness_badge",
         "published_at",
     )
-    list_filter = ("status", "content_role", "search_intent", "robots_index", "pillar")
+    list_filter = ("status", "content_role", "search_intent", "robots_index", "pillar", "categories")
     search_fields = (
         "title",
         "slug",
@@ -199,6 +244,12 @@ class ArticleAdmin(ModelAdmin):
     list_filter_sheet = True
     list_per_page = 25
     ordering = ("-updated_at",)
+
+    def view_on_site(self, obj):
+        from django.conf import settings
+
+        base = getattr(settings, "FRONTEND_URL", "http://127.0.0.1:3000").rstrip("/")
+        return f"{base}/magazine/{obj.slug}"
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj=obj, change=change, **kwargs)

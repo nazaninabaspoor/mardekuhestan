@@ -651,12 +651,15 @@ UNFOLD_STUDIO = {
     "THEME": "light",
     "BORDER_RADIUS": "10px",
     "SHOW_HISTORY": True,
-    "SHOW_VIEW_ON_SITE": False,
+    "SHOW_VIEW_ON_SITE": True,
     "ENVIRONMENT": "core.admin_ui.environment_callback",
     "DASHBOARD_CALLBACK": "core.admin_ui.studio_dashboard_callback",
     "STYLES": [
         *_MK_STYLES,
-        lambda request: static("content/admin/seo_studio.css") + "?v=brand-1",
+        lambda request: static("content/admin/seo_studio.css") + "?v=brand-2",
+    ],
+    "SCRIPTS": [
+        lambda request: static("content/admin/seo_studio_editor.js") + "?v=brand-1",
     ],
     "COLORS": _MK_COLORS,
     "SIDEBAR": {
@@ -710,6 +713,12 @@ UNFOLD_STUDIO = {
                         "title": "دسته‌بندی مجله",
                         "icon": "category",
                         "link": "/studio/content/category/",
+                        "permission": "core.admin_ui.content_panel_ok",
+                    },
+                    {
+                        "title": "صفحه مجله",
+                        "icon": "web",
+                        "link": "/studio/content/magazinepagesettings/",
                         "permission": "core.admin_ui.content_panel_ok",
                     },
                     {

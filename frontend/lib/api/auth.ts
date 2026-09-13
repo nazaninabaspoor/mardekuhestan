@@ -74,6 +74,19 @@ export async function logoutAccount(): Promise<void> {
   }
 }
 
+/** Wipe support chats in Django (admin + DB) while the session is still valid. */
+export async function purgeMySupportChats(): Promise<void> {
+  const token = getAccessToken();
+  await apiFetch<{ ok: boolean; purged: number }>("/api/auth/me/support-chats/", {
+    ...authInit,
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+}
+
 export async function refreshAccountSession(): Promise<{ access: string }> {
   const payload = await apiFetch<{ access: string }>(
     "/api/auth/token/refresh/",

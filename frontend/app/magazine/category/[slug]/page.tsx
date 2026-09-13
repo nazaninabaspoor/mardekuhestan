@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { MagBoards } from "@/components/magazine/mag-boards";
 import { MagMasonry } from "@/components/magazine/mag-card";
 import { MagPager } from "@/components/magazine/mag-pager";
-import { boardBySlug, magazineBoards } from "@/data/magazine-issue";
+import { boardBySlug } from "@/data/magazine-issue";
 import { listArticles, listCategories, unwrapResults } from "@/lib/api/content";
 import {
   magazineListHref,
@@ -12,6 +12,7 @@ import {
   paginatePins,
   parseMagazinePage,
 } from "@/lib/content/magazine-feed";
+import { loadMagazineBoards } from "@/lib/content/magazine-page";
 
 type Params = { slug: string };
 type Search = { page?: string };
@@ -48,7 +49,7 @@ export async function generateMetadata({
   const category = categories.find((item) => item.slug === slug);
   if (!category) return { title: "دسته مجله | مرد کوهستان" };
   return {
-    title: `${category.name} | مجله مرد کوهستان`,
+    title: `${category.seo_title || category.name} | مجله مرد کوهستان`,
     description: category.description || `نوشته‌های دسته ${category.name} در مجله مرد کوهستان.`,
   };
 }
@@ -62,15 +63,15 @@ export default async function MagazineCategoryPage({
 }) {
   const { slug } = await params;
   const { page } = await searchParams;
-  const payload = await loadCategory(slug);
+  const [payload, boards] = await Promise.all([loadCategory(slug), loadMagazineBoards()]);
   const board = boardBySlug(slug);
   const apiCategory = payload.categories.find((item) => item.slug === slug) || null;
   if (!board && !apiCategory) notFound();
 
   const pins = mergeCategoryPins(payload.articles, slug);
   const leaf = paginatePins(pins, parseMagazinePage(page));
-  const name = board?.name || apiCategory?.name || "";
-  const description = board?.description || apiCategory?.description || "";
+  const name = apiCategory?.name || board?.name || "";
+  const description = apiCategory?.description || board?.description || "";
 
   return (
     <div className="mk-mag-shell">
@@ -79,14 +80,16 @@ export default async function MagazineCategoryPage({
         <h2>{name}</h2>
         {description ? <span>{description}</span> : null}
       </header>
-      <MagBoards boards={magazineBoards} active={slug} />
+      <MagBoards boards={boards} active={slug} />
       {leaf.total ? (
         <>
           <MagMasonry pins={leaf.items} feed />
           <MagPager
             page={leaf.page}
             pageCount={leaf.pageCount}
-            hrefFor={(nextPage) => magazineListHref({ page: nextPage, category: slug, hash: "#mk-feed" })}
+            hrefFor={(nextPage) =>
+              magazineListHref({ page: nextPage, category: slug, hash: "#mk-feed" })
+            }
           />
         </>
       ) : null}
