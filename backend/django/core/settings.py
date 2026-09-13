@@ -620,13 +620,13 @@ UNFOLD = {
                 "collapsible": False,
                 "items": [
                     {
-                        "title": "گفتگوهای چت",
+                        "title": "گفتگوها — پاسخ به مشتری",
                         "icon": "chat",
                         "link": reverse_lazy("admin:support_supportconversation_changelist"),
                         "permission": "core.admin_ui.staff_ok",
                     },
                     {
-                        "title": "پیام‌ها",
+                        "title": "آرشیو پیام‌ها",
                         "icon": "forum",
                         "link": reverse_lazy("admin:support_supportmessage_changelist"),
                         "permission": "core.admin_ui.staff_ok",
