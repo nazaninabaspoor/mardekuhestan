@@ -1,4 +1,4 @@
-"""انتشار رویداد پاسخ ادمین به FastAPI (HTTP داخلی)."""
+"""انتشار رویداد پاسخ ادمین به FastAPI (HTTP داخلی) + پاک‌سازی چت."""
 
 from __future__ import annotations
 
@@ -14,6 +14,18 @@ if TYPE_CHECKING:
     from support.models import SupportMessage
 
 logger = logging.getLogger(__name__)
+
+
+def purge_customer_chats(user_id: int) -> int:
+    """حذف کامل گفتگوها و پیام‌های یک مشتری (با لاگ‌اوت)."""
+    from support.models import SupportConversation
+
+    qs = SupportConversation.objects.filter(customer_id=user_id)
+    count = qs.count()
+    if count:
+        qs.delete()
+        logger.info("purged support chats user_id=%s conversations=%s", user_id, count)
+    return count
 
 
 def _message_payload(message: SupportMessage) -> dict:

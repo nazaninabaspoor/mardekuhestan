@@ -88,17 +88,26 @@ export async function postSupportMessage(input: {
 }
 
 export async function closeSupportSession(): Promise<void> {
-  const token = getAccessToken() || (await ensureSupportAccessToken());
+  let token = getAccessToken();
+  if (!token) {
+    token = await ensureSupportAccessToken();
+  }
   if (!token) return;
   try {
-    await fetch(`${fastapiBase()}/api/v1/support/session/close`, {
+    const res = await fetch(`${fastapiBase()}/api/v1/support/session/close`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: "{}",
+      cache: "no-store",
     });
+    if (!res.ok) {
+      // best-effort; Django logout also purges
+      return;
+    }
   } catch {
     // logout must not fail because of chat
   }

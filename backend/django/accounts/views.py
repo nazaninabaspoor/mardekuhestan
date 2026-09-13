@@ -150,10 +150,43 @@ class LogoutView(APIView):
 
     def post(self, request):
         raw = request.COOKIES.get(REFRESH_COOKIE_NAME) or request.data.get("refresh")
+        user_id = _logout_user_id(request, raw)
         blacklist_refresh(raw)
+        if user_id is not None:
+            try:
+                from support.services import purge_customer_chats
+
+                purge_customer_chats(int(user_id))
+            except Exception:  # noqa: BLE001
+                # logout must still succeed even if chat wipe fails
+                pass
         response = Response(status=status.HTTP_204_NO_CONTENT)
         clear_auth_cookies(response)
         return response
+
+
+def _logout_user_id(request, refresh_raw: str | None) -> int | None:
+    """Identify the customer so support chats can be wiped on logout."""
+    if refresh_raw:
+        try:
+            uid = RefreshToken(refresh_raw).payload.get("user_id")
+            if uid is not None:
+                return int(uid)
+        except Exception:  # noqa: BLE001
+            pass
+
+    auth = request.META.get("HTTP_AUTHORIZATION") or ""
+    if auth.lower().startswith("bearer "):
+        token = auth.split(" ", 1)[1].strip()
+        try:
+            from rest_framework_simplejwt.tokens import AccessToken
+
+            uid = AccessToken(token).payload.get("user_id")
+            if uid is not None:
+                return int(uid)
+        except Exception:  # noqa: BLE001
+            pass
+    return None
 
 
 class RefreshView(APIView):

@@ -1,5 +1,5 @@
 import { apiFetch, ApiError } from "@/lib/api/client";
-import { setAccessToken } from "@/lib/api/access-token";
+import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
 
 export type AuthUser = {
   id: number;
@@ -58,11 +58,16 @@ export async function loginAccount(
 }
 
 export async function logoutAccount(): Promise<void> {
+  const token = getAccessToken();
   try {
     await apiFetch<void>("/api/auth/logout/", {
       ...authInit,
       method: "POST",
       body: "{}",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
   } finally {
     setAccessToken(null);

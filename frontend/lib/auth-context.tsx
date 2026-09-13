@@ -156,12 +156,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
-    setUser(null);
     try {
       await logoutAccount();
     } catch {
       // ignore
     }
+    setUser(null);
   }, []);
 
   return (
