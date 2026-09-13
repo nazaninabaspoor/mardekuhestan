@@ -11,7 +11,7 @@ import {
 } from "react";
 import HTMLFlipBook from "react-pageflip";
 
-import { resolveProductImage } from "@/app/profile/page";
+import { resolveProductImage } from "@/lib/profile-order-utils";
 import { V2FlipPage } from "./v2-flip-page";
 import { useV2BookFlip } from "./use-v2-book-flip";
 

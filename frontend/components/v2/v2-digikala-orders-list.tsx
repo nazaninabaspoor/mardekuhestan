@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { resolveProductImage } from "@/app/profile/page";
+import { resolveProductImage } from "@/lib/profile-order-utils";
 
 export type PastureOrderData = {
   id: string;

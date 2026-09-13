@@ -453,7 +453,7 @@ const CURRENT_PENDING_INVOICE = {
   payableAmount: "۱,۳۵۰,۰۰۰ تومان",
 };
 
-export function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buyerInfo: any) {
+function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buyerInfo: any) {
   if (typeof window === "undefined") return;
   const printWindow = window.open("", "_blank", "width=850,height=1000");
   if (!printWindow) {
@@ -596,7 +596,7 @@ export function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buye
   printWindow.document.close();
 }
 
-export function resolveProductImage(name: string, rawImage?: string): string {
+function resolveProductImage(name: string, rawImage?: string): string {
   const n = (name || "").toLowerCase();
   if (n.includes("عسل") || n.includes("کندو") || n.includes("honey")) {
     return "/brand/home-ready.png";
@@ -647,7 +647,7 @@ export function resolveProductImage(name: string, rawImage?: string): string {
   return "/brand/goosht.png";
 }
 
-export const PASTURE_ORDERS_DATABASE = [
+const PASTURE_ORDERS_DATABASE = [
   {
     id: "MK-94021",
     title: "بسته گوشت راسته بره و کره محلی",
