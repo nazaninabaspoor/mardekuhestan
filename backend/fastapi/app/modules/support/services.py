@@ -68,18 +68,18 @@ async def get_my_conversation(session: AsyncSession, user: AuthUser) -> Conversa
 
 
 async def close_my_session(session: AsyncSession, user: AuthUser) -> dict:
-    conversation = await repo.get_active_conversation(session, user.id)
-    if conversation:
-        await repo.close_conversation(session, conversation)
-        await support_hub.publish(
-            {
-                "type": "support.conversation",
-                "conversation_id": str(conversation.id),
-                "customer_id": user.id,
-                "status": STATUS_CLOSED,
-            }
-        )
-    return {"ok": True, "status": STATUS_CLOSED}
+    """Logout: wipe all chats for this customer so the next login starts clean."""
+    deleted = await repo.purge_customer_chats(session, user.id)
+    await support_hub.publish(
+        {
+            "type": "support.conversation",
+            "conversation_id": None,
+            "customer_id": user.id,
+            "status": STATUS_CLOSED,
+            "purged": deleted,
+        }
+    )
+    return {"ok": True, "status": STATUS_CLOSED, "purged": deleted}
 
 
 async def customer_send(

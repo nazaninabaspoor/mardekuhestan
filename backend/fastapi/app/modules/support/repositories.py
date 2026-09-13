@@ -128,6 +128,17 @@ async def close_conversation(session: AsyncSession, conversation: SupportConvers
     await session.commit()
 
 
+async def purge_customer_chats(session: AsyncSession, customer_id: int) -> int:
+    """Delete every conversation + messages for this customer (logout wipe)."""
+    stmt = select(SupportConversation).where(SupportConversation.customer_id == customer_id)
+    result = await session.execute(stmt)
+    rows = list(result.scalars().all())
+    for conversation in rows:
+        await session.delete(conversation)
+    await session.commit()
+    return len(rows)
+
+
 async def mark_whatsapp_notified(session: AsyncSession, message: SupportMessage) -> None:
     message.whatsapp_notified_at = datetime.now(timezone.utc)
     await session.commit()

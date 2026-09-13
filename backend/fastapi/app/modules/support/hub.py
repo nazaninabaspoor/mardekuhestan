@@ -78,20 +78,22 @@ class SupportHub:
             self._staff.discard(websocket)
 
     async def publish(self, event: dict[str, Any]) -> None:
-        """Publish to Redis so every FastAPI worker can push to its local sockets."""
+        """Fan out to local sockets immediately; also publish for other workers."""
+        # Always deliver on this process first — Redis-only publish can miss
+        # local sockets if the pub/sub loop lags (common on Windows/dev).
+        await self._dispatch_local(event)
+
         settings = get_settings()
-        payload = json.dumps(event, default=str)
         if self._redis is None:
-            await self._dispatch_local(event)
             return
         try:
+            payload = json.dumps(event, default=str)
             await asyncio.wait_for(
                 self._redis.publish(settings.SUPPORT_REDIS_CHANNEL, payload),
                 timeout=1.5,
             )
         except Exception:  # noqa: BLE001
-            logger.exception("redis publish failed — falling back to local fanout")
-            await self._dispatch_local(event)
+            logger.exception("redis publish failed (local fanout already done)")
 
     async def _listen_redis(self) -> None:
         assert self._redis is not None

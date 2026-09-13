@@ -116,6 +116,8 @@ export function SupportChatWidget() {
         const payload = JSON.parse(String(event.data)) as {
           type?: string;
           detail?: string;
+          status?: string;
+          purged?: number;
           conversation?: { messages?: SupportMessage[] };
           message?: SupportMessage;
         };
@@ -128,6 +130,13 @@ export function SupportChatWidget() {
           payload.message
         ) {
           setRows((prev) => upsertMessage(prev, toRow(payload.message!)));
+          return;
+        }
+        if (payload.type === "support.conversation") {
+          if (payload.status === "closed" || (payload.purged ?? 0) > 0) {
+            setRows([]);
+            setHint("گفتگو پاک شد؛ از نو شروع کن.");
+          }
           return;
         }
         if (payload.type === "support.error") {
@@ -150,20 +159,50 @@ export function SupportChatWidget() {
     };
   }, [disconnect, user]);
 
+  // Keep WebSocket while logged in so admin replies land even if the panel is closed.
   useEffect(() => {
-    if (!open) {
-      disconnect();
-      setStatus("idle");
-      return;
-    }
     if (!user) {
+      disconnect();
       setRows([]);
+      setStatus("idle");
       setHint("برای گفتگو وارد حساب شو.");
       return;
     }
     void connect();
     return () => disconnect();
-  }, [open, user, connect, disconnect]);
+  }, [user, connect, disconnect]);
+
+  // Backup poll: if WS drops or Redis lags, pull history while the panel is open.
+  useEffect(() => {
+    if (!user || !open) return;
+    let cancelled = false;
+
+    async function pull() {
+      try {
+        const token = await ensureSupportAccessToken();
+        if (!token || cancelled || !mountedRef.current) return;
+        const conversation = await fetchSupportConversation(token);
+        if (cancelled || !mountedRef.current) return;
+        setRows((prev) => {
+          let next = prev;
+          for (const message of conversation.messages) {
+            next = upsertMessage(next, toRow(message));
+          }
+          return next;
+        });
+      } catch {
+        // keep existing rows; live socket may still work
+      }
+    }
+
+    const timer = window.setInterval(() => {
+      void pull();
+    }, 4000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [user, open]);
 
   function toggleOpen() {
     if (!open && !user) {

@@ -62,7 +62,7 @@ async def close_session(
     user: AuthUser = Depends(get_current_user),
     session: AsyncSession = Depends(get_db_session),
 ):
-    """با logout فرانت صدا زده می‌شود تا گفتگوی فعال بسته شود."""
+    """با logout فرانت صدا زده می‌شود تا همهٔ گفتگوهای این کاربر پاک شود."""
     return await services.close_my_session(session, user)
 
 
@@ -89,12 +89,17 @@ async def internal_broadcast(
 ):
     """Django admin بعد از ذخیره پاسخ ادمین این را صدا می‌زند."""
     settings = get_settings()
-    expected = settings.SUPPORT_INTERNAL_TOKEN
-    if expected and x_support_internal_token != expected:
+    expected = (settings.SUPPORT_INTERNAL_TOKEN or "").strip()
+    provided = (x_support_internal_token or "").strip()
+    if expected and provided != expected:
         from fastapi import HTTPException
 
         raise HTTPException(status_code=403, detail="forbidden")
-    await services.broadcast_external(payload.model_dump(mode="json"))
+    event = payload.model_dump(mode="json")
+    # Ensure hub can match the connected customer socket.
+    event["customer_id"] = int(event["customer_id"])
+    event["type"] = event.get("type") or "support.message"
+    await services.broadcast_external(event)
     return {"ok": True}
 
 
