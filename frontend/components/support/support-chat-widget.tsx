@@ -53,6 +53,7 @@ export function SupportChatWidget() {
   const listRef = useRef<HTMLDivElement | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const mountedRef = useRef(true);
+  const intentionalCloseRef = useRef(false);
 
   const scrollBottom = useCallback(() => {
     const node = listRef.current;
@@ -64,6 +65,7 @@ export function SupportChatWidget() {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      intentionalCloseRef.current = true;
       socketRef.current?.close();
       socketRef.current = null;
     };
@@ -74,13 +76,16 @@ export function SupportChatWidget() {
   }, [rows, open, scrollBottom]);
 
   const disconnect = useCallback(() => {
-    socketRef.current?.close();
+    intentionalCloseRef.current = true;
+    const sock = socketRef.current;
     socketRef.current = null;
+    sock?.close();
   }, []);
 
   const connect = useCallback(async () => {
     if (!user) return;
     disconnect();
+    intentionalCloseRef.current = false;
     setStatus("connecting");
     setHint("در حال اتصال امن…");
 
@@ -100,6 +105,8 @@ export function SupportChatWidget() {
       if (!mountedRef.current) return;
       setHint("تاریخچه نیامد؛ باز هم می‌توانی پیام بفرستی.");
     }
+
+    if (!mountedRef.current || intentionalCloseRef.current) return;
 
     const socket = new WebSocket(supportWsUrl(token));
     socketRef.current = socket;
@@ -155,7 +162,14 @@ export function SupportChatWidget() {
 
     socket.onclose = () => {
       if (!mountedRef.current) return;
+      if (socketRef.current !== socket) return;
+      socketRef.current = null;
       setStatus((prev) => (prev === "live" ? "idle" : prev === "connecting" ? "error" : prev));
+      if (intentionalCloseRef.current) return;
+      window.setTimeout(() => {
+        if (!mountedRef.current || intentionalCloseRef.current || socketRef.current) return;
+        void connect();
+      }, 1500);
     };
   }, [disconnect, user]);
 
