@@ -22,6 +22,7 @@ from app.modules.support.exceptions import SupportError
 from app.modules.support.hub import support_hub
 from app.modules.support.models import SupportMessage
 from app.modules.support.schemas import ConversationOut, MessageOut
+from app.modules.support.email_notify import notify_staff_email
 from app.modules.support.whatsapp import notify_admin_whatsapp
 
 logger = logging.getLogger(__name__)
@@ -110,7 +111,7 @@ async def customer_send(
     }
     await support_hub.publish(event)
     asyncio.create_task(
-        _whatsapp_after_customer_message(
+        _notify_staff_after_customer_message(
             session_factory_message_id=message.id,
             customer_id=user.id,
             preview=text,
@@ -162,13 +163,22 @@ async def broadcast_external(event: dict) -> None:
     await support_hub.publish(event)
 
 
-async def _whatsapp_after_customer_message(
+async def _notify_staff_after_customer_message(
     *,
     session_factory_message_id: uuid.UUID,
     customer_id: int,
     preview: str,
     conversation_id: str,
 ) -> None:
+    try:
+        await notify_staff_email(
+            customer_id=customer_id,
+            preview=preview,
+            conversation_id=conversation_id,
+        )
+    except Exception:  # noqa: BLE001
+        logger.exception("email notify failed for conversation=%s", conversation_id)
+
     try:
         ok = await notify_admin_whatsapp(
             customer_id=customer_id,

@@ -311,6 +311,18 @@ export function SupportChatWidget() {
               بفرست
             </button>
           </form>
+          <p className={styles.sla}>
+            همسفر گرامی، پاسخ شما معمولاً تا ۵ دقیقه داده می‌شود.
+            اگر پاسخی نیامد، با شمارهٔ{" "}
+            <a href="tel:02156443394" className={styles.slaPhone}>
+              ۰۲۱-۵۶۴۴۳۳۹۴
+            </a>{" "}
+            یا{" "}
+            <a href="tel:02156443395" className={styles.slaPhone}>
+              ۰۲۱-۵۶۴۴۳۳۹۵
+            </a>{" "}
+            تماس بگیرید.
+          </p>
           <div className={styles.meta} aria-live="polite">
             {status === "live"
               ? "گفتگوی زنده"

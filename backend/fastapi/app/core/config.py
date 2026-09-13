@@ -35,6 +35,17 @@ class Settings(BaseSettings):
     DJANGO_BASE_URL: str = "http://127.0.0.1:8000"
     DJANGO_ADMIN_SUPPORT_URL: str = "http://127.0.0.1:8000/admin/support/supportconversation/"
 
+    # SMTP — staff ping when customer writes in chat (works on host too via env)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+    SMTP_USE_TLS: bool = True
+    SUPPORT_NOTIFY_EMAILS: str = (
+        "neurollamasai@gmail.com,mardekuhestan.ai@gmail.com"
+    )
+
     # WhatsApp outbound notify (admin ping only — not two-way chat)
     # provider: log | meta | greenapi
     WHATSAPP_PROVIDER: str = "log"
