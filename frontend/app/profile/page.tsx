@@ -354,17 +354,17 @@ function InteractiveCard({
       >
         <div className="frame-wood">
           <div className="frame-mat">
-            <div className="coverflow-card-bg-wrap">
-              <Image
-                src={item.image}
-                alt=""
-                fill
+      <div className="coverflow-card-bg-wrap">
+        <Image
+          src={item.image}
+          alt=""
+          fill
                 sizes="(max-width: 768px) 280px, 340px"
-                quality={92}
-                className="coverflow-card-img"
-                style={{ objectPosition: item.scenePosition ?? "center" }}
-                priority={isActive || isAdjacent}
-              />
+          quality={92}
+          className="coverflow-card-img"
+          style={{ objectPosition: item.scenePosition ?? "center" }}
+          priority={isActive || isAdjacent}
+        />
             </div>
           </div>
           <div className="frame-plate">
@@ -393,12 +393,12 @@ function ProfileSceneBackdrop({ isWorkspaceOpen = false }: { isWorkspaceOpen?: b
         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
         style={{ position: "absolute", inset: 0 }}
       >
-        <Image
+          <Image
           src="/brand/profile/profile-kitchen-dawn.png"
-          alt=""
-          fill
+            alt=""
+            fill
           sizes="100vw"
-          quality={92}
+            quality={92}
           priority
           className="profile-scene-wallpaper-img"
         />
@@ -412,7 +412,7 @@ function ProfileSceneBackdrop({ isWorkspaceOpen = false }: { isWorkspaceOpen?: b
       />
       <span className="profile-scene-vignette" />
       <span className="profile-scene-grain" />
-    </div>
+        </div>
   );
 }
 
@@ -491,12 +491,12 @@ function handleDownloadOrderPdf(type: "book" | "invoice", data: any, buyerInfo: 
             <div class="cert-title">
               <h1>سند رسمی اصالت مرتع و زنجیره پروتئین</h1>
               <p>باشگاه همسفران و پایش کیفیت مرد کوهستان · کد رهگیری: #${data.id}</p>
-            </div>
+          </div>
             <div style="text-align: left;">
               <strong>تاریخ ثبت: ${data.date}</strong><br />
               <small>وضعیت: ${data.status}</small>
-            </div>
-          </div>
+        </div>
+      </div>
           <div class="cert-grid">
             <div><strong>چراگاه خاستگاه:</strong> ${data.pastureName}</div>
             <div><strong>ارتفاع چراگاه:</strong> ${data.altitude}</div>
@@ -1734,10 +1734,10 @@ function ProfileContent() {
 
     try {
       if (updateUserProfile) {
-        await updateUserProfile({
-          name: name.trim(),
-          phone: phone.trim(),
-        });
+      await updateUserProfile({
+        name: name.trim(),
+        phone: phone.trim(),
+      });
       }
       setProfileSuccessMsg("اطلاعات شناسنامه با موفقیت ثبت و تأیید شد.");
       setTimeout(() => setProfileSuccessMsg(null), 4000);
@@ -1835,9 +1835,9 @@ function ProfileContent() {
     return (
       <div className="profile-page-wrapper">
         <ProfileSceneBackdrop />
-        <div className="profile-loading-screen">
-          <div className="profile-loading-spinner" />
-          <p>در حال فراخوانی اطلاعات همسفر سبز…</p>
+      <div className="profile-loading-screen">
+        <div className="profile-loading-spinner" />
+        <p>در حال فراخوانی اطلاعات همسفر سبز…</p>
         </div>
       </div>
     );
@@ -1849,31 +1849,31 @@ function ProfileContent() {
       <div className="profile-page-wrapper">
         <ProfileSceneBackdrop />
         <div className="profile-guest-card">
-          <div className="profile-guest-inner">
-            <Image
-              src="/brand/orginal-clear.png"
-              alt="مرد کوهستان"
-              width={72}
-              height={72}
-              className="profile-guest-logo"
-            />
+        <div className="profile-guest-inner">
+          <Image
+            src="/brand/orginal-clear.png"
+            alt="مرد کوهستان"
+            width={72}
+            height={72}
+            className="profile-guest-logo"
+          />
             <h2>{wantsAi ? "میز هوش مصنوعی بسته است" : "ورود به باشگاه راه سبز"}</h2>
             <p>
               {wantsAi
                 ? "دستیار تغذیه فقط برای همسفر خانواده باز می‌شود. ابتدا وارد شوید یا عضویت بگیرید."
                 : "برای مشاهده پنل اختصاصی، اطلاعات فردی، دستیار هوشمند و کیف پول، لطفاً وارد حساب خود شوید."}
             </p>
-            <button
-              type="button"
-              className="profile-btn-primary"
+          <button
+            type="button"
+            className="profile-btn-primary"
               onClick={() =>
                 openLoginModal(
                   wantsAi ? { next: "/profile?tab=ai-nutrition&open=1", reason: "ai" } : undefined,
                 )
               }
-            >
-              ورود / عضویت در خانواده مرد کوهستان
-            </button>
+          >
+            ورود / عضویت در خانواده مرد کوهستان
+          </button>
           </div>
         </div>
       </div>
@@ -1898,16 +1898,16 @@ function ProfileContent() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="profile-scene-kicker">
-            <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
-            <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
-            <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
-          </div>
-          <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
+              <span className="profile-coverflow-kicker-en">Marde Koohestan</span>
+              <span className="profile-coverflow-kicker-sep" aria-hidden="true" />
+              <span className="profile-coverflow-kicker-fa">این راه سبز است</span>
+            </div>
+            <h2 className="profile-coverflow-title">میز کاربری و خدمات اختصاصی کوهستان</h2>
           <p className="profile-coverflow-sub">
             حساب، تغذیه، اعتبار و مسیر سفارش روی یک میز. قاب وسط را باز کنید · با فلش‌ها میان خدمات جابه‌جا شوید.
           </p>
 
-          <div className="profile-coverflow-stage">
+              <div className="profile-coverflow-stage">
             <button
               type="button"
               className="coverflow-nav-btn is-prev"
@@ -1953,7 +1953,7 @@ function ProfileContent() {
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-          </div>
+              </div>
         </motion.div>
 
         <AnimatePresence>
@@ -1969,10 +1969,10 @@ function ProfileContent() {
       <AnimatePresence>
         {openedTab !== null && openedItem && (
           <div className="shell profile-workspace-shell">
-            <motion.div
-              className="profile-workspace-section"
+        <motion.div
+          className="profile-workspace-section"
               data-theme={openedTab}
-              ref={workspaceRef}
+          ref={workspaceRef}
               style={{
                 ["--desk-print" as string]: `url(${
                   openedTab === "ai-nutrition"
@@ -1992,12 +1992,12 @@ function ProfileContent() {
                   <div className="desk-pane-header-main">
                     <div className="desk-pane-thumb">
                       <Image src={openedItem.image} alt="" fill sizes="56px" />
-                    </div>
+                </div>
                     <div>
                       <span className="desk-pane-kicker">{openedItem.badge}</span>
                       <h2>{openedItem.title}</h2>
                       <p>{openedItem.subtitle}</p>
-                    </div>
+              </div>
                   </div>
                   <button type="button" className="desk-pane-close" onClick={handleCloseWorkspace}>
                     بستن
@@ -2034,7 +2034,7 @@ function ProfileContent() {
                           <div className="mk-ledger-titles">
                             <strong>میز اختصاصی هویت و امنیت همسفر</strong>
                             <span>باشگاه مشتریان و سلامت خانواده مرد کوهستان</span>
-                          </div>
+                      </div>
                           <span className="mk-ledger-live">
                             <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2.5" fill="none">
                               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -2107,15 +2107,15 @@ function ProfileContent() {
                                 </div>
                               </header>
 
-                              {profileSuccessMsg && (
+                      {profileSuccessMsg && (
                                 <div className="mk-shenasnameh-alert is-ok" role="status">
                                   <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2.5" fill="none">
                                     <polyline points="20 6 9 17 4 12" />
                                   </svg>
                                   {profileSuccessMsg}
-                                </div>
-                              )}
-                              {profileErrorMsg && (
+                        </div>
+                      )}
+                      {profileErrorMsg && (
                                 <div className="mk-shenasnameh-alert is-bad" role="alert">{profileErrorMsg}</div>
                               )}
 
@@ -2124,7 +2124,7 @@ function ProfileContent() {
                                 {/* Photo Mount with Real Upload, Embossed Seal & Biometrics */}
                                 <div className="mk-shenasnameh-side">
                                   <div className="mk-shenasnameh-photo-wrap">
-                                    <input
+                          <input
                                       ref={fileInputRef}
                                       type="file"
                                       accept="image/jpeg,image/png,image/webp,image/jpg"
@@ -2171,7 +2171,7 @@ function ProfileContent() {
                                         </svg>
                                         <span>تغییر عکس</span>
                                       </div>
-                                    </div>
+                        </div>
 
                                     <div className="mk-shenasnameh-embossed-seal" aria-hidden="true">
                                       <svg viewBox="0 0 100 100" width="56" height="56">
@@ -2248,22 +2248,22 @@ function ProfileContent() {
                                         <em>رایانامه / ایمیل ارتباطی</em>
                                         <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
                                       </label>
-                                      <input
+                          <input
                                         id="shenas-email"
-                                        type="email"
-                                        dir="ltr"
+                            type="email"
+                            dir="ltr"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="yourname@domain.com"
                                       />
-                                    </div>
+                        </div>
 
                                     <div className="mk-shenasnameh-field is-editable">
                                       <label htmlFor="shenas-city">
                                         <em>شهر سکونت / محدوده تحویل</em>
                                         <span className="mk-shenasnameh-edit-badge">قابل ویرایش</span>
                                       </label>
-                                      <input
+                          <input
                                         id="shenas-city"
                                         type="text"
                                         value={city}
@@ -2271,7 +2271,7 @@ function ProfileContent() {
                                         placeholder="مثال: تهران، زعفرانیه"
                                       />
                                     </div>
-                                  </div>
+                        </div>
 
                                   {/* Row 4: Pasture Tier + Green Points (Official Records - Locked) */}
                                   <div className="mk-shenasnameh-dual-row">
@@ -2453,8 +2453,8 @@ function ProfileContent() {
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                   </svg>
                                   {isUpdatingProfile ? "در حال ثبت تغییرات…" : "مهر و ثبت اطلاعات شناسنامه"}
-                                </button>
-                              </div>
+                        </button>
+                    </div>
                             </div>
                           </motion.form>
 
@@ -2480,7 +2480,7 @@ function ProfileContent() {
                                 <div className="mk-safe-title-wrap">
                                   <span className="mk-safe-kicker">SECURITY VAULT</span>
                                   <h3 id="safe-title">گاوصندوق و امنیت</h3>
-                                </div>
+                      </div>
                                 <motion.div
                                   className="mk-safe-dial"
                                   aria-hidden="true"
@@ -2494,10 +2494,10 @@ function ProfileContent() {
                               </header>
 
                               <div className="mk-safe-cavity">
-                                {passSuccessMsg && (
+                      {passSuccessMsg && (
                                   <div className="mk-safe-alert is-ok" role="status">{passSuccessMsg}</div>
-                                )}
-                                {passErrorMsg && (
+                      )}
+                      {passErrorMsg && (
                                   <div className="mk-safe-alert is-bad" role="alert">{passErrorMsg}</div>
                                 )}
 
@@ -2513,14 +2513,14 @@ function ProfileContent() {
                                       </label>
                                     </div>
                                     <LedgerSecretField
-                                      id="prof-cur-pass"
-                                      value={currentPassword}
+                            id="prof-cur-pass"
+                            value={currentPassword}
                                       onChange={setCurrentPassword}
-                                      placeholder="••••••••"
+                            placeholder="••••••••"
                                       autoComplete="current-password"
-                                      required
-                                    />
-                                  </div>
+                            required
+                          />
+                        </div>
 
                                   <div className="mk-safe-field">
                                     <div className="mk-safe-field-head">
@@ -2539,14 +2539,14 @@ function ProfileContent() {
                                       ) : null}
                                     </div>
                                     <LedgerSecretField
-                                      id="prof-new-pass"
-                                      value={newPassword}
+                            id="prof-new-pass"
+                            value={newPassword}
                                       onChange={setNewPassword}
                                       placeholder="حداقل ۱۰ نویسه امنیتی"
                                       autoComplete="new-password"
-                                      required
-                                    />
-                                  </div>
+                            required
+                          />
+                        </div>
 
                                   <div className="mk-safe-field">
                                     <div className="mk-safe-field-head">
@@ -2559,15 +2559,15 @@ function ProfileContent() {
                                       </label>
                                     </div>
                                     <LedgerSecretField
-                                      id="prof-new-pass-rep"
-                                      value={newPasswordRepeat}
+                            id="prof-new-pass-rep"
+                            value={newPasswordRepeat}
                                       onChange={setNewPasswordRepeat}
                                       placeholder="تکرار رمز عبور تازه"
                                       autoComplete="new-password"
-                                      required
-                                    />
+                            required
+                          />
                                   </div>
-                                </div>
+                        </div>
 
                                 <button type="submit" disabled={isChangingPass} className="mk-safe-turn">
                                   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -2575,8 +2575,8 @@ function ProfileContent() {
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                   </svg>
                                   {isChangingPass ? "در حال قفل…" : "قفل گاوصندوق و ذخیره رمز"}
-                                </button>
-                              </div>
+                        </button>
+                    </div>
                             </motion.form>
 
                             {/* Card 2B: Cold Chain Delivery Packets */}
@@ -2595,7 +2595,7 @@ function ProfileContent() {
                                 <div className="mk-mail-title-wrap">
                                   <span className="mk-mail-kicker">COLD CHAIN LOGISTICS · موقعیت تحویل</span>
                                   <h3 id="folio-mail-title">پاکت‌های تحویل سفارش</h3>
-                                </div>
+                  </div>
                                 <span className="mk-mail-cold-tag">
                                   <span className="mk-mail-dot" />
                                   ۲.۴°C زنجیره سرد فعال
@@ -2639,7 +2639,7 @@ function ProfileContent() {
                                           <circle cx="160" cy="30" r="12" fill="none" stroke="#D4A359" strokeWidth="0.6" opacity="0.4" />
                                           <circle cx="160" cy="30" r="3" fill="#D4A359" opacity="0.75" />
                                         </svg>
-                                      </div>
+                    </div>
 
                                       {/* Top Header: Title, 3D Pin & Classification Tag */}
                                       <div className="mk-packet-top">
@@ -2653,13 +2653,13 @@ function ProfileContent() {
                                             <h4>{addr.title || (isHome ? "نشانی منزل" : "نشانی دفتر")}</h4>
                                             <span className="mk-packet-type-text">{typeLabel}</span>
                                           </div>
-                                        </div>
+                      </div>
 
                                         <div className="mk-packet-route-chip">
                                           <span className="mk-route-radar-dot" />
                                           <span>{addr.district || (isHome ? "زعفرانیه" : "فرمانیه")}</span>
                                         </div>
-                                      </div>
+                      </div>
 
                                       {/* Geo City & Postal Code Info Row */}
                                       <div className="mk-packet-meta-row">
@@ -2667,9 +2667,9 @@ function ProfileContent() {
                                           <svg viewBox="0 0 24 24" width="11" height="11" stroke="#D4A359" strokeWidth="2.2" fill="none">
                                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                             <circle cx="12" cy="10" r="3" />
-                                          </svg>
+                          </svg>
                                           <span>{addr.province || "تهران"}، {addr.city}</span>
-                                        </div>
+                      </div>
                                         <div className="mk-packet-meta-item is-postal">
                                           <svg viewBox="0 0 24 24" width="11" height="11" stroke="#86C2EB" strokeWidth="2.2" fill="none">
                                             <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -2679,8 +2679,8 @@ function ProfileContent() {
                                             کد پستی:{" "}
                                             <strong dir="ltr">{addr.postal_code ? addr.postal_code : "ثبت‌نشده (اختیاری)"}</strong>
                                           </span>
-                                        </div>
-                                      </div>
+                    </div>
+                  </div>
 
                                       {/* Detailed Address Line Box */}
                                       <div className="mk-packet-body">
@@ -2690,7 +2690,7 @@ function ProfileContent() {
                                             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
                                           </svg>
                                           <p className="mk-packet-address-text">{addr.address_line}</p>
-                                        </div>
+                </div>
                                       </div>
 
                                       {/* Recipient & Contact Row */}
@@ -2776,14 +2776,14 @@ function ProfileContent() {
                                     <p>ثبت رسمی نشانی در سامانه لجستیک زنجیره سرد و پنل مدیریت مرد کوهستان</p>
                                   </div>
                                 </div>
-                                <button
-                                  type="button"
+                        <button
+                          type="button"
                                   className="mk-address-modal-close"
                                   onClick={() => setIsAddressModalOpen(false)}
                                   aria-label="بستن پنجره"
-                                >
+                        >
                                   ✕
-                                </button>
+                        </button>
                               </header>
 
                               <form onSubmit={handleSaveAddress} className="mk-address-modal-form">
@@ -2811,8 +2811,8 @@ function ProfileContent() {
                                       <option value="work">محل کار / دفتر اداری</option>
                                       <option value="other">سایر نشانی‌ها</option>
                                     </select>
-                                  </div>
-                                </div>
+                    </div>
+                  </div>
 
                                 <div className="mk-modal-grid-2">
                                   <div className="mk-modal-field">
@@ -2938,9 +2938,9 @@ function ProfileContent() {
                     <span className="mk-chat-scene-veil" aria-hidden="true" />
                     <header className="mk-chat-topbar">
                       <div className="mk-chat-brand">
-                        <Image
-                          src="/brand/orginal-clear.png"
-                          alt="مرد کوهستان"
+                      <Image
+                        src="/brand/orginal-clear.png"
+                        alt="مرد کوهستان"
                           width={32}
                           height={32}
                           className="mk-chat-logo"
@@ -2966,7 +2966,7 @@ function ProfileContent() {
                         >
                           بستن
                         </button>
-                      </div>
+                    </div>
                     </header>
                     {!hasUserAiMessage && (
                       <aside className="mk-speech" aria-label="گفتگوی دستیار">
@@ -2983,9 +2983,9 @@ function ProfileContent() {
                     {hasUserAiMessage && (
                       <div className="mk-chat-thread" ref={aiThreadRef}>
                         <div className="mk-chat-feed">
-                          {aiMessages.map((msg, idx) => (
-                            <div
-                              key={idx}
+                      {aiMessages.map((msg, idx) => (
+                        <div
+                          key={idx}
                               className={`mk-chat-row ${msg.sender === "user" ? "is-user" : "is-assistant"}`}
                             >
                               {msg.sender === "assistant" ? (
@@ -3004,10 +3004,10 @@ function ProfileContent() {
                               <div className="mk-chat-bubble">
                                 <AiMessageBody text={msg.text} />
                                 <span className="mk-chat-time">{msg.time}</span>
-                              </div>
-                            </div>
-                          ))}
-                          {aiTyping && (
+                          </div>
+                        </div>
+                      ))}
+                      {aiTyping && (
                             <div className="mk-chat-row is-assistant">
                               <Image
                                 src="/brand/orginal-clear.png"
@@ -3017,16 +3017,16 @@ function ProfileContent() {
                                 className="mk-chat-avatar"
                               />
                               <div className="mk-chat-typing" aria-label="در حال نوشتن">
-                                <span />
-                                <span />
-                                <span />
+                            <span />
+                            <span />
+                            <span />
                               </div>
                             </div>
                           )}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
                   <div className={`mk-chat-dock${hasUserAiMessage ? " is-chatting" : ""}`}>
                     {!hasUserAiMessage && (
@@ -3051,23 +3051,23 @@ function ProfileContent() {
                       className="mk-chat-composer"
                     >
                       <div className="mk-chat-composer-inner">
-                        <input
-                          type="text"
+                      <input
+                        type="text"
                           placeholder="از ما بپرسید؛ از گوشت مرتع تا رژیم و طبخ…"
-                          value={aiInput}
-                          onChange={(e) => setAiInput(e.target.value)}
-                        />
-                        <button
-                          type="submit"
-                          disabled={aiTyping || !aiInput.trim()}
+                        value={aiInput}
+                        onChange={(e) => setAiInput(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        disabled={aiTyping || !aiInput.trim()}
                           className="mk-chat-send"
-                          aria-label="ارسال پیام"
-                        >
+                        aria-label="ارسال پیام"
+                      >
                           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
-                            <line x1="22" y1="2" x2="11" y2="13" />
-                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                          </svg>
-                        </button>
+                          <line x1="22" y1="2" x2="11" y2="13" />
+                          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                      </button>
                       </div>
                     </form>
                   </div>
@@ -3094,7 +3094,7 @@ function ProfileContent() {
                             {walletBalance.toLocaleString("fa-IR")}
                             <span>تومان</span>
                           </strong>
-                        </div>
+                      </div>
                       </div>
                       <p className="mk-leather-gift">شامل ۵۰,۰۰۰ تومان هدیه عضویت باشگاه راه سبز</p>
 
