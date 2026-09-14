@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { resolveProductImage } from "@/app/profile/page";
+import { resolveProductImage } from "@/lib/profile-order-utils";
 
 export type CartItemData = {
   id: number;

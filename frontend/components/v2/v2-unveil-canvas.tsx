@@ -701,10 +701,6 @@ function useManPoses() {
     });
     // Cut out studio matte + normalize height so walk frames stay PNG-clean and correctly scaled.
     const ready = () => setMaps(normalizeWalkCycle(list, POSE_KINDS));
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(ready, { timeout: 280 });
-      return () => window.cancelIdleCallback(id);
-    }
     const timer = window.setTimeout(ready, 0);
     return () => window.clearTimeout(timer);
   }, [loaded]);
@@ -918,16 +914,13 @@ function useFutureProductMaps() {
     const ready = () => {
       const packed = list.map((tex) => packProductSprite(tex));
       packed.forEach((tex) => {
-        if (tex.image && "width" in tex.image && tex.image.width) {
-          tex.userData.aspect = tex.image.width / Math.max(1, tex.image.height);
+        const image = tex.image as { width?: number; height?: number } | undefined;
+        if (image?.width) {
+          tex.userData.aspect = image.width / Math.max(1, image.height ?? 1);
         }
       });
       setMaps(packed);
     };
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(ready, { timeout: 220 });
-      return () => window.cancelIdleCallback(id);
-    }
     const timer = window.setTimeout(ready, 0);
     return () => window.clearTimeout(timer);
   }, [loaded]);
@@ -945,15 +938,12 @@ function useBoxMap() {
     loaded.needsUpdate = true;
     const ready = () => {
       const packed = packProductSprite(loaded);
-      if (packed.image && "width" in packed.image && packed.image.width) {
-        packed.userData.aspect = packed.image.width / Math.max(1, packed.image.height);
+      const image = packed.image as { width?: number; height?: number } | undefined;
+      if (image?.width) {
+        packed.userData.aspect = image.width / Math.max(1, image.height ?? 1);
       }
       setMap(packed);
     };
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(ready, { timeout: 220 });
-      return () => window.cancelIdleCallback(id);
-    }
     const timer = window.setTimeout(ready, 0);
     return () => window.clearTimeout(timer);
   }, [loaded]);

@@ -17,7 +17,7 @@ interface ProductDetailViewProps {
 const NAV_ITEMS = [
   { id: "intro", number: "۰۱", label: "معرفی" }, { id: "nutrition", number: "۰۲", label: "ارزش غذایی" },
   { id: "cooking", number: "۰۳", label: "روش پخت" }, { id: "journey", number: "۰۴", label: "مسیر محصول" },
-  { id: "specifications", number: "۰۵", label: "شناسنامه" },
+  { id: "reviews", number: "۰۵", label: "نظرات" },
 ] as const;
 
 const JOURNEY = [
@@ -40,28 +40,41 @@ function SectionTitle({ eyebrow, title, description, light = false }: { eyebrow:
   return <header className={`${styles.sectionTitle} ${light ? styles.light : ""}`}><span>{eyebrow}</span><h2>{title}</h2>{description ? <p>{description}</p> : null}</header>;
 }
 
-function MetricIcon({ type }: { type: "natural" | "quality" | "protein" }) {
-  if (type === "natural") return <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M26.5 5.5C16 6.2 8.6 11.3 8.2 19.8c5.8.8 13.7-2.2 18.3-14.3Z"/><path d="M5.5 26.5c4.2-6.8 9.2-11 15.5-13.3"/></svg>;
-  if (type === "quality") return <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="8"/><path d="m11 20-1 8 6-3 6 3-1-8M16 8l1.5 3 3.5.5-2.5 2.4.6 3.5-3.1-1.7-3.1 1.7.6-3.5-2.5-2.4 3.5-.5Z"/></svg>;
-  return <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 13v6m4-9v12m4-8h10m0-4v12m4-9v6m4-6v6"/></svg>;
+type GalleryItem = { src: string; alt: string; label: string };
+
+function getProductGallery(product: ProductDetailData): GalleryItem[] {
+  const main = { src: product.image, alt: `${product.name} مرد کوهستان`, label: "تصویر اصلی" };
+  if (product.categoryId === "fresh-meat") return [
+    main,
+    { src: "/brand/product-gallery/lamb-shanks-mountain.png", alt: "گوشت تازه گوسفندی در فضای کوهستان", label: "برش تازه" },
+    { src: "/brand/product-gallery/lamb-cast-iron-mountain.png", alt: "پیشنهاد سرو گوشت بره", label: "پیشنهاد سرو" },
+    { src: "/brand/product-gallery/mountain-butcher.png", alt: "آماده سازی گوشت تازه", label: "آماده سازی" },
+  ];
+  return [main, { src: product.video.poster, alt: product.video.title, label: "از مسیر محصول" }, { src: "/brand/landing-table.png", alt: "پیشنهاد سرو مرد کوهستان", label: "پیشنهاد سرو" }, { src: "/brand/landing-pasture.png", alt: "طبیعت مرد کوهستان", label: "از طبیعت" }];
 }
 
-function ProductHero({ product }: { product: ProductDetailData }) {
+function ProductHero({ product, gallery, activeImage, onSelectImage, portion, onSelectPortion }: { product: ProductDetailData; gallery: GalleryItem[]; activeImage: GalleryItem; onSelectImage: (image: GalleryItem) => void; portion: string; onSelectPortion: (portion: string) => void }) {
   return <section className={styles.hero} aria-labelledby="product-title">
     <div className={styles.heroCopy}>
       <div className={styles.heroHeading}>
         <nav className={styles.breadcrumb} aria-label="مسیر صفحه"><Link href="/">صفحه اصلی</Link><span>/</span><Link href="/#for-home-kitchen">محصولات</Link><span>/</span><span>{product.categoryTitle}</span></nav>
-        <p className={styles.eyebrow}>{product.categoryTitle}</p>
+        <p className={styles.eyebrow} aria-label="مرد کوهستان">
+          <svg viewBox="0 0 66 38" aria-hidden="true"><path d="M2 33 19 12l8 10L39 4l25 29M17 33h47" /></svg>
+        </p>
         <h1 id="product-title">{product.name}</h1>
-        <p className={styles.heroKicker}>برشی از طبیعت کوهستان</p>
+        <span className={styles.heroAccent} aria-hidden="true" />
+        <p className={styles.heroKicker}>از کوهستان تا سفره</p>
+        <div className={`${styles.portions} ${styles.heroPortions}`}>{product.portionOptions.map((item) => <button key={item} className={portion === item ? styles.selected : ""} onClick={() => onSelectPortion(item)} type="button">{item}</button>)}</div>
+        <button className={styles.heroCta} type="button" onClick={() => scrollToSection("purchase")}>افزودن به سبد خرید <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L21 8H6.2M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" /></svg></button>
+        <div className={`${styles.productGallery} ${styles.heroGallery}`} aria-label="آلبوم تصاویر محصول">{gallery.map((image) => <button key={image.src} type="button" className={activeImage.src === image.src ? styles.activeGalleryItem : ""} onClick={() => onSelectImage(image)} aria-label={`نمایش ${image.label}`} aria-pressed={activeImage.src === image.src}><span><Image src={image.src} alt="" fill sizes="76px" /></span><small>{image.label}</small></button>)}</div>
       </div>
+      <div className={styles.heroMemoryBackdrop} aria-hidden="true" />
+      <figure className={styles.heroMemory} aria-label="لحظه‌ای از یک سفره خانوادگی">
+        <span className={styles.heroMemoryPin} aria-hidden="true" />
+        <span className={styles.heroMemoryPhoto}><Image src="/brand/product-family-meal-v1.png" alt="پدر و پسر در حال صرف غذا کنار سفره خانوادگی" fill sizes="(max-width: 760px) 42vw, 175px" /></span>
+      </figure>
       <div className={styles.heroDetails}>
         <p className={styles.heroLead}>{product.headline}</p><p className={styles.heroBody}>{product.story}</p>
-        <dl className={styles.heroFacts}>
-          <div><MetricIcon type="natural" /><dt>۱۰۰٪</dt><dd>طبیعی</dd></div>
-          <div><MetricIcon type="quality" /><dt>A+</dt><dd>درجه کیفی</dd></div>
-          <div><MetricIcon type="protein" /><dt>{product.nutrition.protein.split(" در ")[0]}</dt><dd>پروتئین</dd></div>
-        </dl>
         <p className={styles.editorialNote} aria-hidden="true">طبیعت<br />مزه بهتر زندگی است...</p>
       </div>
     </div>
@@ -69,7 +82,7 @@ function ProductHero({ product }: { product: ProductDetailData }) {
       <div className={styles.heroAtmosphere} aria-hidden="true" />
       <p className={styles.visualSlogan} aria-hidden="true">اصالتِ کوهستان<br />در هر برش</p>
       <div className={styles.platformLayer} aria-hidden="true"><Image src="/brand/product-steak-platform-cutout-v5.png" alt="" fill sizes="(max-width: 760px) 91vw, 780px" /></div>
-      <div className={styles.productStage}><Image src={product.image} alt={`${product.name} مرد کوهستان`} fill priority sizes="(max-width: 760px) 74vw, 480px" /></div>
+      <div className={`${styles.productStage} ${activeImage.src === product.image ? "" : styles.galleryStage}`}><Image key={activeImage.src} src={activeImage.src} alt={activeImage.alt} fill priority sizes="(max-width: 760px) 74vw, 480px" /></div>
       <figcaption><span>مستقیم از کوهستان</span><strong>تا سفره شما</strong></figcaption>
     </figure>
   </section>;
@@ -115,12 +128,14 @@ function ProductSpecifications({ product }: { product: ProductDetailData }) {
 
 function ProductPurchase({
   product,
+  portion,
   onAddedToCart,
 }: {
   product: ProductDetailData;
+  portion: string;
   onAddedToCart?: ProductDetailViewProps["onAddedToCart"];
 }) {
-  const [portion, setPortion] = useState(product.portionOptions[0] || "۵۰۰ گرم"); const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
   const price = useMemo(() => portion.includes("۵۰۰") ? product.price / 2 : portion.includes("۲") ? product.price * 2 : product.price, [portion, product.price]);
@@ -145,15 +160,22 @@ function ProductPurchase({
       setIsAdding(false);
     }
   };
-  return <section className={`${styles.section} ${styles.purchase}`} aria-labelledby="purchase-title"><div><span>انتخاب برای سفره</span><h2 id="purchase-title">این برش را به خانه ببرید</h2><p>تازه، بسته‌بندی‌شده و با زنجیره سرد تا درِ خانه.</p></div><div className={styles.purchaseAction}><div className={styles.portions}>{product.portionOptions.map((item) => <button key={item} className={portion === item ? styles.selected : ""} onClick={() => setPortion(item)} type="button">{item}</button>)}</div><p><strong>{Math.round(price).toLocaleString("fa-IR")}</strong> تومان</p><button className={styles.addButton} type="button" disabled={isAdding} onClick={handleAddToCart}>{isAdding ? "در حال افزودن…" : added ? "به سبد شما افزوده شد" : "افزودن به سبد تازه"}</button></div></section>;
+  return <section id="purchase" className={`${styles.section} ${styles.purchase}`} aria-labelledby="purchase-title"><div><span>انتخاب برای سفره</span><h2 id="purchase-title">این برش را به خانه ببرید</h2><p>تازه، بسته‌بندی‌شده و با زنجیره سرد تا درِ خانه.</p></div><div className={styles.purchaseAction}><p><strong>{Math.round(price).toLocaleString("fa-IR")}</strong> تومان</p><button className={styles.addButton} type="button" disabled={isAdding} onClick={handleAddToCart}>{isAdding ? "در حال افزودن…" : added ? "به سبد شما افزوده شد" : "افزودن به سبد تازه"}</button></div></section>;
 }
 
 function RelatedProducts() {
   return <section className={`${styles.section} ${styles.related}`}><SectionTitle eyebrow="ادامه مسیر سبز" title="برش‌های دیگر برای کشف" /><div className={styles.relatedGrid}>{RELATED.map((item) => <Link href={`/products/${item.id}`} key={item.id}><figure><Image src={item.image} alt={item.name} fill sizes="(max-width: 700px) 90vw, 30vw" /></figure><div><span>گوشت و مرتع</span><h3>{item.name}</h3><b aria-hidden="true">←</b></div></Link>)}</div></section>;
 }
 
+function ProductReviews() {
+  return <section id="reviews" className={`${styles.section} ${styles.reviews}`}><SectionTitle eyebrow="تجربه خریداران" title="نظرات مشتریان" /><p>به‌زودی تجربهٔ خریداران مرد کوهستان را اینجا می‌خوانید.</p></section>;
+}
+
 export function ProductExperience({ product, onClose, isModal = false, onAddedToCart }: ProductDetailViewProps) {
-  return <article className={`${styles.experience} ${isModal ? styles.modal : ""}`} dir="rtl">{isModal && onClose ? <button type="button" className={styles.close} onClick={onClose} aria-label="بستن جزئیات محصول">×</button> : null}<ProductHero product={product} /><ProductScrollNav /><ProductIntro product={product} /><ProductHighlights /><ProductNutrition product={product} /><ProductCooking product={product} /><ProductJourney /><ProductSpecifications product={product} /><ProductPurchase product={product} onAddedToCart={onAddedToCart} /><RelatedProducts /></article>;
+  const gallery = useMemo(() => getProductGallery(product), [product]);
+  const [activeImage, setActiveImage] = useState<GalleryItem>(gallery[0]);
+  const [portion, setPortion] = useState(product.portionOptions[0] || "۵۰۰ گرم");
+  return <article className={`${styles.experience} ${isModal ? styles.modal : ""}`} dir="rtl">{isModal && onClose ? <button type="button" className={styles.close} onClick={onClose} aria-label="بستن جزئیات محصول">×</button> : null}<ProductHero product={product} gallery={gallery} activeImage={activeImage} onSelectImage={setActiveImage} portion={portion} onSelectPortion={setPortion} /><ProductScrollNav /><ProductIntro product={product} /><ProductHighlights /><ProductNutrition product={product} /><ProductCooking product={product} /><ProductJourney /><ProductSpecifications product={product} /><ProductPurchase product={product} portion={portion} onAddedToCart={onAddedToCart} /><RelatedProducts /><ProductReviews /></article>;
 }
 
 export function ProductDetailView(props: ProductDetailViewProps) { return <ProductExperience {...props} />; }

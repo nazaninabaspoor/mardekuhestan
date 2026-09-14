@@ -11,7 +11,7 @@ import { fetchUserOrders, type ApiOrder } from "@/lib/api/orders";
 import { startPayment, type PaymentGateway } from "@/lib/api/payments";
 import { DigikalaCart } from "@/components/v2/v2-digikala-cart";
 import { DigikalaOrdersList, type PastureOrderData } from "@/components/v2/v2-digikala-orders-list";
-import { handleDownloadOrderPdf, resolveProductImage } from "@/app/profile/page";
+import { handleDownloadOrderPdf, resolveProductImage } from "@/lib/profile-order-utils";
 
 const PAGE_SIZE = 15;
 
