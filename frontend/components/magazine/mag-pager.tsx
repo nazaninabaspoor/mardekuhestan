@@ -73,10 +73,13 @@ export function MagPager({
   page,
   pageCount,
   hrefFor,
+  variant = "carousel",
 }: {
   page: number;
   pageCount: number;
   hrefFor: (page: number) => string;
+  /** carousel: only قبلی/بعدی (no growing folio leaves). folio: numbered mini-books. */
+  variant?: "carousel" | "folio";
 }) {
   if (pageCount < 1) return null;
 
@@ -94,17 +97,23 @@ export function MagPager({
           <span className="mk-folio-turn is-quiet">قبلی</span>
         )}
 
-        <ol className="mk-folio-pages">
-          {pageWindow(page, pageCount).map((item, index) =>
-            item === "gap" ? (
-              <li key={`gap-${index}`} className="mk-folio-gap" aria-hidden="true" />
-            ) : (
-              <li key={item}>
-                <Leaf n={item} current={item === page} href={hrefFor(item)} />
-              </li>
-            ),
-          )}
-        </ol>
+        {variant === "folio" ? (
+          <ol className="mk-folio-pages">
+            {pageWindow(page, pageCount).map((item, index) =>
+              item === "gap" ? (
+                <li key={`gap-${index}`} className="mk-folio-gap" aria-hidden="true" />
+              ) : (
+                <li key={item}>
+                  <Leaf n={item} current={item === page} href={hrefFor(item)} />
+                </li>
+              ),
+            )}
+          </ol>
+        ) : (
+          <p className="mk-folio-status mk-folio-status--inline">
+            برگ {fa(page)} از {fa(pageCount)}
+          </p>
+        )}
 
         {next ? (
           <Link className="mk-folio-turn" href={next} rel="next">
@@ -115,9 +124,11 @@ export function MagPager({
         )}
       </div>
 
-      <p className="mk-folio-status">
-        برگ {fa(page)} از {fa(pageCount)}
-      </p>
+      {variant === "folio" ? (
+        <p className="mk-folio-status">
+          برگ {fa(page)} از {fa(pageCount)}
+        </p>
+      ) : null}
     </nav>
   );
 }

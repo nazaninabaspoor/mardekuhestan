@@ -983,9 +983,33 @@ html.is-magazine-route:has(.mk-read) .site-canvas {
 
 .mk-mag-body img,
 .mk-read-body img {
+  display: block;
   max-width: 100%;
   height: auto;
-  margin: 1.2em 0;
+  margin: 1.2em auto;
+  border-radius: 12px;
+}
+
+/* Alt is for accessibility/SEO only — never show as on-page caption text. */
+.mk-mag-body img[alt],
+.mk-read-body img[alt] {
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+}
+
+.mk-mag-body figure,
+.mk-read-body figure {
+  margin: 1.4em 0;
+}
+
+.mk-mag-body figcaption,
+.mk-read-body figcaption {
+  margin-top: 0.55em;
+  color: var(--mk-muted, #5d686e);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  text-align: center;
 }
 
 .mk-read-body a {
@@ -1396,6 +1420,13 @@ a.mk-folio-turn:focus-visible {
 .mk-folio-turn.is-quiet {
   background: transparent;
   color: rgb(244 240 232 / 42%);
+}
+
+.mk-folio-status--inline {
+  margin: 0;
+  min-width: 8rem;
+  text-align: center;
+  align-self: center;
 }
 
 .mk-folio-status {

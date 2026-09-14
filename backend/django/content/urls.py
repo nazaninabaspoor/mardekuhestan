@@ -14,7 +14,7 @@ app_name = "content"
 
 urlpatterns = [
     path("articles/", ArticleListView.as_view(), name="article-list"),
-    path("articles/<slug:slug>/", ArticleDetailView.as_view(), name="article-detail"),
+    path("articles/<path:slug>/", ArticleDetailView.as_view(), name="article-detail"),
     path("categories/", CategoryListView.as_view(), name="category-list"),
     path("magazine-page/", MagazinePageView.as_view(), name="magazine-page"),
     path("tags/", TagListView.as_view(), name="tag-list"),

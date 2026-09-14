@@ -13,15 +13,18 @@ const PAGE_SIZE = 12;
 /** Fresh enough that studio publish/delete shows up quickly on /magazine. */
 const MAG_REVALIDATE = 10;
 
-export async function listArticles(params: {
-  category?: string;
-  tag?: string;
-  pillar?: string;
-  cluster?: string;
-  q?: string;
-  page?: number;
-  pageSize?: number;
-} = {}): Promise<PaginatedContent<ArticleListItem>> {
+export async function listArticles(
+  params: {
+    category?: string;
+    tag?: string;
+    pillar?: string;
+    cluster?: string;
+    q?: string;
+    page?: number;
+    pageSize?: number;
+  } = {},
+  opts?: { revalidate?: number | false },
+): Promise<PaginatedContent<ArticleListItem>> {
   return apiFetch<PaginatedContent<ArticleListItem>>("/api/content/articles/", {
     searchParams: {
       category: params.category,
@@ -32,7 +35,7 @@ export async function listArticles(params: {
       page: params.page ?? 1,
       page_size: params.pageSize ?? PAGE_SIZE,
     },
-    revalidate: MAG_REVALIDATE,
+    revalidate: opts?.revalidate ?? MAG_REVALIDATE,
   });
 }
 

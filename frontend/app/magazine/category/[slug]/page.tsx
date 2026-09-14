@@ -9,8 +9,8 @@ import { listArticles, listCategories, unwrapResults } from "@/lib/api/content";
 import {
   magazineListHref,
   mergeCategoryPins,
-  paginatePins,
   parseMagazinePage,
+  windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards } from "@/lib/content/magazine-page";
 
@@ -21,7 +21,7 @@ async function loadCategory(slug: string) {
   try {
     const [categoriesPayload, articles] = await Promise.all([
       listCategories(),
-      listArticles({ category: slug, page: 1, pageSize: 80 }),
+      listArticles({ category: slug, page: 1, pageSize: 80 }, { revalidate: false }),
     ]);
     return {
       categories: unwrapResults(categoriesPayload),
@@ -31,6 +31,8 @@ async function loadCategory(slug: string) {
     return { categories: [], articles: [] };
   }
 }
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -69,7 +71,7 @@ export default async function MagazineCategoryPage({
   if (!board && !apiCategory) notFound();
 
   const pins = mergeCategoryPins(payload.articles, slug);
-  const leaf = paginatePins(pins, parseMagazinePage(page));
+  const leaf = windowMagazinePins(pins, parseMagazinePage(page));
   const name = apiCategory?.name || board?.name || "";
   const description = apiCategory?.description || board?.description || "";
 

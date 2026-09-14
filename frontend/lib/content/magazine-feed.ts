@@ -2,6 +2,14 @@ import type { ArticleListItem } from "@/lib/api/content.types";
 import { articleCover, formatFaDate } from "@/lib/content/media";
 import { magazinePins, type MagazinePin, searchPins } from "@/data/magazine-issue";
 
+/** Static pins merged when absent from API — until full CMS parity (see workspace rules). */
+const STATIC_MAGAZINE_PIN_SLUGS = new Set(["this-way-is-green"]);
+
+function staticPinsForMerge(query: string) {
+  const pool = query ? searchPins(query) : magazinePins;
+  return pool.filter((pin) => STATIC_MAGAZINE_PIN_SLUGS.has(pin.slug));
+}
+
 export type MagTone = "forest" | "gold" | "earth" | "sage";
 
 export type MagPinData = {
@@ -109,7 +117,7 @@ export function issueToPin(pin: MagazinePin): MagPinData {
 export function mergeMagazinePins(apiArticles: ArticleListItem[], query = "") {
   const fromApi = apiArticles.map(articleToPin);
   const seen = new Set(fromApi.map((pin) => pin.href));
-  const fromIssue = searchPins(query)
+  const fromIssue = staticPinsForMerge(query)
     .map(issueToPin)
     .filter((pin) => !seen.has(pin.href));
   return [...fromApi, ...fromIssue];
@@ -119,7 +127,9 @@ export function mergeCategoryPins(apiArticles: ArticleListItem[], categorySlug: 
   const fromApi = apiArticles.map(articleToPin);
   const seen = new Set(fromApi.map((pin) => pin.href));
   const fromIssue = magazinePins
-    .filter((pin) => pin.categorySlug === categorySlug)
+    .filter(
+      (pin) => pin.categorySlug === categorySlug && STATIC_MAGAZINE_PIN_SLUGS.has(pin.slug),
+    )
     .map(issueToPin)
     .filter((pin) => !seen.has(pin.href));
   return [...fromApi, ...fromIssue];
@@ -129,25 +139,34 @@ export function articleDateLabel(article: ArticleListItem) {
   return formatFaDate(article.published_at);
 }
 
-export const MAG_PAGE_SIZE = 10;
+/** Visible book cards on /magazine (5 columns × 2 rows). */
+export const MAG_WINDOW_SIZE = 10;
 
 export function parseMagazinePage(value?: string) {
   const n = Number.parseInt(value || "1", 10);
   return Number.isFinite(n) && n > 0 ? n : 1;
 }
 
-export function paginatePins<T>(items: T[], page: number, size = MAG_PAGE_SIZE) {
-  const pageCount = Math.max(1, Math.ceil(items.length / size));
-  const current = Math.min(Math.max(1, page), pageCount);
-  const start = (current - 1) * size;
+/** `page` is 1-based window step: each step shifts the shelf by one book. */
+export function windowMagazinePins<T>(items: T[], page: number, size = MAG_WINDOW_SIZE) {
+  const total = items.length;
+  const maxStart = total > size ? total - size : 0;
+  const start = Math.min(Math.max(0, page - 1), maxStart);
+  const stepCount = maxStart + 1;
+  const current = start + 1;
   return {
     items: items.slice(start, start + size),
     page: current,
-    pageCount,
-    total: items.length,
-    hasPrev: current > 1,
-    hasNext: current < pageCount,
+    pageCount: stepCount,
+    total,
+    hasPrev: start > 0,
+    hasNext: start < maxStart,
   };
+}
+
+/** @deprecated Use windowMagazinePins for magazine shelves. */
+export function paginatePins<T>(items: T[], page: number, size = MAG_WINDOW_SIZE) {
+  return windowMagazinePins(items, page, size);
 }
 
 export function magazineListHref(opts: {

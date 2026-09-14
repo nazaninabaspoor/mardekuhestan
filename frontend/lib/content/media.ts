@@ -16,6 +16,42 @@ export function resolveMediaUrl(path: string | null | undefined): string {
   return `${getApiBaseUrl()}/media/${raw.replace(/^\/+/, "")}`;
 }
 
+/**
+ * CKEditor stores uploads as `/media/...` (Django). Rewrite those to the API host
+ * so images work when the magazine runs on :3000.
+ */
+export function rewriteArticleHtmlMedia(html: string): string {
+  if (!html) return "";
+  const api = getApiBaseUrl().replace(/\/$/, "");
+  let out = html;
+
+  // Unescape accidental double-encoded HTML from pasting source into visual mode.
+  if (
+    /&lt;(?:p|h[1-6]|ul|ol|li|figure|img|div|strong|em)\b/i.test(out) &&
+    !/<(?:p|h[1-6])\b/i.test(out)
+  ) {
+    out = out
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&");
+  }
+
+  out = out.replace(
+    /\b(src|href|poster)=(["'])(\/media\/[^"']+)\2/gi,
+    (_full, attr: string, quote: string, path: string) =>
+      `${attr}=${quote}${api}${path}${quote}`,
+  );
+  out = out.replace(
+    /\b(src|href|poster)=(["'])(media\/[^"']+)\2/gi,
+    (_full, attr: string, quote: string, path: string) =>
+      `${attr}=${quote}${api}/${path}${quote}`,
+  );
+
+  return out;
+}
+
 export function fallbackCover(seed = 0): string {
   return FALLBACKS[Math.abs(seed) % FALLBACKS.length];
 }
@@ -36,7 +72,9 @@ export function formatFaDate(iso: string | null | undefined): string {
   }).format(date);
 }
 
-export function faqPairs(raw: Array<Record<string, string>> | undefined): Array<{ q: string; a: string }> {
+export function faqPairs(
+  raw: Array<Record<string, string>> | undefined,
+): Array<{ q: string; a: string }> {
   if (!Array.isArray(raw)) return [];
   return raw
     .map((item) => {

@@ -7,7 +7,7 @@ import { magazinePins, pinBySlug, relatedPins } from "@/data/magazine-issue";
 import { ApiError } from "@/lib/api/client";
 import { getArticleBySlug } from "@/lib/api/content";
 import type { ArticleDetail } from "@/lib/api/content.types";
-import { articleCover, faqPairs, formatFaDate, resolveMediaUrl } from "@/lib/content/media";
+import { articleCover, faqPairs, formatFaDate, resolveMediaUrl, rewriteArticleHtmlMedia } from "@/lib/content/media";
 import { articleToPin, issueToPin, toneForCategory } from "@/lib/content/magazine-feed";
 import { magazineArticleGraph } from "@/lib/content/magazine-schema";
 
@@ -28,7 +28,7 @@ async function loadArticle(slug: string) {
 
 function storyFromApi(article: ArticleDetail): MagStory {
   const category = article.categories[0];
-  const body = article.body || "";
+  const body = rewriteArticleHtmlMedia(article.body || "");
   return {
     slug: article.slug,
     title: article.title,

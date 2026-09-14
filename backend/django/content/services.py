@@ -154,8 +154,21 @@ def prepare_article_for_save(article) -> None:
         )
     if article.geo_faq:
         article.geo_faq = normalize_geo_faq(article.geo_faq)
-    if article.internal_links:
+    # Empty admin JSON fields arrive as None — DB columns are NOT NULL.
+    if not article.internal_links:
+        article.internal_links = []
+    else:
         article.internal_links = normalize_internal_links(article.internal_links)
+    if article.secondary_keywords is None:
+        article.secondary_keywords = []
+    if article.geo_key_facts is None:
+        article.geo_key_facts = []
+    if article.geo_entities is None:
+        article.geo_entities = []
+    if article.geo_faq is None:
+        article.geo_faq = []
+    if article.schema_json is None:
+        article.schema_json = {}
     article.word_count, article.reading_time_minutes = compute_reading_metrics(article.body)
     apply_seo_defaults(article)
     article.schema_json = build_article_schema(article)

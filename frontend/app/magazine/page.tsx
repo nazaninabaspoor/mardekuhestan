@@ -8,8 +8,8 @@ import { listArticles } from "@/lib/api/content";
 import {
   magazineListHref,
   mergeMagazinePins,
-  paginatePins,
   parseMagazinePage,
+  windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards, loadMagazinePage } from "@/lib/content/magazine-page";
 
@@ -17,12 +17,14 @@ type Search = { q?: string; page?: string };
 
 async function loadIndex(q?: string) {
   try {
-    const articles = await listArticles({ q, page: 1, pageSize: 80 });
+    const articles = await listArticles({ q, page: 1, pageSize: 80 }, { revalidate: false });
     return articles.results || [];
   } catch {
     return [];
   }
 }
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "مجله مرد کوهستان | این راه سبز است",
@@ -42,7 +44,7 @@ export default async function MagazinePage({
     loadMagazinePage(),
   ]);
   const pins = mergeMagazinePins(articles, q);
-  const leaf = paginatePins(pins, parseMagazinePage(params.page));
+  const leaf = windowMagazinePins(pins, parseMagazinePage(params.page));
 
   return (
     <>

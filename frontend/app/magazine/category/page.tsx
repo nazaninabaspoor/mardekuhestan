@@ -3,16 +3,16 @@ import type { Metadata } from "next";
 import { MagBoards } from "@/components/magazine/mag-boards";
 import { MagMasonry } from "@/components/magazine/mag-card";
 import { MagPager } from "@/components/magazine/mag-pager";
-import { magazinePins } from "@/data/magazine-issue";
 import { listArticles } from "@/lib/api/content";
 import {
-  issueToPin,
   magazineListHref,
   mergeMagazinePins,
-  paginatePins,
   parseMagazinePage,
+  windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards } from "@/lib/content/magazine-page";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "قفسه‌های مجله | مرد کوهستان",
@@ -28,14 +28,12 @@ export default async function MagazineCategoryIndexPage({
   const { page } = await searchParams;
   const [boards, apiArticles] = await Promise.all([
     loadMagazineBoards(),
-    listArticles({ page: 1, pageSize: 80 })
+    listArticles({ page: 1, pageSize: 80 }, { revalidate: false })
       .then((res) => res.results || [])
       .catch(() => []),
   ]);
-  const pins = apiArticles.length
-    ? mergeMagazinePins(apiArticles)
-    : magazinePins.map(issueToPin);
-  const leaf = paginatePins(pins, parseMagazinePage(page));
+  const pins = mergeMagazinePins(apiArticles);
+  const leaf = windowMagazinePins(pins, parseMagazinePage(page));
 
   return (
     <div className="mk-mag-shell">
