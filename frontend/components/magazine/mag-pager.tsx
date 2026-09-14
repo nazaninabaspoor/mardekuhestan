@@ -69,6 +69,41 @@ function Leaf({
   );
 }
 
+function TurnLeaf({
+  label,
+  href,
+  rel,
+}: {
+  label: string;
+  href: string | null;
+  rel?: "prev" | "next";
+}) {
+  const inner = (
+    <>
+      <span className="mk-folio-leaf-pages" aria-hidden="true" />
+      <span className="mk-folio-leaf-spine" aria-hidden="true" />
+      <span className="mk-folio-leaf-face">
+        <PeakMark />
+        <b className="mk-folio-leaf-label">{label}</b>
+      </span>
+    </>
+  );
+
+  if (!href) {
+    return (
+      <span className="mk-folio-leaf mk-folio-leaf--turn is-quiet" aria-disabled="true">
+        {inner}
+      </span>
+    );
+  }
+
+  return (
+    <Link className="mk-folio-leaf mk-folio-leaf--turn" href={href} rel={rel}>
+      {inner}
+    </Link>
+  );
+}
+
 export function MagPager({
   page,
   pageCount,
@@ -78,7 +113,7 @@ export function MagPager({
   page: number;
   pageCount: number;
   hrefFor: (page: number) => string;
-  /** carousel: only قبلی/بعدی (no growing folio leaves). folio: numbered mini-books. */
+  /** carousel: فقط کتاب قبلی/بعدی. folio: برگ‌های شماره‌دار. */
   variant?: "carousel" | "folio";
 }) {
   if (pageCount < 1) return null;
@@ -89,13 +124,7 @@ export function MagPager({
   return (
     <nav className="mk-folio" aria-label="برگ‌های مجله">
       <div className="mk-folio-shelf">
-        {prev ? (
-          <Link className="mk-folio-turn" href={prev} rel="prev">
-            قبلی
-          </Link>
-        ) : (
-          <span className="mk-folio-turn is-quiet">قبلی</span>
-        )}
+        <TurnLeaf label="قبلی" href={prev} rel="prev" />
 
         {variant === "folio" ? (
           <ol className="mk-folio-pages">
@@ -115,13 +144,7 @@ export function MagPager({
           </p>
         )}
 
-        {next ? (
-          <Link className="mk-folio-turn" href={next} rel="next">
-            بعدی
-          </Link>
-        ) : (
-          <span className="mk-folio-turn is-quiet">بعدی</span>
-        )}
+        <TurnLeaf label="بعدی" href={next} rel="next" />
       </div>
 
       {variant === "folio" ? (

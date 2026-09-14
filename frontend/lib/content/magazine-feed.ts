@@ -2,14 +2,6 @@ import type { ArticleListItem } from "@/lib/api/content.types";
 import { articleCover, formatFaDate } from "@/lib/content/media";
 import { magazinePins, type MagazinePin, searchPins } from "@/data/magazine-issue";
 
-/** Static pins merged when absent from API — until full CMS parity (see workspace rules). */
-const STATIC_MAGAZINE_PIN_SLUGS = new Set(["this-way-is-green"]);
-
-function staticPinsForMerge(query: string) {
-  const pool = query ? searchPins(query) : magazinePins;
-  return pool.filter((pin) => STATIC_MAGAZINE_PIN_SLUGS.has(pin.slug));
-}
-
 export type MagTone = "forest" | "gold" | "earth" | "sage";
 
 export type MagPinData = {
@@ -117,7 +109,7 @@ export function issueToPin(pin: MagazinePin): MagPinData {
 export function mergeMagazinePins(apiArticles: ArticleListItem[], query = "") {
   const fromApi = apiArticles.map(articleToPin);
   const seen = new Set(fromApi.map((pin) => pin.href));
-  const fromIssue = staticPinsForMerge(query)
+  const fromIssue = searchPins(query)
     .map(issueToPin)
     .filter((pin) => !seen.has(pin.href));
   return [...fromApi, ...fromIssue];
@@ -127,9 +119,7 @@ export function mergeCategoryPins(apiArticles: ArticleListItem[], categorySlug: 
   const fromApi = apiArticles.map(articleToPin);
   const seen = new Set(fromApi.map((pin) => pin.href));
   const fromIssue = magazinePins
-    .filter(
-      (pin) => pin.categorySlug === categorySlug && STATIC_MAGAZINE_PIN_SLUGS.has(pin.slug),
-    )
+    .filter((pin) => pin.categorySlug === categorySlug)
     .map(issueToPin)
     .filter((pin) => !seen.has(pin.href));
   return [...fromApi, ...fromIssue];
