@@ -6,6 +6,7 @@ from app.modules.automation.routers import router as automation_router
 from app.modules.integrations.routers import router as integrations_router
 from app.modules.knowledge.routers import router as knowledge_router
 from app.modules.recommendations.routers import router as recommendations_router
+from app.modules.support.routers import router as support_router
 
 api_router = APIRouter()
 api_router.include_router(health.router)
@@ -14,3 +15,4 @@ api_router.include_router(recommendations_router)
 api_router.include_router(knowledge_router)
 api_router.include_router(automation_router)
 api_router.include_router(integrations_router)
+api_router.include_router(support_router)

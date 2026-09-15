@@ -1,13 +1,41 @@
 ﻿from rest_framework import serializers
 
-from content.models import Article, Category, ContentPillar, Tag, TopicCluster
+from content.models import Article, Category, ContentPillar, MagazinePageSettings, Tag, TopicCluster
+from content.selectors import get_related_articles
 from content.services import seo_readiness_checklist
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    article_count = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ("id", "name", "slug", "description", "parent", "is_active")
+        fields = (
+            "id",
+            "name",
+            "slug",
+            "description",
+            "seo_title",
+            "parent",
+            "is_active",
+            "sort_order",
+            "show_on_magazine",
+            "image",
+            "article_count",
+        )
+
+    def get_article_count(self, obj: Category) -> int:
+        return int(getattr(obj, "article_count", 0) or 0)
+
+    def get_image(self, obj: Category) -> str:
+        return obj.board_image_url or ""
+
+
+class MagazinePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MagazinePageSettings
+        fields = ("hero_eyebrow", "hero_title", "search_placeholder", "updated_at")
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -88,6 +116,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     pillar_detail = ContentPillarSerializer(source="pillar", read_only=True)
     cluster_detail = TopicClusterSerializer(source="cluster", read_only=True)
+    related = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
@@ -120,6 +149,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
             "cluster",
             "pillar_detail",
             "cluster_detail",
+            "related",
             "categories",
             "tags",
             "cover_image",
@@ -140,3 +170,6 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
 
     def get_readiness(self, obj: Article) -> dict:
         return seo_readiness_checklist(obj)
+
+    def get_related(self, obj: Article) -> list:
+        return ArticleListSerializer(get_related_articles(obj), many=True, context=self.context).data

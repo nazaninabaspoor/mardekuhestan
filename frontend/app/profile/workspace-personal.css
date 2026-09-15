@@ -1,0 +1,1914 @@
+﻿/* ==========================================================================
+   MARDE KOOHESTAN — Personal Info & Security Workspace (2026 Brand Edition)
+   Authentic Iranian Shenasnameh, Precision Security Vault & Cold-Chain Parcels
+   Aligned strictly with Marde Koohestan Brand Guidelines & Natural Colors
+   ========================================================================== */
+
+.profile-workspace-section[data-theme="personal"] {
+  position: relative !important;
+  padding: 14px 20px 20px !important;
+  height: min(92vh, 830px) !important;
+  max-height: min(92vh, 830px) !important;
+  min-height: 560px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  /* Brand-aligned Forest Emerald Glass with warm luxury gradient */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 91, 72, 0.45) 0%, rgba(14, 38, 30, 0.94) 50%, rgba(9, 24, 19, 0.98) 100%) !important;
+  backdrop-filter: blur(32px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(1.3) !important;
+  border: 1px solid rgba(212, 163, 89, 0.45) !important;
+  box-shadow:
+    0 28px 70px rgba(0, 20, 15, 0.55),
+    0 0 0 1px rgba(0, 91, 72, 0.3),
+    inset 0 1px 0 rgba(212, 163, 89, 0.4) !important;
+  color: #f4f0e8;
+  box-sizing: border-box;
+}
+
+.profile-workspace-section[data-theme="personal"]::before,
+.profile-workspace-section[data-theme="personal"]::after {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+}
+
+.profile-workspace-section[data-theme="personal"] .desk-pane-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   CONSOLE CONTAINER & TOPBAR
+   -------------------------------------------------------------------------- */
+
+.mk-ledger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mk-ledger-topbar {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-shrink: 0;
+  padding: 0 4px 10px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
+  margin-bottom: 10px;
+}
+
+.mk-ledger-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mk-ledger-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #d4a359, 0 4px 12px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.mk-ledger-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-ledger-titles strong {
+  color: #f4f0e8;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.mk-ledger-titles span {
+  color: rgba(212, 163, 89, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mk-ledger-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.45);
+  font-size: 11px;
+  font-weight: 800;
+  color: #a4e09e;
+  white-space: nowrap;
+}
+
+.mk-ledger-live svg {
+  color: #50af47;
+}
+
+.mk-ledger-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  background: rgba(0, 91, 72, 0.35);
+  color: #f4f0e8;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mk-ledger-close:hover {
+  background: rgba(212, 163, 89, 0.25);
+  border-color: #d4a359;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.mk-ledger-close svg {
+  color: #d4a359;
+}
+
+/* --------------------------------------------------------------------------
+   DESK GRID LAYOUT (Shenasnameh Folio on Right, Vault + Parcels on Left)
+   -------------------------------------------------------------------------- */
+
+.mk-ledger-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mk-ledger-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mk-ledger-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 0.72fr);
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.mk-ledger-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+}
+
+/* --------------------------------------------------------------------------
+   CORNER BRASS BOLTS (Tactical Hardware)
+   -------------------------------------------------------------------------- */
+
+.mk-safe-bolt {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #d4a359 55%, #8a652e 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.mk-safe-bolt.is-tr { top: 9px; right: 9px; }
+.mk-safe-bolt.is-tl { top: 9px; left: 9px; }
+.mk-safe-bolt.is-br { bottom: 9px; right: 9px; }
+.mk-safe-bolt.is-bl { bottom: 9px; left: 9px; }
+
+/* ==========================================================================
+   CARD 1: AUTHENTIC IRANIAN SHENASNAMEH (BRAND IDENTITY FOLIO)
+   Forest Green Leatherette Cover + Warm Cream Parchment Interior
+   ========================================================================== */
+
+.mk-shenasnameh {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  border-radius: 14px;
+  /* Deep Forest Green Textured Leatherette Exterior */
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 91, 72, 0.6) 0%, rgba(0, 56, 44, 0.95) 70%, #002e24 100%);
+  border: 1.5px solid #d4a359;
+  box-shadow:
+    0 16px 40px rgba(0, 20, 15, 0.45),
+    0 0 0 1px rgba(212, 163, 89, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 10px 10px 10px 32px; /* Extra left padding for spine */
+}
+
+/* Spine detail */
+.mk-shenasnameh-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(90deg, #002b21 0%, #004d3d 50%, #002b21 100%);
+  border-right: 1px solid rgba(212, 163, 89, 0.5);
+  box-shadow: inset -2px 0 6px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.mk-shenasnameh-spine span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #d4a359;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  opacity: 0.85;
+}
+
+/* Inner Parchment Page */
+.mk-shenasnameh-page {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Authentic Warm Cream Security Parchment */
+  background:
+    radial-gradient(ellipse at 50% 20%, #faf8f3 0%, #f4f0e8 70%, #eae4d6 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 163, 89, 0.45);
+  box-shadow:
+    inset 0 0 24px rgba(144, 56, 40, 0.04),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+  padding: 16px 20px 14px;
+  color: #1d1d1b;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Guilloche Pattern & Watermark Overlay */
+.mk-shenasnameh-watermark {
+  display: none;
+}
+
+.mk-shenasnameh-guilloche {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.mk-shenasnameh-head,
+.mk-shenasnameh-alert,
+.mk-shenasnameh-body,
+.mk-shenasnameh-centerpiece,
+.mk-shenasnameh-foot {
+  position: relative;
+  z-index: 1;
+}
+
+/* Official Header */
+.mk-shenasnameh-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid rgba(0, 91, 72, 0.18);
+  margin-bottom: 10px;
+}
+
+.mk-shenasnameh-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mk-shenasnameh-org {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #005b48;
+}
+
+.mk-shenasnameh-serial {
+  font-size: 9.5px;
+  font-weight: 900;
+  font-family: monospace;
+  color: #903828;
+  letter-spacing: 0.05em;
+}
+
+.mk-shenasnameh-head-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-shenasnameh-crest {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.2px solid #005b48;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+
+.mk-shenasnameh-head-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mk-shenasnameh-title-fa {
+  font-size: 15px;
+  font-weight: 900;
+  color: #005b48;
+  letter-spacing: -0.01em;
+}
+
+.mk-shenasnameh-title-en {
+  font-size: 8px;
+  font-weight: 800;
+  color: #8a652e;
+  letter-spacing: 0.1em;
+}
+
+/* Alerts */
+.mk-shenasnameh-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.mk-shenasnameh-alert.is-ok {
+  background: rgba(80, 175, 71, 0.15);
+  border: 1px solid rgba(80, 175, 71, 0.4);
+  color: #005b48;
+}
+
+.mk-shenasnameh-alert.is-bad {
+  background: rgba(144, 56, 40, 0.12);
+  border: 1px solid rgba(144, 56, 40, 0.35);
+  color: #903828;
+}
+
+/* Document Body Layout */
+.mk-shenasnameh-body {
+  display: grid;
+  grid-template-columns: 122px minmax(0, 1fr);
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+}
+
+/* Photo Section */
+.mk-shenasnameh-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.mk-shenasnameh-photo-wrap {
+  position: relative;
+  width: 118px;
+  height: 154px;
+}
+
+.mk-shenasnameh-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e4ded0 0%, #d5cdbd 100%);
+  border: 1.5px solid #005b48;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.mk-shenasnameh-photo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 91, 72, 0.25);
+  border-color: #d4a359;
+}
+
+.mk-shenasnameh-user-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.mk-shenasnameh-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 91, 72, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #f4f0e8;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3;
+}
+
+.mk-shenasnameh-photo:hover .mk-shenasnameh-photo-overlay {
+  opacity: 1;
+}
+
+.mk-shenasnameh-photo-overlay span {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mk-shenasnameh-photo strong {
+  font-size: 38px;
+  font-weight: 900;
+  color: #005b48;
+  line-height: 1;
+}
+
+.mk-shenasnameh-photo small {
+  font-size: 9px;
+  font-weight: 700;
+  color: #5d686e;
+  margin-top: 4px;
+}
+
+.mk-shenasnameh-foil {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(180deg, #d4a359 0%, #50af47 35%, #86c2eb 70%, #d4a359 100%);
+  opacity: 0.65;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.mk-shenasnameh-corner-mount {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #d4a359;
+  border-style: solid;
+  z-index: 2;
+}
+
+.mk-shenasnameh-corner-mount.is-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.mk-shenasnameh-corner-mount.is-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.mk-shenasnameh-corner-mount.is-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.mk-shenasnameh-corner-mount.is-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.mk-shenasnameh-embossed-seal {
+  position: absolute;
+  bottom: -12px;
+  right: -12px;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
+}
+
+.mk-shenasnameh-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3.5px 9px;
+  border-radius: 4px;
+  background: rgba(80, 175, 71, 0.16);
+  border: 1px solid rgba(80, 175, 71, 0.5);
+  color: #005b48;
+  font-size: 10.5px;
+  font-weight: 900;
+}
+
+/* Fields Area */
+.mk-shenasnameh-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 9px;
+  min-width: 0;
+  flex: 1;
+}
+
+.mk-shenasnameh-dual-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mk-shenasnameh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mk-shenasnameh-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mk-shenasnameh-label-row label,
+.mk-shenasnameh-field label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #005b48;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mk-shenasnameh-field label em {
+  font-style: normal;
+}
+
+.mk-shenasnameh-lock-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #5d686e;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.mk-shenasnameh-edit-badge {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #903828;
+  background: rgba(144, 56, 40, 0.08);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.mk-shenasnameh-val-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 10px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 91, 72, 0.18);
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.mk-shenasnameh-val-row strong {
+  font-size: 12.5px;
+  font-weight: 900;
+  color: #1d1d1b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mk-shenasnameh-val-row small {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #8a652e;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  margin-inline-start: 6px;
+  flex-shrink: 0;
+}
+
+.mk-shenasnameh-field input {
+  width: 100%;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d1d1b;
+  background: #ffffff;
+  border: 1px solid rgba(212, 163, 89, 0.55);
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.mk-shenasnameh-field input:focus {
+  border-color: #005b48;
+  box-shadow: 0 0 0 2px rgba(0, 91, 72, 0.15);
+}
+
+/* ==========================================================================
+   OFFICIAL EMBOSSED SEAL & CREDENTIAL CENTERPIECE (MID-PAGE)
+   ========================================================================== */
+
+.mk-shenasnameh-centerpiece {
+  position: relative;
+  margin: 12px 0 10px;
+  padding: 8px 12px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(244, 240, 232, 0.95) 0%, rgba(234, 228, 214, 0.65) 100%);
+  border: 1px solid rgba(212, 163, 89, 0.45);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.8),
+    0 2px 6px rgba(0, 40, 30, 0.05);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mk-shenasnameh-center-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Side Pillars (Right & Left Wings) */
+.mk-shenasnameh-pillar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 91, 72, 0.16);
+  border-radius: 6px;
+  padding: 6px 10px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.mk-shenasnameh-pillar.is-right {
+  justify-content: flex-start;
+}
+
+.mk-shenasnameh-pillar.is-left {
+  justify-content: flex-start;
+}
+
+.mk-pillar-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0, 91, 72, 0.1);
+  border: 1px solid rgba(0, 91, 72, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mk-pillar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-pillar-info strong {
+  font-size: 10px;
+  font-weight: 900;
+  color: #005b48;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.mk-pillar-info span {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #5d686e;
+  white-space: nowrap;
+}
+
+/* Unified Precision Medallion Seal */
+.mk-shenasnameh-seal-medallion {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 10px rgba(0, 91, 72, 0.25));
+}
+
+.mk-seal-svg {
+  width: 92px;
+  height: 92px;
+  display: block;
+  transform: rotate(0deg);
+}
+
+.mk-seal-center-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.mk-seal-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
+}
+
+/* Document Footer */
+.mk-shenasnameh-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1.5px solid rgba(0, 91, 72, 0.18);
+  margin-top: 8px;
+}
+
+/* Official Signature Badge Card */
+.mk-shenasnameh-sign-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0, 91, 72, 0.04);
+  border: 1px dashed rgba(0, 91, 72, 0.28);
+  border-radius: 8px;
+  padding: 4px 10px 4px;
+  min-width: 175px;
+  max-width: 215px;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-shenasnameh-sign-card:hover {
+  border-color: #005b48;
+  background: rgba(0, 91, 72, 0.07);
+}
+
+.mk-shenasnameh-sign-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.mk-shenasnameh-sign-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #005b48;
+}
+
+.mk-shenasnameh-sign-badge {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #8a652e;
+  background: rgba(212, 163, 89, 0.2);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.mk-shenasnameh-sign-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  position: relative;
+  min-height: 32px;
+}
+
+.mk-shenasnameh-sign-text-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+}
+
+.mk-shenasnameh-sign-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: text;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.mk-shenasnameh-sign-name {
+  font-family: 'MardeKuhestan', cursive, serif;
+  font-size: 17px;
+  font-weight: 900;
+  color: #14352b;
+  transform: rotate(-2.5deg) skewX(-3deg);
+  text-shadow: 0 1px 1px rgba(0, 91, 72, 0.22);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.mk-shenasnameh-sign-card:hover .mk-shenasnameh-sign-name {
+  color: #903828;
+}
+
+.mk-shenasnameh-sign-flourish {
+  width: 135px;
+  height: 18px;
+  margin-top: -6px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(144, 56, 40, 0.2));
+}
+
+.mk-shenasnameh-sign-stamp {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(144, 56, 40, 0.15));
+}
+
+.mk-shenasnameh-mrz {
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+  font-size: 7.5px;
+  font-weight: 800;
+  color: rgba(0, 91, 72, 0.7);
+  letter-spacing: 0.14em;
+  line-height: 1.15;
+}
+
+.mk-shenasnameh-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #005b48 0%, #004537 100%);
+  color: #f4f0e8;
+  border: 1px solid #d4a359;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 91, 72, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.mk-shenasnameh-submit-btn:hover {
+  background: linear-gradient(135deg, #007059 0%, #005b48 100%);
+  border-color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(0, 91, 72, 0.4);
+}
+
+.mk-shenasnameh-submit-btn svg {
+  color: #d4a359;
+}
+
+/* ==========================================================================
+   CARD 2: SECURITY VAULT (Tactical Steel & Burnished Brass Safe)
+   ========================================================================== */
+
+.mk-safe {
+  position: relative;
+  flex: 1 1 54%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  /* Brushed Emerald Titanium Door with Brass Trim */
+  background:
+    linear-gradient(155deg, rgba(0, 68, 54, 0.85) 0%, rgba(8, 28, 22, 0.96) 60%, rgba(4, 16, 12, 0.98) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.55);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 18px rgba(0, 0, 0, 0.55);
+  padding: 14px 16px 12px;
+  box-sizing: border-box;
+}
+
+.mk-safe-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
+}
+
+.mk-safe-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-safe-kicker {
+  font-size: 8.5px;
+  font-weight: 900;
+  color: #d4a359;
+  letter-spacing: 0.16em;
+}
+
+.mk-safe-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: #f4f0e8;
+  letter-spacing: -0.01em;
+}
+
+/* 3D Tactile Brass Safe Dial */
+.mk-safe-dial {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff1c7 0%, #d4a359 50%, #8a652e 100%);
+  border: 2px solid #5a411a;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    inset 0 0 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mk-safe-dial-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 0, 0, 0.45);
+}
+
+.mk-safe-dial-ring.is-mid {
+  inset: 7px;
+  border-style: dotted;
+}
+
+.mk-safe-dial-core {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #005b48 70%, #00281f 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.mk-safe-cavity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  justify-content: space-between;
+}
+
+.mk-safe-alert {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.mk-safe-alert.is-ok {
+  background: rgba(80, 175, 71, 0.2);
+  border: 1px solid rgba(80, 175, 71, 0.45);
+  color: #a4e09e;
+}
+
+.mk-safe-alert.is-bad {
+  background: rgba(144, 56, 40, 0.2);
+  border: 1px solid rgba(144, 56, 40, 0.45);
+  color: #ff9b8c;
+}
+
+.mk-safe-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 10px;
+  margin: 2px 0 6px;
+}
+
+.mk-safe-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mk-safe-field-head,
+.mk-safe-field label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: rgba(244, 240, 232, 0.9);
+}
+
+.mk-safe-field-head label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f4f0e8;
+}
+
+.mk-safe-field-head label svg {
+  opacity: 0.95;
+  flex-shrink: 0;
+}
+
+.mk-safe-tight {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #a4e09e;
+  background: rgba(80, 175, 71, 0.18);
+  border: 1px solid rgba(80, 175, 71, 0.45);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.mk-safe-tight.is-loose {
+  color: #ff9b8c;
+  background: rgba(144, 56, 40, 0.2);
+  border-color: rgba(144, 56, 40, 0.45);
+}
+
+.mk-safe-tight-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Vault Tactical Secret Input Slot */
+.mk-safe-secret {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(2, 18, 14, 0.82);
+  border: 1.2px solid rgba(212, 163, 89, 0.42);
+  border-radius: 7px;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.65),
+    0 1px 2px rgba(212, 163, 89, 0.08);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 42px;
+  min-height: 42px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.mk-safe-secret:focus-within {
+  border-color: #d4a359;
+  background: rgba(1, 24, 18, 0.94);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.7),
+    0 0 0 2px rgba(212, 163, 89, 0.28);
+}
+
+.mk-safe-input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f4f0e8;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.mk-safe-input::placeholder {
+  color: rgba(244, 240, 232, 0.35);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
+/* Tactical Peek / Show Password Button */
+.mk-safe-peek {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  margin-inline-end: 6px;
+  background: rgba(212, 163, 89, 0.14);
+  border: 1px solid rgba(212, 163, 89, 0.42);
+  border-radius: 5px;
+  color: #d4a359;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mk-safe-peek:hover {
+  background: rgba(212, 163, 89, 0.28);
+  border-color: #f5db99;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transform: translateY(-0.5px);
+}
+
+.mk-safe-peek:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.mk-safe-peek.is-active {
+  background: rgba(80, 175, 71, 0.22);
+  border-color: rgba(80, 175, 71, 0.6);
+  color: #a4e09e;
+}
+
+.mk-safe-peek.is-active:hover {
+  background: rgba(80, 175, 71, 0.32);
+  border-color: #a4e09e;
+  color: #ffffff;
+}
+
+.mk-safe-peek svg {
+  flex-shrink: 0;
+}
+
+.mk-safe-turn {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #d4a359 0%, #b8863b 100%);
+  color: #1a1408;
+  font-size: 12px;
+  font-weight: 900;
+  border: 1px solid #f5db99;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mk-safe-turn:hover {
+  background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(212, 163, 89, 0.45);
+}
+
+.mk-safe-turn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   CARD 3: COLD CHAIN DELIVERY PACKETS (Tactical Consignment & Map Coordinates)
+   ========================================================================== */
+
+.mk-mail {
+  position: relative;
+  flex: 1 1 46%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background:
+    linear-gradient(155deg, rgba(0, 56, 44, 0.82) 0%, rgba(4, 20, 16, 0.96) 100%);
+  border: 1.5px solid rgba(212, 163, 89, 0.45);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 16px rgba(0, 0, 0, 0.5);
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+.mk-mail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.22);
+}
+
+.mk-mail-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mk-mail-kicker {
+  font-size: 8px;
+  font-weight: 900;
+  color: #d4a359;
+  letter-spacing: 0.14em;
+}
+
+.mk-mail-head h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 900;
+  color: #f4f0e8;
+  letter-spacing: -0.01em;
+}
+
+.mk-mail-cold-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(134, 194, 235, 0.12);
+  border: 1px solid rgba(134, 194, 235, 0.38);
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #aae0ff;
+}
+
+.mk-mail-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #86c2eb;
+  box-shadow: 0 0 6px #86c2eb;
+}
+
+.mk-mail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Realistic Location & Postal Consignment Ticket Card - Emerald Obsidian & Brass */
+.mk-packet {
+  position: relative;
+  background:
+    linear-gradient(150deg, rgba(3, 30, 24, 0.95) 0%, rgba(1, 18, 14, 0.98) 60%, rgba(0, 11, 8, 0.99) 100%);
+  border: 1.2px solid rgba(212, 163, 89, 0.4);
+  border-radius: 9px;
+  padding: 8px 10px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 14px rgba(0, 0, 0, 0.45);
+  color: #f4f0e8;
+  overflow: hidden;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.mk-packet.is-home {
+  border-right: 3px solid #50af47;
+}
+
+.mk-packet.is-work {
+  border-right: 3px solid #be6516;
+}
+
+.mk-packet:hover {
+  transform: translateY(-2px);
+  border-color: #d4a359;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(212, 163, 89, 0.22);
+}
+
+.mk-packet-geo-watermark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  overflow: hidden;
+}
+
+.mk-geo-grid-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Header: Title, Pin & Type Badge */
+.mk-packet-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.mk-packet-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mk-packet-pin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.mk-packet-pin.is-home {
+  background: radial-gradient(circle at 35% 35%, #50af47 0%, #005b48 85%);
+  color: #ffffff;
+  border: 1px solid #73d66a;
+}
+
+.mk-packet-pin.is-work {
+  background: radial-gradient(circle at 35% 35%, #e67e22 0%, #903828 85%);
+  color: #ffffff;
+  border: 1px solid #f39c12;
+}
+
+.mk-packet-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mk-packet-title-box h4 {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #f4f0e8;
+  letter-spacing: -0.01em;
+}
+
+.mk-packet-type-text {
+  font-size: 8px;
+  font-weight: 800;
+  color: #d4a359;
+}
+
+.mk-packet-route-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(0, 91, 72, 0.5);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #aae0ff;
+}
+
+.mk-packet.is-work .mk-packet-route-chip {
+  background: rgba(144, 56, 40, 0.4);
+  border-color: rgba(212, 163, 89, 0.35);
+  color: #fed0bb;
+}
+
+.mk-route-radar-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #50af47;
+  box-shadow: 0 0 6px #50af47;
+}
+
+.mk-packet.is-work .mk-route-radar-dot {
+  background: #e67e22;
+  box-shadow: 0 0 6px #e67e22;
+}
+
+/* Geo City & Postal Code Info Row */
+.mk-packet-meta-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding: 2.5px 6px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(212, 163, 89, 0.18);
+}
+
+.mk-packet-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: rgba(244, 240, 232, 0.9);
+}
+
+.mk-packet-meta-item.is-postal {
+  color: #86c2eb;
+}
+
+.mk-packet-meta-item.is-postal strong {
+  color: #d4a359;
+  font-family: inherit;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+/* Detailed Address Line Box */
+.mk-packet-body {
+  position: relative;
+  z-index: 1;
+  margin: 1px 0 4px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mk-packet-address-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  background: rgba(0, 28, 22, 0.55);
+  border: 1px dashed rgba(212, 163, 89, 0.28);
+  border-radius: 5px;
+  padding: 4px 6px;
+}
+
+.mk-packet-addr-icon {
+  flex-shrink: 0;
+  margin-top: 1.5px;
+}
+
+.mk-packet-address-text {
+  margin: 0;
+  font-size: 9.5px;
+  color: #f4f0e8;
+  font-weight: 700;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Recipient & Contact Row */
+.mk-packet-contact-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+  padding: 2px 2px;
+}
+
+.mk-packet-contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #b9c7c3;
+}
+
+.mk-packet-contact-item strong {
+  color: #f4f0e8;
+  font-weight: 800;
+}
+
+/* Footer: Priority Badge, Cold State & Edit Button */
+.mk-packet-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid rgba(212, 163, 89, 0.22);
+}
+
+.mk-packet-status-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mk-packet-active-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
+  font-weight: 900;
+  color: #a4e09e;
+  background: rgba(80, 175, 71, 0.2);
+  border: 1px solid rgba(80, 175, 71, 0.4);
+  padding: 1.5px 5px;
+  border-radius: 3px;
+}
+
+.mk-packet-active-pill.is-secondary {
+  color: #fed0bb;
+  background: rgba(144, 56, 40, 0.25);
+  border-color: rgba(190, 101, 22, 0.4);
+}
+
+.mk-packet-cold-state {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #86c2eb;
+  opacity: 0.85;
+}
+
+.mk-packet-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #d4a359 0%, #a67c33 100%);
+  border: 1px solid #f5db99;
+  color: #151004;
+  font-size: 8.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(212, 163, 89, 0.25);
+}
+
+.mk-packet-edit-btn:hover {
+  background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(212, 163, 89, 0.4);
+}
+
+/* ==========================================================================
+   ADDRESS EDIT MODAL
+   ========================================================================== */
+
+.mk-address-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 18, 14, 0.82);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.mk-address-modal-card {
+  width: 100%;
+  max-width: 550px;
+  background: linear-gradient(150deg, #0a2e25 0%, #041812 100%);
+  border: 1.5px solid #d4a359;
+  border-radius: 14px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+  padding: 18px 22px;
+  color: #f4f0e8;
+  box-sizing: border-box;
+}
+
+.mk-address-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 163, 89, 0.25);
+}
+
+.mk-address-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-address-modal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: rgba(0, 91, 72, 0.6);
+  border: 1px solid #d4a359;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #d4a359;
+}
+
+.mk-address-modal-title h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: #f4f0e8;
+}
+
+.mk-address-modal-title p {
+  margin: 2px 0 0;
+  font-size: 10px;
+  color: #a9b5b2;
+}
+
+.mk-address-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e1dcd1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.mk-address-modal-close:hover {
+  background: rgba(212, 163, 89, 0.25);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.mk-address-modal-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mk-modal-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mk-modal-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mk-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mk-modal-field label {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #d4a359;
+}
+
+.mk-modal-field input,
+.mk-modal-field select,
+.mk-modal-field textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  border-radius: 7px;
+  padding: 7px 9px;
+  color: #f4f0e8;
+  font-size: 11.5px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mk-modal-field textarea {
+  resize: vertical;
+  min-height: 52px;
+}
+
+.mk-modal-field select {
+  cursor: pointer;
+}
+
+.mk-modal-field select option {
+  background: #092820;
+  color: #f4f0e8;
+}
+
+.mk-modal-field input:focus,
+.mk-modal-field select:focus,
+.mk-modal-field textarea:focus {
+  outline: none;
+  border-color: #50af47;
+  box-shadow: 0 0 0 2px rgba(80, 175, 71, 0.25);
+}
+
+.mk-modal-checkbox-row {
+  margin: 6px 0 14px;
+}
+
+.mk-modal-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: #d4e0dc;
+  cursor: pointer;
+}
+
+.mk-modal-check-label input[type="checkbox"] {
+  accent-color: #005b48;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.mk-address-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(212, 163, 89, 0.2);
+}
+
+.mk-modal-cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(212, 163, 89, 0.3);
+  color: #d4e0dc;
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mk-modal-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.mk-modal-save-btn {
+  background: linear-gradient(135deg, #d4a359 0%, #a67c33 100%);
+  border: 1px solid #f5db99;
+  color: #1a1205;
+  padding: 7px 18px;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212, 163, 89, 0.3);
+  transition: all 0.15s ease;
+}
+
+.mk-modal-save-btn:hover {
+  background: linear-gradient(135deg, #e4b66f 0%, #c8964b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(212, 163, 89, 0.45);
+}
+
+.mk-modal-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .mk-ledger-desk {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .profile-workspace-section[data-theme="personal"] {
+    height: auto !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  .mk-shenasnameh-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .mk-shenasnameh-dual-row,
+  .mk-mail-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mk-shenasnameh-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

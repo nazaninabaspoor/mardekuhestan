@@ -2,13 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+
+import { CatalogSearchBox } from "@/components/catalog-search-box";
+import { MagSearch } from "@/components/magazine/mag-search";
+import { AuthHeaderButton } from "@/components/auth-header-button";
+import { HeaderCartButton } from "@/components/header-cart-button";
+import { AuthModal } from "@/components/auth-modal";
+import { HeaderAiGate, HeaderAiNavItem } from "@/components/header-ai-nav";
+import {
+  markSectionTravel,
+  travelToSection,
+  type TravelTarget,
+} from "@/lib/travel-to-kitchen";
 
 const v2NavItems = [
-  { id: "story", href: "/way", label: "داستان ما", icon: "book" },
-  { id: "way", href: "/way", label: "راه ما", icon: "mountain" },
-  { id: "chain", href: "/chain", label: "مسیر غذا", icon: "path" },
-  { id: "products", href: "/products", label: "محصولات", icon: "olive" },
+  { id: "story", href: "/#v2-catalogs", label: "داستان ما", icon: "book", travel: "catalogs" },
+  { id: "way", href: "/#v2-catalogs", label: "راه ما", icon: "mountain", travel: "catalogs" },
+  { id: "chain", href: "/#v2-catalogs", label: "مسیر غذا", icon: "path" },
+  { id: "magazine", href: "/magazine", label: "مجله", icon: "journal" },
+  { id: "products", href: "/#for-home-kitchen", label: "محصولات", icon: "olive", travel: "kitchen" },
 ] as const;
 
 function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
@@ -17,21 +31,34 @@ function V2NavIcon({ icon }: { icon: (typeof v2NavItems)[number]["icon"] }) {
     mountain: <path d="m3 18 6.2-10 2.4 3.7L14.5 7 21 18H3Zm4.4-3.8 1.8-2.9 1.2 1.9 1.2-1.9 2.9 4.7" />,
     path: <path d="M6 20c0-5.4 8-4 8-9.1 0-2.1-1.6-3.5-4.2-4.9M15.5 4.5 18 3l1.5 2.5L17 7l-1.5-2.5Z" />,
     olive: <path d="M5 19c4.2-1.7 7-5.4 9.2-11M8.4 14.4C5.2 14.5 3.7 12.8 4 10c3.1-.1 4.8 1.4 4.4 4.4Zm3.4-3.9c-2.8-1-3.6-3-2.5-5.4 2.9.9 3.7 2.8 2.5 5.4Zm2.1 5.7c.7-3 2.6-4.2 5.2-3.4-.6 3-2.4 4.2-5.2 3.4Z" />,
+    journal: <path d="M6 4.5h11.5A1.5 1.5 0 0 1 19 6v13.2H7.2A1.2 1.2 0 0 1 6 18V4.5Zm0 0v13.5M9.2 8.2h6.2M9.2 11.4h6.2M9.2 14.6h4" />,
   } as const;
 
   return (
-    <svg className="v2-nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="v2-nav-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
       {paths[icon]}
     </svg>
   );
 }
 
-/**
- * Shop header for /v2 — brand ribbon + white plate, logo on the right (RTL).
- */
 export function V2SiteHeader() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isMagazine = Boolean(pathname?.startsWith("/magazine"));
   const [open, setOpen] = useState(false);
+  const [aiGateOpen, setAiGateOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const goToSection = (target: TravelTarget) => (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setOpen(false);
+    if (pathname === "/") {
+      travelToSection(target);
+      return;
+    }
+    markSectionTravel(target);
+    router.push("/");
+  };
   const [logoReady, setLogoReady] = useState(false);
   const logoImageRef = useRef<HTMLImageElement>(null);
 
@@ -45,6 +72,7 @@ export function V2SiteHeader() {
   useLayoutEffect(() => {
     const logo = logoImageRef.current;
     if (!logo) return;
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       logo.style.opacity = "1";
       setLogoReady(true);
@@ -59,9 +87,15 @@ export function V2SiteHeader() {
       if (cancelled || !logo.isConnected) return;
 
       const rect = logo.getBoundingClientRect();
+      if (rect.width < 8 || rect.height < 8) {
+        logo.style.opacity = "1";
+        setLogoReady(true);
+        return;
+      }
+
       const offsetX = window.innerWidth / 2 - (rect.left + rect.width / 2);
       const offsetY = window.innerHeight * 0.48 - (rect.top + rect.height / 2);
-      const introTransform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.05)`;
+      const introTransform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.78)`;
 
       clone = logo.cloneNode(true) as HTMLImageElement;
       clone.removeAttribute("class");
@@ -91,11 +125,11 @@ export function V2SiteHeader() {
       animation = clone.animate(
         [
           { opacity: 0, filter: "brightness(0.96)", transform: introTransform, offset: 0 },
-          { opacity: 1, filter: "brightness(1.03)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.18)`, offset: 0.22 },
-          { opacity: 1, filter: "brightness(1)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(2.18)`, offset: 0.34 },
+          { opacity: 1, filter: "brightness(1.02)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.92)`, offset: 0.14 },
+          { opacity: 1, filter: "brightness(1)", transform: `translate3d(${offsetX}px, ${offsetY}px, 0) scale(1.92)`, offset: 0.22 },
           { opacity: 1, filter: "brightness(1)", transform: "translate3d(0, 0, 0) scale(1)", offset: 1 },
         ],
-        { duration: 1900, easing: "cubic-bezier(0.2, 0.72, 0.2, 1)", fill: "forwards" },
+        { duration: 920, easing: "cubic-bezier(0.22, 0.78, 0.2, 1)", fill: "forwards" },
       );
 
       animation.finished.then(() => {
@@ -107,7 +141,7 @@ export function V2SiteHeader() {
       }).catch(() => undefined);
     };
 
-    if (logo.complete) run();
+    if (logo.complete && logo.naturalWidth > 0) run();
     else logo.addEventListener("load", run, { once: true });
 
     return () => {
@@ -124,53 +158,64 @@ export function V2SiteHeader() {
       <div className="v2-header-body">
         <div className="shell v2-header-plate">
           <div className="v2-menubar">
-            <Link
-              href="/v2"
-              className="v2-logo"
-              aria-label="مرد کوهستان، بازگشت به خانه"
-            >
-              <Image
-                src="/brand/orginal-clear.png"
-                alt=""
-                width={88}
-                height={88}
-                priority
-                className="v2-logo-img"
-                ref={logoImageRef}
-                style={{ opacity: logoReady ? 1 : 0 }}
-              />
-              <span className="v2-logo-word">مرد کوهستان</span>
-            </Link>
+            <div className="v2-brand-cluster">
+              <Link href="/" className="v2-logo" aria-label="مرد کوهستان، بازگشت به خانه">
+                <Image
+                  src="/brand/orginal-clear.png"
+                  alt=""
+                  width={88}
+                  height={88}
+                  priority
+                  className="v2-logo-img"
+                  ref={logoImageRef}
+                  style={{ opacity: logoReady ? 1 : 0 }}
+                />
+              </Link>
 
-            <nav className="v2-primary-nav" aria-label="منوی اصلی">
-              {v2NavItems.map((item) => {
-                return (
+              <nav className="v2-primary-nav" aria-label="منوی اصلی">
+                {v2NavItems.map((item) => (
                   <Link
                     key={item.id}
                     href={item.href}
-                    className="v2-nav-link"
+                    className={`v2-nav-link${pathname?.startsWith("/magazine") && item.id === "magazine" ? " is-active" : ""}`}
+                    onClick={"travel" in item && item.travel ? goToSection(item.travel) : undefined}
                   >
                     <V2NavIcon icon={item.icon} />
                     <span className="v2-nav-label">{item.label}</span>
                   </Link>
-                );
-              })}
-            </nav>
+                ))}
+                <HeaderAiNavItem onGuestClick={() => setAiGateOpen(true)} />
+              </nav>
+            </div>
+
+            <div className="v2-menubar-spacer" aria-hidden="true" />
 
             <div className="v2-menubar-actions">
-              <button
-                type="button"
-                className="v2-menu-toggle"
-                aria-expanded={open}
-                aria-controls="v2-mobile-menu"
-                aria-label={open ? "بستن منو" : "باز کردن منو"}
-                onClick={() => setOpen((value) => !value)}
-              >
-                <span />
-                <span />
-                <span />
-              </button>
+              {isMagazine ? (
+                <MagSearch size="header" />
+              ) : (
+                <CatalogSearchBox
+                  className="v2-header-search"
+                  variant="v2"
+                  placeholder="جستجو در راه سبز…"
+                />
+              )}
+              <HeaderCartButton />
+              <AuthHeaderButton />
             </div>
+
+            <button
+              type="button"
+              className="v2-menu-toggle"
+              aria-expanded={open}
+              aria-controls="v2-mobile-menu"
+              aria-label={open ? "بستن منو" : "باز کردن منو"}
+              onClick={() => setOpen((value) => !value)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
       </div>
@@ -181,21 +226,46 @@ export function V2SiteHeader() {
         aria-label="منوی موبایل"
       >
         <div className="shell">
-          {v2NavItems.map((item) => {
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                className="v2-nav-link"
-                onClick={() => setOpen(false)}
-              >
-                <V2NavIcon icon={item.icon} />
-                <span className="v2-nav-label">{item.label}</span>
-              </Link>
-            );
-          })}
+          <div className="v2-mobile-auth-wrapper">
+            <HeaderCartButton
+              variant="mobile"
+              onItemClick={() => setOpen(false)}
+            />
+            <AuthHeaderButton
+              variant="mobile"
+              onItemClick={() => setOpen(false)}
+            />
+          </div>
+
+          {isMagazine ? (
+            <MagSearch size="header" className="v2-header-search--mobile" />
+          ) : (
+            <CatalogSearchBox
+              className="v2-header-search v2-header-search--mobile"
+              variant="v2"
+              placeholder="جستجو در راه سبز…"
+            />
+          )}
+          {v2NavItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`v2-nav-link${pathname?.startsWith("/magazine") && item.id === "magazine" ? " is-active" : ""}`}
+              onClick={"travel" in item && item.travel ? goToSection(item.travel) : () => setOpen(false)}
+            >
+              <V2NavIcon icon={item.icon} />
+              <span className="v2-nav-label">{item.label}</span>
+            </Link>
+          ))}
+          <HeaderAiNavItem
+            onGuestClick={() => setAiGateOpen(true)}
+            onNavigate={() => setOpen(false)}
+          />
         </div>
       </nav>
+
+      <HeaderAiGate open={aiGateOpen} onClose={() => setAiGateOpen(false)} />
+      <AuthModal />
     </header>
   );
 }

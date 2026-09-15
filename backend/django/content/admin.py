@@ -10,6 +10,7 @@ from content.models import (
     Article,
     Category,
     ContentPillar,
+    MagazinePageSettings,
     RedirectRule,
     Tag,
     TopicCluster,
@@ -36,26 +37,70 @@ class TopicClusterInline(TabularInline):
     show_change_link = True
     tab = True
     hide_title = True
-    verbose_name = "خوشه"
-    verbose_name_plural = "خوشه‌های این ستون"
+    verbose_name = "زیرموضوع"
+    verbose_name_plural = "زیرموضوع‌های این موضوع"
 
 
 @admin.register(Category, site=content_studio)
 class CategoryAdmin(ModelAdmin):
-    list_display = ("name", "slug", "parent", "is_active")
-    list_filter = ("is_active",)
-    search_fields = ("name", "slug", "description")
+    list_display = ("name", "slug", "sort_order", "show_on_magazine", "is_active", "parent")
+    list_editable = ("sort_order", "show_on_magazine", "is_active")
+    list_filter = ("is_active", "show_on_magazine")
+    search_fields = ("name", "slug", "description", "seo_title")
     prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("parent",)
     list_fullwidth = True
     compressed_fields = True
     list_filter_sheet = True
+    ordering = ("sort_order", "name")
     fieldsets = (
         (
             "اطلاعات دسته",
             {
-                "fields": ("name", "slug", "parent", "description", "is_active"),
-                "description": "دسته‌بندی‌ها برای نظم مقالات و فیلتر سایت استفاده می‌شوند.",
+                "fields": (
+                    "name",
+                    "slug",
+                    "seo_title",
+                    "parent",
+                    "description",
+                    "is_active",
+                ),
+                "description": "نام دسته را SEOمحور بنویسید. آدرس صفحه (slug) را بی‌دلیل عوض نکنید تا لینک‌ها نشکنند.",
+            },
+        ),
+        (
+            "حلقه مجله",
+            {
+                "fields": (
+                    "show_on_magazine",
+                    "sort_order",
+                    "magazine_image",
+                    "magazine_image_path",
+                ),
+                "description": "همین‌ها روی صفحه /magazine کنار «همه نوشته‌ها» دیده می‌شوند. می‌توانید دسته اضافه یا حذف کنید.",
+            },
+        ),
+    )
+
+
+@admin.register(MagazinePageSettings, site=content_studio)
+class MagazinePageSettingsAdmin(ModelAdmin):
+    list_display = ("hero_title", "hero_eyebrow", "updated_at")
+    list_fullwidth = True
+    compressed_fields = True
+
+    def has_add_permission(self, request):
+        return not MagazinePageSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    fieldsets = (
+        (
+            "بالای صفحه مجله",
+            {
+                "fields": ("hero_eyebrow", "hero_title", "search_placeholder"),
+                "description": "متن هیرو و جستجوی /magazine را اینجا عوض کنید؛ بعد از ذخیره روی سایت می‌آید.",
             },
         ),
     )
@@ -73,7 +118,7 @@ class TagAdmin(ModelAdmin):
             "برچسب",
             {
                 "fields": ("name", "slug"),
-                "description": "برچسب‌ها برای اتصال موضوعی مقالات هستند.",
+                "description": "برچسب یعنی موضوع کوچک روی مقاله، مثل «عسل» یا «راه سبز».",
             },
         ),
     )
@@ -92,7 +137,7 @@ class ContentPillarAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "ستون محتوا",
+            "موضوع اصلی",
             {
                 "fields": (
                     "title",
@@ -101,7 +146,7 @@ class ContentPillarAdmin(ModelAdmin):
                     "description",
                     "is_active",
                 ),
-                "description": "هر ستون محتوا یک موضوع اصلی برند است؛ خوشه‌ها را زیر همین ستون بسازید.",
+                "description": "موضوع بزرگ مجله را اینجا می‌گذارید. زیرموضوع‌ها را زیر همین موضوع بسازید.",
             },
         ),
     )
@@ -119,7 +164,7 @@ class TopicClusterAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "خوشه موضوعی",
+            "زیرموضوع",
             {
                 "fields": (
                     "pillar",
@@ -129,7 +174,7 @@ class TopicClusterAdmin(ModelAdmin):
                     "description",
                     "is_active",
                 ),
-                "description": "خوشه زیر یک ستون محتوا تعریف می‌شود و مقاله را به استراتژی سئو وصل می‌کند.",
+                "description": "زیرموضوع زیر یک موضوع اصلی می‌نشیند و مقاله‌ها را مرتب می‌کند.",
             },
         ),
     )
@@ -145,7 +190,7 @@ class RedirectRuleAdmin(ModelAdmin):
     list_filter_sheet = True
     fieldsets = (
         (
-            "ریدایرکت",
+            "آدرس قدیمی",
             {
                 "fields": (
                     "from_path",
@@ -154,7 +199,7 @@ class RedirectRuleAdmin(ModelAdmin):
                     "is_active",
                     "note",
                 ),
-                "description": "برای حفظ سئو هنگام تغییر آدرس مقاله از ریدایرکت ۳۰۱ استفاده کنید.",
+                "description": "اگر آدرس مقاله عوض شد، بازدیدکننده را از آدرس قدیمی به آدرس جدید بفرستید. «برای همیشه» معمولاً انتخاب درست است.",
             },
         ),
     )
@@ -171,7 +216,7 @@ class ArticleAdmin(ModelAdmin):
         "readiness_badge",
         "published_at",
     )
-    list_filter = ("status", "content_role", "search_intent", "robots_index", "pillar")
+    list_filter = ("status", "content_role", "search_intent", "robots_index", "pillar", "categories")
     search_fields = (
         "title",
         "slug",
@@ -200,6 +245,12 @@ class ArticleAdmin(ModelAdmin):
     list_per_page = 25
     ordering = ("-updated_at",)
 
+    def view_on_site(self, obj):
+        from django.conf import settings
+
+        base = getattr(settings, "FRONTEND_URL", "http://127.0.0.1:3000").rstrip("/")
+        return f"{base}/magazine/{obj.slug}"
+
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj=obj, change=change, **kwargs)
         if "published_at" in form.base_fields:
@@ -208,10 +259,10 @@ class ArticleAdmin(ModelAdmin):
 
     fieldsets = (
         (
-            "محتوا",
+            "نوشته",
             {
                 "classes": ["tab"],
-                "description": "عنوان، متن و وضعیت انتشار را اینجا بنویسید. نامک اگر خالی بماند خودکار ساخته می‌شود.",
+                "description": "عنوان و متن را بنویسید. اگر آدرس صفحه خالی بماند، خودش ساخته می‌شود.",
                 "fields": (
                     ("title", "slug"),
                     "excerpt",
@@ -223,10 +274,10 @@ class ArticleAdmin(ModelAdmin):
             },
         ),
         (
-            "ساختار",
+            "مرتب‌سازی",
             {
                 "classes": ["tab"],
-                "description": "دسته، برچسب و اتصال به ستون/خوشه محتوا را مشخص کنید تا استراتژی سئو منظم بماند.",
+                "description": "دسته و برچسب را بگذارید و اگر این نوشته زیر یک موضوع اصلی است، همان را وصل کنید.",
                 "fields": (
                     "categories",
                     "tags",
@@ -236,10 +287,10 @@ class ArticleAdmin(ModelAdmin):
             },
         ),
         (
-            "سئو",
+            "گوگل و جستجو",
             {
                 "classes": ["tab"],
-                "description": "کلمه کلیدی و متا را کامل کنید. تعداد کلمات کلیدی فرعی محدود نیست.",
+                "description": "کلمهٔ جستجو و عنوان و توضیح گوگل را پر کنید تا مقاله راحت‌تر پیدا شود.",
                 "fields": (
                     "focus_keyword",
                     "secondary_keywords",
@@ -254,15 +305,15 @@ class ArticleAdmin(ModelAdmin):
             "شبکه اجتماعی",
             {
                 "classes": ["tab"],
-                "description": "اگر خالی بماند، از عنوان و توضیحات سئو استفاده می‌شود.",
+                "description": "اگر خالی بماند، از عنوان و توضیح گوگل استفاده می‌شود.",
                 "fields": ("og_title", "og_description", "og_image"),
             },
         ),
         (
-            "هوش مصنوعی",
+            "پاسخ‌های اینترنتی",
             {
                 "classes": ["tab"],
-                "description": "برای GEO: خلاصه قابل استناد، حقایق، موجودیت‌ها و سوالات متداول را با کلیدهای فارسی بنویسید.",
+                "description": "خلاصه، نکته‌ها و سوال‌وجواب را ساده بنویسید تا اگر کسی در اینترنت پرسید، جواب درست باشد.",
                 "fields": (
                     "geo_summary",
                     "geo_key_facts",
@@ -277,7 +328,7 @@ class ArticleAdmin(ModelAdmin):
             "آمادگی",
             {
                 "classes": ["tab"],
-                "description": "قبل از انتشار این چک‌لیست را مرور کنید. تعداد کلمات آزاد است.",
+                "description": "قبل از انتشار این فهرست را نگاه کنید.",
                 "fields": (
                     ("word_count", "reading_time_minutes"),
                     "readiness_panel",
@@ -324,18 +375,18 @@ class ArticleAdmin(ModelAdmin):
         description="آمادگی",
         label={
             "آماده": "success",
-            "نیاز به تکمیل": "warning",
+            "چند مورد مانده": "warning",
         },
     )
     def readiness_badge(self, obj: Article):
         checks = seo_readiness_checklist(obj)
-        return "آماده" if checks["آماده برای انتشار"] else "نیاز به تکمیل"
+        return "آماده" if checks["آماده برای انتشار"] else "چند مورد مانده"
 
-    @admin.display(description="چک‌لیست سئو و هوش مصنوعی")
+    @admin.display(description="فهرست آمادگی")
     def readiness_panel(self, obj: Article):
         if not obj.pk:
             return format_html(
-                '<p class="mk-empty-hint">بعد از اولین ذخیره، چک‌لیست آمادگی اینجا نمایش داده می‌شود.</p>'
+                '<p class="mk-empty-hint">بعد از اولین ذخیره، فهرست آمادگی اینجا دیده می‌شود.</p>'
             )
 
         checks = seo_readiness_checklist(obj)

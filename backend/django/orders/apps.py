@@ -2,6 +2,11 @@
 
 
 class OrdersConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'orders'
-    verbose_name = 'orders'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "orders"
+    verbose_name = "سفارش‌ها"
+
+    def ready(self) -> None:
+        from orders.signals import connect_order_signals
+
+        connect_order_signals()

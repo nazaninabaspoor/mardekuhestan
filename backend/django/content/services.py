@@ -55,7 +55,7 @@ def apply_seo_defaults(article) -> None:
 
 
 def build_article_schema(article, *, site_url: str = "https://mardekuhestan.com") -> dict:
-    page_url = article.canonical_url or f"{site_url.rstrip('/')}/articles/{article.slug}/"
+    page_url = article.canonical_url or f"{site_url.rstrip('/')}/magazine/{article.slug}"
     graph = [
         {
             "@type": "Article",
@@ -154,8 +154,21 @@ def prepare_article_for_save(article) -> None:
         )
     if article.geo_faq:
         article.geo_faq = normalize_geo_faq(article.geo_faq)
-    if article.internal_links:
+    # Empty admin JSON fields arrive as None — DB columns are NOT NULL.
+    if not article.internal_links:
+        article.internal_links = []
+    else:
         article.internal_links = normalize_internal_links(article.internal_links)
+    if article.secondary_keywords is None:
+        article.secondary_keywords = []
+    if article.geo_key_facts is None:
+        article.geo_key_facts = []
+    if article.geo_entities is None:
+        article.geo_entities = []
+    if article.geo_faq is None:
+        article.geo_faq = []
+    if article.schema_json is None:
+        article.schema_json = {}
     article.word_count, article.reading_time_minutes = compute_reading_metrics(article.body)
     apply_seo_defaults(article)
     article.schema_json = build_article_schema(article)
@@ -179,42 +192,42 @@ def unpublish_article(article):
 def seo_readiness_checklist(article) -> dict:
     checks = {
         "عنوان مقاله": bool((article.title or "").strip()),
-        "نامک آدرس": bool((article.slug or "").strip()),
-        "عنوان سئو": bool((article.seo_title or "").strip()),
-        "توضیحات سئو": bool((article.seo_description or "").strip()),
-        "کلمه کلیدی اصلی": bool((article.focus_keyword or "").strip()),
-        "کلمات کلیدی فرعی": bool(article.secondary_keywords),
+        "آدرس صفحه": bool((article.slug or "").strip()),
+        "عنوان در گوگل": bool((article.seo_title or "").strip()),
+        "توضیح در گوگل": bool((article.seo_description or "").strip()),
+        "کلمهٔ اصلی جستجو": bool((article.focus_keyword or "").strip()),
+        "کلمه‌های نزدیک": bool(article.secondary_keywords),
         "خلاصه کوتاه": bool((article.excerpt or "").strip()),
-        "متن اصلی": bool(strip_html(article.body or "")),
-        "خلاصه برای هوش مصنوعی": bool((article.geo_summary or "").strip()),
-        "سوالات متداول برای هوش مصنوعی": bool(article.geo_faq),
-        "تصویر شاخص": bool(article.cover_image),
-        "تصویر شبکه‌های اجتماعی": bool(article.og_image or article.cover_image),
+        "متن مقاله": bool(strip_html(article.body or "")),
+        "خلاصه برای پاسخ‌های اینترنتی": bool((article.geo_summary or "").strip()),
+        "سوال و جواب": bool(article.geo_faq),
+        "عکس بالای مقاله": bool(article.cover_image),
+        "عکس شبکه‌های اجتماعی": bool(article.og_image or article.cover_image),
         "دسته‌بندی": bool(article.pk and article.categories.exists()),
-        "اتصال به ستون محتوا یا مستقل بودن": bool(
+        "موضوع اصلی وصل است یا نوشته جداست": bool(
             article.content_role == "standalone"
             or article.pillar_id
             or article.content_role == "pillar"
         ),
-        "اتصال خوشه در صورت نیاز": not (
+        "زیرموضوع در صورت نیاز وصل است": not (
             article.content_role == "cluster" and not article.cluster_id
         ),
-        "اجازه ایندکس فعال است": bool(article.robots_index),
-        "متن نوشته شده (تعداد کلمات آزاد است)": (article.word_count or 0) > 0,
+        "در گوگل نشان داده می‌شود": bool(article.robots_index),
+        "متن نوشته شده است": (article.word_count or 0) > 0,
     }
     checks["آماده برای انتشار"] = all(
         [
             checks["عنوان مقاله"],
-            checks["عنوان سئو"],
-            checks["توضیحات سئو"],
-            checks["کلمه کلیدی اصلی"],
-            checks["متن اصلی"],
-            checks["خلاصه برای هوش مصنوعی"],
-            checks["سوالات متداول برای هوش مصنوعی"],
+            checks["عنوان در گوگل"],
+            checks["توضیح در گوگل"],
+            checks["کلمهٔ اصلی جستجو"],
+            checks["متن مقاله"],
+            checks["خلاصه برای پاسخ‌های اینترنتی"],
+            checks["سوال و جواب"],
             checks["دسته‌بندی"],
-            checks["اتصال به ستون محتوا یا مستقل بودن"],
-            checks["اتصال خوشه در صورت نیاز"],
-            checks["متن نوشته شده (تعداد کلمات آزاد است)"],
+            checks["موضوع اصلی وصل است یا نوشته جداست"],
+            checks["زیرموضوع در صورت نیاز وصل است"],
+            checks["متن نوشته شده است"],
         ]
     )
     return checks

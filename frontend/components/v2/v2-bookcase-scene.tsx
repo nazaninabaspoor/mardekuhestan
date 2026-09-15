@@ -3,8 +3,8 @@
 import Image from "next/image";
 
 const SCENE = {
-  magazine: "/brand/v2/bookcase-morning-read.png",
-  catalog: "/brand/v2/bookcase-morning-work.png",
+  magazine: "/brand/v2/bookcase-morning-read-daylight.png",
+  catalog: "/brand/v2/bookcase-morning-work-daylight.png",
 } as const;
 
 type V2BookcaseSceneProps = {

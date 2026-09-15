@@ -8,6 +8,8 @@ celery==5.5.3
 kombu==5.5.4
 python-jose[cryptography]
 passlib[bcrypt]
+sqlalchemy[asyncio]==2.0.43
+asyncpg==0.30.0
 opensearch-py==3.0.0
 confluent-kafka==2.11.1
 qdrant-client==1.15.1

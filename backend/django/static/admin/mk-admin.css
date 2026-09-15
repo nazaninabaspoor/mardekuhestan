@@ -1,0 +1,290 @@
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../content/fonts/MardeKoohestan-Regular.woff2") format("woff2"),
+       url("../content/fonts/MardeKoohestan-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "MardeKuhestan";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../content/fonts/MardeKoohestan-Bold.woff2") format("woff2"),
+       url("../content/fonts/MardeKoohestan-Bold.woff") format("woff");
+}
+
+:root {
+  --mk-green: #005b48;
+  --mk-green-deep: #005040;
+  --mk-cream: #f4f0e8;
+  --mk-ink: #1d1d1b;
+  --mk-earth: #903828;
+  --mk-navy: #204078;
+  --mk-muted: #5d686e;
+  --mk-line: rgba(0, 91, 72, 0.14);
+  --mk-font: "MardeKuhestan", Tahoma, "Segoe UI", sans-serif;
+}
+
+html {
+  direction: rtl;
+}
+
+body,
+button:not(.material-symbols-outlined),
+input,
+select,
+textarea,
+label,
+th,
+td,
+h1, h2, h3, h4, h5, h6,
+p,
+li,
+a,
+.help,
+.helptext,
+.breadcrumbs {
+  font-family: var(--mk-font) !important;
+  letter-spacing: 0 !important;
+}
+
+.material-symbols-outlined,
+.material-symbols-outlined *,
+[class*="material-symbols"] {
+  font-family: "Material Symbols Outlined" !important;
+  letter-spacing: normal !important;
+}
+
+body {
+  color: var(--mk-ink);
+  background: var(--mk-cream) !important;
+}
+
+/* نوار کناری: جنگل آرام، نه داشبورد استارتاپی */
+aside,
+nav[aria-label],
+.unfold-sidebar {
+  background: var(--mk-green) !important;
+  color: var(--mk-cream) !important;
+}
+
+aside a,
+aside span,
+aside p,
+aside button {
+  color: inherit;
+}
+
+/* خانه خوش‌آمد */
+.mk-welcome {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 1.75rem 1.6rem 1.5rem;
+  background: #fff;
+  border: 1px solid var(--mk-line);
+  border-radius: 1.1rem;
+  box-shadow: 0 18px 40px rgba(0, 64, 50, 0.06);
+  overflow: hidden;
+}
+
+.mk-welcome::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  background: linear-gradient(90deg, #86c2eb 0%, #50af47 100%);
+  clip-path: polygon(0 100%, 8% 0, 16% 100%, 24% 20%, 32% 100%, 50% 0, 68% 100%, 76% 25%, 84% 100%, 92% 10%, 100% 100%);
+}
+
+.mk-welcome__kicker {
+  margin: 0 0 0.35rem;
+  color: var(--mk-green);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.mk-welcome__title {
+  margin: 0 0 0.55rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--mk-green-deep);
+  line-height: 1.35;
+}
+
+.mk-welcome__lead {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--mk-muted);
+  line-height: 1.9;
+  font-size: 0.98rem;
+}
+
+.mk-quick {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-bottom: 0.65rem;
+}
+
+.mk-quick__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.95rem 1rem;
+  background: var(--mk-cream);
+  border: 1px solid var(--mk-line);
+  border-radius: 0.85rem;
+  text-decoration: none !important;
+  color: var(--mk-ink) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.mk-quick__card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mk-green);
+  box-shadow: 0 10px 24px rgba(0, 91, 72, 0.12);
+}
+
+.mk-quick__card strong {
+  color: var(--mk-green-deep);
+  font-size: 0.98rem;
+}
+
+.mk-quick__card span {
+  color: var(--mk-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* دکمه‌ها */
+.submit-row input[type="submit"],
+.submit-row a.default,
+button[type="submit"],
+a.button,
+.object-tools a {
+  border-radius: 999px !important;
+}
+
+input[type="submit"].default,
+input[name="_save"] {
+  background: var(--mk-green) !important;
+  border-color: var(--mk-green) !important;
+}
+
+/* فرم و لیست */
+#content,
+#content-main,
+.change-form,
+.change-list {
+  max-width: 100%;
+}
+
+fieldset .description {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--mk-cream);
+  border: 1px solid var(--mk-line);
+  color: var(--mk-muted);
+  line-height: 1.85;
+}
+
+.mk-checklist {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mk-checklist__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--mk-line);
+  border-radius: 0.65rem;
+  background: var(--mk-cream);
+}
+
+.mk-checklist__label {
+  color: var(--mk-green-deep);
+  font-weight: 700;
+}
+
+.mk-checklist__value {
+  flex: 0 0 auto;
+  min-width: 3.2rem;
+  text-align: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.mk-checklist__value--yes {
+  color: #fff;
+  background: var(--mk-green);
+}
+
+.mk-checklist__value--no {
+  color: #fff;
+  background: var(--mk-earth);
+}
+
+.mk-checklist__summary {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--mk-line);
+  color: var(--mk-muted);
+  background: #fff;
+  line-height: 1.8;
+}
+
+.mk-checklist__summary.is-ready {
+  color: var(--mk-green);
+  background: #eef6f3;
+}
+
+.mk-checklist__summary.is-pending {
+  color: var(--mk-earth);
+  background: #faf4f0;
+}
+
+.mk-empty-hint {
+  color: var(--mk-muted);
+  line-height: 1.8;
+}
+
+/* ورود */
+.login body,
+body.login {
+  background:
+    linear-gradient(180deg, rgba(0, 91, 72, 0.88), rgba(0, 80, 64, 0.92)),
+    var(--mk-green) !important;
+}
+
+body.login #container,
+body.login .login-form,
+form#login-form {
+  font-family: var(--mk-font);
+}
+
+@media (max-width: 900px) {
+  .mk-checklist__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mk-welcome {
+    padding: 1.25rem 1rem 1.35rem;
+  }
+}

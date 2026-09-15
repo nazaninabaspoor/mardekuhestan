@@ -5,7 +5,7 @@ from content.constants import CONTENT_CREATOR_GROUP, SEO_SPECIALIST_GROUP
 
 
 class Command(BaseCommand):
-    help = "ساخت گروه‌ها و دسترسی‌های پنل استودیو محتوا و سئو"
+    help = "ساخت گروه‌ها و دسترسی‌های پنل مجله و نوشته‌ها"
 
     def handle(self, *args, **options):
         content_perms = Permission.objects.filter(content_type__app_label="content")
@@ -24,6 +24,6 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.WARNING(
                 "کاربر را Staff کنید و در یکی از این گروه‌ها بگذارید؛ "
-                "بعد فقط آدرس /studio/ برایش باز است و به /admin/ فنی دسترسی ندارد."
+                "بعد فقط آدرس /studio/ برایش باز است و به /admin/ فروشگاه دسترسی ندارد."
             )
         )

@@ -1,11 +1,14 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(_ENV_FILE),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -15,12 +18,45 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
     CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
 
+    # Must match Django SECRET_KEY so SimpleJWT access tokens verify here.
+    JWT_SECRET: str = "change-me"
+    JWT_ALGORITHM: str = "HS256"
+
+    DATABASE_URL: str = (
+        "postgresql+asyncpg://mardekoohestan:change-me@127.0.0.1:55432/mardekoohestan_db"
+    )
+    DB_POOL_SIZE: int = 10
+    DB_MAX_OVERFLOW: int = 20
+
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
+    SUPPORT_REDIS_CHANNEL: str = "mk:support:events"
+    SUPPORT_INTERNAL_TOKEN: str = ""
+
     CELERY_BROKER_URL: str = "amqp://mardekoohestan:change-me@127.0.0.1:5672//"
     CELERY_RESULT_BACKEND: str = "redis://127.0.0.1:6379/1"
 
     DJANGO_BASE_URL: str = "http://127.0.0.1:8000"
-    JWT_SECRET: str = "change-me"
+    DJANGO_ADMIN_SUPPORT_URL: str = "http://127.0.0.1:8000/admin/support/supportconversation/"
+
+    # SMTP — staff ping when customer writes in chat (works on host too via env)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+    SMTP_USE_TLS: bool = True
+    SUPPORT_NOTIFY_EMAILS: str = (
+        "neurollamasai@gmail.com,mardekuhestan.ai@gmail.com"
+    )
+
+    # WhatsApp outbound notify (admin ping only — not two-way chat)
+    # provider: log | meta | greenapi
+    WHATSAPP_PROVIDER: str = "log"
+    WHATSAPP_ADMIN_PHONE: str = ""
+    WHATSAPP_ACCESS_TOKEN: str = ""
+    WHATSAPP_PHONE_NUMBER_ID: str = ""
+    WHATSAPP_GREENAPI_INSTANCE_ID: str = ""
+    WHATSAPP_GREENAPI_TOKEN: str = ""
 
     KAFKA_BOOTSTRAP_SERVERS: str = "127.0.0.1:9092"
     OPENSEARCH_HOST: str = "127.0.0.1"
@@ -33,6 +69,7 @@ class Settings(BaseSettings):
     MINIO_BUCKET_NAME: str = "mardekoohestan"
 
     OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4o-mini"
 
     @property
     def cors_origins_list(self) -> list[str]:

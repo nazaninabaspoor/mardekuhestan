@@ -1,4 +1,4 @@
-"""قفل دسترسی ادمین فنی: تیم محتوا/سئو فقط استودیو را دارند."""
+"""قفل دسترسی پنل فروشگاه: تیم نوشته‌ها فقط مجله را دارند."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ def is_restricted_content_user(user) -> bool:
 
 
 def install_content_admin_guards() -> None:
-    """کاربران محتوا/سئو از /admin فنی به /studio هدایت می‌شوند."""
+    """کاربران مجله از /admin فروشگاه به /studio هدایت می‌شوند."""
 
     if getattr(admin.AdminSite, "_mk_content_permission_guarded", False):
         return

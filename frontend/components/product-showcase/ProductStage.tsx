@@ -17,7 +17,7 @@ export function ProductStage({ category }: ProductStageProps) {
       <div className={styles.productGroup}>
         <AnimatePresence mode="wait">
           <motion.div
-            key={category.id}
+            key={`${category.id}:${category.heroImage}`}
             className={styles.plate}
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -25,7 +25,6 @@ export function ProductStage({ category }: ProductStageProps) {
             transition={{ duration: reduceMotion ? 0.12 : 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image src={category.heroImage} alt={category.headline} fill sizes="(max-width: 700px) 78vw, 520px" priority className={styles.productImage} />
-            <span className={styles.plateHighlight} aria-hidden="true" />
           </motion.div>
         </AnimatePresence>
       </div>

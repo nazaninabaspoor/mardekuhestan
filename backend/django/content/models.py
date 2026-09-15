@@ -39,8 +39,14 @@ def _unique_slug(model_cls, title: str, *, instance_pk=None, field: str = "slug"
 
 class Category(models.Model):
     name = models.CharField("نام دسته", max_length=120)
-    slug = models.SlugField("نامک", max_length=140, unique=True, blank=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=140, unique=True, blank=True, allow_unicode=True)
     description = models.TextField("توضیحات", blank=True)
+    seo_title = models.CharField(
+        "عنوان SEO دسته",
+        max_length=SEO_TITLE_MAX_LENGTH,
+        blank=True,
+        help_text="اگر خالی باشد همان نام دسته برای گوگل استفاده می‌شود",
+    )
     parent = models.ForeignKey(
         "self",
         verbose_name="دسته والد",
@@ -49,13 +55,37 @@ class Category(models.Model):
         blank=True,
         related_name="children",
     )
+    sort_order = models.PositiveIntegerField(
+        "ترتیب نمایش در مجله",
+        default=100,
+        db_index=True,
+        help_text="عدد کوچکتر زودتر در حلقه‌های مجله دیده می‌شود",
+    )
+    show_on_magazine = models.BooleanField(
+        "نمایش در حلقه‌های مجله",
+        default=True,
+        help_text="اگر خاموش باشد فقط برای فیلتر مقاله می‌ماند و در صفحه مجله دیده نمی‌شود",
+    )
+    magazine_image = models.ImageField(
+        "عکس حلقه مجله",
+        upload_to="magazine/categories/",
+        blank=True,
+        null=True,
+        help_text="اگر خالی باشد از مسیر ثابت زیر استفاده می‌شود",
+    )
+    magazine_image_path = models.CharField(
+        "مسیر عکس ثابت",
+        max_length=255,
+        blank=True,
+        help_text="مثال: /magazine/png/png-sheep.png",
+    )
     is_active = models.BooleanField("فعال", default=True)
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
 
     class Meta:
         verbose_name = "دسته‌بندی"
         verbose_name_plural = "دسته‌بندی‌ها"
-        ordering = ["name"]
+        ordering = ["sort_order", "name"]
 
     def __str__(self) -> str:
         return self.name
@@ -65,10 +95,16 @@ class Category(models.Model):
             self.slug = _unique_slug(Category, self.name, instance_pk=self.pk)
         super().save(*args, **kwargs)
 
+    @property
+    def board_image_url(self) -> str:
+        if self.magazine_image:
+            return self.magazine_image.url
+        return (self.magazine_image_path or "").strip()
+
 
 class Tag(models.Model):
     name = models.CharField("نام برچسب", max_length=80, unique=True)
-    slug = models.SlugField("نامک", max_length=100, unique=True, blank=True, allow_unicode=True)
+    slug = models.SlugField("آدرس صفحه", max_length=100, unique=True, blank=True, allow_unicode=True)
 
     class Meta:
         verbose_name = "برچسب"
@@ -85,18 +121,18 @@ class Tag(models.Model):
 
 
 class ContentPillar(models.Model):
-    title = models.CharField("عنوان ستون محتوا", max_length=180)
-    slug = models.SlugField("نامک", max_length=200, unique=True, blank=True, allow_unicode=True)
-    description = models.TextField("توضیحات استراتژی", blank=True)
-    primary_keyword = models.CharField("کلمه کلیدی اصلی", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
+    title = models.CharField("نام موضوع اصلی", max_length=180)
+    slug = models.SlugField("آدرس صفحه", max_length=200, unique=True, blank=True, allow_unicode=True)
+    description = models.TextField("توضیح این موضوع", blank=True)
+    primary_keyword = models.CharField("کلمهٔ اصلی که مردم جستجو می‌کنند", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
     is_active = models.BooleanField("فعال", default=True)
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
     updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True)
 
     class Meta:
         ordering = ["title"]
-        verbose_name = "ستون محتوا"
-        verbose_name_plural = "ستون‌های محتوا"
+        verbose_name = "موضوع اصلی"
+        verbose_name_plural = "موضوع‌های اصلی"
 
     def __str__(self) -> str:
         return self.title
@@ -110,22 +146,22 @@ class ContentPillar(models.Model):
 class TopicCluster(models.Model):
     pillar = models.ForeignKey(
         ContentPillar,
-        verbose_name="ستون محتوا",
+        verbose_name="موضوع اصلی",
         on_delete=models.CASCADE,
         related_name="clusters",
     )
-    title = models.CharField("عنوان خوشه", max_length=180)
-    slug = models.SlugField("نامک", max_length=200, blank=True, allow_unicode=True)
+    title = models.CharField("نام زیرموضوع", max_length=180)
+    slug = models.SlugField("آدرس صفحه", max_length=200, blank=True, allow_unicode=True)
     description = models.TextField("توضیحات", blank=True)
-    target_keyword = models.CharField("کلمه کلیدی هدف", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
+    target_keyword = models.CharField("کلمهٔ جستجو برای این زیرموضوع", max_length=FOCUS_KEYWORD_MAX_LENGTH, blank=True)
     is_active = models.BooleanField("فعال", default=True)
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
 
     class Meta:
         ordering = ["pillar__title", "title"]
         unique_together = ("pillar", "slug")
-        verbose_name = "خوشه موضوعی"
-        verbose_name_plural = "خوشه‌های موضوعی"
+        verbose_name = "زیرموضوع"
+        verbose_name_plural = "زیرموضوع‌ها"
 
     def __str__(self) -> str:
         return f"{self.pillar.title} → {self.title}"
@@ -149,20 +185,20 @@ class TopicCluster(models.Model):
 class Article(models.Model):
     title = models.CharField("عنوان مقاله", max_length=ARTICLE_TITLE_MAX_LENGTH)
     slug = models.SlugField(
-        "نامک آدرس",
+        "آدرس صفحه",
         max_length=ARTICLE_SLUG_MAX_LENGTH,
         unique=True,
         blank=True,
         allow_unicode=True,
     )
-    excerpt = models.TextField("خلاصه کوتاه", blank=True, help_text="برای کارت‌ها و لیست مقالات")
-    body = CKEditor5Field("متن اصلی مقاله", config_name="extends")
+    excerpt = models.TextField("خلاصه کوتاه", blank=True, help_text="روی کارت مقاله در سایت دیده می‌شود")
+    body = CKEditor5Field("متن مقاله", config_name="extends")
 
     categories = models.ManyToManyField(Category, verbose_name="دسته‌بندی‌ها", blank=True, related_name="articles")
     tags = models.ManyToManyField(Tag, verbose_name="برچسب‌ها", blank=True, related_name="articles")
     pillar = models.ForeignKey(
         ContentPillar,
-        verbose_name="ستون محتوا",
+        verbose_name="موضوع اصلی",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -170,21 +206,21 @@ class Article(models.Model):
     )
     cluster = models.ForeignKey(
         TopicCluster,
-        verbose_name="خوشه موضوعی",
+        verbose_name="زیرموضوع",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="articles",
     )
     content_role = models.CharField(
-        "نقش محتوا",
+        "نوع نوشته",
         max_length=20,
         choices=ContentRole.CHOICES,
         default=ContentRole.STANDALONE,
         db_index=True,
     )
     search_intent = models.CharField(
-        "نیت جستجو",
+        "مخاطب دنبال چیست",
         max_length=20,
         choices=SearchIntent.CHOICES,
         default=SearchIntent.INFORMATIONAL,
@@ -192,77 +228,77 @@ class Article(models.Model):
     )
 
     focus_keyword = models.CharField(
-        "کلمه کلیدی اصلی",
+        "کلمهٔ اصلی جستجو",
         max_length=FOCUS_KEYWORD_MAX_LENGTH,
         blank=True,
-        help_text="کلمه کلیدی اصلی که سئوکار روی آن کار می‌کند",
+        help_text="همان کلمه‌ای که مردم در گوگل می‌نویسند",
     )
     secondary_keywords = models.JSONField(
-        "کلمات کلیدی فرعی",
+        "کلمه‌های نزدیک",
         default=list,
         blank=True,
-        help_text='هر تعداد کلمه که لازم دارید؛ مثال: ["عسل کوهستان", "راه سبز", "محصولات لبنی"]',
+        help_text='هر تعداد که لازم دارید؛ مثال: ["عسل کوهستان", "راه سبز"]',
     )
     seo_title = models.CharField(
-        "عنوان سئو",
+        "عنوان در گوگل",
         max_length=SEO_TITLE_MAX_LENGTH,
         blank=True,
         validators=[validate_seo_title],
-        help_text="حداکثر حدود ۷۰ کاراکتر",
+        help_text="حدود ۷۰ حرف؛ همان عنوان آبی در نتایج گوگل",
     )
     seo_description = models.CharField(
-        "توضیحات سئو",
+        "توضیح در گوگل",
         max_length=SEO_DESCRIPTION_MAX_LENGTH,
         blank=True,
         validators=[validate_seo_description],
-        help_text="حداکثر حدود ۱۶۰ کاراکتر",
+        help_text="حدود ۱۶۰ حرف؛ همان دو خط خاکستری زیر عنوان",
     )
-    canonical_url = models.URLField("آدرس کنونیکال", blank=True)
-    robots_index = models.BooleanField("اجازه ایندکس", default=True)
-    robots_follow = models.BooleanField("اجازه دنبال کردن لینک‌ها", default=True)
-    breadcrumb_title = models.CharField("عنوان مسیر راهنما", max_length=120, blank=True)
+    canonical_url = models.URLField("آدرس اصلی صفحه", blank=True)
+    robots_index = models.BooleanField("در گوگل نشان داده شود", default=True)
+    robots_follow = models.BooleanField("لینک‌های داخل متن دنبال شود", default=True)
+    breadcrumb_title = models.CharField("نام کوتاه در مسیر صفحه", max_length=120, blank=True)
 
     og_title = models.CharField("عنوان شبکه‌های اجتماعی", max_length=SEO_TITLE_MAX_LENGTH, blank=True)
     og_description = models.CharField("توضیح شبکه‌های اجتماعی", max_length=SEO_DESCRIPTION_MAX_LENGTH, blank=True)
     og_image = models.ImageField("تصویر شبکه‌های اجتماعی", upload_to="articles/og/", blank=True, null=True)
 
     geo_summary = models.TextField(
-        "خلاصه برای موتورهای هوش مصنوعی",
+        "خلاصه برای پاسخ‌های اینترنتی",
         blank=True,
-        help_text="خلاصه شفاف و قابل استناد برای پاسخ‌دهی هوش مصنوعی (چت‌جی‌پی‌تی، پرپلکسیتی و مشابه)",
+        help_text="چند خط ساده که اگر کسی از چت‌بات‌ها پرسید، جواب درست بدهند",
         validators=[validate_geo_summary_quality],
     )
     geo_key_facts = models.JSONField(
-        "حقایق کلیدی برای هوش مصنوعی",
+        "نکته‌های مهم",
         default=list,
         blank=True,
         help_text='هر تعداد حقیقت؛ مثال: ["مرد کوهستان برند صنایع غذایی است", "راه سبز زنجیره ارزش یکپارچه است"]',
     )
     geo_entities = models.JSONField(
-        "موجودیت‌های برند و محصول",
+        "نام‌های برند و محصول در متن",
         default=list,
         blank=True,
         help_text='مثال: ["مرد کوهستان", "راه سبز", "عسل کوهستان"]',
     )
     geo_faq = models.JSONField(
-        "سوالات متداول برای هوش مصنوعی",
+        "سوال و جواب",
         default=list,
         blank=True,
         help_text='هر تعداد سوال؛ مثال: [{"سوال":"مرد کوهستان چیست؟","پاسخ":"..."}]',
         validators=[validate_geo_faq],
     )
-    schema_json = models.JSONField("داده ساخت‌یافته برای موتورهای جستجو", default=dict, blank=True)
+    schema_json = models.JSONField("اطلاعات فنی برای گوگل", default=dict, blank=True)
 
     word_count = models.PositiveIntegerField("تعداد کلمات", default=0, editable=False)
     reading_time_minutes = models.PositiveIntegerField("زمان مطالعه (دقیقه)", default=0, editable=False)
     internal_links = models.JSONField(
-        "لینک‌های داخلی",
+        "لینک به صفحه‌های دیگر سایت",
         default=list,
         blank=True,
-        help_text='هر تعداد لینک؛ مثال: [{"عنوان":"راه سبز","آدرس":"/articles/rah-sabz/"}]',
+        help_text='هر تعداد لینک؛ مثال: [{"عنوان":"راه سبز","آدرس":"/magazine/this-way-is-green"}]',
     )
 
-    cover_image = models.ImageField("تصویر شاخص", upload_to="articles/covers/", blank=True, null=True)
+    cover_image = models.ImageField("عکس بالای مقاله", upload_to="articles/covers/", blank=True, null=True)
     status = models.CharField(
         "وضعیت",
         max_length=20,
@@ -282,16 +318,16 @@ class Article(models.Model):
         related_name="articles",
     )
     editor_notes = models.TextField(
-        "یادداشت داخلی تیم",
+        "یادداشت برای همکار",
         blank=True,
-        help_text="فقط برای تیم محتوا/سئو؛ در سایت نمایش داده نمی‌شود",
+        help_text="فقط تیم می‌بیند؛ روی سایت نمی‌آید",
     )
 
     objects = ArticleManager()
 
     class Meta:
         verbose_name = "مقاله"
-        verbose_name_plural = "مقالات"
+        verbose_name_plural = "مقاله‌ها"
         ordering = ["-published_at", "-created_at"]
         indexes = [
             models.Index(fields=["status", "published_at"]),
@@ -301,6 +337,10 @@ class Article(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self) -> str:
+        """لینک مشاهده روی سایت برای SEO کار در استودیو."""
+        return f"/magazine/{self.slug}"
 
     def clean(self):
         super().clean()
@@ -314,13 +354,54 @@ class Article(models.Model):
         super().save(*args, **kwargs)
 
 
+class MagazinePageSettings(models.Model):
+    """تنظیمات بالای صفحه /magazine — قابل ویرایش توسط SEO."""
+
+    hero_eyebrow = models.CharField(
+        "خط بالای عنوان",
+        max_length=120,
+        default="مجله مرد کوهستان",
+    )
+    hero_title = models.CharField(
+        "عنوان اصلی مجله",
+        max_length=180,
+        default="این راه سبز است",
+    )
+    search_placeholder = models.CharField(
+        "متن داخل جستجو",
+        max_length=200,
+        default="در مجله بگردید یک مسیر و یک طعم و یک نوشته",
+    )
+    updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True)
+
+    class Meta:
+        verbose_name = "صفحه مجله"
+        verbose_name_plural = "صفحه مجله"
+
+    def __str__(self) -> str:
+        return "تنظیمات صفحه مجله"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # singleton — قابل حذف از پنل نیست
+        return
+
+    @classmethod
+    def load(cls) -> "MagazinePageSettings":
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
 class RedirectRule(models.Model):
-    from_path = models.CharField("مسیر مبدأ", max_length=255, unique=True, help_text="مثال: /old-article/")
-    to_path = models.CharField("مسیر مقصد", max_length=255, help_text="مثال: /articles/new-slug/")
+    from_path = models.CharField("آدرس قدیمی", max_length=255, unique=True, help_text="مثال: /old-article/")
+    to_path = models.CharField("آدرس جدید", max_length=255, help_text="مثال: /magazine/new-slug")
     status_code = models.PositiveSmallIntegerField(
-        "کد وضعیت",
+        "نوع هدایت",
         default=301,
-        choices=((301, "۳۰۱ دائمی"), (302, "۳۰۲ موقت")),
+        choices=((301, "برای همیشه"), (302, "موقت")),
     )
     is_active = models.BooleanField("فعال", default=True)
     note = models.CharField("یادداشت", max_length=255, blank=True)
@@ -328,8 +409,8 @@ class RedirectRule(models.Model):
 
     class Meta:
         ordering = ["from_path"]
-        verbose_name = "ریدایرکت"
-        verbose_name_plural = "ریدایرکت‌ها"
+        verbose_name = "آدرس قدیمی"
+        verbose_name_plural = "آدرس‌های قدیمی"
 
     def __str__(self) -> str:
         return f"{self.from_path} → {self.to_path}"

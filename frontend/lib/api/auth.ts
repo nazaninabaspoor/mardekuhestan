@@ -1,0 +1,240 @@
+import { apiFetch, ApiError } from "@/lib/api/client";
+import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
+
+export type AuthUser = {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  email_verified: boolean;
+  is_staff: boolean;
+  avatar_url?: string;
+};
+
+type AuthPayload = {
+  user: AuthUser;
+  access: string;
+};
+
+const authInit = {
+  credentials: "include" as const,
+  revalidate: false as const,
+  headers: { "Content-Type": "application/json" },
+};
+
+export async function registerAccount(input: {
+  email: string;
+  password: string;
+  passwordRepeat: string;
+  name: string;
+  phone?: string;
+}): Promise<AuthPayload> {
+  const payload = await apiFetch<AuthPayload>("/api/auth/register/", {
+    ...authInit,
+    method: "POST",
+    body: JSON.stringify({
+      email: input.email,
+      password: input.password,
+      password_repeat: input.passwordRepeat,
+      name: input.name,
+      phone: input.phone ?? "",
+    }),
+  });
+  setAccessToken(payload.access);
+  return payload;
+}
+
+export async function loginAccount(
+  email: string,
+  password: string,
+): Promise<AuthPayload> {
+  const payload = await apiFetch<AuthPayload>("/api/auth/login/", {
+    ...authInit,
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  setAccessToken(payload.access);
+  return payload;
+}
+
+export async function logoutAccount(): Promise<void> {
+  const token = getAccessToken();
+  try {
+    await apiFetch<void>("/api/auth/logout/", {
+      ...authInit,
+      method: "POST",
+      body: "{}",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+  } finally {
+    setAccessToken(null);
+  }
+}
+
+/** Wipe support chats in Django (admin + DB) while the session is still valid. */
+export async function purgeMySupportChats(): Promise<void> {
+  const token = getAccessToken();
+  await apiFetch<{ ok: boolean; purged: number }>("/api/auth/me/support-chats/", {
+    ...authInit,
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+}
+
+export async function refreshAccountSession(): Promise<{ access: string }> {
+  const payload = await apiFetch<{ access: string }>(
+    "/api/auth/token/refresh/",
+    {
+      ...authInit,
+      method: "POST",
+      body: "{}",
+    },
+  );
+  setAccessToken(payload.access);
+  return payload;
+}
+
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  try {
+    return await apiFetch<AuthUser>("/api/auth/me/", {
+      credentials: "include",
+      revalidate: false,
+    });
+  } catch (error) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 401 || error.status === 403)
+    ) {
+      setAccessToken(null);
+      return null;
+    }
+    return null;
+  }
+}
+
+export async function updateProfile(data: {
+  name?: string;
+  phone?: string;
+}): Promise<AuthUser> {
+  return await apiFetch<AuthUser>("/api/auth/me/", {
+    ...authInit,
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function uploadAvatar(file: File): Promise<AuthUser> {
+  const body = new FormData();
+  body.append("avatar", file);
+  return await apiFetch<AuthUser>("/api/auth/me/avatar/", {
+    credentials: "include",
+    revalidate: false,
+    method: "POST",
+    body,
+  });
+}
+
+export async function changePassword(data: {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordRepeat: string;
+}): Promise<{ detail: string; access?: string }> {
+  const res = await apiFetch<{ detail: string; access?: string }>(
+    "/api/auth/password/",
+    {
+      ...authInit,
+      method: "POST",
+      body: JSON.stringify({
+        current_password: data.currentPassword,
+        new_password: data.newPassword,
+        new_password_repeat: data.newPasswordRepeat,
+      }),
+    },
+  );
+  if (res.access) {
+    setAccessToken(res.access);
+  }
+  return res;
+}
+
+export type CustomerAddress = {
+  id: number;
+  title: string;
+  address_type: "home" | "work" | "other";
+  province: string;
+  city: string;
+  district: string;
+  address_line: string;
+  postal_code: string;
+  receiver_name: string;
+  receiver_phone: string;
+  is_default: boolean;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export async function getUserAddresses(): Promise<CustomerAddress[]> {
+  return await apiFetch<CustomerAddress[]>("/api/auth/addresses/", {
+    credentials: "include",
+    revalidate: false,
+  });
+}
+
+export async function createAddress(
+  data: Partial<CustomerAddress>
+): Promise<CustomerAddress> {
+  return await apiFetch<CustomerAddress>("/api/auth/addresses/", {
+    ...authInit,
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateAddress(
+  id: number,
+  data: Partial<CustomerAddress>
+): Promise<CustomerAddress> {
+  return await apiFetch<CustomerAddress>(`/api/auth/addresses/${id}/`, {
+    ...authInit,
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteAddress(id: number): Promise<void> {
+  await apiFetch<void>(`/api/auth/addresses/${id}/`, {
+    ...authInit,
+    method: "DELETE",
+  });
+}
+
+export function authErrorMessage(error: unknown): string {
+  if (error instanceof ApiError) {
+    const body = error.body;
+    if (body && typeof body === "object") {
+      const record = body as Record<string, unknown>;
+      if (
+        record.code === "token_not_valid" ||
+        (typeof record.detail === "string" && record.detail.includes("توکن"))
+      ) {
+        return "نشست کاربری شما منقضی شده است. لطفاً مجدداً وارد حساب کاربری شوید.";
+      }
+      if (typeof record.detail === "string") return record.detail;
+      const first = Object.values(record).flatMap((val) =>
+        Array.isArray(val) ? val : [val],
+      )[0];
+      if (typeof first === "string") return first;
+    }
+    if (error.status === 401) return "ایمیل یا رمز درست نیست یا نشست منقضی شده است.";
+    if (error.status === 409) return "این ایمیل قبلاً ثبت شده است.";
+    if (error.status === 429)
+      return "درخواست‌های پشت‌سر‌هم زیاد بود. چند لحظه بعد تلاش کنید.";
+  }
+  return "خطایی رخ داد. لطفاً دوباره امتحان کنید.";
+}

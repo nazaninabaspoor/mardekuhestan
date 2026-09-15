@@ -1,4 +1,132 @@
-﻿"""accounts.serializers
+﻿"""ورودی/خروجی API حساب — متن ساده."""
 
-Part of Marde Kuhestan Django business domain.
-"""
+from __future__ import annotations
+
+from rest_framework import serializers
+
+from accounts.constants import DISPLAY_NAME_MAX_LENGTH, PASSWORD_MIN_LENGTH
+from accounts.models import CustomerAddress
+from accounts.selectors import get_or_create_profile
+from sec.ownership import reject_foreign_identity
+
+
+class IdentityLockedSerializer(serializers.Serializer):
+    def validate(self, attrs):
+        reject_foreign_identity(getattr(self, "initial_data", None))
+        return attrs
+
+
+class RegisterSerializer(IdentityLockedSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, min_length=PASSWORD_MIN_LENGTH)
+    password_repeat = serializers.CharField(write_only=True)
+    name = serializers.CharField(max_length=DISPLAY_NAME_MAX_LENGTH)
+    phone = serializers.CharField(required=False, allow_blank=True, default="")
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if attrs["password"] != attrs["password_repeat"]:
+            raise serializers.ValidationError(
+                {"password_repeat": "دو رمز یکی نیستند."}
+            )
+        return attrs
+
+
+class LoginSerializer(IdentityLockedSerializer):
+    email = serializers.CharField(required=False, allow_blank=True, default="")
+    username = serializers.CharField(required=False, allow_blank=True, default="")
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        ident = (attrs.get("email") or attrs.get("username") or "").strip()
+        if not ident:
+            raise serializers.ValidationError({"email": "ایمیل را بنویسید."})
+        attrs["email"] = ident
+        return attrs
+
+
+class RefreshSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=False, allow_blank=True, default="")
+
+
+class ChangePasswordSerializer(IdentityLockedSerializer):
+    current_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, min_length=PASSWORD_MIN_LENGTH)
+    new_password_repeat = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if attrs["new_password"] != attrs["new_password_repeat"]:
+            raise serializers.ValidationError(
+                {"new_password_repeat": "دو رمز یکی نیستند."}
+            )
+        return attrs
+
+
+class ProfileUpdateSerializer(IdentityLockedSerializer):
+    name = serializers.CharField(max_length=DISPLAY_NAME_MAX_LENGTH, required=False)
+    phone = serializers.CharField(required=False, allow_blank=True)
+
+
+class UserMeSerializer(serializers.Serializer):
+    def to_representation(self, user):
+        return serialize_user(user, self.context.get("request"))
+
+
+def serialize_user(user, request=None) -> dict:
+    profile = get_or_create_profile(user)
+    avatar_url = ""
+    if profile.avatar:
+        try:
+            rel = profile.avatar.url
+            avatar_url = request.build_absolute_uri(rel) if request else rel
+        except ValueError:
+            avatar_url = ""
+    return {
+        "id": user.pk,
+        "email": user.email,
+        "name": profile.display_name or user.first_name or "",
+        "phone": profile.phone or "",
+        "email_verified": profile.email_verified,
+        "is_staff": bool(user.is_staff),
+        "avatar_url": avatar_url,
+    }
+
+
+class CustomerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerAddress
+        fields = (
+            "id",
+            "title",
+            "address_type",
+            "province",
+            "city",
+            "district",
+            "address_line",
+            "postal_code",
+            "receiver_name",
+            "receiver_phone",
+            "is_default",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+
+class CustomerAddressWriteSerializer(IdentityLockedSerializer):
+    title = serializers.CharField(max_length=100, required=False, allow_blank=True, default="نشانی تحویل")
+    address_type = serializers.ChoiceField(
+        choices=CustomerAddress.AddressType.choices,
+        required=False,
+        default=CustomerAddress.AddressType.HOME,
+    )
+    province = serializers.CharField(max_length=100, required=False, allow_blank=True, default="تهران")
+    city = serializers.CharField(max_length=100, required=False, allow_blank=True, default="تهران")
+    district = serializers.CharField(max_length=120, required=False, allow_blank=True, default="")
+    address_line = serializers.CharField(max_length=500)
+    postal_code = serializers.CharField(max_length=30, required=False, allow_blank=True, default="")
+    receiver_name = serializers.CharField(max_length=120, required=False, allow_blank=True, default="")
+    receiver_phone = serializers.CharField(max_length=40, required=False, allow_blank=True, default="")
+    is_default = serializers.BooleanField(required=False, default=False)

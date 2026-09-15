@@ -1,0 +1,30 @@
+[Unit]
+Description=Marde Kuhestan Celery Worker
+After=network.target redis.service postgresql.service
+
+[Service]
+Type=forking
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mardekoohestan/backend/django
+EnvironmentFile=/var/www/mardekoohestan/backend/django/.env
+ExecStart=/var/www/mardekoohestan/venv/bin/celery -A core multi start worker1 worker2 \
+    --pidfile=/var/run/celery/%n.pid \
+    --logfile=/var/log/celery/%n%I.log \
+    --loglevel=INFO \
+    --queues=high_priority,default,low_priority \
+    --concurrency=4 \
+    --prefetch-multiplier=1 \
+    --max-tasks-per-child=500 \
+    --max-memory-per-child=350000
+ExecStop=/var/www/mardekoohestan/venv/bin/celery multi stopwait worker1 worker2 \
+    --pidfile=/var/run/celery/%n.pid
+ExecReload=/var/www/mardekoohestan/venv/bin/celery multi restart worker1 worker2 \
+    --pidfile=/var/run/celery/%n.pid \
+    --logfile=/var/log/celery/%n%I.log \
+    --loglevel=INFO
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

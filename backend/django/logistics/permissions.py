@@ -1,4 +1,3 @@
-﻿"""logistics.permissions
+﻿from sec.ownership import IsOwner, OwnedQuerysetMixin
 
-Part of Marde Kuhestan Django business domain.
-"""
+__all__ = ["IsOwner", "OwnedQuerysetMixin"]

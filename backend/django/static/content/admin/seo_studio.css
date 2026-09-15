@@ -18,11 +18,11 @@
 
 :root {
   --seo-font: "MardeKuhestan", Tahoma, "Segoe UI", sans-serif;
-  --studio-surface: #f7faf7;
-  --studio-border: #d7e6d9;
-  --studio-ok: #2f7f3c;
-  --studio-warn: #b45309;
-  --studio-muted: #5b6b5e;
+  --studio-surface: #f4f0e8;
+  --studio-border: rgba(0, 91, 72, 0.16);
+  --studio-ok: #005b48;
+  --studio-warn: #903828;
+  --studio-muted: #5d686e;
 }
 
 /* فونت برند فقط روی متن؛ آیکون‌های Unfold دست‌نخورده بمانند */
@@ -110,6 +110,49 @@ fieldset.module {
   min-height: 280px;
   font-size: 1rem;
   line-height: 1.9;
+  transition: min-height 0.2s ease;
+}
+
+.mk-editor-size-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 0 0.65rem;
+}
+
+.mk-editor-size-btn {
+  appearance: none;
+  border: 1px solid rgba(0, 91, 72, 0.28);
+  background: #005b48;
+  color: #fff !important;
+  font-family: var(--seo-font) !important;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-radius: 0.65rem;
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+}
+
+.mk-editor-size-btn:hover {
+  background: #005040;
+}
+
+.mk-editor-size-btn[aria-pressed="true"] {
+  background: #903828;
+  border-color: rgba(144, 56, 40, 0.35);
+}
+
+.field-body.is-editor-expanded .ck-editor__editable_inline,
+.field-body.is-editor-expanded .ck-content,
+.form-row.field-body.is-editor-expanded .ck-editor__editable_inline,
+.form-row.field-body.is-editor-expanded .ck-content {
+  min-height: min(72vh, 820px) !important;
+}
+
+.field-body.is-editor-expanded .django-ckeditor-5,
+.form-row.field-body.is-editor-expanded .django-ckeditor-5 {
+  position: relative;
+  z-index: 2;
 }
 
 .ck.ck-toolbar {

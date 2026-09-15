@@ -959,6 +959,8 @@ export const homeCategoryProducts = {
 
 export type HomeDoorId = keyof typeof homeCategoryProducts;
 
+export type HomeCategoryProduct = (typeof homeCategoryProducts)[HomeDoorId][number];
+
 /** دو محصول در راه — تیزر «به‌زودی» بین راه ما و مجله */
 export const upcomingDrops = {
   kicker: "به‌زودی",
@@ -1043,9 +1045,13 @@ export const contactInfo = {
   email: "info@mardekuhestan.com",
   pages: [
     { href: "/", label: "صفحه اصلی" },
+    { href: "/magazine", label: "مجله" },
     { href: "/chain", label: "زنجیره" },
     { href: "/way", label: "راه‌ها" },
     { href: "/contact", label: "ارتباط با ما" },
+    { href: "/legal/terms", label: "قوانین فروش" },
+    { href: "/legal/privacy", label: "حریم خصوصی" },
+    { href: "/legal/returns", label: "بازگشت کالا" },
   ],
 } as const;
 

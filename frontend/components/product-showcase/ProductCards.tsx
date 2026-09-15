@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { ProductCard, type ShowcaseProduct } from "./ProductCard";
 import styles from "./ProductCards.module.css";
@@ -8,13 +8,43 @@ import styles from "./ProductCards.module.css";
 type ProductCardsProps = {
   title: string;
   products: ReadonlyArray<ShowcaseProduct>;
+  highlightId?: string | null;
+  onProductClick?: (product: ShowcaseProduct) => void;
 };
 
-export function ProductCards({ title, products = [] }: ProductCardsProps) {
+export function ProductCards({
+  title,
+  products = [],
+  highlightId = null,
+  onProductClick,
+}: ProductCardsProps) {
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const scroll = (direction: -1 | 1) => {
-    trackRef.current?.scrollBy({ left: direction * 360, behavior: "smooth" });
+
+  const focusIndex = Math.max(
+    0,
+    products.findIndex((product) => product.id === highlightId),
+  );
+
+  const goTo = (index: number) => {
+    if (!products.length) return;
+    const nextIndex = (index + products.length) % products.length;
+    const next = products[nextIndex];
+    if (!next) return;
+    onProductClick?.(next);
+    window.requestAnimationFrame(() => {
+      const card = document.getElementById(`catalog-product-${next.id}`);
+      card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    });
   };
+
+  useEffect(() => {
+    if (!highlightId) return;
+    const card = document.getElementById(`catalog-product-${highlightId}`);
+    if (!card) return;
+    card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [highlightId, products]);
+
+  const showArrows = products.length > 1;
 
   return (
     <section className={styles.rail} aria-label={title}>
@@ -24,11 +54,37 @@ export function ProductCards({ title, products = [] }: ProductCardsProps) {
         <span aria-hidden="true" />
       </header>
 
-      <button type="button" className={`${styles.arrow} ${styles.previous}`} aria-label="محصولات قبلی" onClick={() => scroll(-1)}>‹</button>
       <div ref={trackRef} className={styles.products}>
-        {products.map((product) => <ProductCard key={product.id} product={product} />)}
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            highlighted={product.id === highlightId}
+            onClick={onProductClick}
+          />
+        ))}
       </div>
-      <button type="button" className={`${styles.arrow} ${styles.next}`} aria-label="محصولات بعدی" onClick={() => scroll(1)}>›</button>
+
+      {showArrows ? (
+        <div className={styles.nav} aria-label="ورق زدن محصولات">
+          <button
+            type="button"
+            className={styles.arrow}
+            aria-label="محصول قبلی"
+            onClick={() => goTo(focusIndex - 1)}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className={styles.arrow}
+            aria-label="محصول بعدی"
+            onClick={() => goTo(focusIndex + 1)}
+          >
+            ›
+          </button>
+        </div>
+      ) : null}
     </section>
   );
 }

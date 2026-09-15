@@ -1,5 +1,37 @@
 ﻿from django.urls import path
 
-app_name = 'accounts'
+from accounts.views import (
+    AddressDetailView,
+    AddressListCreateView,
+    AvatarUploadView,
+    ChangePasswordView,
+    LoginView,
+    LogoutAllView,
+    LogoutView,
+    MeView,
+    PurgeMySupportChatsView,
+    RefreshView,
+    RegisterView,
+    TokenPairView,
+)
 
-urlpatterns = []
+app_name = "accounts"
+
+urlpatterns = [
+    path("register/", RegisterView.as_view(), name="register"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("logout-all/", LogoutAllView.as_view(), name="logout_all"),
+    path("token/", TokenPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", RefreshView.as_view(), name="token_refresh"),
+    path("me/", MeView.as_view(), name="me"),
+    path("me/avatar/", AvatarUploadView.as_view(), name="me_avatar"),
+    path(
+        "me/support-chats/",
+        PurgeMySupportChatsView.as_view(),
+        name="me_support_chats_purge",
+    ),
+    path("password/", ChangePasswordView.as_view(), name="change_password"),
+    path("addresses/", AddressListCreateView.as_view(), name="address_list_create"),
+    path("addresses/<int:pk>/", AddressDetailView.as_view(), name="address_detail"),
+]

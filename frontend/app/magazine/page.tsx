@@ -1,26 +1,75 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-import { latestArticles } from "@/lib/brand";
+import { MagMasonry } from "@/components/magazine/mag-card";
+import { MagPager } from "@/components/magazine/mag-pager";
+import { MagToday } from "@/components/magazine/mag-today";
+import { listArticles } from "@/lib/api/content";
+import {
+  magazineListHref,
+  mergeMagazinePins,
+  parseMagazinePage,
+  windowMagazinePins,
+} from "@/lib/content/magazine-feed";
+import { loadMagazineBoards, loadMagazinePage } from "@/lib/content/magazine-page";
 
-export default function MagazinePage() {
+type Search = { q?: string; page?: string };
+
+async function loadIndex(q?: string) {
+  try {
+    const articles = await listArticles({ q, page: 1, pageSize: 80 }, { revalidate: false });
+    return articles.results || [];
+  } catch {
+    return [];
+  }
+}
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "مجله مرد کوهستان | این راه سبز است",
+  description: "مجله راه سبز: نوشته‌هایی از مرتع، مزرعه، غذا و زندگی در ارتفاع.",
+};
+
+export default async function MagazinePage({
+  searchParams,
+}: {
+  searchParams: Promise<Search>;
+}) {
+  const params = await searchParams;
+  const q = (params.q || "").trim();
+  const [articles, boards, page] = await Promise.all([
+    loadIndex(q),
+    loadMagazineBoards(),
+    loadMagazinePage(),
+  ]);
+  const pins = mergeMagazinePins(articles, q);
+  const leaf = windowMagazinePins(pins, parseMagazinePage(params.page));
+
   return (
-    <section className="inner">
-      <div className="shell">
-        <p className="inner-kicker">مجله</p>
-        <h1>آخرین مقالات</h1>
-        <p className="inner-lead">داستان مسیر غذا، خانه، و راه سبز.</p>
-        <ul className="magazine-list">
-          {latestArticles.map((article) => (
-            <li key={article.id}>
-              <Link href={`/magazine/${article.slug}`}>
-                <span className="magazine-list-kicker">{article.category}</span>
-                <strong>{article.title}</strong>
-                <span className="magazine-list-meta">{article.date}</span>
+    <>
+      <MagToday query={q} boards={boards} active="all" page={page} />
+      <div className="mk-mag-shell">
+        {leaf.total ? (
+          <>
+            <MagMasonry pins={leaf.items} feed />
+            <MagPager
+              page={leaf.page}
+              pageCount={leaf.pageCount}
+              hrefFor={(pageNum) => magazineListHref({ page: pageNum, q, hash: "#mk-feed" })}
+            />
+          </>
+        ) : (
+          <div className="mk-mag-empty">
+            <h2>چیزی با این جستجو پیدا نشد</h2>
+            <p>
+              <Link href="/magazine" className="mk-mag-read">
+                بازگشت به مجله
               </Link>
-            </li>
-          ))}
-        </ul>
+            </p>
+          </div>
+        )}
       </div>
-    </section>
+    </>
   );
 }
