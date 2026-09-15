@@ -1,8 +1,6 @@
-﻿"""شروع و تأیید پرداخت روی سندباکس رسمی زرین‌پال و پارسیان."""
+﻿"""شروع و تأیید پرداخت روی سندباکس رسمی زرین‌پال."""
 
 from __future__ import annotations
-
-import time
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -12,7 +10,6 @@ from orders.services import fulfill_cart_as_order
 from payments.circuit import CircuitOpen, GatewayTransportError
 from payments.gateways import (
     GatewayRejected,
-    request_parsian,
     request_zarinpal,
     verify_parsian,
     verify_zarinpal,
@@ -40,8 +37,11 @@ def cart_payable_toman(user) -> int:
 
 
 def start_payment(user, gateway: str, receiver_name: str, receiver_phone: str, shipping_address: str) -> dict:
-    if gateway not in {Payment.Gateway.ZARINPAL, Payment.Gateway.PARSIAN}:
-        raise ValidationError("درگاه پرداخت نامعتبر است.")
+    # فعلاً فقط زرین‌پال برای مشتری فعال است (پارسیان از UI حذف شده).
+    requested = (gateway or Payment.Gateway.ZARINPAL).strip().lower()
+    if requested and requested != Payment.Gateway.ZARINPAL:
+        raise ValidationError("درگاه فعال فقط زرین‌پال است.")
+    gateway = Payment.Gateway.ZARINPAL
 
     amount = cart_payable_toman(user)
 
@@ -56,19 +56,12 @@ def start_payment(user, gateway: str, receiver_name: str, receiver_phone: str, s
     )
 
     try:
-        if gateway == Payment.Gateway.ZARINPAL:
-            callback = f"{_backend_url()}/api/payments/callback/zarinpal/?pid={payment.public_id}"
-            authority, pay_url = request_zarinpal(
-                amount,
-                callback,
-                f"سفارش مرد کوهستان #{payment.public_id.hex[:8]}",
-            )
-        else:
-            callback = f"{_backend_url()}/api/payments/callback/parsian/?pid={payment.public_id}"
-            order_id = (int(payment.pk) * 1_000_000 + int(time.time()) % 1_000_000) % (10**12)
-            if order_id < 1000:
-                order_id += 1000
-            authority, pay_url = request_parsian(amount, order_id, callback)
+        callback = f"{_backend_url()}/api/payments/callback/zarinpal/?pid={payment.public_id}"
+        authority, pay_url = request_zarinpal(
+            amount,
+            callback,
+            f"سفارش مرد کوهستان #{payment.public_id.hex[:8]}",
+        )
     except CircuitOpen as exc:
         payment.status = Payment.Status.FAILED
         payment.save(update_fields=["status", "updated_at"])

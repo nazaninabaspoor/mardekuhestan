@@ -8,26 +8,11 @@ import { fetchSandboxPayment } from "@/lib/api/payments";
 function zarinpalAuthorityFromUrl(url: string) {
   try {
     const parsed = new URL(url);
-    if (parsed.hostname !== "sandbox.zarinpal.com") return "";
+    if (parsed.hostname !== "sandbox.zarinpal.com" && parsed.hostname !== "www.zarinpal.com") {
+      return "";
+    }
     const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
-    if (token.length === 36 && token.startsWith("S")) return token;
-    return "";
-  } catch {
-    return "";
-  }
-}
-
-function parsianTokenFromUrl(url: string) {
-  try {
-    const parsed = new URL(url);
-    const host = parsed.hostname;
-    const isParsianHost =
-      host === "pec.shaparak.ir" ||
-      host === "sandbox.pec.ir" ||
-      (host === "sandbox.banktest.ir" && parsed.pathname.includes("/parsian/"));
-    if (!isParsianHost) return "";
-    const token = parsed.searchParams.get("Token") || parsed.searchParams.get("token") || "";
-    if (/^[1-9]\d{3,18}$/.test(token)) return token;
+    if (token.length === 36 && (token.startsWith("S") || token.startsWith("A"))) return token;
     return "";
   } catch {
     return "";
@@ -40,7 +25,7 @@ export default function SandboxPayPage() {
   const { user, isLoading } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [target, setTarget] = useState<string | null>(null);
-  const [statusText, setStatusText] = useState("در حال ورود به درگاه رسمی…");
+  const [statusText, setStatusText] = useState("در حال ورود به درگاه رسمی زرین‌پال…");
 
   useEffect(() => {
     document.documentElement.classList.add("is-pay-sandbox");
@@ -53,24 +38,21 @@ export default function SandboxPayPage() {
       .then((payment) => {
         const url = payment.redirect_url || "";
         const authority = zarinpalAuthorityFromUrl(url);
-        if (authority) {
+        if (authority.startsWith("S")) {
           const official = `https://sandbox.zarinpal.com/pg/StartPay/${authority}/`;
           setStatusText("در حال ورود به درگاه رسمی زرین‌پال…");
           setTarget(official);
           window.location.replace(official);
           return;
         }
-        const parsianToken = parsianTokenFromUrl(url);
-        if (parsianToken) {
-          const official = url.includes("pec.shaparak.ir") && !url.includes("banktest")
-            ? `https://pec.shaparak.ir/NewIPG/?Token=${parsianToken}`
-            : `https://sandbox.banktest.ir/parsian/pec.shaparak.ir/NewIPG/?Token=${parsianToken}`;
-          setStatusText("در حال ورود به درگاه سندباکس پارسیان…");
+        if (authority.startsWith("A")) {
+          const official = `https://www.zarinpal.com/pg/StartPay/${authority}/`;
+          setStatusText("در حال ورود به درگاه رسمی زرین‌پال…");
           setTarget(official);
           window.location.replace(official);
           return;
         }
-        setError("کد پیگیری درگاه ناقص است. از سبد دوباره درگاه را انتخاب کنید.");
+        setError("کد پیگیری زرین‌پال ناقص است. از سبد دوباره پرداخت را شروع کنید.");
       })
       .catch(() => {
         router.replace("/profile/orders?view=cart");
@@ -79,9 +61,7 @@ export default function SandboxPayPage() {
 
   return (
     <div className="mk-psp">
-      <p className="mk-psp-status">
-        {error || statusText}
-      </p>
+      <p className="mk-psp-status">{error || statusText}</p>
       {target && !error && (
         <p className="mk-psp-status" style={{ fontSize: 13, wordBreak: "break-all", opacity: 0.75 }}>
           {target}

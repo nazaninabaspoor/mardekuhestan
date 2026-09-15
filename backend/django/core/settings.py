@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "product",
     "inventory",
-    "orders",
+    "orders.apps.OrdersConfig",
     "payments",
     "logistics",
     "content.apps.ContentConfig",
@@ -149,9 +149,29 @@ _PARSIAN_SANDBOX_PIN = "12345678901234567890"
 PARSIAN_PIN = os.getenv("PARSIAN_PIN", "").strip()
 if not PARSIAN_PIN and PARSIAN_SANDBOX:
     PARSIAN_PIN = _PARSIAN_SANDBOX_PIN
-PAYMENT_GATEWAY_TIMEOUT_SECONDS = int(os.getenv("PAYMENT_GATEWAY_TIMEOUT_SECONDS", "4"))
-PAYMENT_CIRCUIT_FAILURE_THRESHOLD = int(os.getenv("PAYMENT_CIRCUIT_FAILURE_THRESHOLD", "3"))
-PAYMENT_CIRCUIT_OPEN_SECONDS = int(os.getenv("PAYMENT_CIRCUIT_OPEN_SECONDS", "45"))
+PAYMENT_GATEWAY_TIMEOUT_SECONDS = int(os.getenv("PAYMENT_GATEWAY_TIMEOUT_SECONDS", "15"))
+PAYMENT_CIRCUIT_FAILURE_THRESHOLD = int(os.getenv("PAYMENT_CIRCUIT_FAILURE_THRESHOLD", "5"))
+PAYMENT_CIRCUIT_OPEN_SECONDS = int(os.getenv("PAYMENT_CIRCUIT_OPEN_SECONDS", "30"))
+
+# ایمیل SMTP — اطلاع سفارش جدید به ادمین (هم‌نام با FastAPI: SMTP_* هم پذیرفته می‌شود)
+EMAIL_HOST = (os.getenv("EMAIL_HOST") or os.getenv("SMTP_HOST") or "").strip()
+EMAIL_PORT = int(os.getenv("EMAIL_PORT") or os.getenv("SMTP_PORT") or "587")
+EMAIL_HOST_USER = (os.getenv("EMAIL_HOST_USER") or os.getenv("SMTP_USER") or "").strip()
+EMAIL_HOST_PASSWORD = (
+    os.getenv("EMAIL_HOST_PASSWORD") or os.getenv("SMTP_PASSWORD") or ""
+).replace(" ", "").strip()
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", default=env_bool("SMTP_USE_TLS", default=True))
+EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", default=False)
+DEFAULT_FROM_EMAIL = (
+    os.getenv("DEFAULT_FROM_EMAIL") or os.getenv("SMTP_FROM") or EMAIL_HOST_USER or "noreply@mardekoohestan.ir"
+).strip()
+ORDER_NOTIFY_EMAILS = (
+    os.getenv("ORDER_NOTIFY_EMAILS") or os.getenv("SUPPORT_NOTIFY_EMAILS") or ""
+).strip()
+if EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -583,6 +603,31 @@ UNFOLD = {
                 ],
             },
             {
+                "title": "سفارش و پرداخت",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "سفارش‌ها",
+                        "icon": "receipt_long",
+                        "link": reverse_lazy("admin:orders_order_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "سبدهای خرید",
+                        "icon": "shopping_cart",
+                        "link": reverse_lazy("admin:orders_cart_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "پرداخت‌ها",
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:payments_payment_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                ],
+            },
+            {
                 "title": "نوشته‌ها",
                 "separator": True,
                 "collapsible": False,
@@ -604,6 +649,12 @@ UNFOLD = {
                         "title": "کاربران",
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_user_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "پروفایل مشتری",
+                        "icon": "badge",
+                        "link": reverse_lazy("admin:accounts_customerprofile_changelist"),
                         "permission": "core.admin_ui.staff_ok",
                     },
                     {

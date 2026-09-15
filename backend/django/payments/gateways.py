@@ -127,8 +127,7 @@ def parsian_pin() -> str:
     return (getattr(settings, "PARSIAN_PIN", "") or "").strip()
 
 
-def _http_json(url: str, payload: dict, gateway: str) -> dict:
-    guard(gateway)
+def _json_urllib(url: str, payload: dict) -> str:
     body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -136,12 +135,72 @@ def _http_json(url: str, payload: dict, gateway: str) -> dict:
         headers={"Content-Type": "application/json", "Accept": "application/json"},
         method="POST",
     )
+    with urllib.request.urlopen(req, timeout=_timeout(), context=ssl.create_default_context()) as resp:
+        return resp.read().decode("utf-8")
+
+
+def _json_curl(url: str, payload: dict) -> str:
+    """روی ویندوز urllib گاهی به sandbox.zarinpal.com گیر می‌کند؛ curl پایدارتر است."""
+    curl = "curl.exe" if os.name == "nt" else "curl"
+    timeout = int(max(_timeout(), 8))
+    body = json.dumps(payload)
     try:
-        with urllib.request.urlopen(req, timeout=_timeout(), context=ssl.create_default_context()) as resp:
-            raw = resp.read().decode("utf-8")
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        record_failure(gateway)
+        completed = subprocess.run(
+            [
+                curl,
+                "-sS",
+                "-m",
+                str(timeout),
+                "--http1.1",
+                "-H",
+                "Content-Type: application/json",
+                "-H",
+                "Accept: application/json",
+                "--data-binary",
+                "@-",
+                "-w",
+                "\n__HTTPSTATUS__%{http_code}",
+                url,
+            ],
+            input=body.encode("utf-8"),
+            capture_output=True,
+            timeout=timeout + 5,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
         raise GatewayTransportError(str(exc)) from exc
+    out = completed.stdout.decode("utf-8", "replace")
+    err = completed.stderr.decode("utf-8", "replace")
+    raw = out
+    status = ""
+    if "__HTTPSTATUS__" in out:
+        raw, status = out.rsplit("__HTTPSTATUS__", 1)
+        status = status.strip()
+    if completed.returncode != 0 and not raw.strip():
+        raise GatewayTransportError(err or f"curl {completed.returncode}")
+    if status and status not in {"200", "201", "422"}:
+        raise GatewayTransportError(f"http {status} {err}".strip() or f"http {status}")
+    if not raw.strip():
+        raise GatewayTransportError(err or "empty json")
+    return raw
+
+
+def _http_json(url: str, payload: dict, gateway: str) -> dict:
+    guard(gateway)
+    # ویندوز: اول curl (مثل پارسیان)، بعد urllib
+    senders = (_json_curl, _json_urllib) if os.name == "nt" else (_json_urllib, _json_curl)
+    last_exc: Exception | None = None
+    raw = ""
+    for sender in senders:
+        try:
+            raw = sender(url, payload)
+            break
+        except (urllib.error.URLError, TimeoutError, OSError, GatewayTransportError) as exc:
+            last_exc = exc
+            logger.warning("Zarinpal/JSON via %s failed: %s", sender.__name__, exc)
+    else:
+        record_failure(gateway)
+        raise GatewayTransportError(str(last_exc) if last_exc else "json request failed") from last_exc
     try:
         parsed = json.loads(raw)
     except json.JSONDecodeError as exc:

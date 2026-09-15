@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api/client";
 
-export type PaymentGateway = "zarinpal" | "parsian";
+export type PaymentGateway = "zarinpal";
 
 export type PaymentStart = {
   payment_id: string;
@@ -12,7 +12,7 @@ export type PaymentStart = {
 
 export type SandboxPayment = {
   payment_id: string;
-  gateway: PaymentGateway;
+  gateway: PaymentGateway | string;
   gateway_display: string;
   status: string;
   amount_toman: number;
@@ -35,7 +35,7 @@ const payInit = {
 };
 
 export async function startPayment(input: {
-  gateway: PaymentGateway;
+  gateway?: PaymentGateway;
   receiver_name?: string;
   receiver_phone?: string;
   shipping_address?: string;
@@ -43,7 +43,7 @@ export async function startPayment(input: {
   return apiFetch<PaymentStart>("/api/payments/start/", {
     ...payInit,
     method: "POST",
-    body: JSON.stringify(input),
+    body: JSON.stringify({ gateway: "zarinpal", ...input }),
   });
 }
 

@@ -8,55 +8,29 @@ import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { authErrorMessage, getUserAddresses } from "@/lib/api/auth";
 import { fetchUserOrders, type ApiOrder } from "@/lib/api/orders";
-import { startPayment, type PaymentGateway } from "@/lib/api/payments";
+import { startPayment } from "@/lib/api/payments";
 import { DigikalaCart } from "@/components/v2/v2-digikala-cart";
 import { DigikalaOrdersList, type PastureOrderData } from "@/components/v2/v2-digikala-orders-list";
 import { handleDownloadOrderPdf, resolveProductImage } from "@/lib/profile-order-utils";
 
 const PAGE_SIZE = 15;
 
-function parsianTokenFromUrl(url: string) {
+function zarinpalAuthorityFromUrl(url: string) {
   try {
     const parsed = new URL(url);
-    const host = parsed.hostname;
-    const isParsianHost =
-      host === "pec.shaparak.ir" ||
-      host === "sandbox.pec.ir" ||
-      (host === "sandbox.banktest.ir" && parsed.pathname.includes("/parsian/"));
-    if (!isParsianHost) return "";
-    const token = parsed.searchParams.get("Token") || parsed.searchParams.get("token") || "";
-    if (/^[1-9]\d{3,18}$/.test(token)) return token;
+    if (parsed.hostname !== "sandbox.zarinpal.com" && parsed.hostname !== "www.zarinpal.com") {
+      return "";
+    }
+    const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
+    if (token.length === 36 && (token.startsWith("S") || token.startsWith("A"))) return token;
     return "";
   } catch {
     return "";
   }
 }
 
-function parsianPayUrl(token: string, sandbox = true) {
-  if (sandbox) {
-    return `https://sandbox.banktest.ir/parsian/pec.shaparak.ir/NewIPG/?Token=${token}`;
-  }
-  return `https://pec.shaparak.ir/NewIPG/?Token=${token}`;
-}
-
-function isOfficialGatewayUrl(url: string) {
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname === "sandbox.zarinpal.com") {
-      const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
-      return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("S");
-    }
-    if (parsed.hostname === "pec.shaparak.ir" || parsed.hostname === "sandbox.pec.ir" || parsed.hostname === "sandbox.banktest.ir") {
-      return Boolean(parsianTokenFromUrl(url));
-    }
-    if (parsed.hostname === "www.zarinpal.com" || parsed.hostname === "payment.zarinpal.com") {
-      const token = parsed.pathname.split("/").filter(Boolean).pop() || "";
-      return parsed.pathname.includes("/pg/StartPay/") && token.length === 36 && token.startsWith("A");
-    }
-    return false;
-  } catch {
-    return false;
-  }
+function isOfficialZarinpalUrl(url: string) {
+  return Boolean(zarinpalAuthorityFromUrl(url));
 }
 
 function mapApiOrder(ord: ApiOrder): PastureOrderData {
@@ -201,42 +175,33 @@ function OrdersRouteContent() {
     });
   };
 
-  const handleSelectGateway = async (gateway: PaymentGateway) => {
+  const startZarinpalCheckout = async () => {
     if (!cart?.items?.length) {
       setPayError("سبد خرید خالی است.");
+      setIsPayModalOpen(true);
       return;
     }
     setIsPaying(true);
     setPayError(null);
+    setIsPayModalOpen(true);
     try {
       const started = await startPayment({
-        gateway,
+        gateway: "zarinpal",
         receiver_name: buyerInfo.name,
         receiver_phone: buyerInfo.phone,
         shipping_address: buyerInfo.address,
       });
       const url = started.redirect_url || "";
-      if (started.gateway === "zarinpal") {
-        const token = (() => {
-          try {
-            return new URL(url).pathname.split("/").filter(Boolean).pop() || "";
-          } catch {
-            return "";
-          }
-        })();
-        if (token.length === 36 && token.startsWith("S")) {
-          window.location.replace(`https://sandbox.zarinpal.com/pg/StartPay/${token}/`);
-          return;
-        }
+      const token = zarinpalAuthorityFromUrl(url);
+      if (token.startsWith("S")) {
+        window.location.replace(`https://sandbox.zarinpal.com/pg/StartPay/${token}/`);
+        return;
       }
-      if (started.gateway === "parsian") {
-        const token = parsianTokenFromUrl(url);
-        if (token) {
-          window.location.replace(parsianPayUrl(token, started.sandbox !== false));
-          return;
-        }
+      if (token.startsWith("A")) {
+        window.location.replace(`https://www.zarinpal.com/pg/StartPay/${token}/`);
+        return;
       }
-      if (!isOfficialGatewayUrl(url)) {
+      if (!isOfficialZarinpalUrl(url)) {
         setPayError("آدرس برگشتی درگاه معتبر نیست.");
         setIsPaying(false);
         return;
@@ -370,8 +335,7 @@ function OrdersRouteContent() {
               onRemoveFromCart={(itemId) => removeFromCart(itemId)}
               onClearCart={() => clearCart()}
               onCheckout={() => {
-                setPayError(null);
-                setIsPayModalOpen(true);
+                void startZarinpalCheckout();
               }}
               onDownloadPdf={() => {
                 handleDownloadOrderPdf(
@@ -411,12 +375,14 @@ function OrdersRouteContent() {
               exit={{ opacity: 0, scale: 0.94, y: 16 }}
             >
               <p className="mk-gateway-kicker">پرداخت امن راه سبز</p>
-              <h3>با کدام درگاه پرداخت می‌کنید؟</h3>
+              <h3>{isPaying ? "در حال اتصال به زرین‌پال…" : "پرداخت با زرین‌پال"}</h3>
               <p className="mk-gateway-amount">
                 مبلغ قابل پرداخت: <strong>{payableLabel}</strong>
               </p>
               <p className="mk-gateway-note">
-                با انتخاب درگاه وارد صفحهٔ پرداخت رسمی زرین‌پال یا پارسیان می‌شوید. کارت و رمز را همان‌جا وارد می‌کنید.
+                {isPaying
+                  ? "لطفاً چند لحظه صبر کنید؛ به صفحهٔ رسمی پرداخت زرین‌پال می‌روید."
+                  : "برای ادامه، دوباره تلاش کنید تا وارد درگاه رسمی زرین‌پال شوید."}
               </p>
               {payError && <p className="mk-gateway-error">{payError}</p>}
               <div className="mk-gateway-choices">
@@ -424,24 +390,12 @@ function OrdersRouteContent() {
                   type="button"
                   className="mk-gateway-choice mk-gateway-choice--zarinpal"
                   disabled={isPaying}
-                  onClick={() => void handleSelectGateway("zarinpal")}
+                  onClick={() => void startZarinpalCheckout()}
                 >
                   <span className="mk-gateway-mark">زر</span>
                   <span className="mk-gateway-choice-text">
                     <strong>زرین‌پال</strong>
-                    <small>سندباکس رسمی زرین‌پال</small>
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="mk-gateway-choice mk-gateway-choice--parsian"
-                  disabled={isPaying}
-                  onClick={() => void handleSelectGateway("parsian")}
-                >
-                  <span className="mk-gateway-mark">پا</span>
-                  <span className="mk-gateway-choice-text">
-                    <strong>بانک پارسیان</strong>
-                    <small>سندباکس پارسیان</small>
+                    <small>{isPaying ? "در حال انتقال…" : "ورود به درگاه رسمی"}</small>
                   </span>
                 </button>
               </div>
