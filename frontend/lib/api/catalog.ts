@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 import { DEFAULT_SALES_CHANNEL } from "@/lib/api/config";
 import type {
+  CatalogCategory,
   CatalogDomain,
   CatalogProductDetail,
   CatalogProductListItem,
@@ -18,6 +19,29 @@ type ListProductsParams = {
 
 export async function listDomains(): Promise<CatalogDomain[]> {
   return apiFetch<CatalogDomain[]>("/api/products/domains/");
+}
+
+function unwrapList<T>(payload: T[] | Paginated<T>): T[] {
+  if (Array.isArray(payload)) return payload;
+  return payload.results || [];
+}
+
+/** Active storefront categories from Django admin (دسته‌ها). */
+export async function listProductCategories(params?: {
+  kind?: string;
+  domain?: string;
+}): Promise<CatalogCategory[]> {
+  const payload = await apiFetch<CatalogCategory[] | Paginated<CatalogCategory>>(
+    "/api/products/categories/",
+    {
+      searchParams: {
+        kind: params?.kind,
+        domain: params?.domain,
+        page_size: 100,
+      },
+    },
+  );
+  return unwrapList(payload).filter((item) => item.is_active);
 }
 
 export async function listProducts(

@@ -8,6 +8,21 @@ export type CatalogDomain = {
   requires_cold_chain: boolean;
 };
 
+export type CatalogCategory = {
+  id: number;
+  public_uuid: string;
+  name: string;
+  slug: string;
+  description: string;
+  domain: string;
+  kind: string;
+  sort_order: number;
+  is_active: boolean;
+  domain_label_fa?: string;
+  domain_slug?: string;
+  domain_frontend_key?: string;
+};
+
 export type CatalogHeroImage = {
   id: number;
   public_uuid: string;

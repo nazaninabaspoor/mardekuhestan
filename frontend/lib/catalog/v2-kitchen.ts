@@ -1,5 +1,5 @@
-import type { CatalogDomain } from "@/lib/api/catalog.types";
-import { listDomains, listProducts } from "@/lib/api/catalog";
+import type { CatalogCategory } from "@/lib/api/catalog.types";
+import { listProductCategories, listProducts } from "@/lib/api/catalog";
 import { domainDisplay } from "@/lib/catalog/domain-display";
 import { mapProductToCard } from "@/lib/catalog/map";
 import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
@@ -14,11 +14,6 @@ export type V2KitchenCatalogPayload = {
   productsByCategory: Record<string, ShowcaseProduct[]>;
   source: "api" | "static";
   apiReachable: boolean;
-};
-
-const V2_STATIC_KEY_MAP: Record<string, string> = {
-  ready: "ready-meal",
-  agriculture: "farm",
 };
 
 const FOR_KITCHEN_PAGE_SIZE = 60;
@@ -43,43 +38,39 @@ export function staticKitchenPayload(): V2KitchenCatalogPayload {
   };
 }
 
-function domainToCategory(domain: CatalogDomain): ProductCategory {
-  const frontendKey = domain.frontend_query_key;
-  const staticId = V2_STATIC_KEY_MAP[frontendKey] ?? frontendKey;
-  const preset = productCategories.find((item) => item.id === staticId);
+function adminCategoryToDoor(category: CatalogCategory): ProductCategory {
+  const frontendKey = category.domain_frontend_key || category.slug;
   const display = domainDisplay(frontendKey);
-
-  if (preset) {
-    return {
-      ...preset,
-      id: frontendKey,
-      title: preset.title,
-      headline: domain.label_fa,
-    };
-  }
-
-  const shortTitle = domain.label_fa.split(/\s+/)[0] ?? domain.label_fa;
+  const shortTitle = category.name.split(/\s+/)[0] ?? category.name;
   return {
-    id: frontendKey,
+    id: category.slug,
     title: shortTitle,
     eyebrow: "از مزرعه تا سفره",
-    headline: domain.label_fa,
-    description: "تازه و قابل اعتماد — از مسیر سبز مرد کوهستان.",
+    headline: category.name,
+    description:
+      category.description?.trim() ||
+      "تازه و قابل اعتماد — از مسیر سبز مرد کوهستان.",
     heroImage: display.plateImage,
     cardImage: display.plateImage,
     video: "/brand/teaser.mp4",
   };
 }
 
+/** Homepage kitchen doors = active admin categories with published products. */
 export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
   try {
-    const domains = await listDomains();
-    if (!domains.length) return staticKitchenPayload();
+    const adminCategories = await listProductCategories({ kind: "navigation" });
+    const pool =
+      adminCategories.length > 0
+        ? adminCategories
+        : await listProductCategories();
+
+    if (!pool.length) return staticKitchenPayload();
 
     const loaded = await Promise.all(
-      domains.map(async (domain) => {
+      pool.map(async (category) => {
         const { results } = await listProducts({
-          domain: domain.key,
+          category: category.slug,
           pageSize: FOR_KITCHEN_PAGE_SIZE,
         });
         const apiProducts = results.map((item) => {
@@ -92,18 +83,17 @@ export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
             alt: card.alt,
           };
         });
-        return { domain, apiProducts };
+        return { category, apiProducts };
       }),
     );
 
     const categories: ProductCategory[] = [];
     const productsByCategory: Record<string, ShowcaseProduct[]> = {};
 
-    for (const { domain, apiProducts } of loaded) {
-      // Only doors with published admin products appear on the homepage.
+    for (const { category, apiProducts } of loaded) {
       if (apiProducts.length === 0) continue;
-      categories.push(domainToCategory(domain));
-      productsByCategory[domain.frontend_query_key] = apiProducts;
+      categories.push(adminCategoryToDoor(category));
+      productsByCategory[category.slug] = apiProducts;
     }
 
     if (!categories.length) return staticKitchenPayload();

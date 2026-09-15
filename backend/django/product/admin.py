@@ -15,6 +15,7 @@ from unfold.widgets import UnfoldAdminExpandableTextareaWidget, UnfoldAdminTexta
 from product import validators as product_validators
 from product.constants import (
     Allergen,
+    CategoryKind,
     ProductImageRole,
     ProductStatus,
     ProductVisibility,
@@ -113,6 +114,18 @@ class ProductAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.initial["allergens"] = self.instance.allergens or []
+        else:
+            # New products should appear on the storefront unless staff chooses draft.
+            self.fields["status"].initial = ProductStatus.ACTIVE
+            self.initial["status"] = ProductStatus.ACTIVE
+            self.fields["visibility"].initial = ProductVisibility.PUBLIC
+            self.initial["visibility"] = ProductVisibility.PUBLIC
+            if "sort_order" in self.fields:
+                self.fields["sort_order"].initial = 10
+                self.initial["sort_order"] = 10
+            self.fields["status"].help_text = (
+                "برای دیده شدن در صفحه اصلی باید «فعال» باشد. پیش‌نویس فقط در پنل می‌ماند."
+            )
 
     def clean_name(self):
         product_validators.validate_product_name(self.cleaned_data["name"])
@@ -432,7 +445,7 @@ class ProductAdmin(ModelAdmin):
     warn_unsaved_form = True
     list_filter_sheet = True
     list_per_page = 25
-    ordering = ("sort_order", "name")
+    ordering = ("-updated_at", "name")
 
     fieldsets = (
         (
@@ -664,14 +677,58 @@ class ProductAdmin(ModelAdmin):
 
     def save_model(self, request, obj, form, change) -> None:
         super().save_model(request, obj, form, change)
-        if obj.status in ProductStatus.PUBLISHABLE:
+
+        # Ensure a sellable size/variant exists for cart/checkout.
+        if not obj.variants.exists():
+            ProductVariant.objects.create(
+                product=obj,
+                sku=normalize_sku(f"MK-{obj.pk:05d}-01") or f"MK-{obj.pk:05d}-01",
+                label="استاندارد",
+                unit_price_rial=obj.unit_price_rial,
+                net_weight_grams=obj.net_weight_grams,
+                is_active=True,
+                sort_order=10,
+            )
+
+        # If staff picked a domain but no category, attach the matching navigation category.
+        if obj.domain and not obj.categories.exists():
+            match = (
+                Category.objects.active()
+                .filter(domain=obj.domain, kind=CategoryKind.NAVIGATION)
+                .order_by("sort_order", "name")
+                .first()
+            )
+            if match is None:
+                match = (
+                    Category.objects.active()
+                    .filter(domain=obj.domain)
+                    .order_by("sort_order", "name")
+                    .first()
+                )
+            if match is not None:
+                obj.categories.add(match)
+
+        if obj.status == ProductStatus.DRAFT:
+            self.message_user(
+                request,
+                "محصول به‌صورت «پیش‌نویس» ذخیره شد — در صفحه اصلی دیده نمی‌شود. "
+                "وضعیت را روی «فعال» بگذارید و حداقل یک عکس اصلی اضافه کنید.",
+                level=messages.WARNING,
+            )
+        elif obj.status in ProductStatus.PUBLISHABLE:
             images = list(obj.images.all())
             try:
                 product_validators.validate_product_images_have_hero(images)
+                self.message_user(
+                    request,
+                    "محصول فعال است و پس از رفرش صفحه اصلی در سکشن محصولات دیده می‌شود.",
+                    level=messages.SUCCESS,
+                )
             except ValidationError as exc:
                 self.message_user(
                     request,
-                    " ".join(exc.messages),
+                    " ".join(exc.messages)
+                    + " بدون عکس اصلی ممکن است کارت محصول ناقص دیده شود.",
                     level=messages.WARNING,
                 )
 
