@@ -143,6 +143,13 @@ _ZARINPAL_SANDBOX_MERCHANT = "123e4567-e89b-12d3-a456-426614174000"
 ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID", "").strip()
 if not ZARINPAL_MERCHANT_ID and ZARINPAL_SANDBOX:
     ZARINPAL_MERCHANT_ID = _ZARINPAL_SANDBOX_MERCHANT
+if not ZARINPAL_SANDBOX and not ZARINPAL_MERCHANT_ID:
+    import warnings
+
+    warnings.warn(
+        "ZARINPAL_SANDBOX=false ولی ZARINPAL_MERCHANT_ID خالی است — درگاه زنده کار نمی‌کند.",
+        stacklevel=1,
+    )
 PARSIAN_SANDBOX = env_bool("PARSIAN_SANDBOX", default=True)
 # پارسیان sandbox.pec.ir ندارد. سندباکس: banktest با همان SOAP پارسیان. زنده: PIN pec.ir.
 _PARSIAN_SANDBOX_PIN = "12345678901234567890"

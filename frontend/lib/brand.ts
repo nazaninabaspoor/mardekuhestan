@@ -1049,6 +1049,9 @@ export const contactInfo = {
     { href: "/chain", label: "زنجیره" },
     { href: "/way", label: "راه‌ها" },
     { href: "/contact", label: "ارتباط با ما" },
+    { href: "/legal/terms", label: "قوانین فروش" },
+    { href: "/legal/privacy", label: "حریم خصوصی" },
+    { href: "/legal/returns", label: "بازگشت کالا" },
   ],
 } as const;
 

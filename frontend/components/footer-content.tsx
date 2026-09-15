@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { EnamadBadge } from "@/components/enamad-badge";
 import { v2Footer } from "@/data/v2-footer";
 import { contactInfo } from "@/lib/brand";
 
@@ -85,8 +86,9 @@ export function FooterContent() {
         </div>
 
         <div className="footer-bottom">
-          <div className="shell">
+          <div className="shell footer-bottom-row">
             <p>{v2Footer.copyright}</p>
+            <EnamadBadge />
           </div>
         </div>
       </>
@@ -142,11 +144,12 @@ export function FooterContent() {
       </div>
 
       <div className="footer-bottom">
-        <div className="shell">
+        <div className="shell footer-bottom-row">
           <p>
             کلیه حقوق این سایت متعلق به صنایع غذایی مرد کوهستان می‌باشد | All Rights
             Reserved to Mard-e-Kuhestan
           </p>
+          <EnamadBadge />
         </div>
       </div>
     </>
