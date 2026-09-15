@@ -1,4 +1,4 @@
-import type { CatalogCategory } from "@/lib/api/catalog.types";
+import type { CatalogCategory, CatalogProductListItem } from "@/lib/api/catalog.types";
 import { listProductCategories, listProducts } from "@/lib/api/catalog";
 import { domainDisplay } from "@/lib/catalog/domain-display";
 import { mapProductToCard } from "@/lib/catalog/map";
@@ -16,7 +16,7 @@ export type V2KitchenCatalogPayload = {
   apiReachable: boolean;
 };
 
-const FOR_KITCHEN_PAGE_SIZE = 60;
+const FOR_KITCHEN_PAGE_SIZE = 80;
 
 export function staticKitchenPayload(): V2KitchenCatalogPayload {
   const productsByCategory: Record<string, ShowcaseProduct[]> = {};
@@ -56,7 +56,36 @@ function adminCategoryToDoor(category: CatalogCategory): ProductCategory {
   };
 }
 
-/** Homepage kitchen doors = active admin categories with published products. */
+function toCard(item: CatalogProductListItem): ShowcaseProduct {
+  const card = mapProductToCard(item);
+  return {
+    id: card.id,
+    name: card.name,
+    href: card.href,
+    image: card.image,
+    alt: card.alt,
+  };
+}
+
+function mergeProducts(
+  primary: CatalogProductListItem[],
+  secondary: CatalogProductListItem[],
+): ShowcaseProduct[] {
+  const seen = new Set<string>();
+  const out: ShowcaseProduct[] = [];
+  for (const item of [...primary, ...secondary]) {
+    const key = item.public_uuid || item.slug || String(item.id);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(toCard(item));
+  }
+  return out;
+}
+
+/**
+ * Homepage kitchen doors = active admin categories.
+ * Products: by category slug, plus same-domain products (so admin domain alone is enough).
+ */
 export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
   try {
     const adminCategories = await listProductCategories({ kind: "navigation" });
@@ -69,20 +98,22 @@ export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
 
     const loaded = await Promise.all(
       pool.map(async (category) => {
-        const { results } = await listProducts({
-          category: category.slug,
-          pageSize: FOR_KITCHEN_PAGE_SIZE,
-        });
-        const apiProducts = results.map((item) => {
-          const card = mapProductToCard(item);
-          return {
-            id: card.id,
-            name: card.name,
-            href: card.href,
-            image: card.image,
-            alt: card.alt,
-          };
-        });
+        const [byCategory, byDomain] = await Promise.all([
+          listProducts({
+            category: category.slug,
+            pageSize: FOR_KITCHEN_PAGE_SIZE,
+          }),
+          category.domain
+            ? listProducts({
+                domain: category.domain,
+                pageSize: FOR_KITCHEN_PAGE_SIZE,
+              })
+            : Promise.resolve({ results: [] as CatalogProductListItem[] }),
+        ]);
+        const apiProducts = mergeProducts(
+          byCategory.results || [],
+          byDomain.results || [],
+        );
         return { category, apiProducts };
       }),
     );
