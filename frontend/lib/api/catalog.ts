@@ -18,7 +18,10 @@ type ListProductsParams = {
 };
 
 export async function listDomains(): Promise<CatalogDomain[]> {
-  return apiFetch<CatalogDomain[]>("/api/products/domains/");
+  return apiFetch<CatalogDomain[]>("/api/products/domains/", {
+    revalidate: false,
+    cache: "no-store",
+  });
 }
 
 function unwrapList<T>(payload: T[] | Paginated<T>): T[] {
@@ -39,6 +42,8 @@ export async function listProductCategories(params?: {
         domain: params?.domain,
         page_size: 100,
       },
+      revalidate: false,
+      cache: "no-store",
     },
   );
   return unwrapList(payload).filter((item) => item.is_active);
@@ -70,6 +75,8 @@ export async function listProducts(
       page: params.page ?? 1,
       page_size: params.pageSize ?? 24,
     },
+    revalidate: false,
+    cache: "no-store",
   });
 }
 

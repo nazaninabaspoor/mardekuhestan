@@ -1,5 +1,5 @@
-import type { CatalogCategory, CatalogProductListItem } from "@/lib/api/catalog.types";
-import { listProductCategories, listProducts } from "@/lib/api/catalog";
+import type { CatalogCategory, CatalogDomain, CatalogProductListItem } from "@/lib/api/catalog.types";
+import { listDomains, listProductCategories, listProducts } from "@/lib/api/catalog";
 import { domainDisplay } from "@/lib/catalog/domain-display";
 import { mapProductToCard } from "@/lib/catalog/map";
 import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
@@ -17,6 +17,15 @@ export type V2KitchenCatalogPayload = {
 };
 
 const FOR_KITCHEN_PAGE_SIZE = 80;
+
+const V2_STATIC_KEY_MAP: Record<string, string> = {
+  ready: "ready-meal",
+  agriculture: "farm",
+  bakery: "farm",
+  sausage: "ready-meal",
+  "ready-to-cook": "ready-meal",
+  "ready-meals": "ready-meal",
+};
 
 export function staticKitchenPayload(): V2KitchenCatalogPayload {
   const productsByCategory: Record<string, ShowcaseProduct[]> = {};
@@ -38,24 +47,6 @@ export function staticKitchenPayload(): V2KitchenCatalogPayload {
   };
 }
 
-function adminCategoryToDoor(category: CatalogCategory): ProductCategory {
-  const frontendKey = category.domain_frontend_key || category.slug;
-  const display = domainDisplay(frontendKey);
-  const shortTitle = category.name.split(/\s+/)[0] ?? category.name;
-  return {
-    id: category.slug,
-    title: shortTitle,
-    eyebrow: "از مزرعه تا سفره",
-    headline: category.name,
-    description:
-      category.description?.trim() ||
-      "تازه و قابل اعتماد — از مسیر سبز مرد کوهستان.",
-    heroImage: display.plateImage,
-    cardImage: display.plateImage,
-    video: "/brand/teaser.mp4",
-  };
-}
-
 function toCard(item: CatalogProductListItem): ShowcaseProduct {
   const card = mapProductToCard(item);
   return {
@@ -67,64 +58,86 @@ function toCard(item: CatalogProductListItem): ShowcaseProduct {
   };
 }
 
-function mergeProducts(
-  primary: CatalogProductListItem[],
-  secondary: CatalogProductListItem[],
-): ShowcaseProduct[] {
-  const seen = new Set<string>();
-  const out: ShowcaseProduct[] = [];
-  for (const item of [...primary, ...secondary]) {
-    const key = item.public_uuid || item.slug || String(item.id);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(toCard(item));
+function domainToDoor(
+  domain: CatalogDomain,
+  adminCategory?: CatalogCategory,
+): ProductCategory {
+  const frontendKey = domain.frontend_query_key;
+  const staticId = V2_STATIC_KEY_MAP[frontendKey] ?? frontendKey;
+  const preset = productCategories.find((item) => item.id === staticId);
+  const display = domainDisplay(frontendKey);
+  const label = adminCategory?.name || domain.label_fa;
+  const shortTitle = label.split(/\s+/)[0] ?? label;
+
+  if (preset) {
+    return {
+      ...preset,
+      id: frontendKey,
+      title: shortTitle,
+      headline: label,
+      description:
+        adminCategory?.description?.trim() ||
+        preset.description ||
+        "تازه و قابل اعتماد — از مسیر سبز مرد کوهستان.",
+    };
   }
-  return out;
+
+  return {
+    id: frontendKey,
+    title: shortTitle,
+    eyebrow: "از مزرعه تا سفره",
+    headline: label,
+    description:
+      adminCategory?.description?.trim() ||
+      "تازه و قابل اعتماد — از مسیر سبز مرد کوهستان.",
+    heroImage: display.plateImage,
+    cardImage: display.plateImage,
+    video: "/brand/teaser.mp4",
+  };
 }
 
 /**
- * Homepage kitchen doors = active admin categories.
- * Products: by category slug, plus same-domain products (so admin domain alone is enough).
+ * Kitchen doors = product domains that have published products in Django.
+ * IDs stay as frontend_query_key (fresh-meat, …) so UI state keeps working.
  */
 export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
   try {
-    const adminCategories = await listProductCategories({ kind: "navigation" });
-    const pool =
-      adminCategories.length > 0
-        ? adminCategories
-        : await listProductCategories();
+    const [domains, adminCategories] = await Promise.all([
+      listDomains(),
+      listProductCategories({ kind: "navigation" }).catch(() => [] as CatalogCategory[]),
+    ]);
 
-    if (!pool.length) return staticKitchenPayload();
+    if (!domains.length) return staticKitchenPayload();
+
+    const byDomainAdmin = new Map(
+      adminCategories.map((category) => [category.domain, category] as const),
+    );
 
     const loaded = await Promise.all(
-      pool.map(async (category) => {
-        const [byCategory, byDomain] = await Promise.all([
-          listProducts({
-            category: category.slug,
+      domains.map(async (domain) => {
+        try {
+          const { results } = await listProducts({
+            domain: domain.key,
             pageSize: FOR_KITCHEN_PAGE_SIZE,
-          }),
-          category.domain
-            ? listProducts({
-                domain: category.domain,
-                pageSize: FOR_KITCHEN_PAGE_SIZE,
-              })
-            : Promise.resolve({ results: [] as CatalogProductListItem[] }),
-        ]);
-        const apiProducts = mergeProducts(
-          byCategory.results || [],
-          byDomain.results || [],
-        );
-        return { category, apiProducts };
+          });
+          return {
+            domain,
+            products: (results || []).map(toCard),
+          };
+        } catch {
+          return { domain, products: [] as ShowcaseProduct[] };
+        }
       }),
     );
 
     const categories: ProductCategory[] = [];
     const productsByCategory: Record<string, ShowcaseProduct[]> = {};
 
-    for (const { category, apiProducts } of loaded) {
-      if (apiProducts.length === 0) continue;
-      categories.push(adminCategoryToDoor(category));
-      productsByCategory[category.slug] = apiProducts;
+    for (const { domain, products } of loaded) {
+      if (!products.length) continue;
+      const door = domainToDoor(domain, byDomainAdmin.get(domain.key));
+      categories.push(door);
+      productsByCategory[door.id] = products;
     }
 
     if (!categories.length) return staticKitchenPayload();
@@ -135,7 +148,8 @@ export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
       source: "api",
       apiReachable: true,
     };
-  } catch {
+  } catch (error) {
+    console.error("[kitchen-catalog] API load failed, using static fallback", error);
     return staticKitchenPayload();
   }
 }

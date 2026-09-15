@@ -126,7 +126,7 @@ class Product(models.Model):
         "وضعیت",
         max_length=20,
         choices=ProductStatus.CHOICES,
-        default=ProductStatus.DRAFT,
+        default=ProductStatus.ACTIVE,
     )
     visibility = models.CharField(
         "نمایش",
@@ -270,7 +270,7 @@ class ProductVariant(models.Model):
 
 class ProductImage(PublicUUIDMixin, models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images", verbose_name="محصول")
-    role = models.CharField("نقش", max_length=20, choices=ProductImageRole.CHOICES, default=ProductImageRole.PACKSHOT)
+    role = models.CharField("نقش", max_length=20, choices=ProductImageRole.CHOICES, default=ProductImageRole.HERO)
     image = models.ImageField("تصویر", upload_to="products/%Y/%m/")
     alt_text = models.CharField("متن جایگزین", max_length=220, blank=True)
     sort_order = models.PositiveIntegerField("ترتیب", default=DEFAULT_SORT_ORDER)

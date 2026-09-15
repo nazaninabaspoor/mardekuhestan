@@ -183,10 +183,19 @@ export function ForHomeKitchen({ catalog }: ForHomeKitchenProps) {
     categories[0]?.id ?? DEFAULT_CATEGORY,
   );
 
+  // When catalog switches from static → API (or doors change), keep a valid active door.
+  useEffect(() => {
+    if (!categories.length) return;
+    if (!categories.some((category) => category.id === activeCategoryId)) {
+      setActiveCategoryId(categories[0].id);
+      setFocusProductId(null);
+    }
+  }, [categories, activeCategoryId]);
+
   const activeCategory =
     categories.find((category) => category.id === activeCategoryId) ??
     categories[0];
-  const catalogProducts = productsByCategory[activeCategoryId] ?? [];
+  const catalogProducts = productsByCategory[activeCategory?.id ?? activeCategoryId] ?? [];
   const activeProducts = useMemo(() => {
     if (!pinnedProduct) return catalogProducts;
     const alreadyThere = catalogProducts.some(

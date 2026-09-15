@@ -14,7 +14,6 @@ from unfold.widgets import UnfoldAdminExpandableTextareaWidget, UnfoldAdminTexta
 
 from product import validators as product_validators
 from product.constants import (
-    Allergen,
     CategoryKind,
     ProductImageRole,
     ProductStatus,
@@ -25,7 +24,6 @@ from product.utils import (
     domain_label_fa,
     format_rial,
     format_weight_grams,
-    normalize_allergen_list,
     normalize_sku,
 )
 
@@ -99,48 +97,72 @@ class CategoryAdminForm(forms.ModelForm):
 
 
 class ProductAdminForm(forms.ModelForm):
-    allergens = forms.MultipleChoiceField(
-        label="آلرژن‌ها",
-        choices=Allergen.CHOICES,
-        required=False,
-        widget=forms.CheckboxSelectMultiple,
-    )
+    """فرم ساده افزودن محصول — فقط نام و گروه الزامی است."""
 
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = (
+            "name",
+            "domain",
+            "unit_price_rial",
+            "short_description",
+            "status",
+            "visibility",
+            "subtitle",
+            "categories",
+            "sort_order",
+            "sales_channel",
+            "pricing_strategy",
+            "unit_of_measure",
+            "net_weight_grams",
+            "storage_class",
+            "packaging_type",
+            "halal_status",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.initial["allergens"] = self.instance.allergens or []
-        else:
-            # New products should appear on the storefront unless staff chooses draft.
+        # Always optional in UI — filled automatically on save.
+        for name in (
+            "short_description",
+            "subtitle",
+            "unit_price_rial",
+            "net_weight_grams",
+            "categories",
+            "sort_order",
+        ):
+            if name in self.fields:
+                self.fields[name].required = False
+
+        self.fields["name"].help_text = "مثلاً: فیله، عسل کوهستان، نان تازه"
+        self.fields["domain"].help_text = "کدام قفسه صفحه اصلی؟ (گوشت، لبنیات، …)"
+        self.fields["unit_price_rial"].help_text = "اختیاری — اگر خالی بماند قیمت پیش‌فرض گذاشته می‌شود"
+        self.fields["short_description"].help_text = "اختیاری"
+
+        if not self.instance.pk:
             self.fields["status"].initial = ProductStatus.ACTIVE
             self.initial["status"] = ProductStatus.ACTIVE
             self.fields["visibility"].initial = ProductVisibility.PUBLIC
             self.initial["visibility"] = ProductVisibility.PUBLIC
-            if "sort_order" in self.fields:
-                self.fields["sort_order"].initial = 10
-                self.initial["sort_order"] = 10
-            self.fields["status"].help_text = (
-                "برای دیده شدن در صفحه اصلی باید «فعال» باشد. پیش‌نویس فقط در پنل می‌ماند."
-            )
+            self.fields["unit_price_rial"].initial = 450_000
+            self.initial["unit_price_rial"] = 450_000
+            self.fields["sort_order"].initial = 10
+            self.initial["sort_order"] = 10
+            self.fields["net_weight_grams"].initial = 900
+            self.initial["net_weight_grams"] = 900
 
     def clean_name(self):
         product_validators.validate_product_name(self.cleaned_data["name"])
         return self.cleaned_data["name"]
 
-    def clean_slug(self):
-        value = self.cleaned_data.get("slug", "")
-        if value:
-            product_validators.validate_product_slug(value)
-        return value
+    def clean_domain(self):
+        product_validators.validate_product_domain(self.cleaned_data["domain"])
+        return self.cleaned_data["domain"]
 
-    def clean_subtitle(self):
-        value = self.cleaned_data.get("subtitle", "")
-        if value:
-            product_validators.validate_product_subtitle(value)
+    def clean_unit_price_rial(self):
+        value = self.cleaned_data.get("unit_price_rial")
+        if value is not None:
+            product_validators.validate_unit_price_rial(value)
         return value
 
     def clean_short_description(self):
@@ -149,79 +171,29 @@ class ProductAdminForm(forms.ModelForm):
             product_validators.validate_product_short_description(value)
         return value
 
-    def clean_domain(self):
-        product_validators.validate_product_domain(self.cleaned_data["domain"])
-        return self.cleaned_data["domain"]
-
-    def clean_status(self):
-        product_validators.validate_product_status(self.cleaned_data["status"])
-        return self.cleaned_data["status"]
-
-    def clean_visibility(self):
-        product_validators.validate_product_visibility(self.cleaned_data["visibility"])
-        return self.cleaned_data["visibility"]
-
-    def clean_sales_channel(self):
-        product_validators.validate_sales_channel(self.cleaned_data["sales_channel"])
-        return self.cleaned_data["sales_channel"]
-
-    def clean_unit_price_rial(self):
-        value = self.cleaned_data.get("unit_price_rial")
-        if value is not None:
-            product_validators.validate_unit_price_rial(value)
-        return value
-
-    def clean_pricing_strategy(self):
-        product_validators.validate_pricing_strategy(self.cleaned_data["pricing_strategy"])
-        return self.cleaned_data["pricing_strategy"]
-
-    def clean_unit_of_measure(self):
-        product_validators.validate_unit_of_measure(self.cleaned_data["unit_of_measure"])
-        return self.cleaned_data["unit_of_measure"]
-
-    def clean_net_weight_grams(self):
-        value = self.cleaned_data.get("net_weight_grams")
-        if value is not None:
-            product_validators.validate_net_weight_grams(value)
-        return value
-
-    def clean_storage_class(self):
-        product_validators.validate_storage_class(self.cleaned_data["storage_class"])
-        return self.cleaned_data["storage_class"]
-
-    def clean_packaging_type(self):
-        product_validators.validate_packaging_type(self.cleaned_data["packaging_type"])
-        return self.cleaned_data["packaging_type"]
-
-    def clean_halal_status(self):
-        product_validators.validate_halal_status(self.cleaned_data["halal_status"])
-        return self.cleaned_data["halal_status"]
-
-    def clean_allergens(self):
-        normalized = normalize_allergen_list(self.cleaned_data.get("allergens"))
-        product_validators.validate_allergen_list(normalized)
-        return normalized
-
-    def clean_sort_order(self):
-        product_validators.validate_sort_order(self.cleaned_data["sort_order"])
-        return self.cleaned_data["sort_order"]
-
     def clean(self):
         cleaned = super().clean()
-        product_validators.validate_pricing_unit_consistency(
-            pricing_strategy=cleaned.get("pricing_strategy"),
-            unit_of_measure=cleaned.get("unit_of_measure"),
-        )
-        product_validators.validate_storage_for_domain(
-            domain=cleaned.get("domain"),
-            storage_class=cleaned.get("storage_class"),
-        )
-        product_validators.validate_publishable_product(
-            status=cleaned.get("status"),
-            name=cleaned.get("name", ""),
-            domain=cleaned.get("domain", ""),
-            unit_price_rial=cleaned.get("unit_price_rial"),
-        )
+        # Sensible defaults so staff don't fight validators.
+        if not cleaned.get("status"):
+            cleaned["status"] = ProductStatus.ACTIVE
+        if not cleaned.get("visibility"):
+            cleaned["visibility"] = ProductVisibility.PUBLIC
+        if cleaned.get("unit_price_rial") is None and cleaned.get("status") in ProductStatus.PUBLISHABLE:
+            cleaned["unit_price_rial"] = 450_000
+        if not cleaned.get("storage_class") and cleaned.get("domain"):
+            from product.utils import default_storage_for_domain
+
+            cleaned["storage_class"] = default_storage_for_domain(cleaned["domain"])
+        if not cleaned.get("pricing_strategy"):
+            cleaned["pricing_strategy"] = "fixed"
+        if not cleaned.get("unit_of_measure"):
+            cleaned["unit_of_measure"] = "piece"
+        if not cleaned.get("sales_channel"):
+            cleaned["sales_channel"] = "b2c"
+        if not cleaned.get("halal_status"):
+            cleaned["halal_status"] = "not_applicable"
+        if not cleaned.get("packaging_type"):
+            cleaned["packaging_type"] = "other"
         return cleaned
 
 
@@ -259,17 +231,23 @@ class ProductVariantInlineForm(forms.ModelForm):
 class ProductImageInlineForm(forms.ModelForm):
     class Meta:
         model = ProductImage
-        fields = "__all__"
+        fields = ("image", "alt_text", "role", "sort_order")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.instance.pk and "role" in self.fields:
+        if "role" in self.fields:
             self.fields["role"].initial = ProductImageRole.HERO
             self.initial["role"] = ProductImageRole.HERO
+            self.fields["role"].widget = forms.HiddenInput()
+        if "sort_order" in self.fields:
+            self.fields["sort_order"].widget = forms.HiddenInput()
+            self.fields["sort_order"].initial = 10
+        if "alt_text" in self.fields:
+            self.fields["alt_text"].required = False
+            self.fields["alt_text"].help_text = "اختیاری"
 
     def clean_role(self):
-        product_validators.validate_product_image_role(self.cleaned_data["role"])
-        return self.cleaned_data["role"]
+        return self.cleaned_data.get("role") or ProductImageRole.HERO
 
     def clean_alt_text(self):
         value = self.cleaned_data.get("alt_text", "")
@@ -278,8 +256,8 @@ class ProductImageInlineForm(forms.ModelForm):
         return value
 
     def clean_sort_order(self):
-        product_validators.validate_sort_order(self.cleaned_data["sort_order"])
-        return self.cleaned_data["sort_order"]
+        value = self.cleaned_data.get("sort_order")
+        return 10 if value is None else value
 
 
 # ---------------------------------------------------------------------------
@@ -290,7 +268,7 @@ class ProductImageInlineForm(forms.ModelForm):
 class ProductVariantInline(TabularInline):
     model = ProductVariant
     form = ProductVariantInlineForm
-    extra = 1
+    extra = 0
     fields = (
         "label",
         "sku",
@@ -300,22 +278,21 @@ class ProductVariantInline(TabularInline):
         "sort_order",
     )
     show_change_link = True
-    # Keep below the main form (not a separate tab) so staff always see it.
     verbose_name = "نوع و اندازه"
     verbose_name_plural = "نوع و اندازه‌های این محصول"
+    classes = ["collapse"]
 
 
 class ProductImageInline(TabularInline):
     model = ProductImage
     form = ProductImageInlineForm
-    extra = 2
+    extra = 1
     min_num = 0
-    fields = ("role", "image", "image_preview", "alt_text", "sort_order")
+    fields = ("image", "alt_text", "role", "sort_order", "image_preview")
     readonly_fields = ("image_preview",)
-    show_change_link = True
-    # Visible under the product form — Unfold tab=True was hiding the upload UI.
-    verbose_name = "تصویر محصول"
-    verbose_name_plural = "گالری تصاویر — فایل را اینجا انتخاب کنید"
+    show_change_link = False
+    verbose_name = "عکس"
+    verbose_name_plural = "عکس محصول (یک فایل انتخاب کنید)"
 
     @admin.display(description="پیش‌نمایش")
     def image_preview(self, obj: ProductImage) -> str:
@@ -396,27 +373,18 @@ class CategoryAdmin(ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
     form = ProductAdminForm
-    inlines = (ProductVariantInline, ProductImageInline)
+    inlines = (ProductImageInline, ProductVariantInline)
     list_display = (
         "name",
-        "public_uuid",
         "domain_label",
         "status_badge",
-        "visibility_badge",
         "price_display",
-        "weight_display",
-        "variant_count",
         "image_count",
-        "sort_order",
         "updated_at",
     )
     list_filter = (
         "status",
-        "visibility",
         "domain",
-        "sales_channel",
-        "storage_class",
-        "pricing_strategy",
     )
     search_fields = (
         "name",
@@ -424,25 +392,18 @@ class ProductAdmin(ModelAdmin):
         "subtitle",
         "short_description",
         "public_uuid",
-        "variants__sku",
-        "variants__public_uuid",
     )
-    prepopulated_fields = {"slug": ("name",)}
     autocomplete_fields = ("categories",)
     readonly_fields = (
         "public_uuid",
         "created_at",
         "updated_at",
-        "catalog_readiness_panel",
         "hero_preview",
     )
     actions = (
         "action_activate",
-        "action_pending_review",
-        "action_out_of_stock",
-        "action_discontinue",
-        "action_archive",
         "action_draft",
+        "action_archive",
     )
     save_on_top = True
     list_fullwidth = True
@@ -454,62 +415,35 @@ class ProductAdmin(ModelAdmin):
 
     fieldsets = (
         (
-            "نام و معرفی",
+            "محصول جدید — فقط این‌ها لازم است",
             {
-                "classes": ["tab"],
-                "description": "نام محصول را بنویسید. اگر آدرس صفحه خالی بماند، خودش ساخته می‌شود.",
+                "description": (
+                    "۱) نام  ۲) گروه  ۳) عکس پایین صفحه. "
+                    "قیمت و بقیه در صورت خالی بودن خودکار پر می‌شوند."
+                ),
                 "fields": (
-                    "public_uuid",
-                    ("name", "slug"),
-                    "subtitle",
+                    "name",
+                    "domain",
+                    "unit_price_rial",
                     "short_description",
-                    ("domain", "sort_order"),
+                ),
+            },
+        ),
+        (
+            "تنظیمات بیشتر (اختیاری)",
+            {
+                "classes": ["collapse"],
+                "fields": (
+                    "status",
+                    "visibility",
+                    "subtitle",
                     "categories",
-                ),
-            },
-        ),
-        (
-            "وضعیت نمایش",
-            {
-                "classes": ["tab"],
-                "description": "محصول کی روی سایت دیده شود و برای چه کسی.",
-                "fields": (
-                    ("status", "visibility"),
+                    "sort_order",
                     "sales_channel",
-                ),
-            },
-        ),
-        (
-            "قیمت و واحد",
-            {
-                "classes": ["tab"],
-                "description": "قیمت به ریال. اگر قیمت بر اساس وزن است، واحد را گرم یا کیلوگرم بگذارید.",
-                "fields": (
-                    ("unit_price_rial", "pricing_strategy"),
-                    ("unit_of_measure", "net_weight_grams"),
-                ),
-            },
-        ),
-        (
-            "نگهداری و برچسب",
-            {
-                "classes": ["tab"],
-                "description": "چطور نگه دارید، چه بسته‌بندی‌ای دارد، حلال است یا نه، و چه چیزی ممکن است حساسیت بدهد.",
-                "fields": (
-                    ("storage_class", "packaging_type"),
-                    "halal_status",
-                    "allergens",
-                ),
-            },
-        ),
-        (
-            "آمادگی فروشگاه",
-            {
-                "classes": ["tab"],
-                "description": "عکس‌ها را در بخش «گالری تصاویر» پایین همین صفحه آپلود کنید.",
-                "fields": (
+                    ("pricing_strategy", "unit_of_measure", "net_weight_grams"),
+                    ("storage_class", "packaging_type", "halal_status"),
                     "hero_preview",
-                    "catalog_readiness_panel",
+                    "public_uuid",
                     ("created_at", "updated_at"),
                 ),
             },
@@ -675,6 +609,21 @@ class ProductAdmin(ModelAdmin):
         )
 
     def save_model(self, request, obj, form, change) -> None:
+        from product.utils import build_unique_slug, default_storage_for_domain
+
+        if not (obj.slug or "").strip():
+            obj.slug = build_unique_slug(Product, obj.name, instance_pk=obj.pk)
+        if not obj.status:
+            obj.status = ProductStatus.ACTIVE
+        if not obj.visibility:
+            obj.visibility = ProductVisibility.PUBLIC
+        if obj.unit_price_rial is None:
+            obj.unit_price_rial = 450_000
+        if not obj.net_weight_grams:
+            obj.net_weight_grams = 900
+        if obj.domain:
+            obj.storage_class = default_storage_for_domain(obj.domain) or obj.storage_class
+
         super().save_model(request, obj, form, change)
 
         # Ensure a sellable size/variant exists for cart/checkout.
@@ -689,7 +638,7 @@ class ProductAdmin(ModelAdmin):
                 sort_order=10,
             )
 
-        # If staff picked a domain but no category, attach the matching navigation category.
+        # Attach matching navigation category from domain.
         if obj.domain and not obj.categories.exists():
             match = (
                 Category.objects.active()
@@ -707,29 +656,31 @@ class ProductAdmin(ModelAdmin):
             if match is not None:
                 obj.categories.add(match)
 
-        if obj.status == ProductStatus.DRAFT:
+        if obj.images.exists():
             self.message_user(
                 request,
-                "محصول به‌صورت «پیش‌نویس» ذخیره شد — در صفحه اصلی دیده نمی‌شود. "
-                "وضعیت را روی «فعال» بگذارید و حداقل یک عکس اصلی اضافه کنید.",
+                f"«{obj.name}» ذخیره شد و روی صفحه اصلی (بعد از رفرش) دیده می‌شود.",
+                level=messages.SUCCESS,
+            )
+        else:
+            self.message_user(
+                request,
+                f"«{obj.name}» ذخیره شد. برای دیده شدن کامل روی سایت، یک عکس در پایین همین صفحه بگذارید.",
                 level=messages.WARNING,
             )
-        elif obj.status in ProductStatus.PUBLISHABLE:
-            images = list(obj.images.all())
-            try:
-                product_validators.validate_product_images_have_hero(images)
-                self.message_user(
-                    request,
-                    "محصول فعال است و پس از رفرش صفحه اصلی در سکشن محصولات دیده می‌شود.",
-                    level=messages.SUCCESS,
-                )
-            except ValidationError as exc:
-                self.message_user(
-                    request,
-                    " ".join(exc.messages)
-                    + " بدون عکس اصلی ممکن است کارت محصول ناقص دیده شود.",
-                    level=messages.WARNING,
-                )
+
+    def save_formset(self, request, form, formset, change) -> None:
+        instances = formset.save(commit=False)
+        for obj in instances:
+            if isinstance(obj, ProductImage):
+                if not obj.role:
+                    obj.role = ProductImageRole.HERO
+                if not obj.alt_text and form.instance:
+                    obj.alt_text = form.instance.name
+            obj.save()
+        formset.save_m2m()
+        for obj in formset.deleted_objects:
+            obj.delete()
 
     @admin.action(description="فعال‌سازی در فروشگاه")
     def action_activate(self, request, queryset):

@@ -157,17 +157,12 @@
   transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, opacity 160ms ease;
 }
 
-.arrow:hover:not(:disabled),
-.arrow:focus-visible:not(:disabled) {
+.arrow:hover,
+.arrow:focus-visible {
   background: rgb(0 91 72 / 92%);
   border-color: rgb(194 158 82 / 80%);
   transform: translateY(-1px);
   outline: none;
-}
-
-.arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
 }
 
 @media (max-width: 900px) {
