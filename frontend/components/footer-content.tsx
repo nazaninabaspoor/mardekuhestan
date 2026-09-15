@@ -57,6 +57,9 @@ export function FooterContent() {
           </nav>
 
           <div className="footer-col footer-col--contact">
+            <div className="footer-enamad-slot">
+              <EnamadBadge />
+            </div>
             <p className="footer-col-title">{v2Footer.contactTitle}</p>
             <address>
               <p>{v2Footer.address}</p>
@@ -86,9 +89,8 @@ export function FooterContent() {
         </div>
 
         <div className="footer-bottom">
-          <div className="shell footer-bottom-row">
+          <div className="shell">
             <p>{v2Footer.copyright}</p>
-            <EnamadBadge />
           </div>
         </div>
       </>
@@ -126,6 +128,9 @@ export function FooterContent() {
         </nav>
 
         <div className="footer-col footer-col--contact">
+          <div className="footer-enamad-slot">
+            <EnamadBadge />
+          </div>
           <p className="footer-col-title">راه‌های تماس</p>
           <address>
             <p>{contactInfo.address}</p>
@@ -144,12 +149,11 @@ export function FooterContent() {
       </div>
 
       <div className="footer-bottom">
-        <div className="shell footer-bottom-row">
+        <div className="shell">
           <p>
             کلیه حقوق این سایت متعلق به صنایع غذایی مرد کوهستان می‌باشد | All Rights
             Reserved to Mard-e-Kuhestan
           </p>
-          <EnamadBadge />
         </div>
       </div>
     </>

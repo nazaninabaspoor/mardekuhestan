@@ -69,6 +69,7 @@ class Settings(BaseSettings):
     MINIO_BUCKET_NAME: str = "mardekoohestan"
 
     OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4o-mini"
 
     @property
     def cors_origins_list(self) -> list[str]:

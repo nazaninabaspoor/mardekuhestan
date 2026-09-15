@@ -18,6 +18,7 @@ import {
 } from "three";
 
 import { useAuth } from "@/lib/auth-context";
+import { registerWaitlist } from "@/lib/api/assistant";
 
 import {
   UNVEIL_CAM_Z,
@@ -1194,8 +1195,15 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
                     try {
                       window.localStorage.setItem(WATCH_KEY, JSON.stringify(next));
                     } catch {
-                      /* waitlist backend comes later */
+                      /* ignore */
                     }
+                    void registerWaitlist({
+                      product_key: product.id,
+                      product_name: product.name,
+                      source: "product-unveil",
+                    }).catch(() => {
+                      /* UI already optimistic */
+                    });
                   }}
                 >
                   خبرم کن

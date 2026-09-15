@@ -632,6 +632,18 @@ UNFOLD = {
                         "link": reverse_lazy("admin:payments_payment_changelist"),
                         "permission": "core.admin_ui.staff_ok",
                     },
+                    {
+                        "title": "خبرم کن (به‌زودی)",
+                        "icon": "notifications_active",
+                        "link": reverse_lazy("admin:notifications_waitlistinterest_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
+                    {
+                        "title": "سهمیه راهیار",
+                        "icon": "psychology",
+                        "link": reverse_lazy("admin:notifications_aicoachquota_changelist"),
+                        "permission": "core.admin_ui.staff_ok",
+                    },
                 ],
             },
             {

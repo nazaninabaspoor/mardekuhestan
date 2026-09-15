@@ -6950,20 +6950,12 @@ body {
   color: color-mix(in srgb, var(--cream) 68%, transparent);
 }
 
-.footer-bottom-row {
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  justify-content: space-between !important;
-}
-
-.footer-bottom-row p {
-  flex: 1 1 16rem;
-  text-align: start;
+.footer-enamad-slot {
+  margin: 0 0 12px;
 }
 
 .mk-enamad-badge {
   display: inline-flex;
-  flex-shrink: 0;
   line-height: 0;
   border-radius: 8px;
   background: rgb(244 240 232 / 92%);
@@ -6971,22 +6963,22 @@ body {
 }
 
 .mk-enamad-placeholder {
-  flex-shrink: 0;
-  min-width: 72px;
-  min-height: 72px;
-  border: 1px dashed color-mix(in srgb, var(--cream) 35%, transparent);
+  width: 90px;
+  min-height: 90px;
+  border: 1px dashed color-mix(in srgb, var(--cream) 40%, transparent);
   border-radius: 8px;
   display: grid;
   place-items: center;
-  padding: 6px;
+  padding: 8px;
+  background: rgb(4 24 22 / 28%);
 }
 
 .mk-enamad-placeholder-label {
-  font-size: 9px;
-  line-height: 1.4;
+  font-size: 10px;
+  line-height: 1.45;
   text-align: center;
-  color: color-mix(in srgb, var(--cream) 55%, transparent);
-  max-width: 88px;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+  max-width: 76px;
 }
 
 .mk-legal-page {

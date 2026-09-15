@@ -19,6 +19,10 @@ class Payment(models.Model):
         FAILED = "failed", "ناموفق"
         CANCELED = "canceled", "انصراف"
 
+    class Purpose(models.TextChoices):
+        CART = "cart", "سبد خرید"
+        AI_COACH = "ai_coach", "اشتراک راهیار تغذیه"
+
     public_id = models.UUIDField("شناسه عمومی", default=uuid.uuid4, unique=True, editable=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -33,6 +37,13 @@ class Payment(models.Model):
         blank=True,
         related_name="payments",
         verbose_name="سفارش",
+    )
+    purpose = models.CharField(
+        "نوع پرداخت",
+        max_length=20,
+        choices=Purpose.choices,
+        default=Purpose.CART,
+        db_index=True,
     )
     gateway = models.CharField("درگاه", max_length=20, choices=Gateway.choices)
     status = models.CharField("وضعیت", max_length=20, choices=Status.choices, default=Status.PENDING)

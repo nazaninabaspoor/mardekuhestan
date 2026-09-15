@@ -37,6 +37,7 @@ class PaymentStartView(APIView):
                 receiver_name=request.data.get("receiver_name") or "",
                 receiver_phone=request.data.get("receiver_phone") or "",
                 shipping_address=request.data.get("shipping_address") or "",
+                purpose=request.data.get("purpose") or "cart",
             )
         except DjangoValidationError as exc:
             msg = exc.messages[0] if getattr(exc, "messages", None) else str(exc)

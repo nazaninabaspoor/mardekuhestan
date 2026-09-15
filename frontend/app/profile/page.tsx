@@ -22,6 +22,13 @@ import {
   type ApiOrder,
 } from "@/lib/api/orders";
 import { getAccessToken, setAccessToken } from "@/lib/api/access-token";
+import {
+  assistantWsUrl,
+  ensureAssistantAccessToken,
+  fetchAiQuota,
+  startAiCoachPayment,
+  type AiQuota,
+} from "@/lib/api/assistant";
 import { ProfileComingSoon, type ComingSoonKind } from "@/components/profile/profile-coming-soon";
 import { MK_OPEN_AI_DESK } from "@/components/header-ai-nav";
 
@@ -1338,6 +1345,11 @@ function ProfileContent() {
   const [aiMessages, setAiMessages] = useState(INITIAL_AI_MESSAGES);
   const [aiInput, setAiInput] = useState("");
   const [aiTyping, setAiTyping] = useState(false);
+  const [aiQuota, setAiQuota] = useState<AiQuota | null>(null);
+  const [aiPaywall, setAiPaywall] = useState<string | null>(null);
+  const [aiPaying, setAiPaying] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const aiWsRef = useRef<WebSocket | null>(null);
 
   // Wallet State
   const [walletBalance, setWalletBalance] = useState(50000);
@@ -1660,6 +1672,38 @@ function ProfileContent() {
     handleCardOpen("ai-nutrition");
   }, [user, tabParam, searchParams, handleCardOpen]);
 
+  useEffect(() => {
+    if (!user || openedTab !== "ai-nutrition") return;
+    void fetchAiQuota()
+      .then((q) => {
+        setAiQuota(q);
+        if (q.needs_payment) {
+          setAiPaywall("دو سوال رایگان تموم شده. برای ۲۰ سوال بعدی بسته راهیار را فعال کن.");
+        }
+      })
+      .catch(() => {});
+    if (searchParams.get("ai_paid") === "1") {
+      setAiPaywall(null);
+      setAiError(null);
+      router.replace("/profile?tab=ai-nutrition&open=1", { scroll: false });
+    }
+    const pay = searchParams.get("ai_pay");
+    if (pay) {
+      setAiError("پرداخت اشتراک کامل نشد؛ دوباره تلاش کنید.");
+    }
+  }, [user, openedTab, searchParams, router]);
+
+  useEffect(() => {
+    return () => {
+      try {
+        aiWsRef.current?.close();
+      } catch {
+        /* ignore */
+      }
+      aiWsRef.current = null;
+    };
+  }, []);
+
   const handleCloseWorkspace = useCallback(() => {
     setOpenedTab(null);
     setComingSoon(null);
@@ -1785,41 +1829,130 @@ function ProfileContent() {
     if (!textToSend || aiTyping) return;
 
     const userMsg = {
-      sender: "user",
+      sender: "user" as const,
       text: textToSend,
       time: "همین الان",
     };
-
     setAiMessages((prev) => [...prev, userMsg]);
     if (!userPrompt) setAiInput("");
+    setAiError(null);
+    setAiPaywall(null);
     setAiTyping(true);
 
-    setTimeout(() => {
-      let reply = "";
-      const lower = textToSend.toLowerCase();
+    const history = [...aiMessages, userMsg]
+      .filter((m) => m.sender === "user" || m.sender === "assistant")
+      .slice(-8)
+      .map((m) => ({
+        role: m.sender === "user" ? "user" : "assistant",
+        content: m.text,
+      }));
 
-      if (lower.includes("گوشت") || lower.includes("راسته") || lower.includes("بره") || lower.includes("پخت")) {
-        reply = "برای گوشت راسته گوسفندی مرتع مرد کوهستان:\n\n۱. به دلیل تغذیه طبیعی دام در ارتفاعات البرز و بافت بسیار لطیف، نیازی به مرینیت طولانی با اسیدهای تند ندارید.\n۲. فقط با کمی روغن زیتون فرابکر، رزماری کوهی و فلفل سیاه نیم‌کوب آغشته کنید.\n۳. در تابه چدنی بسیار داغ هر طرف را ۳ تا ۴ دقیقه تفت دهید تا آبدار بماند.\n۴. قبل از برش، ۳ دقیقه استراحت دهید تا میوگلوبین و ارزش پروتئینی آن در بافت حفظ شود.";
-      } else if (lower.includes("برنامه") || lower.includes("رژیم") || lower.includes("پروتئین")) {
-        reply = "برنامه ۳ روزه پروتئین سالم با محصولات سبز مرد کوهستان:\n\n• روز اول: فیله مرغ بدون آنتی‌بیوتیک + خوراک سبزیجات معطر مزرعه + روغن زیتون طبیعی\n• روز دوم: ماهی قزل‌آلای آب سرد کبابی + دوغ سنتی و پروبیوتیک کوهپایه\n• روز سوم: فیله گوسفند مرتعی با پوره سیب‌زمینی تنوری و سبزیجات خشک کوهستان\n\nاین ترکیب روزانه به طور میانگین ۱۱۰ گرم پروتئین خالص بدون چربی مضر تامین می‌کند.";
-      } else if (lower.includes("ماهی") || lower.includes("دریایی") || lower.includes("قزل")) {
-        reply = "ماهی قزل‌آلای مرد کوهستان در جریان آب خنک و پر از اکسیژن چشمه‌های طبیعی رشد می‌کند. به همین خاطر:\n• بافت آن بدون بو و کاملاً منسجم و صورتی است.\n• سرشار از اسیدهای چرب امگا ۳ فعال و فسفر طبیعی است.\n• در مقایسه با استخرهای متراکم، میزان پروتئین خالص آن بیشتر و فاقد چربی سنگین است.";
-      } else if (lower.includes("کره") || lower.includes("روغن") || lower.includes("کتو")) {
-        reply = "روغن حیوانی و کره سنتی مرد کوهستان از شیر دوشیده‌شده در مراتع ییلاقی تولید می‌شود. این محصولات حاوی CLA و ویتامین‌های محلول در چربی هستند که در رژیم کتوژنیک به عنوان سوخت پاک برای سلول‌ها و افزایش انرژی پایدار روزانه عمل می‌کنند.";
-      } else {
-        reply = "غذای طبیعی سلامت تن و آرامش روان را می‌سازد. محصولات مرد کوهستان از منبع مرتع و مزرعه بدون ماده نگه‌دارنده به دست شما می‌رسد. می‌توانید محصولات پروتئینی، لبنی و ارگانیک را از بخش محصولات سفارش دهید و ارزش غذایی هر کدام را در شناسنامه مزرعه ببینید.";
+    const sendViaWs = async () => {
+      try {
+        const token = await ensureAssistantAccessToken();
+        if (!token) {
+          setAiTyping(false);
+          setAiError("برای گفتگو باید وارد حساب شوید.");
+          return;
+        }
+
+        let ws = aiWsRef.current;
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+          ws = new WebSocket(assistantWsUrl(token));
+          aiWsRef.current = ws;
+          await new Promise<void>((resolve, reject) => {
+            const t = window.setTimeout(() => reject(new Error("timeout")), 8000);
+            ws!.onopen = () => {
+              window.clearTimeout(t);
+              resolve();
+            };
+            ws!.onerror = () => {
+              window.clearTimeout(t);
+              reject(new Error("ws_error"));
+            };
+          });
+          ws.onmessage = (ev) => {
+            try {
+              const data = JSON.parse(ev.data as string);
+              if (data.type === "quota") {
+                setAiQuota(data as AiQuota);
+              } else if (data.type === "typing") {
+                setAiTyping(Boolean(data.on));
+              } else if (data.type === "answer") {
+                setAiMessages((prev) => [
+                  ...prev,
+                  { sender: "assistant", text: data.text || "", time: "همین الان" },
+                ]);
+                if (data.quota) setAiQuota(data.quota as AiQuota);
+                setAiTyping(false);
+              } else if (data.type === "paywall") {
+                setAiPaywall(data.message || "برای ادامه باید اشتراک فعال شود.");
+                if (data.pack_price_toman) {
+                  setAiQuota((prev) => ({
+                    free_remaining: data.free_remaining ?? 0,
+                    free_limit: data.free_limit ?? 2,
+                    paid_remaining: data.paid_remaining ?? 0,
+                    paid_pack_questions: data.paid_pack_questions ?? 20,
+                    pack_price_toman: data.pack_price_toman,
+                    can_ask: false,
+                    needs_payment: true,
+                    pricing_note: prev?.pricing_note,
+                  }));
+                }
+                setAiTyping(false);
+              } else if (data.type === "error") {
+                setAiError(data.detail || "خطا در راهیار");
+                setAiTyping(false);
+              }
+            } catch {
+              setAiTyping(false);
+            }
+          };
+          ws.onclose = () => {
+            if (aiWsRef.current === ws) aiWsRef.current = null;
+          };
+        }
+
+        ws.send(JSON.stringify({ type: "ask", text: textToSend, history }));
+      } catch {
+        setAiTyping(false);
+        setAiError("اتصال به راهیار برقرار نشد. FastAPI را چک کنید.");
       }
+    };
 
-      setAiMessages((prev) => [
-        ...prev,
-        {
-          sender: "assistant",
-          text: reply,
-          time: "چند ثانیه پیش",
-        },
-      ]);
-      setAiTyping(false);
-    }, 1100);
+    void sendViaWs();
+  };
+
+  const handleBuyAiPack = async () => {
+    setAiPaying(true);
+    setAiError(null);
+    try {
+      const started = await startAiCoachPayment({
+        receiver_name: name || user?.name || "",
+        receiver_phone: phone || user?.phone || "",
+      });
+      const url = started.redirect_url || "";
+      const token = (() => {
+        try {
+          return new URL(url).pathname.split("/").filter(Boolean).pop() || "";
+        } catch {
+          return "";
+        }
+      })();
+      if (token.length === 36 && token.startsWith("S")) {
+        window.location.replace(`https://sandbox.zarinpal.com/pg/StartPay/${token}/`);
+        return;
+      }
+      if (url) {
+        window.location.replace(url);
+        return;
+      }
+      setAiError("آدرس درگاه نامعتبر بود.");
+    } catch (err) {
+      setAiError(authErrorMessage(err));
+    } finally {
+      setAiPaying(false);
+    }
   };
 
   const handleChargeWallet = () => {
@@ -2947,6 +3080,11 @@ function ProfileContent() {
                         />
                         <strong>دستیار تغذیه</strong>
                         <span className="mk-chat-live">آنلاین</span>
+                        {aiQuota && (
+                          <span className="mk-chat-live" style={{ opacity: 0.85 }}>
+                            رایگان {aiQuota.free_remaining}/{aiQuota.free_limit} · پولی {aiQuota.paid_remaining}
+                          </span>
+                        )}
                       </div>
                       <div className="mk-chat-actions">
                         <button
@@ -2968,6 +3106,36 @@ function ProfileContent() {
                         </button>
                     </div>
                     </header>
+                    {(aiPaywall || aiError) && (
+                      <div
+                        style={{
+                          margin: "8px 16px 0",
+                          padding: "12px 14px",
+                          borderRadius: 12,
+                          background: "rgba(244,240,232,0.92)",
+                          color: "#1D1D1B",
+                          fontSize: 14,
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {aiError && <p style={{ margin: "0 0 8px" }}>{aiError}</p>}
+                        {aiPaywall && (
+                          <>
+                            <p style={{ margin: "0 0 10px" }}>{aiPaywall}</p>
+                            <button
+                              type="button"
+                              className="profile-btn-primary"
+                              disabled={aiPaying}
+                              onClick={() => void handleBuyAiPack()}
+                            >
+                              {aiPaying
+                                ? "در حال اتصال به زرین‌پال…"
+                                : `فعال‌سازی بسته ۲۰ سوالی — ${(aiQuota?.pack_price_toman || 149000).toLocaleString("fa-IR")} تومان`}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
                     {!hasUserAiMessage && (
                       <aside className="mk-speech" aria-label="گفتگوی دستیار">
                         <div className="mk-speech-cloud">

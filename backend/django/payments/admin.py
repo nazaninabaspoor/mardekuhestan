@@ -9,6 +9,7 @@ class PaymentAdmin(ModelAdmin):
     list_display = (
         "short_id",
         "user",
+        "purpose",
         "gateway",
         "status",
         "amount_toman",
@@ -18,7 +19,7 @@ class PaymentAdmin(ModelAdmin):
         "sandbox",
         "created_at",
     )
-    list_filter = ("status", "gateway", "sandbox", "created_at")
+    list_filter = ("status", "purpose", "gateway", "sandbox", "created_at")
     search_fields = (
         "public_id",
         "user__email",
