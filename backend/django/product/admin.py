@@ -261,6 +261,12 @@ class ProductImageInlineForm(forms.ModelForm):
         model = ProductImage
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk and "role" in self.fields:
+            self.fields["role"].initial = ProductImageRole.HERO
+            self.initial["role"] = ProductImageRole.HERO
+
     def clean_role(self):
         product_validators.validate_product_image_role(self.cleaned_data["role"])
         return self.cleaned_data["role"]
@@ -284,7 +290,7 @@ class ProductImageInlineForm(forms.ModelForm):
 class ProductVariantInline(TabularInline):
     model = ProductVariant
     form = ProductVariantInlineForm
-    extra = 0
+    extra = 1
     fields = (
         "label",
         "sku",
@@ -294,8 +300,7 @@ class ProductVariantInline(TabularInline):
         "sort_order",
     )
     show_change_link = True
-    tab = True
-    hide_title = True
+    # Keep below the main form (not a separate tab) so staff always see it.
     verbose_name = "نوع و اندازه"
     verbose_name_plural = "نوع و اندازه‌های این محصول"
 
@@ -303,20 +308,20 @@ class ProductVariantInline(TabularInline):
 class ProductImageInline(TabularInline):
     model = ProductImage
     form = ProductImageInlineForm
-    extra = 1
+    extra = 2
+    min_num = 0
     fields = ("role", "image", "image_preview", "alt_text", "sort_order")
     readonly_fields = ("image_preview",)
     show_change_link = True
-    tab = True
-    hide_title = True
-    verbose_name = "تصویر"
-    verbose_name_plural = "گالری تصاویر"
+    # Visible under the product form — Unfold tab=True was hiding the upload UI.
+    verbose_name = "تصویر محصول"
+    verbose_name_plural = "گالری تصاویر — فایل را اینجا انتخاب کنید"
 
     @admin.display(description="پیش‌نمایش")
     def image_preview(self, obj: ProductImage) -> str:
-        if obj.image:
+        if obj and getattr(obj, "image", None):
             return format_html(
-                '<img src="{}" alt="" style="max-height:52px;border-radius:6px;" />',
+                '<img src="{}" alt="" style="max-height:72px;border-radius:6px;" />',
                 obj.image.url,
             )
         return "—"
@@ -498,18 +503,12 @@ class ProductAdmin(ModelAdmin):
             },
         ),
         (
-            "گالری",
-            {
-                "classes": ["tab"],
-                "description": "حداقل یک عکس با نقش «تصویر اصلی» لازم است تا محصول روی سایت برود.",
-                "fields": ("hero_preview",),
-            },
-        ),
-        (
             "آمادگی فروشگاه",
             {
                 "classes": ["tab"],
+                "description": "عکس‌ها را در بخش «گالری تصاویر» پایین همین صفحه آپلود کنید.",
                 "fields": (
+                    "hero_preview",
                     "catalog_readiness_panel",
                     ("created_at", "updated_at"),
                 ),
