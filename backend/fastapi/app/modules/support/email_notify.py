@@ -19,7 +19,7 @@ _PLACEHOLDER_MARKERS = (
     "your@",
     "example.com",
     "change-me",
-    "password",
+    "changeme",
 )
 
 
@@ -44,7 +44,7 @@ def _smtp_ready() -> tuple[bool, str]:
     settings = get_settings()
     host = (settings.SMTP_HOST or "").strip()
     user = (settings.SMTP_USER or "").strip()
-    password = (settings.SMTP_PASSWORD or "").strip()
+    password = (settings.SMTP_PASSWORD or "").replace(" ", "").strip()
     if not host:
         return False, "SMTP_HOST خالی است"
     if _looks_like_placeholder(user) or "@" not in user:
@@ -79,10 +79,24 @@ def _from_header() -> str:
     settings = get_settings()
     user = (settings.SMTP_USER or "").strip()
     raw_from = (settings.SMTP_FROM or user or "noreply@mardekoohestan.ir").strip()
-    # Allow "Name <email>" or bare email → always brand as مرد کوهستان
     match = re.match(r"^(.*?)\s*<([^>]+)>\s*$", raw_from)
     address = match.group(2).strip() if match else raw_from
     return formataddr(("مرد کوهستان", address))
+
+
+def _send_via_starttls(*, host: str, port: int, user: str, password: str, message: EmailMessage) -> None:
+    with smtplib.SMTP(host, port, timeout=20) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+        smtp.login(user, password)
+        smtp.send_message(message)
+
+
+def _send_via_ssl(*, host: str, user: str, password: str, message: EmailMessage) -> None:
+    with smtplib.SMTP_SSL(host, 465, timeout=20) as smtp:
+        smtp.login(user, password)
+        smtp.send_message(message)
 
 
 def _send_smtp_sync(*, subject: str, body: str, recipients: list[str]) -> bool:
@@ -104,7 +118,7 @@ def _send_smtp_sync(*, subject: str, body: str, recipients: list[str]) -> bool:
 
     host = (settings.SMTP_HOST or "").strip()
     user = (settings.SMTP_USER or "").strip()
-    password = (settings.SMTP_PASSWORD or "").strip()
+    password = (settings.SMTP_PASSWORD or "").replace(" ", "").strip()
     port = int(settings.SMTP_PORT or 587)
     use_tls = bool(settings.SMTP_USE_TLS)
 
@@ -115,19 +129,28 @@ def _send_smtp_sync(*, subject: str, body: str, recipients: list[str]) -> bool:
     message.set_content(body)
 
     try:
-        with smtplib.SMTP(host, port, timeout=12) as smtp:
-            smtp.ehlo()
-            if use_tls:
-                smtp.starttls()
-                smtp.ehlo()
-            smtp.login(user, password)
-            smtp.send_message(message)
+        if use_tls and port != 465:
+            try:
+                _send_via_starttls(host=host, port=port, user=user, password=password, message=message)
+            except smtplib.SMTPAuthenticationError:
+                logger.warning("SMTP 587 auth failed; retrying SSL 465 for %s", user)
+                _send_via_ssl(host=host, user=user, password=password, message=message)
+        else:
+            _send_via_ssl(host=host, user=user, password=password, message=message)
         logger.info(
             "support email sent from مرد کوهستان to=%s subject=%s",
             ",".join(recipients),
             subject,
         )
         return True
+    except smtplib.SMTPAuthenticationError as exc:
+        logger.error(
+            "SMTP login rejected by Google for %s — App Password را از حساب همین ایمیل "
+            "(با 2-Step Verification) دوباره بساز و در SMTP_PASSWORD بگذار. detail=%s",
+            user,
+            exc,
+        )
+        return False
     except Exception:  # noqa: BLE001
         logger.exception("SMTP send failed to=%s", recipients)
         return False

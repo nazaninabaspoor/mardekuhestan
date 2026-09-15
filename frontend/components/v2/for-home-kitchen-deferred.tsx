@@ -1,12 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-import type { ShowcaseProduct } from "@/components/product-showcase/ProductCard";
-import { productCategories } from "@/data/productCategories";
-import { homeCategoryProducts, type HomeDoorId } from "@/lib/brand";
 import type { V2KitchenCatalogPayload } from "@/lib/catalog/v2-kitchen";
+import { loadV2KitchenCatalog, staticKitchenPayload } from "@/lib/catalog/v2-kitchen";
 
 const ForHomeKitchen = dynamic(
   () => import("@/components/v2/for-home-kitchen").then((mod) => mod.ForHomeKitchen),
@@ -25,29 +23,20 @@ const ForHomeKitchen = dynamic(
   },
 );
 
-function staticKitchenPayload(): V2KitchenCatalogPayload {
-  const productsByCategory: Record<string, ShowcaseProduct[]> = {};
-  for (const category of productCategories) {
-    const items = homeCategoryProducts[category.id as HomeDoorId] ?? [];
-    productsByCategory[category.id] = items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      href: `/products/${item.id}`,
-      image: item.image,
-      alt: item.alt,
-    }));
-  }
-  return {
-    categories: [...productCategories],
-    productsByCategory,
-    source: "static",
-    apiReachable: false,
-  };
-}
-
-/** Client-only kitchen — keeps catalog fetch off the first paint. */
+/** Client-only kitchen — loads catalog from Django admin API with static fallback. */
 export function ForHomeKitchenDeferred() {
-  const catalog = useMemo(() => staticKitchenPayload(), []);
+  const [catalog, setCatalog] = useState<V2KitchenCatalogPayload>(() => staticKitchenPayload());
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadV2KitchenCatalog().then((payload) => {
+      if (!cancelled) setCatalog(payload);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <Suspense
       fallback={

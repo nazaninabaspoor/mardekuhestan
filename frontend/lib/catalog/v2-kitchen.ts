@@ -8,7 +8,6 @@ import {
   type ProductCategory,
 } from "@/data/productCategories";
 import { homeCategoryProducts, type HomeDoorId } from "@/lib/brand";
-import { brandCategoryItems } from "@/lib/catalog/brand-keys";
 
 export type V2KitchenCatalogPayload = {
   categories: ProductCategory[];
@@ -24,17 +23,7 @@ const V2_STATIC_KEY_MAP: Record<string, string> = {
 
 const FOR_KITCHEN_PAGE_SIZE = 60;
 
-function staticProductsForApiKey(frontendKey: string): ShowcaseProduct[] {
-  return brandCategoryItems(frontendKey).map((item) => ({
-    id: item.id,
-    name: item.name,
-    href: `/products/${item.id}`,
-    image: item.image,
-    alt: item.alt,
-  }));
-}
-
-function staticKitchenPayload(): V2KitchenCatalogPayload {
+export function staticKitchenPayload(): V2KitchenCatalogPayload {
   const productsByCategory: Record<string, ShowcaseProduct[]> = {};
   for (const category of productCategories) {
     const items = homeCategoryProducts[category.id as HomeDoorId] ?? [];
@@ -87,10 +76,7 @@ export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
     const domains = await listDomains();
     if (!domains.length) return staticKitchenPayload();
 
-    const categories = domains.map(domainToCategory);
-    const productsByCategory: Record<string, ShowcaseProduct[]> = {};
-
-    await Promise.all(
+    const loaded = await Promise.all(
       domains.map(async (domain) => {
         const { results } = await listProducts({
           domain: domain.key,
@@ -106,11 +92,21 @@ export async function loadV2KitchenCatalog(): Promise<V2KitchenCatalogPayload> {
             alt: card.alt,
           };
         });
-        const fallback = staticProductsForApiKey(domain.frontend_query_key);
-        productsByCategory[domain.frontend_query_key] =
-          apiProducts.length > 0 ? apiProducts : fallback;
+        return { domain, apiProducts };
       }),
     );
+
+    const categories: ProductCategory[] = [];
+    const productsByCategory: Record<string, ShowcaseProduct[]> = {};
+
+    for (const { domain, apiProducts } of loaded) {
+      // Only doors with published admin products appear on the homepage.
+      if (apiProducts.length === 0) continue;
+      categories.push(domainToCategory(domain));
+      productsByCategory[domain.frontend_query_key] = apiProducts;
+    }
+
+    if (!categories.length) return staticKitchenPayload();
 
     return {
       categories,

@@ -172,11 +172,17 @@ async def _notify_staff_after_customer_message(
     conversation_id: str,
 ) -> None:
     try:
-        await notify_staff_email(
+        ok = await notify_staff_email(
             customer_id=customer_id,
             preview=preview,
             conversation_id=conversation_id,
         )
+        if not ok:
+            logger.error(
+                "staff email notify returned false for conversation=%s customer=%s",
+                conversation_id,
+                customer_id,
+            )
     except Exception:  # noqa: BLE001
         logger.exception("email notify failed for conversation=%s", conversation_id)
 

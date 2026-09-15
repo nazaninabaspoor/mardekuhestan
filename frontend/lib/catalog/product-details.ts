@@ -268,3 +268,56 @@ export function getStaticProductDetail(id: string): ProductDetailData {
 
   return getProductDetail(id);
 }
+
+function rialToToman(rial: number | null | undefined): number {
+  if (!rial || rial <= 0) return 0;
+  return Math.round(rial / 10);
+}
+
+/** Prefer Django catalog API (admin-managed), fall back to static brand cards. */
+export async function resolveProductDetail(idOrSlug: string): Promise<ProductDetailData> {
+  try {
+    const { getProductBySlug, getProductByUuid } = await import("@/lib/api/catalog");
+    const { resolveMediaUrl } = await import("@/lib/catalog/map");
+
+    const looksUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      );
+
+    const api = looksUuid
+      ? await getProductByUuid(idOrSlug)
+      : await getProductBySlug(idOrSlug);
+
+    const image =
+      resolveMediaUrl(api.hero_image?.url) ||
+      resolveMediaUrl(api.images?.[0]?.url) ||
+      "/brand/home-meat.png";
+
+    const portionOptions =
+      api.variants?.filter((v) => v.is_active).map((v) => v.label).filter(Boolean) ||
+      [];
+
+    const base = getProductDetail(
+      api.slug || api.public_uuid,
+      api.domain_frontend_key || "fresh-meat",
+      api.name,
+      image,
+    );
+
+    return {
+      ...base,
+      id: api.public_uuid || api.slug,
+      name: api.name,
+      headline: api.subtitle || api.short_description || base.headline,
+      story: api.short_description || api.subtitle || base.story,
+      image,
+      price: rialToToman(api.unit_price_rial) || base.price,
+      categoryId: api.domain_frontend_key || base.categoryId,
+      categoryTitle: api.domain_label_fa || base.categoryTitle,
+      portionOptions: portionOptions.length ? portionOptions : base.portionOptions,
+    };
+  } catch {
+    return getStaticProductDetail(idOrSlug);
+  }
+}
