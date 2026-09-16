@@ -31,15 +31,10 @@ if [ -f "$REPO_WEB/index.html" ]; then
   fi
   # بیلد Next معمولاً خیلی بزرگ‌تر از لندینگ موقت (~1KB) است
   if [ "${REPO_SIZE:-0}" -gt 4096 ]; then
-    if [ "${DISK_SIZE:-0}" -lt 4096 ] || [ "${REPO_SIZE}" -ne "${DISK_SIZE}" ]; then
-      echo "[mk-prestart] syncing frontend build (${REPO_SIZE} bytes) -> $DISK_WEB"
-      # پاک کردن محتوای قبلی بدون حذف خود پوشه (ممکن است mount باشد)
-      find "$DISK_WEB" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
-      cp -a "$REPO_WEB"/. "$DISK_WEB"/ || true
-      echo "[mk-prestart] frontend sync done"
-    else
-      echo "[mk-prestart] frontend already in sync (${DISK_SIZE} bytes)"
-    fi
+    echo "[mk-prestart] syncing frontend build (${REPO_SIZE} bytes) -> $DISK_WEB"
+    find "$DISK_WEB" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+    cp -a "$REPO_WEB"/. "$DISK_WEB"/ || true
+    echo "[mk-prestart] frontend sync done"
   elif [ ! -f "$DISK_WEB/index.html" ]; then
     cp -f "$REPO_WEB/index.html" "$DISK_WEB/index.html" || true
     echo "[mk-prestart] seeded placeholder index.html"
