@@ -18,6 +18,13 @@ if [ -d "$DJ/core" ]; then
   done
 fi
 
+# صفحه اصلی موقت روی دیسک public (اگر خالی بود)
+mkdir -p /app/public/web || true
+if [ ! -f /app/public/web/index.html ] && [ -f /app/backend/django/public/web/index.html ]; then
+  cp -f /app/backend/django/public/web/index.html /app/public/web/index.html || true
+  echo "[mk-prestart] seeded public/web/index.html"
+fi
+
 BIN="/usr/local/bin/gunicorn"
 REAL="/usr/local/bin/gunicorn.real"
 
