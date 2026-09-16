@@ -74,9 +74,27 @@
 5. روی کامیت مدنظر **Revert/Deploy** بزن
 6. تیک **دریافت خودکار (auto pull)** را اگر می‌خواهی بعد از هر push آپدیت شود فعال کن
 
+### رفع خطای `ValueError: Empty module name`
+
+این خطا یعنی gunicorn با ماژول خالی استارت شده (`gunicorn :application`).
+
+در env سرویس Django حتماً بگذار:
+
+```
+DJANGO_WSGI_MODULE=wsgi
+WSGI_MODULE=wsgi
+DJANGO_SETTINGS_MODULE=core.settings
+```
+
+اگر `APP_MODULE=wsgi:application` گذاشته‌ای، **پاکش کن** یا عوضش کن به `wsgi`.
+
+در منوی راست اگر **تغییر اپلیکیشن / Config Map** دیدی و فیلد WSGI/Module خالی است، مقدار `wsgi` بگذار.
+
+بعد سرویس را Restart/Redeploy کن.
+
 ### مرحله ۶ — دستور استارت / روت پروژه
 
-**مهم:** مسیر ریشه (Root) سرویس را روی **ریشه ریپو** بگذار (جایی که `manage.py` و `requirements.txt` هستند)، نه `backend/django`.
+**مهم:** مسیر ریشه (Root) سرویس را روی **ریشه ریپو** بگذار (جایی که `manage.py` و `wsgi.py` و `requirements.txt` هستند)، نه `backend/django`.
 
 اگر پنل جایی برای Start Command دارد، این را بگذار:
 
