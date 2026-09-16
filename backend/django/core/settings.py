@@ -41,7 +41,13 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 # دامنه تستی Runflare و دامنه اصلی برند
-for _host in (".runflare.cloud", "mardekuhestan.com", "www.mardekuhestan.com"):
+for _host in (
+    ".runflare.cloud",
+    "koohestanesepid.com",
+    "www.koohestanesepid.com",
+    "mardekuhestan.com",
+    "www.mardekuhestan.com",
+):
     if not DEBUG and _host not in ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS:
         ALLOWED_HOSTS.append(_host)
 

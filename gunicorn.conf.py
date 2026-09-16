@@ -1,26 +1,20 @@
-"""Gunicorn config for Runflare Django host.
-
-If the platform runs bare `gunicorn` (or empty APP module), this file
-still boots the monorepo WSGI entrypoint.
-"""
+"""Gunicorn config — never boot with an empty module name."""
 
 from __future__ import annotations
 
 import os
 
-# Critical: never leave module empty (causes ValueError: Empty module name)
+# Prefer nested package (Runflare autodetect-friendly)
 _module = (
     os.getenv("DJANGO_WSGI_MODULE")
     or os.getenv("WSGI_MODULE")
-    or os.getenv("APP_MODULE")
-    or "wsgi:application"
+    or "koohestan.wsgi:application"
 ).strip()
 
 if not _module:
-    _module = "wsgi:application"
+    _module = "koohestan.wsgi:application"
 
 if ":" not in _module:
-    # Platform often expands: gunicorn ${DJANGO_WSGI_MODULE}:application
     wsgi_app = f"{_module}:application"
 else:
     wsgi_app = _module
@@ -32,3 +26,4 @@ accesslog = "-"
 errorlog = "-"
 capture_output = True
 preload_app = False
+chdir = os.getenv("GUNICORN_CHDIR", os.getcwd())

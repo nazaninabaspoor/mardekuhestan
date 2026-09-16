@@ -76,21 +76,35 @@
 
 ### رفع خطای `ValueError: Empty module name`
 
-این خطا یعنی gunicorn با ماژول خالی استارت شده (`gunicorn :application`).
+علت رایج: `wsgi.py` در ریشه ریپو باعث می‌شود رانفلر نام پکیج را خالی بگذارد و بزند `gunicorn :application`.
 
-در env سرویس Django حتماً بگذار:
+الان پکیج استاندارد این است: `koohestan/wsgi.py`
+
+در env حتماً:
 
 ```
-DJANGO_WSGI_MODULE=wsgi
-WSGI_MODULE=wsgi
 DJANGO_SETTINGS_MODULE=core.settings
+DJANGO_WSGI_MODULE=koohestan.wsgi
+WSGI_MODULE=koohestan.wsgi
 ```
 
-اگر `APP_MODULE=wsgi:application` گذاشته‌ای، **پاکش کن** یا عوضش کن به `wsgi`.
+اگر فیلد «تغییر اپلیکیشن» دیدی، نام پروژه/ماژول را بگذار: `koohestan`
 
-در منوی راست اگر **تغییر اپلیکیشن / Config Map** دیدی و فیلد WSGI/Module خالی است، مقدار `wsgi` بگذار.
+اگر Start Command داشتی:
 
-بعد سرویس را Restart/Redeploy کن.
+```
+bash /app/start.sh
+```
+
+یا:
+
+```
+gunicorn koohestan.wsgi:application --bind 0.0.0.0:80 --workers 2 --timeout 120
+```
+
+### دامنه فعلی
+
+`koohestanesepid.com` (دیگر mardekuhestan.com نیست) — ALLOWED_HOSTS و CORS را با همین دامنه پر کن.
 
 ### مرحله ۶ — دستور استارت / روت پروژه
 

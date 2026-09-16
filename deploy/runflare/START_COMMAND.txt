@@ -1,0 +1,12 @@
+# اگر در پنل Runflare (تنظیمات / تغییر اپلیکیشن / Config Map) فیلد دستور اجرا داری،
+# عیناً یکی از این‌ها را بگذار:
+
+bash /app/start.sh
+
+# یا مستقیم (ترجیحی اگر bash کار نکرد):
+gunicorn koohestan.wsgi:application --bind 0.0.0.0:80 --workers 2 --timeout 120
+
+# در «تغییر اپلیکیشن» اگر نام ماژول/پروژه خواست:
+# koohestan
+# یا:
+# koohestan.wsgi
