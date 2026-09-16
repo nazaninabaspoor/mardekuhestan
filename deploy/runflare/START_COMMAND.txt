@@ -1,12 +1,12 @@
-# اگر در پنل Runflare (تنظیمات / تغییر اپلیکیشن / Config Map) فیلد دستور اجرا داری،
-# عیناً یکی از این‌ها را بگذار:
+# فقط این یک خط را در:
+# تنظیمات → «دستور پیش از شروع»
+# بگذار (اگر قبلاً gunicorn گذاشتی پاکش کن و فقط این را بگذار):
 
-bash /app/start.sh
+bash /app/deploy/runflare/prestart.sh
 
-# یا مستقیم (ترجیحی اگر bash کار نکرد):
-gunicorn koohestan.wsgi:application --bind 0.0.0.0:80 --workers 2 --timeout 120
+# ---------------------------------------------------------------
+# اگر جایی «دستور اصلی / Start / Command» جدا دیدی (نه پیش از شروع):
+gunicorn koohestan.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120
 
-# در «تغییر اپلیکیشن» اگر نام ماژول/پروژه خواست:
-# koohestan
-# یا:
-# koohestan.wsgi
+# در «تغییر اپلیکیشن» اگر فیلد نام پروژه / WSGI بود:
+koohestan.wsgi
