@@ -26,7 +26,7 @@ export function HeroSection() {
                       aria-hidden="true"
                     >
                       <source
-                        src="/brand/Pin%20on%20Come%20with%20me%20%E2%9C%A8.mp4"
+                        src="/brand/Man_opening_window_to_mountains_202608221109.mp4"
                         type="video/mp4"
                       />
                     </video>
@@ -53,7 +53,7 @@ export function HeroSection() {
                       aria-hidden="true"
                     >
                       <source
-                        src="/brand/Pin%20on%20Camping.mp4"
+                        src="/brand/teaser.mp4"
                         type="video/mp4"
                       />
                     </video>

@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { homeCategoryProducts } from "@/lib/brand";
 import { resolveProductDetail } from "@/lib/catalog/product-details";
 import { ProductDetailView } from "@/components/product-detail/product-detail-view";
 
@@ -8,6 +9,12 @@ type ProductPageProps = {
     id: string;
   }>;
 };
+
+export function generateStaticParams() {
+  return Object.values(homeCategoryProducts)
+    .flat()
+    .map((item) => ({ id: item.id }));
+}
 
 export async function generateMetadata({
   params,

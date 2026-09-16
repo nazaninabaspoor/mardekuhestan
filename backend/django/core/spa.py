@@ -56,6 +56,53 @@ def _landing_html() -> HttpResponse:
     )
 
 
+def _file_response(path: Path) -> FileResponse:
+    content_type = None
+    suffix = path.suffix.lower()
+    if suffix == ".html":
+        content_type = "text/html; charset=utf-8"
+    elif suffix == ".js":
+        content_type = "application/javascript; charset=utf-8"
+    elif suffix == ".css":
+        content_type = "text/css; charset=utf-8"
+    elif suffix == ".json":
+        content_type = "application/json; charset=utf-8"
+    elif suffix == ".svg":
+        content_type = "image/svg+xml"
+    elif suffix == ".txt":
+        content_type = "text/plain; charset=utf-8"
+    return FileResponse(path.open("rb"), content_type=content_type)
+
+
+def _resolve_static(root: Path, rel: str) -> Path | None:
+    """Next export بدون trailingSlash: /magazine → magazine.html"""
+    try:
+        root_resolved = root.resolve()
+    except OSError:
+        return None
+
+    if not rel:
+        index = root_resolved / "index.html"
+        return index if index.is_file() else None
+
+    base = (root_resolved / rel).resolve()
+    if not str(base).startswith(str(root_resolved)):
+        return None
+
+    if base.is_file():
+        return base
+
+    html_file = Path(f"{base}.html")
+    if html_file.is_file() and str(html_file.resolve()).startswith(str(root_resolved)):
+        return html_file
+
+    as_dir_index = base / "index.html"
+    if as_dir_index.is_file():
+        return as_dir_index
+
+    return None
+
+
 @require_GET
 def spa_serve(request, path: str = ""):
     """
@@ -63,28 +110,28 @@ def spa_serve(request, path: str = ""):
     اگر بیلد نبود، لندینگ موقت ۲۰۰ برمی‌گردد (نه ۴۰۴).
     """
     rel = (path or "").lstrip("/")
+    hits: list[Path] = []
+
+    for root in _candidate_roots():
+        if not root.is_dir():
+            continue
+        found = _resolve_static(root, rel)
+        if found is not None:
+            hits.append(found)
+
+    if hits:
+        # اگر دیسک public لندینگ موقت داشته باشد و ریپو بیلد واقعی، بزرگ‌تر را بگیر
+        best = max(hits, key=lambda p: p.stat().st_size if p.is_file() else 0)
+        return _file_response(best)
 
     for root in _candidate_roots():
         if not root.is_dir():
             continue
         try:
-            root_resolved = root.resolve()
+            fallback = root.resolve() / "index.html"
         except OSError:
             continue
-
-        candidate = (root_resolved / rel).resolve() if rel else (root_resolved / "index.html")
-        if not str(candidate).startswith(str(root_resolved)):
-            continue
-
-        if candidate.is_file():
-            return FileResponse(candidate.open("rb"))
-
-        as_dir_index = candidate / "index.html"
-        if as_dir_index.is_file():
-            return FileResponse(as_dir_index.open("rb"))
-
-        fallback = root_resolved / "index.html"
-        if fallback.is_file():
-            return FileResponse(fallback.open("rb"))
+        if fallback.is_file() and fallback.stat().st_size > 4096:
+            return _file_response(fallback)
 
     return _landing_html()

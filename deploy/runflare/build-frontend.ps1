@@ -1,6 +1,6 @@
 # Build frontend for same-host Django serve (optional for first API-only bring-up)
 param(
-  [string]$SiteUrl = "https://mardekuhestan.com"
+  [string]$SiteUrl = "https://koohestanesepid.com"
 )
 
 $ErrorActionPreference = "Stop"

@@ -22,6 +22,8 @@ import {
   catalogResultsPageUrl,
   navigateCatalogHit,
 } from "@/lib/catalog/navigate-hit";
+import type { CatalogProductListItem, Paginated } from "@/lib/api/catalog.types";
+import { mapProductToCard } from "@/lib/catalog/map";
 import {
   filterCatalogPrefixHits,
   mergeSearchHits,
@@ -102,18 +104,22 @@ export function CatalogSearchBox({
       setApiPending(true);
 
       try {
+        const base = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
         const response = await fetch(
-          `/api/catalog/search?q=${encodeURIComponent(trimmed)}`,
+          `${base}/api/products/search/?q=${encodeURIComponent(trimmed)}&page_size=8`,
           { signal: controller.signal, cache: "no-store" },
         );
         if (!response.ok) return;
-        const data = (await response.json()) as { results: CatalogSearchHit[] };
+        const data = (await response.json()) as Paginated<CatalogProductListItem>;
         const apiHits = filterCatalogPrefixHits(
-          data.results.map((item) => ({
-            ...item,
-            categoryId: item.categoryId ?? "fresh-meat",
-            domainLabel: item.domainLabel ?? "",
-          })),
+          (data.results || []).map((item) => {
+            const card = mapProductToCard(item);
+            return {
+              ...card,
+              categoryId: card.categoryId ?? item.domain_frontend_key ?? "fresh-meat",
+              domainLabel: card.domainLabel ?? item.domain_label_fa ?? "",
+            } satisfies CatalogSearchHit;
+          }),
           trimmed,
         );
         setResults(

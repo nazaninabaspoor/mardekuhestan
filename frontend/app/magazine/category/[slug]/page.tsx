@@ -4,18 +4,20 @@ import { notFound } from "next/navigation";
 import { MagBoards } from "@/components/magazine/mag-boards";
 import { MagMasonry } from "@/components/magazine/mag-card";
 import { MagPager } from "@/components/magazine/mag-pager";
-import { boardBySlug } from "@/data/magazine-issue";
+import { boardBySlug, magazineBoards } from "@/data/magazine-issue";
 import { listArticles, listCategories, unwrapResults } from "@/lib/api/content";
 import {
   magazineListHref,
   mergeCategoryPins,
-  parseMagazinePage,
   windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards } from "@/lib/content/magazine-page";
 
 type Params = { slug: string };
-type Search = { page?: string };
+
+export function generateStaticParams() {
+  return magazineBoards.map((board) => ({ slug: board.slug }));
+}
 
 async function loadCategory(slug: string) {
   try {
@@ -31,9 +33,6 @@ async function loadCategory(slug: string) {
     return { categories: [], articles: [] };
   }
 }
-
-export const dynamic =
-  process.env.STATIC_EXPORT === "1" ? "force-static" : "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -59,20 +58,17 @@ export async function generateMetadata({
 
 export default async function MagazineCategoryPage({
   params,
-  searchParams,
 }: {
   params: Promise<Params>;
-  searchParams: Promise<Search>;
 }) {
   const { slug } = await params;
-  const { page } = await searchParams;
   const [payload, boards] = await Promise.all([loadCategory(slug), loadMagazineBoards()]);
   const board = boardBySlug(slug);
   const apiCategory = payload.categories.find((item) => item.slug === slug) || null;
   if (!board && !apiCategory) notFound();
 
   const pins = mergeCategoryPins(payload.articles, slug);
-  const leaf = windowMagazinePins(pins, parseMagazinePage(page));
+  const leaf = windowMagazinePins(pins, 1);
   const name = apiCategory?.name || board?.name || "";
   const description = apiCategory?.description || board?.description || "";
 

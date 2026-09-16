@@ -18,11 +18,32 @@ if [ -d "$DJ/core" ]; then
   done
 fi
 
-# صفحه اصلی موقت روی دیسک public (اگر خالی بود)
+# همگام‌سازی فرانت استاتیک از ریپو → دیسک public
+# اگر فقط index قدیمی لندینگ روی دیسک باشد، سایت واقعی دیده نمی‌شود.
 mkdir -p /app/public/web || true
-if [ ! -f /app/public/web/index.html ] && [ -f /app/backend/django/public/web/index.html ]; then
-  cp -f /app/backend/django/public/web/index.html /app/public/web/index.html || true
-  echo "[mk-prestart] seeded public/web/index.html"
+REPO_WEB="/app/backend/django/public/web"
+DISK_WEB="/app/public/web"
+if [ -f "$REPO_WEB/index.html" ]; then
+  REPO_SIZE=$(wc -c < "$REPO_WEB/index.html" | tr -d ' ')
+  DISK_SIZE=0
+  if [ -f "$DISK_WEB/index.html" ]; then
+    DISK_SIZE=$(wc -c < "$DISK_WEB/index.html" | tr -d ' ')
+  fi
+  # بیلد Next معمولاً خیلی بزرگ‌تر از لندینگ موقت (~1KB) است
+  if [ "${REPO_SIZE:-0}" -gt 4096 ]; then
+    if [ "${DISK_SIZE:-0}" -lt 4096 ] || [ "${REPO_SIZE}" -ne "${DISK_SIZE}" ]; then
+      echo "[mk-prestart] syncing frontend build (${REPO_SIZE} bytes) -> $DISK_WEB"
+      # پاک کردن محتوای قبلی بدون حذف خود پوشه (ممکن است mount باشد)
+      find "$DISK_WEB" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+      cp -a "$REPO_WEB"/. "$DISK_WEB"/ || true
+      echo "[mk-prestart] frontend sync done"
+    else
+      echo "[mk-prestart] frontend already in sync (${DISK_SIZE} bytes)"
+    fi
+  elif [ ! -f "$DISK_WEB/index.html" ]; then
+    cp -f "$REPO_WEB/index.html" "$DISK_WEB/index.html" || true
+    echo "[mk-prestart] seeded placeholder index.html"
+  fi
 fi
 
 BIN="/usr/local/bin/gunicorn"

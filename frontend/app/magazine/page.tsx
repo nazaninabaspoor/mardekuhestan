@@ -8,48 +8,36 @@ import { listArticles } from "@/lib/api/content";
 import {
   magazineListHref,
   mergeMagazinePins,
-  parseMagazinePage,
   windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards, loadMagazinePage } from "@/lib/content/magazine-page";
 
-type Search = { q?: string; page?: string };
-
-async function loadIndex(q?: string) {
+async function loadIndex() {
   try {
-    const articles = await listArticles({ q, page: 1, pageSize: 80 }, { revalidate: false });
+    const articles = await listArticles({ page: 1, pageSize: 80 }, { revalidate: false });
     return articles.results || [];
   } catch {
     return [];
   }
 }
 
-export const dynamic =
-  process.env.STATIC_EXPORT === "1" ? "force-static" : "force-dynamic";
-
 export const metadata: Metadata = {
   title: "مجله مرد کوهستان | این راه سبز است",
   description: "مجله راه سبز: نوشته‌هایی از مرتع، مزرعه، غذا و زندگی در ارتفاع.",
 };
 
-export default async function MagazinePage({
-  searchParams,
-}: {
-  searchParams: Promise<Search>;
-}) {
-  const params = await searchParams;
-  const q = (params.q || "").trim();
+export default async function MagazinePage() {
   const [articles, boards, page] = await Promise.all([
-    loadIndex(q),
+    loadIndex(),
     loadMagazineBoards(),
     loadMagazinePage(),
   ]);
-  const pins = mergeMagazinePins(articles, q);
-  const leaf = windowMagazinePins(pins, parseMagazinePage(params.page));
+  const pins = mergeMagazinePins(articles);
+  const leaf = windowMagazinePins(pins, 1);
 
   return (
     <>
-      <MagToday query={q} boards={boards} active="all" page={page} />
+      <MagToday query="" boards={boards} active="all" page={page} />
       <div className="mk-mag-shell">
         {leaf.total ? (
           <>
@@ -57,7 +45,7 @@ export default async function MagazinePage({
             <MagPager
               page={leaf.page}
               pageCount={leaf.pageCount}
-              hrefFor={(pageNum) => magazineListHref({ page: pageNum, q, hash: "#mk-feed" })}
+              hrefFor={(pageNum) => magazineListHref({ page: pageNum, hash: "#mk-feed" })}
             />
           </>
         ) : (

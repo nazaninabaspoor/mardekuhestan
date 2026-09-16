@@ -7,13 +7,9 @@ import { listArticles } from "@/lib/api/content";
 import {
   magazineListHref,
   mergeMagazinePins,
-  parseMagazinePage,
   windowMagazinePins,
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards } from "@/lib/content/magazine-page";
-
-export const dynamic =
-  process.env.STATIC_EXPORT === "1" ? "force-static" : "force-dynamic";
 
 export const metadata: Metadata = {
   title: "قفسه‌های مجله | مرد کوهستان",
@@ -21,12 +17,7 @@ export const metadata: Metadata = {
     "دسته‌های تصویری مجله مرد کوهستان: راه سبز، از مرتع تا سفره، سفره خانواده، مرتع و ارتفاع.",
 };
 
-export default async function MagazineCategoryIndexPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const { page } = await searchParams;
+export default async function MagazineCategoryIndexPage() {
   const [boards, apiArticles] = await Promise.all([
     loadMagazineBoards(),
     listArticles({ page: 1, pageSize: 80 }, { revalidate: false })
@@ -34,7 +25,7 @@ export default async function MagazineCategoryIndexPage({
       .catch(() => []),
   ]);
   const pins = mergeMagazinePins(apiArticles);
-  const leaf = windowMagazinePins(pins, parseMagazinePage(page));
+  const leaf = windowMagazinePins(pins, 1);
 
   return (
     <div className="mk-mag-shell">

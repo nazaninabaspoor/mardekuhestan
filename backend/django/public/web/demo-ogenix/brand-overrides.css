@@ -1,0 +1,61 @@
+/* Brand overrides on top of exact Ogenix dark template */
+:root {
+  --ogenix-base: #005b48;
+  --ogenix-primary: #005b48;
+  --ogenix-black: #0d1410;
+}
+
+.mk-demo-banner {
+  position: sticky;
+  top: 0;
+  z-index: 99999;
+  background: #005b48;
+  color: #f4f0e8;
+  font-family: Tahoma, sans-serif;
+  border-bottom: 1px solid rgb(244 240 232 / 18%);
+}
+
+.mk-demo-banner__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.mk-demo-banner a {
+  color: #f4f0e8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+}
+
+/* Soften template primary toward brand green where hard-coded */
+.thm-btn,
+.main-menu .main-menu__list > li > a::before,
+.feature-one__icon span,
+.about-one__points li .icon span,
+.product-one__cart,
+.why-choose-one__icon span,
+.site-footer__social a:hover {
+  background-color: #005b48 !important;
+}
+
+.thm-btn:hover {
+  background-color: #004538 !important;
+}
+
+.main-header__logo img,
+.logo-box img {
+  max-height: 48px;
+  width: auto;
+}
+
+/* Keep template LTR layout exact; Persian text still readable */
+body {
+  font-family: Tahoma, "Segoe UI", sans-serif;
+}
