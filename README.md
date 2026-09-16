@@ -53,3 +53,10 @@ Health: `http://127.0.0.1:8001/api/v1/health`
 
 - فقط `.env.example` در گیت
 - `.env` و `venv` و دیتابیس لوکال commit نشوند
+
+## دیپلوی Runflare
+
+راهنمای مرحله‌به‌مرحله (هاست Django واحد + FastAPI + فرانت):
+
+[`deploy/runflare/README.md`](deploy/runflare/README.md)
+

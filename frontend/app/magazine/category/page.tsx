@@ -12,7 +12,8 @@ import {
 } from "@/lib/content/magazine-feed";
 import { loadMagazineBoards } from "@/lib/content/magazine-page";
 
-export const dynamic = "force-dynamic";
+export const dynamic =
+  process.env.STATIC_EXPORT === "1" ? "force-static" : "force-dynamic";
 
 export const metadata: Metadata = {
   title: "قفسه‌های مجله | مرد کوهستان",

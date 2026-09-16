@@ -131,7 +131,12 @@ CORS_ALLOWED_ORIGINS = [
     if origin.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = list(CORS_ALLOWED_ORIGINS)
+_csrf_raw = os.getenv("CSRF_TRUSTED_ORIGINS", "").strip()
+CSRF_TRUSTED_ORIGINS = (
+    [o.strip() for o in _csrf_raw.split(",") if o.strip()]
+    if _csrf_raw
+    else list(CORS_ALLOWED_ORIGINS)
+)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 BACKEND_PUBLIC_URL = os.getenv("BACKEND_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
@@ -182,6 +187,7 @@ else:
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "sec.middleware.DDoSMitigationMiddleware",
     "sec.middleware.SlowRequestWatchdogMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -278,15 +284,40 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# Static / media — Runflare دیسک روی public:
+# https://runflare.com/docs/load-django-css-images/
+_PUBLIC_DIR = Path(os.getenv("PUBLIC_DIR", str(BASE_DIR / "public")))
+_USE_RUNFLARE_PUBLIC = env_bool("RUNFLARE_PUBLIC_DISK", default=not DEBUG)
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+if _USE_RUNFLARE_PUBLIC:
+    STATIC_URL = "/public/static/"
+    STATIC_ROOT = _PUBLIC_DIR / "static"
+    MEDIA_URL = "/public/media/"
+    MEDIA_ROOT = _PUBLIC_DIR / "media"
+else:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+_static_src = BASE_DIR / "static"
+STATICFILES_DIRS = [_static_src] if _static_src.is_dir() else []
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+FRONTEND_STATIC_ROOT = Path(
+    os.getenv("FRONTEND_STATIC_ROOT", str(_PUBLIC_DIR / "web"))
+)
+SERVE_FRONTEND_FROM_DJANGO = env_bool(
+    "SERVE_FRONTEND_FROM_DJANGO", default=not DEBUG
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -816,39 +847,53 @@ UNFOLD_STUDIO = {
     },
 }
 
-# Redis cache
-REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
-CHANNEL_REDIS_URL = os.getenv("CHANNEL_REDIS_URL", "redis://127.0.0.1:6379/2")
+# Redis cache (بدون Redis هم Django بالا می‌آید)
+REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0").strip()
+CHANNEL_REDIS_URL = os.getenv(
+    "CHANNEL_REDIS_URL",
+    REDIS_URL or "redis://127.0.0.1:6379/2",
+).strip()
+_USE_REDIS = bool(REDIS_URL) and not env_bool("FORCE_INMEMORY_CHANNELS", default=False)
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [CHANNEL_REDIS_URL],
-            "capacity": 1500,
-            "expiry": 30,
-        },
-    },
-}
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {
-                "max_connections": int(os.getenv("REDIS_MAX_CONNECTIONS", "100")),
-                "retry_on_timeout": True,
-                "socket_timeout": 1,
-                "socket_connect_timeout": 1,
+if _USE_REDIS:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [CHANNEL_REDIS_URL],
+                "capacity": 1500,
+                "expiry": 30,
             },
-            "SOCKET_TIMEOUT": 1,
-            "SOCKET_CONNECT_TIMEOUT": 1,
-            "IGNORE_EXCEPTIONS": True,
         },
     }
-}
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "CONNECTION_POOL_KWARGS": {
+                    "max_connections": int(os.getenv("REDIS_MAX_CONNECTIONS", "100")),
+                    "retry_on_timeout": True,
+                    "socket_timeout": 1,
+                    "socket_connect_timeout": 1,
+                },
+                "SOCKET_TIMEOUT": 1,
+                "SOCKET_CONNECT_TIMEOUT": 1,
+                "IGNORE_EXCEPTIONS": True,
+            },
+        }
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
+    }
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "mk-local",
+        },
+    }
 
 # Celery (Enterprise Queueing, Anti-OOM & Fail-safe Task Routing)
 CELERY_BROKER_URL = os.getenv(
@@ -900,6 +945,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024  # 6 MB (تصاویر کاتالو
 FILE_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024
 
 if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", default=True)
     SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -910,3 +956,6 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = "same-origin"
     X_FRAME_OPTIONS = "DENY"
+
+if TRUST_X_FORWARDED_FOR:
+    USE_X_FORWARDED_HOST = True

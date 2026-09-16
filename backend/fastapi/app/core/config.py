@@ -19,7 +19,8 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
 
     # Must match Django SECRET_KEY so SimpleJWT access tokens verify here.
-    JWT_SECRET: str = "change-me"
+    # روی Runflare معمولاً JWT_SECRET را همان SECRET_KEY می‌گذارید.
+    JWT_SECRET: str = ""
     JWT_ALGORITHM: str = "HS256"
 
     DATABASE_URL: str = (
@@ -74,6 +75,12 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def jwt_secret_resolved(self) -> str:
+        import os
+
+        return (self.JWT_SECRET or os.getenv("SECRET_KEY") or "change-me").strip()
 
 
 @lru_cache

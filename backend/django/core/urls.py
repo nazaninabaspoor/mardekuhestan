@@ -2,10 +2,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 from content.sitemaps import ArticleSitemap
 from content.studio import content_studio
+from core.spa import spa_serve
 
 admin.site.site_header = "مرد کوهستان"
 admin.site.site_title = "مدیریت مرد کوهستان"
@@ -41,3 +42,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# فرانت استاتیک — آخر لیست تا /api و /admin را نگیرد
+if getattr(settings, "SERVE_FRONTEND_FROM_DJANGO", True):
+    urlpatterns += [
+        re_path(r"^(?P<path>.*)$", spa_serve, name="spa"),
+    ]

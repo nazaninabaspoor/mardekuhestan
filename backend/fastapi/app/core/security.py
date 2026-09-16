@@ -25,7 +25,7 @@ def decode_access_token(token: str) -> AuthUser:
     try:
         payload = jwt.decode(
             token,
-            settings.JWT_SECRET,
+            settings.jwt_secret_resolved,
             algorithms=[settings.JWT_ALGORITHM],
             options={"verify_aud": False},
         )

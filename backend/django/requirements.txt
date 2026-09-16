@@ -22,3 +22,15 @@ django-unfold==0.68.0
 channels==4.2.2
 channels-redis==4.2.1
 daphne==4.2.1
+whitenoise==6.9.0
+argon2-cffi==25.1.0
+# FastAPI (همان پروسه ASGI — مسیر /api/v1)
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+pydantic-settings==2.10.1
+httpx==0.28.1
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+sqlalchemy[asyncio]==2.0.43
+asyncpg==0.30.0
+qdrant-client==1.15.1

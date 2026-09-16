@@ -1,0 +1,2 @@
+# Runflare / monorepo — نصب وابستگی‌ها از ریشه ریپو
+-r backend/django/requirements.txt

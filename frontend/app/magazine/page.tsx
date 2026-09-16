@@ -24,7 +24,8 @@ async function loadIndex(q?: string) {
   }
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic =
+  process.env.STATIC_EXPORT === "1" ? "force-static" : "force-dynamic";
 
 export const metadata: Metadata = {
   title: "مجله مرد کوهستان | این راه سبز است",

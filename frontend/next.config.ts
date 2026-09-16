@@ -1,9 +1,12 @@
 import path from "path";
 import type { NextConfig } from "next";
 
+const staticExport = process.env.STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
+  ...(staticExport ? { output: "export" as const } : {}),
   async redirects() {
     return [
       { source: "/products", destination: "/#for-home-kitchen", permanent: false },
@@ -23,6 +26,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    unoptimized: staticExport,
     remotePatterns: [
       {
         protocol: "http",
@@ -50,6 +54,16 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "api.mardekuhestan.com",
         pathname: "/media/**",
+      },
+      {
+        protocol: "https",
+        hostname: "mardekuhestan.com",
+        pathname: "/public/media/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.mardekuhestan.com",
+        pathname: "/public/media/**",
       },
     ],
   },
