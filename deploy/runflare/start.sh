@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# استارت سرویس واحد روی Runflare (Django + FastAPI در یک ASGI)
+# استارت سازگار با هاست Django رانفلر (nginx + gunicorn)
 set -uo pipefail
 
 echo "[mk] start pwd=$(pwd) PORT=${PORT:-} PUBLIC_DIR=${PUBLIC_DIR:-}"
@@ -11,31 +11,57 @@ else
   ROOT="$(pwd)"
 fi
 
-if [ -d "$ROOT/backend/django" ]; then
+# همیشه از ریشه ریپو: wsgi.py / asgi.py
+if [ -d "$ROOT/backend/django" ] && [ -f "$ROOT/wsgi.py" ]; then
   DJANGO_DIR="$ROOT/backend/django"
   FASTAPI_DIR="$ROOT/backend/fastapi"
+  WSGI_APP="wsgi:application"
+  ASGI_APP="asgi:application"
+  cd "$ROOT"
+elif [ -d "$ROOT/backend/django" ]; then
+  DJANGO_DIR="$ROOT/backend/django"
+  FASTAPI_DIR="$ROOT/backend/fastapi"
+  WSGI_APP="core.wsgi:application"
+  ASGI_APP="core.asgi:application"
+  cd "$DJANGO_DIR"
 elif [ -f "$ROOT/manage.py" ] && [ -d "$ROOT/core" ]; then
   DJANGO_DIR="$ROOT"
   FASTAPI_DIR="${ROOT}/../fastapi"
+  WSGI_APP="core.wsgi:application"
+  ASGI_APP="core.asgi:application"
+  cd "$DJANGO_DIR"
 else
   echo "[mk] Django project not found. pwd=$(pwd) ROOT=$ROOT" >&2
   ls -la "$ROOT" >&2 || true
   exit 1
 fi
 
-export PYTHONPATH="${DJANGO_DIR}:${FASTAPI_DIR}:${PYTHONPATH:-}"
-cd "$DJANGO_DIR"
-echo "[mk] django_dir=$DJANGO_DIR"
+export PYTHONPATH="${ROOT}:${DJANGO_DIR}:${FASTAPI_DIR}:${PYTHONPATH:-}"
+export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-core.settings}"
+echo "[mk] root=$ROOT django_dir=$DJANGO_DIR wsgi=$WSGI_APP"
 
 export RUNFLARE_PUBLIC_DISK="${RUNFLARE_PUBLIC_DISK:-true}"
 export PUBLIC_DIR="${PUBLIC_DIR:-/app/public}"
 mkdir -p "$PUBLIC_DIR/static" "$PUBLIC_DIR/media" "$PUBLIC_DIR/web" || true
 
-# اگر migrate/collectstatic شکست بخورد، حداقل سرور بالا بیاید تا لاگ دیده شود
-python manage.py migrate --noinput || echo "[mk] WARN: migrate failed"
-python manage.py collectstatic --noinput || echo "[mk] WARN: collectstatic failed"
+(
+  cd "$DJANGO_DIR"
+  python manage.py migrate --noinput || echo "[mk] WARN: migrate failed"
+  python manage.py collectstatic --noinput || echo "[mk] WARN: collectstatic failed"
+)
 
-# Runflare معمولاً PORT را می‌دهد؛ اگر ندهد اغلب 80 است
 PORT="${PORT:-80}"
 echo "[mk] listening on 0.0.0.0:${PORT}"
-exec daphne -b 0.0.0.0 -p "$PORT" core.asgi:application
+
+# Runflare معمولاً gunicorn می‌خواهد؛ اگر APP_MODULE خالی باشد خودمان صریح می‌دهیم
+if python -c "import gunicorn" 2>/dev/null; then
+  exec gunicorn "$WSGI_APP" \
+    --bind "0.0.0.0:${PORT}" \
+    --workers "${WEB_CONCURRENCY:-2}" \
+    --timeout 120 \
+    --access-logfile - \
+    --error-logfile -
+fi
+
+echo "[mk] gunicorn missing; falling back to daphne"
+exec daphne -b 0.0.0.0 -p "$PORT" "$ASGI_APP"

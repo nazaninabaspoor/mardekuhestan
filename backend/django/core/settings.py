@@ -40,9 +40,10 @@ ALLOWED_HOSTS = [
     for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
     if host.strip()
 ]
-# دامنه تستی Runflare (*.runflare.cloud)
-if not DEBUG and ".runflare.cloud" not in ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(".runflare.cloud")
+# دامنه تستی Runflare و دامنه اصلی برند
+for _host in (".runflare.cloud", "mardekuhestan.com", "www.mardekuhestan.com"):
+    if not DEBUG and _host not in ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_host)
 
 
 
