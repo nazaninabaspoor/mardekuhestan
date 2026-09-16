@@ -1,1 +1,1 @@
-web: bash deploy/runflare/start.sh
+web: bash start.sh

@@ -40,6 +40,10 @@ ALLOWED_HOSTS = [
     for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
     if host.strip()
 ]
+# دامنه تستی Runflare (*.runflare.cloud)
+if not DEBUG and ".runflare.cloud" not in ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".runflare.cloud")
+
 
 
 # Application definition
@@ -308,7 +312,8 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # بدون Manifest تا collectstatic روی هاست به‌خاطر فایل گم‌شده نترکد
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
@@ -946,7 +951,8 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", default=True)
+    # پشت پروکسی Runflare؛ تا دامنه نهایی اوکی نشده پیش‌فرض false امن‌تر است
+    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", default=False)
     SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = env_bool("SECURE_HSTS_PRELOAD", default=False)
