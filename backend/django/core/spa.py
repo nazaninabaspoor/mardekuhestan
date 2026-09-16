@@ -5,8 +5,57 @@ from __future__ import annotations
 from pathlib import Path
 
 from django.conf import settings
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, HttpResponseNotFound
 from django.views.decorators.http import require_GET
+
+# پسوندهایی که هرگز نباید با index.html جایگزین شوند (فونت/ویدیو/استاتیک)
+_ASSET_SUFFIXES = {
+    ".woff",
+    ".woff2",
+    ".ttf",
+    ".otf",
+    ".eot",
+    ".mp4",
+    ".webm",
+    ".mov",
+    ".js",
+    ".css",
+    ".map",
+    ".json",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".gif",
+    ".svg",
+    ".ico",
+    ".avif",
+    ".txt",
+    ".xml",
+    ".pdf",
+}
+
+_CONTENT_TYPES = {
+    ".html": "text/html; charset=utf-8",
+    ".js": "application/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".svg": "image/svg+xml",
+    ".txt": "text/plain; charset=utf-8",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".ttf": "font/ttf",
+    ".otf": "font/otf",
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".ico": "image/x-icon",
+    ".avif": "image/avif",
+}
 
 
 def _candidate_roots() -> list[Path]:
@@ -15,7 +64,6 @@ def _candidate_roots() -> list[Path]:
         getattr(settings, "FRONTEND_STATIC_ROOT", settings.BASE_DIR / "public" / "web")
     )
     roots.append(primary)
-    # fallback داخل ریپو (قبل از بیلد Next روی دیسک)
     repo_web = Path(settings.BASE_DIR) / "public" / "web"
     if repo_web.resolve() != primary.resolve():
         roots.append(repo_web)
@@ -57,21 +105,12 @@ def _landing_html() -> HttpResponse:
 
 
 def _file_response(path: Path) -> FileResponse:
-    content_type = None
+    content_type = _CONTENT_TYPES.get(path.suffix.lower())
+    response = FileResponse(path.open("rb"), content_type=content_type)
     suffix = path.suffix.lower()
-    if suffix == ".html":
-        content_type = "text/html; charset=utf-8"
-    elif suffix == ".js":
-        content_type = "application/javascript; charset=utf-8"
-    elif suffix == ".css":
-        content_type = "text/css; charset=utf-8"
-    elif suffix == ".json":
-        content_type = "application/json; charset=utf-8"
-    elif suffix == ".svg":
-        content_type = "image/svg+xml"
-    elif suffix == ".txt":
-        content_type = "text/plain; charset=utf-8"
-    return FileResponse(path.open("rb"), content_type=content_type)
+    if suffix in {".woff", ".woff2", ".ttf", ".otf", ".js", ".css", ".mp4", ".webm"}:
+        response["Cache-Control"] = "public, max-age=31536000, immutable"
+    return response
 
 
 def _resolve_static(root: Path, rel: str) -> Path | None:
@@ -103,11 +142,19 @@ def _resolve_static(root: Path, rel: str) -> Path | None:
     return None
 
 
+def _looks_like_asset(rel: str) -> bool:
+    name = rel.rsplit("/", 1)[-1]
+    if "." not in name:
+        return False
+    suffix = "." + name.rsplit(".", 1)[-1].lower()
+    return suffix in _ASSET_SUFFIXES
+
+
 @require_GET
 def spa_serve(request, path: str = ""):
     """
     فایل‌های بیلد فرانت را سرو می‌کند.
-    اگر بیلد نبود، لندینگ موقت ۲۰۰ برمی‌گردد (نه ۴۰۴).
+    برای مسیرهای HTML بدون فایل، fallback به index؛ برای assetها هرگز HTML برنگردان.
     """
     rel = (path or "").lstrip("/")
     hits: list[Path] = []
@@ -120,9 +167,11 @@ def spa_serve(request, path: str = ""):
             hits.append(found)
 
     if hits:
-        # اگر دیسک public لندینگ موقت داشته باشد و ریپو بیلد واقعی، بزرگ‌تر را بگیر
         best = max(hits, key=lambda p: p.stat().st_size if p.is_file() else 0)
         return _file_response(best)
+
+    if _looks_like_asset(rel):
+        return HttpResponseNotFound("asset not found")
 
     for root in _candidate_roots():
         if not root.is_dir():

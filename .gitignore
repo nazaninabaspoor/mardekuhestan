@@ -31,7 +31,11 @@ ENV/
 db.sqlite3
 db.sqlite3-journal
 staticfiles/
-media/
+# آپلودهای Django — نه پوشه فونت Next (_next/static/media)
+/media/
+backend/django/media/
+backend/django/public/media/
+!**/_next/static/media/
 local_settings.py
 
 # Node / frontend
