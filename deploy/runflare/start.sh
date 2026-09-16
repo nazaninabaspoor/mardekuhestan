@@ -2,16 +2,33 @@
 # استارت سرویس واحد روی Runflare (Django + FastAPI در یک ASGI)
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-DJANGO_DIR="$ROOT/backend/django"
-FASTAPI_DIR="$ROOT/backend/fastapi"
+# اگر از ریشه ریپو اجرا شود یا از داخل backend/django
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -d "$SCRIPT_DIR/../../backend/django" ]; then
+  ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+elif [ -f "$SCRIPT_DIR/manage.py" ] && [ -d "$SCRIPT_DIR/core" ]; then
+  ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+else
+  ROOT="$(pwd)"
+fi
+
+if [ -d "$ROOT/backend/django" ]; then
+  DJANGO_DIR="$ROOT/backend/django"
+  FASTAPI_DIR="$ROOT/backend/fastapi"
+elif [ -f "$ROOT/manage.py" ] && [ -d "$ROOT/core" ]; then
+  DJANGO_DIR="$ROOT"
+  FASTAPI_DIR="${ROOT}/../fastapi"
+else
+  echo "Django project not found. pwd=$(pwd) ROOT=$ROOT" >&2
+  exit 1
+fi
 
 export PYTHONPATH="${DJANGO_DIR}:${FASTAPI_DIR}:${PYTHONPATH:-}"
 cd "$DJANGO_DIR"
 
-# دیسک Runflare برای static/media/web
 export RUNFLARE_PUBLIC_DISK="${RUNFLARE_PUBLIC_DISK:-true}"
-export PUBLIC_DIR="${PUBLIC_DIR:-$DJANGO_DIR/public}"
+# دیسک Runflare معمولاً روی /app/public مونت می‌شود
+export PUBLIC_DIR="${PUBLIC_DIR:-/app/public}"
 mkdir -p "$PUBLIC_DIR/static" "$PUBLIC_DIR/media" "$PUBLIC_DIR/web"
 
 python manage.py migrate --noinput

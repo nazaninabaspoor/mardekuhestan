@@ -76,16 +76,15 @@
 
 ### مرحله ۶ — دستور استارت / روت پروژه
 
+**مهم:** مسیر ریشه (Root) سرویس را روی **ریشه ریپو** بگذار (جایی که `manage.py` و `requirements.txt` هستند)، نه `backend/django`.
+
 اگر پنل جایی برای Start Command دارد، این را بگذار:
 
 ```bash
 bash deploy/runflare/start.sh
 ```
 
-اگر فقط ریشه Django را می‌شناسد:
-
-- Root Directory را روی ریشه ریپو بگذار (جایی که `manage.py` هست)، نه فقط `backend/django`
-- یا اگر مجبور شدی root را `backend/django` بگذاری، باز هم کل ریپو باید کلون شود تا پوشه `../fastapi` دیده شود
+فایل `requirements.txt` ریشه باید لیست کامل پکیج‌ها باشد (نه `-r ...`) تا بیلد Runflare گیر نکند.
 
 بعد از بالا آمدن، در ترمینال سرویس یک‌بار چک کن:
 

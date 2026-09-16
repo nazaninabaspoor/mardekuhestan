@@ -1,2 +1,37 @@
-# Runflare / monorepo — نصب وابستگی‌ها از ریشه ریپو
--r backend/django/requirements.txt
+# وابستگی‌های سرویس واحد Runflare (ریشه ریپو)
+# این فایل باید کامل باشد (نه -r) تا بیلد هاست Django گیر نکند.
+asgiref==3.12.1
+Django==5.2.17
+django-cors-headers==4.7.0
+djangorestframework==3.18.0
+djangorestframework_simplejwt==5.5.1
+PyJWT==2.13.0
+psycopg[binary]==3.2.9
+python-dotenv==1.1.1
+sqlparse==0.5.5
+tzdata==2026.3
+celery==5.5.3
+redis==6.4.0
+django-redis==6.0.0
+kombu==5.5.4
+boto3==1.40.16
+django-storages==1.14.6
+opensearch-py==3.0.0
+confluent-kafka==2.11.1
+Pillow==11.3.0
+django-ckeditor-5==0.2.18
+django-unfold==0.68.0
+channels==4.2.2
+channels-redis==4.2.1
+daphne==4.2.1
+whitenoise==6.9.0
+argon2-cffi==25.1.0
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+pydantic-settings==2.10.1
+httpx==0.28.1
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+sqlalchemy[asyncio]==2.0.43
+asyncpg==0.30.0
+qdrant-client==1.15.1
