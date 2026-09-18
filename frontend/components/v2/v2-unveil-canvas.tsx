@@ -2,7 +2,7 @@
 
 import { Html, PerspectiveCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from "react";
 import {
   CanvasTexture,
   ClampToEdgeWrapping,
@@ -1398,20 +1398,29 @@ function FitAllColumns() {
   useLayoutEffect(() => {
     const perspective = camera as import("three").PerspectiveCamera;
     if (!("fov" in perspective) || !size.width || !size.height) return;
-    const aspect = size.width / Math.max(size.height, 1);
-    const portrait = aspect < 1;
-    if (portrait) {
-      perspective.position.set(0, 1.18, UNVEIL_CAM_Z);
-      perspective.fov = 44;
-      perspective.lookAt(0, 0.52, UNVEIL_PEDESTAL_Z);
-    } else {
-      perspective.position.set(0, 1.42, UNVEIL_CAM_Z);
+    const mobile = size.width < 760;
+    if (mobile) {
+      perspective.position.set(0, 1.05, UNVEIL_CAM_Z);
       perspective.fov = 38;
-      perspective.lookAt(0, 0.4, UNVEIL_PEDESTAL_Z);
+      perspective.lookAt(0, 0.42, UNVEIL_PEDESTAL_Z);
+    } else {
+      perspective.position.set(0, 1.36, UNVEIL_CAM_Z);
+      perspective.fov = 40;
+      perspective.lookAt(0, 0.26, UNVEIL_PEDESTAL_Z);
     }
     perspective.updateProjectionMatrix();
   }, [camera, size.height, size.width]);
   return null;
+}
+
+function StageRig({ children }: { children: ReactNode }) {
+  const { size } = useThree();
+  const mobile = size.width < 760;
+  return (
+    <group scale={mobile ? [0.78, 0.9, 0.9] : 1} position={mobile ? [0, -0.1, 0.2] : [0, 0, 0]}>
+      {children}
+    </group>
+  );
 }
 
 function Hall() {
@@ -1430,9 +1439,10 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.42, UNVEIL_CAM_Z]} fov={36} near={0.1} far={48} />
+      <PerspectiveCamera makeDefault position={[0, 1.36, UNVEIL_CAM_Z]} fov={40} near={0.1} far={48} />
       <FitAllColumns />
       <Hall />
+      <StageRig>
       <MountainMan man={man} cloth={cloth} active={active} />
       {UNVEIL_SLOT_X.map((x, index) => (
         <Pedestal key={`p-${x}`} x={x} index={index} man={man} factoryMap={factoryMap} />
@@ -1452,6 +1462,7 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
       {UNVEIL_SLOT_X.map((x, index) => (
         <Cloth key={`c-${x}`} x={x} index={index} cloth={cloth} />
       ))}
+      </StageRig>
     </>
   );
 }
