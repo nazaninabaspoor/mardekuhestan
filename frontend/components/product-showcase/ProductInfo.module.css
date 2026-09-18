@@ -53,4 +53,25 @@
   box-shadow: 0 0 0 2px rgb(244 240 232 / 28%);
 }
 @media (max-width: 900px) { .root { margin-inline: auto; text-align: center; } .root > div { align-items: center; } .root h3, .description { text-align: center; } .eyebrow, .actions { justify-content: center; } .description { margin-inline: auto; } }
-@media (max-width: 560px) { .root h3 { font-size: 2.5rem; } .description { font-size: .93rem; line-height: 1.85; } }
+@media (max-width: 560px) {
+  .root h3 {
+    font-size: 1.7rem;
+    line-height: 1.25;
+  }
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .primaryAction,
+  .videoAction,
+  .quickCartAction {
+    width: 100%;
+    max-width: 280px;
+    white-space: normal;
+    min-height: 42px;
+  }
+}

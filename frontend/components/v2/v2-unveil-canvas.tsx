@@ -1393,6 +1393,20 @@ function MountainMan({
   );
 }
 
+function FitAllColumns() {
+  const { camera, size } = useThree();
+  useLayoutEffect(() => {
+    const perspective = camera as import("three").PerspectiveCamera;
+    if (!("fov" in perspective) || !size.width || !size.height) return;
+    const aspect = size.width / Math.max(size.height, 1);
+    const neededH = 1.08; // ~62° so first/last pedestals stay fully in frame
+    const vFov = (2 * Math.atan(Math.tan(neededH / 2) / aspect) * 180) / Math.PI;
+    perspective.fov = Math.min(58, Math.max(28, vFov));
+    perspective.updateProjectionMatrix();
+  }, [camera, size.height, size.width]);
+  return null;
+}
+
 function Hall() {
   return (
     <>
@@ -1409,7 +1423,8 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.55, UNVEIL_CAM_Z]} fov={32} near={0.1} far={42} />
+      <PerspectiveCamera makeDefault position={[0, 1.55, UNVEIL_CAM_Z]} fov={38} near={0.1} far={48} />
+      <FitAllColumns />
       <Hall />
       <MountainMan man={man} cloth={cloth} active={active} />
       {UNVEIL_SLOT_X.map((x, index) => (

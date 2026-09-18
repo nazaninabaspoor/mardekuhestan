@@ -272,9 +272,12 @@
 
 @media (max-width: 900px) {
   .slots {
-    right: 5%;
-    left: 5%;
-    bottom: 18%;
+    position: relative;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    width: min(100% - 24px, 640px);
+    margin: 0 auto 1.5rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -285,5 +288,16 @@
 
   .copy {
     padding-top: 4.2rem;
+  }
+
+  .section {
+    min-height: 0;
+    height: auto;
+    padding-bottom: 1.5rem;
+  }
+
+  .stage {
+    position: relative;
+    min-height: min(72svh, 620px);
   }
 }

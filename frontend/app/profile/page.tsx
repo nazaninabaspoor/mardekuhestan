@@ -1916,7 +1916,7 @@ function ProfileContent() {
         ws.send(JSON.stringify({ type: "ask", text: textToSend, history }));
       } catch {
         setAiTyping(false);
-        setAiError("اتصال به راهیار برقرار نشد. FastAPI را چک کنید.");
+        setAiError("اتصال به راهیار برقرار نشد. کمی بعد دوباره تلاش کن.");
       }
     };
 

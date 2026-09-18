@@ -7,12 +7,12 @@
 .profile-workspace-section[data-theme="personal"] {
   position: relative !important;
   padding: 14px 20px 20px !important;
-  height: min(92vh, 830px) !important;
-  max-height: min(92vh, 830px) !important;
-  min-height: 560px !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   border-radius: 18px !important;
   /* Brand-aligned Forest Emerald Glass with warm luxury gradient */
   background:

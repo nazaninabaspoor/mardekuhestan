@@ -84,9 +84,10 @@ html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{backg
   .is-home-v2 .kui-plate-wrap{transform:none!important}
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
   .is-home-v2 .kui-dock{max-width:100%!important}
-  .is-home-v2 .v2-bookcase{min-height:0!important;padding-block:2.2rem!important}
-  img,video,svg,canvas{max-width:100%!important;height:auto}
+  .is-home-v2 .v2-bookcase{min-height:0!important;height:auto!important;padding-block:2.2rem!important}
+  img,video,svg{max-width:100%!important}
   .landing--v2 .landing-v2-video{height:100%!important}
+  .landing-v2-playlist-track{justify-content:center!important;width:100%!important;max-width:100%!important}
 }
 </style>"""
 

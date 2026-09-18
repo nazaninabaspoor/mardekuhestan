@@ -33,7 +33,10 @@ if _FASTAPI_ROOT.is_dir():
 _fastapi_app = None
 try:
     from app.main import app as _fastapi_app  # type: ignore
-except Exception:  # pragma: no cover — لوکال بدون FastAPI هم Django بالا می‌آید
+except Exception:
+    import logging
+
+    logging.getLogger(__name__).exception("FastAPI failed to mount at /api/v1")
     _fastapi_app = None
 
 

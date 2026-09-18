@@ -89,25 +89,23 @@ export function SupportChatWidget() {
     setStatus("connecting");
     setHint("در حال اتصال امن…");
 
-    const token = await ensureSupportAccessToken();
-    if (!token) {
-      if (!mountedRef.current) return;
-      setStatus("error");
-      setHint("نشست منقضی شده؛ دوباره وارد شو.");
-      return;
-    }
-
     try {
-      const conversation = await fetchSupportConversation(token);
+      const conversation = await fetchSupportConversation();
       if (!mountedRef.current) return;
       setRows(conversation.messages.map(toRow));
     } catch {
       if (!mountedRef.current) return;
-      setHint("تاریخچه نیامد؛ باز هم می‌توانی پیام بفرستی.");
+      setHint("پیامت را بنویس؛ همین‌جا می‌رسد.");
     }
 
     if (!mountedRef.current || intentionalCloseRef.current) return;
 
+    const token = await ensureSupportAccessToken();
+    if (!token) {
+      setStatus("idle");
+      setHint("متصل شدی؛ پیامت را بنویس.");
+      return;
+    }
     const socket = new WebSocket(supportWsUrl(token));
     socketRef.current = socket;
 
@@ -193,9 +191,8 @@ export function SupportChatWidget() {
 
     async function pull() {
       try {
-        const token = await ensureSupportAccessToken();
-        if (!token || cancelled || !mountedRef.current) return;
-        const conversation = await fetchSupportConversation(token);
+        if (cancelled || !mountedRef.current) return;
+        const conversation = await fetchSupportConversation();
         if (cancelled || !mountedRef.current) return;
         setRows(conversation.messages.map(toRow));
       } catch {
@@ -237,19 +234,6 @@ export function SupportChatWidget() {
     setDraft("");
     setSending(true);
 
-    const socket = socketRef.current;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(
-        JSON.stringify({
-          action: "send_message",
-          body,
-          client_message_id: clientId,
-        }),
-      );
-      setSending(false);
-      return;
-    }
-
     try {
       const message = await postSupportMessage({
         body,
@@ -258,10 +242,9 @@ export function SupportChatWidget() {
       setRows((prev) => upsertMessage(prev, toRow(message)));
       setHint("پیام رسید؛ پاسخ از پنل می‌آید.");
       setStatus("idle");
-      void connect();
     } catch {
       setRows((prev) => prev.filter((row) => row.key !== clientId));
-      setHint("پیام نرفت. FastAPI روی پورت ۸۰۰۱ را روشن کن و دوباره بفرست.");
+      setHint("پیام نرفت. کمی بعد دوباره بفرست.");
       setStatus("error");
     } finally {
       setSending(false);

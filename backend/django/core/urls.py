@@ -38,6 +38,7 @@ urlpatterns = [
     # Brand & ops
     path("api/content/", include("content.urls")),
     path("api/notifications/", include("notifications.urls")),
+    path("api/support/", include("support.urls")),
 ]
 
 if settings.DEBUG:

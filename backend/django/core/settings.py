@@ -117,7 +117,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -151,7 +151,7 @@ CSRF_TRUSTED_ORIGINS = (
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 BACKEND_PUBLIC_URL = os.getenv("BACKEND_PUBLIC_URL", "http://127.0.0.1:8000").rstrip("/")
-FASTAPI_BASE_URL = os.getenv("FASTAPI_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
+FASTAPI_BASE_URL = os.getenv("FASTAPI_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 SUPPORT_INTERNAL_TOKEN = os.getenv("SUPPORT_INTERNAL_TOKEN", "").strip()
 ZARINPAL_SANDBOX = env_bool("ZARINPAL_SANDBOX", default=True)
 # در سندباکس زرین‌پال مرچنت می‌تواند هر UUID معتبر باشد؛ این مقدار فقط برای تست است.

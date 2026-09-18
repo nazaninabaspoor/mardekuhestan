@@ -19,30 +19,26 @@ export type SupportConversation = {
   messages: SupportMessage[];
 };
 
-function fastapiBase(): string {
-  // در مرورگر همیشه همان دامنه سایت — استاتیک اکسپورت نباید به 127.0.0.1 برود
+function siteOrigin(): string {
   if (typeof window !== "undefined" && window.location?.origin) {
     return window.location.origin.replace(/\/$/, "");
   }
-  const raw =
-    process.env.NEXT_PUBLIC_FASTAPI_BASE_URL?.trim() ||
-    process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
-    "";
-  return raw.replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 }
 
 function wsBase(): string {
-  const http = fastapiBase();
+  const http = siteOrigin();
   if (http.startsWith("https://")) return `wss://${http.slice("https://".length)}`;
   if (http.startsWith("http://")) return `ws://${http.slice("http://".length)}`;
-  return `ws://${http}`;
+  return "";
 }
 
 export function supportWsUrl(token: string): string {
-  return `${wsBase()}/api/v1/support/ws?token=${encodeURIComponent(token)}&role=customer`;
+  const base = wsBase();
+  if (!base) return "";
+  return `${base}/api/v1/support/ws?token=${encodeURIComponent(token)}&role=customer`;
 }
 
-/** Fresh JWT for WebSocket — cookie session alone is not enough. */
 export async function ensureSupportAccessToken(): Promise<string | null> {
   try {
     const { access } = await refreshAccountSession();
@@ -51,68 +47,58 @@ export async function ensureSupportAccessToken(): Promise<string | null> {
       return access;
     }
   } catch {
-    // fall through to cached token
+    /* cached */
   }
   return getAccessToken();
 }
 
-export async function fetchSupportConversation(
-  accessToken?: string,
-): Promise<SupportConversation> {
-  const token = accessToken ?? (await ensureSupportAccessToken());
-  if (!token) throw new Error("login_required");
-  const res = await fetch(`${fastapiBase()}/api/v1/support/conversation`, {
-    headers: { Authorization: `Bearer ${token}` },
+async function supportFetch<T>(path: string, init: RequestInit = {}, retried = false): Promise<T> {
+  const token = getAccessToken();
+  const headers = new Headers(init.headers);
+  headers.set("Accept", "application/json");
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  const res = await fetch(`${siteOrigin()}${path}`, {
+    ...init,
+    headers,
+    credentials: "include",
     cache: "no-store",
   });
-  if (!res.ok) throw new Error(`conversation_${res.status}`);
-  return res.json();
+  if (res.status === 401 && !retried) {
+    const fresh = await ensureSupportAccessToken();
+    if (fresh) {
+      headers.set("Authorization", `Bearer ${fresh}`);
+      return supportFetch<T>(path, { ...init, headers }, true);
+    }
+  }
+  if (!res.ok) {
+    throw new Error(`support_${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+export async function fetchSupportConversation(): Promise<SupportConversation> {
+  return supportFetch<SupportConversation>("/api/support/conversation/");
 }
 
 export async function postSupportMessage(input: {
   body: string;
   client_message_id?: string;
-  accessToken?: string;
 }): Promise<SupportMessage> {
-  const token = input.accessToken ?? (await ensureSupportAccessToken());
-  if (!token) throw new Error("login_required");
-  const res = await fetch(`${fastapiBase()}/api/v1/support/messages`, {
+  return supportFetch<SupportMessage>("/api/support/messages/", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       body: input.body,
       client_message_id: input.client_message_id,
     }),
-    cache: "no-store",
   });
-  if (!res.ok) throw new Error(`message_${res.status}`);
-  return res.json();
 }
 
 export async function closeSupportSession(): Promise<void> {
-  let token = getAccessToken();
-  if (!token) {
-    token = await ensureSupportAccessToken();
-  }
-  if (!token) return;
   try {
-    const res = await fetch(`${fastapiBase()}/api/v1/support/session/close`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: "{}",
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      // best-effort; Django logout also purges
-      return;
-    }
+    await supportFetch("/api/auth/me/support-chats/", { method: "DELETE" });
   } catch {
     // logout must not fail because of chat
   }

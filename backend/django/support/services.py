@@ -61,7 +61,7 @@ def _message_payload(message: SupportMessage) -> dict:
 
 def publish_staff_reply(message: SupportMessage) -> None:
     """بعد از ذخیره پاسخ ادمین در پنل، به هاب FastAPI بگو تا روی WebSocket مشتری برود."""
-    base = getattr(settings, "FASTAPI_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
+    base = getattr(settings, "FASTAPI_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
     token = getattr(settings, "SUPPORT_INTERNAL_TOKEN", "") or ""
     url = f"{base}/api/v1/support/internal/broadcast"
     payload = json.dumps(_message_payload(message), ensure_ascii=False).encode("utf-8")
