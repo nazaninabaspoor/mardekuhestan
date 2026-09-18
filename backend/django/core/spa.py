@@ -88,9 +88,13 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
   .v2-unveil{min-height:0!important;height:auto!important}
   .is-home-v2 .home-v2 > div,.is-home-v2 .v2-home-lazy,.is-home-v2 .v2-home-lazy.is-ready{min-height:0!important;height:auto!important;background:transparent!important}
-  .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow:hidden!important;background:#0a5540!important}
+  .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow-x:clip!important;overflow-y:visible!important;background:#0a5540!important}
   .is-home-v2 .v2-bookcase-layout,.is-home-v2 .v2-bookcase-shell,.is-home-v2 .v2-bookcase-stage{min-height:0!important;height:auto!important}
-  .is-home-v2 .v2-section-edge--top,.is-home-v2 .v2-section-edge--bottom,.is-home-v2 .site-footer .v2-section-edge{display:none!important;height:0!important}
+  .is-home-v2 .v2-bookcase-scene--magazine{background-image:url(/brand/v2/bookcase-morning-read-daylight.png)!important;background-size:cover!important;background-position:center 42%!important;background-repeat:no-repeat!important}
+  .is-home-v2 .v2-bookcase-scene--catalog{background-image:url(/brand/v2/bookcase-morning-work-daylight.png)!important;background-size:cover!important;background-position:center 38%!important;background-repeat:no-repeat!important}
+  .is-home-v2 .v2-section-edge{display:block!important;pointer-events:none!important}
+  .is-home-v2 .v2-section-edge--top{height:96px!important;top:0!important;background:linear-gradient(to bottom,#0a5540 0%,rgb(10 85 64 / 78%) 28%,rgb(10 85 64 / 28%) 62%,transparent 100%)!important}
+  .is-home-v2 .v2-section-edge--bottom{height:88px!important;bottom:0!important;background:linear-gradient(to bottom,transparent 0%,rgb(10 85 64 / 28%) 38%,rgb(10 85 64 / 78%) 72%,#0a5540 100%)!important}
   img,video,svg{max-width:100%!important}
   .landing--v2,.is-home-v2 .site-canvas > main .landing--v2{margin-top:0!important}
   .landing--v2 .landing-v2-stage{min-height:min(68svh,560px)!important;height:min(68svh,560px)!important;aspect-ratio:auto!important}
@@ -99,10 +103,11 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .landing--v2 .landing-v2-video{object-fit:cover!important;object-position:center 42%!important;height:100%!important}
   .landing-v2-playlist-track{justify-content:center!important;width:100%!important;max-width:100%!important}
   .is-home-v2 .site-footer{position:relative!important;overflow:hidden!important;margin-top:0!important;background:#0a5540!important}
-  .is-home-v2 .footer-scene-art,.is-home-v2 .footer-scene img{margin-bottom:0!important;width:100%!important;height:min(72svh,540px)!important;object-fit:cover!important;object-position:center 32%!important}
-  .is-home-v2 .footer-body{position:absolute!important;inset:0!important;top:0!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:0!important;background:linear-gradient(180deg,transparent 0%,rgb(10 85 64 / 62%) 62%,rgb(8 50 40 / 88%) 100%)!important}
-  .is-home-v2 .footer-grid{grid-template-columns:1fr!important;gap:.55rem!important;padding:0 1rem .55rem!important;align-items:start!important}
-  .is-home-v2 .footer-col--products{display:none!important}
+  .is-home-v2 .footer-scene-art,.is-home-v2 .footer-scene img{margin-bottom:0!important;width:100%!important;height:min(78svh,640px)!important;object-fit:cover!important;object-position:76% 58%!important}
+  .is-home-v2 .footer-body{position:absolute!important;inset:auto 0 0 0!important;top:auto!important;height:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:5.5rem 0 0!important;background:linear-gradient(180deg,transparent 0%,rgb(10 85 64 / 18%) 28%,rgb(10 85 64 / 72%) 58%,rgb(8 50 40 / 94%) 100%)!important}
+  .is-home-v2 .footer-grid{display:flex!important;flex-direction:column!important;gap:.65rem!important;padding:0 1rem .7rem!important}
+  .is-home-v2 .footer-col--products,.is-home-v2 .footer-col--actions,.is-home-v2 .footer-blurb,.is-home-v2 .footer-kicker,.is-home-v2 .footer-hours,.is-home-v2 .site-footer .footer-brand-seal{display:none!important}
+  .is-home-v2 .footer-col--pages ul{display:flex!important;flex-wrap:wrap!important;gap:.2rem .9rem!important}
   .mk-ledger-topbar{display:grid!important;grid-template-columns:1fr auto!important;align-items:start!important;gap:8px 10px!important}
   .mk-ledger-titles strong,.mk-ledger-titles span{white-space:normal!important}
 }
