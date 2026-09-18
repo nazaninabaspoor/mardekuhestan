@@ -15798,6 +15798,16 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
     height: auto !important;
   }
 
+  /* Lazy wrappers kept a 90vh cream plate under magazine/catalog. Collapse them. */
+  .is-home-v2 .home-v2 > div,
+  .is-home-v2 .home-v2 > .v2-home-lazy,
+  .is-home-v2 .v2-home-lazy.is-ready {
+    min-height: 0 !important;
+    height: auto !important;
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
   .is-home-v2 .v2-bookcase-scene,
   .is-home-v2 .v2-bookcase-scene-veil {
     background-color: #0a5540 !important;

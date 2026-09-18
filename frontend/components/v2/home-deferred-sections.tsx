@@ -13,7 +13,7 @@ const greenPlaceholder = {
 
 const creamPlaceholder = {
   minHeight: "90vh",
-  background: "#F4F0E8",
+  background: "#0a5540",
 } as const;
 
 const ForHomeKitchenDeferred = dynamic(

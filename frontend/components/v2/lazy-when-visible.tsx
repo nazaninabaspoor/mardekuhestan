@@ -97,11 +97,12 @@ export function LazyWhenVisible({
   return (
     <div
       ref={ref}
-      style={{
-        minHeight: ready ? undefined : minHeight,
-        background: "#F4F0E8",
-        ...placeholderStyle,
-      }}
+      className={`v2-home-lazy${ready ? " is-ready" : ""}`}
+      style={
+        ready
+          ? { minHeight: 0, height: "auto", background: "transparent" }
+          : { minHeight, background: "#0a5540", ...placeholderStyle }
+      }
     >
       {ready ? children : null}
     </div>

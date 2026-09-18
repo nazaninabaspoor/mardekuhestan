@@ -87,6 +87,7 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .kui-plate-wrap{transform:none!important}
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
   .v2-unveil{min-height:0!important;height:auto!important}
+  .is-home-v2 .home-v2 > div,.is-home-v2 .v2-home-lazy,.is-home-v2 .v2-home-lazy.is-ready{min-height:0!important;height:auto!important;background:transparent!important}
   .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow:hidden!important;background:#0a5540!important}
   .is-home-v2 .v2-bookcase-layout,.is-home-v2 .v2-bookcase-shell,.is-home-v2 .v2-bookcase-stage{min-height:0!important;height:auto!important}
   .is-home-v2 .v2-section-edge--top,.is-home-v2 .v2-section-edge--bottom,.is-home-v2 .site-footer .v2-section-edge{display:none!important;height:0!important}
