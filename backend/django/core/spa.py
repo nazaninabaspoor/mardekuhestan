@@ -66,15 +66,17 @@ _CONTENT_TYPES = {
 _CRITICAL_CSS = """<style id="mk-ship-fix">
 html,body,.site-canvas,main,.home-v2,.landing--v2{max-width:100%!important;overflow-x:clip!important}
 .landing--v2,.landing-v2-stage,.landing-v2-media{overflow:hidden!important;max-width:100%!important}
-.landing--v2 .landing-v2-video{width:100%!important;height:100%!important;max-width:100%!important;object-fit:cover!important;inset:0!important}
+.landing--v2 .landing-v2-video{width:100%!important;height:100%!important;max-width:100%!important;inset:0!important}
 html:has(.mk-mag),html:has(.mk-mag) body,html:has(.mk-mag) .site-canvas{background:#005B48!important}
 html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{background:#F4F0E8!important}
 .site-canvas:has(.mk-mag)::before,.site-canvas:has(.mk-read)::before{display:none!important;content:none!important;background:none!important}
 .mk-mag{background:#005B48!important}
 .mk-mag:has(.mk-read){background:#F4F0E8!important;color:#1D1D1B!important}
-.v2-bookcase--magazine,.v2-bookcase--magazine .v2-bookcase-scene{background:#005B48!important}
-.v2-bookcase--magazine .v2-bookcase-scene-img{display:none!important}
-.v2-bookcase--magazine .v2-bookcase-scene-veil{background:transparent!important}
+.v2-bookcase--magazine .v2-bookcase-scene-img{display:block!important;object-fit:cover!important}
+.v2-bookcase--magazine .v2-bookcase-scene-veil{background:linear-gradient(180deg,rgb(0 45 36 / 38%) 0%,rgb(0 45 36 / 10%) 26%,rgb(0 45 36 / 6%) 58%,rgb(0 45 36 / 42%) 100%)!important}
+.profile-coverflow-title,.profile-coverflow-sub,.profile-scene-kicker{position:relative;z-index:8}
+.profile-coverflow-sub{margin-bottom:clamp(28px,5vh,64px)}
+.profile-coverflow-stage{padding-top:clamp(36px,6vh,88px)}
 @media (max-width:980px){
   .site-header--v2 .v2-primary-nav{display:none!important}
   .site-header--v2 .v2-menu-toggle{display:flex!important}
@@ -84,10 +86,16 @@ html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{backg
   .is-home-v2 .kui-plate-wrap{transform:none!important}
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
   .is-home-v2 .kui-dock{max-width:100%!important}
-  .is-home-v2 .v2-bookcase{min-height:0!important;height:auto!important;padding-block:2.2rem!important}
+  .is-home-v2 .v2-bookcase{min-height:0!important;height:auto!important;padding-block:1.5rem .85rem!important;margin-bottom:0!important}
+  .is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{overflow:hidden!important;margin-top:0!important}
+  .is-home-v2 .v2-section-edge--top,.is-home-v2 .v2-section-edge--bottom{height:36px!important}
   img,video,svg{max-width:100%!important}
-  .landing--v2 .landing-v2-video{height:100%!important}
+  .landing--v2 .landing-v2-stage{min-height:0!important;height:auto!important;aspect-ratio:16/9}
+  .landing--v2 .landing-v2-shell{min-height:0!important;padding-bottom:.85rem!important}
+  .landing--v2 .landing-v2-video{object-fit:contain!important;object-position:center center!important;height:100%!important}
   .landing-v2-playlist-track{justify-content:center!important;width:100%!important;max-width:100%!important}
+  .is-home-v2 .footer-scene-art,.is-home-v2 .footer-scene img{margin-bottom:0!important}
+  .is-home-v2 .footer-body{position:relative!important;inset:auto!important;top:auto!important;padding:.75rem 0 .35rem!important}
 }
 </style>"""
 
@@ -143,11 +151,17 @@ def _landing_html() -> HttpResponse:
     )
 
 
+_SHIP_FIX_RE = re.compile(
+    rb'<style id="mk-ship-fix">.*?</style>',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
 def _prepare_html(data: bytes) -> bytes:
     data = _PRELOAD_VIDEO_RE.sub(b"", data)
-    if b"mk-ship-fix" in data:
-        return data
     css = _CRITICAL_CSS.encode("utf-8")
+    if _SHIP_FIX_RE.search(data):
+        return _SHIP_FIX_RE.sub(css, data, count=1)
     lower = data.lower()
     idx = lower.find(b"</head>")
     if idx == -1:

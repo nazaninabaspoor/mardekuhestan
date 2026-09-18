@@ -271,33 +271,40 @@
 }
 
 @media (max-width: 900px) {
-  .slots {
-    position: relative;
-    right: auto;
-    left: auto;
-    bottom: auto;
-    width: min(100% - 24px, 640px);
-    margin: 0 auto 1.5rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .section {
+    min-height: max(640px, calc(100svh - var(--v2-header-h, 72px)));
+    height: auto;
+    padding-bottom: 0;
+    overflow: hidden;
   }
 
-  .slot:nth-child(4),
-  .slot:nth-child(5) {
-    display: none;
+  .stage {
+    position: absolute;
+    z-index: 2;
+    top: auto;
+    right: 0;
+    bottom: 2%;
+    left: 0;
+    height: 54%;
+    min-height: 0;
   }
 
   .copy {
     padding-top: 4.2rem;
   }
 
-  .section {
-    min-height: 0;
-    height: auto;
-    padding-bottom: 1.5rem;
+  .slots {
+    position: absolute;
+    right: 5%;
+    left: 5%;
+    bottom: 10%;
+    width: auto;
+    margin: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .stage {
-    position: relative;
-    min-height: min(72svh, 620px);
+  .slot:nth-child(4),
+  .slot:nth-child(5) {
+    display: none;
   }
 }

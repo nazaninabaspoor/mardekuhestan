@@ -2,7 +2,7 @@
 
 .is-home-v2,
 .is-home-v2 body {
-  background: #f4f0e8 !important;
+  background: #0a5540 !important;
 }
 
 /* Gate hero until cinematic fling into kitchen */
@@ -120,7 +120,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .home-v2 {
-  background: #f4f0e8;
+  background: #0a5540;
   padding: 0;
   margin: 0;
 }
@@ -224,7 +224,7 @@ html.is-v2-bell-cursor textarea {
   margin-top: 0;
   padding: 0;
   border: 0;
-  background: #eef5f1 !important;
+  background: #0a5540 !important;
 }
 
 /* Footer — full scenic plate; only the lowest hills trimmed (no zoom, no tiny box) */
@@ -234,7 +234,7 @@ html.is-v2-bell-cursor textarea {
   line-height: 0;
   width: 100%;
   overflow: hidden;
-  background: #dceee6;
+  background: #0a5540;
 }
 
 .is-home-v2 .footer-scene-art,
@@ -7002,21 +7002,30 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene-img {
-  display: none !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center 42% !important;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene-veil {
-  background: transparent !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(0 45 36 / 38%) 0%,
+      rgb(0 45 36 / 10%) 26%,
+      rgb(0 45 36 / 6%) 58%,
+      rgb(0 45 36 / 42%) 100%
+    ) !important;
 }
 
 .is-home-v2 .v2-bookcase--catalog {
-  background: #eef5f1 !important;
-  color: #0a5540;
+  background: #0a5540 !important;
+  color: #f4f0e8;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene,
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-scene {
-  background: #dceee6;
+  background: #0a5540;
 }
 
 .is-home-v2 .v2-bookcase-scene--magazine .v2-bookcase-scene-veil,
@@ -7065,34 +7074,36 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-title {
-  color: #0a5540;
-  text-shadow: none;
+  color: #f4f0e8;
+  text-shadow:
+    0 1px 0 rgb(0 0 0 / 35%),
+    0 12px 36px rgb(0 0 0 / 55%);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-lead {
-  color: color-mix(in srgb, #0a5540 78%, #1d1d1b);
-  text-shadow: none;
+  color: rgb(244 240 232 / 86%);
+  text-shadow: 0 8px 24px rgb(0 0 0 / 40%);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab {
-  background: rgb(10 85 64 / 8%);
-  color: #0a5540;
-  box-shadow: inset 0 0 0 1px rgb(10 85 64 / 16%);
+  background: rgb(244 240 232 / 16%);
+  color: #f4f0e8;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 28%);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab:hover,
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab:focus-visible {
-  background: rgb(10 85 64 / 14%);
-  color: #0a5540;
-  box-shadow: inset 0 0 0 1px rgb(10 85 64 / 28%);
+  background: rgb(244 240 232 / 24%);
+  color: #f4f0e8;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 40%);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-tab.is-active {
-  background: #0a5540;
-  color: #f4f0e8;
+  background: #f4f0e8;
+  color: #0a5540;
   box-shadow:
-    inset 0 0 0 1px rgb(10 85 64 / 40%),
-    0 8px 18px rgb(10 85 64 / 18%);
+    inset 0 0 0 1px rgb(244 240 232 / 50%),
+    0 8px 18px rgb(0 20 16 / 18%);
 }
 
 .is-home-v2 .v2-bookcase--catalog .v2-bookcase-nav {
@@ -10875,7 +10886,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 
 .profile-page-wrapper {
   --profile-header-h: 122px;
-  --table-rest: 26vh;
+  --table-rest: 16vh;
   position: relative;
   z-index: 1;
   min-height: 100dvh;
@@ -10962,6 +10973,9 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 .profile-scene-kicker {
+  position: relative;
+  z-index: 8;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10971,6 +10985,9 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 .profile-coverflow-title {
+  position: relative;
+  z-index: 8;
+  flex: 0 0 auto;
   margin: 8px 16px 0;
   font-size: clamp(18px, 2.4vw, 30px);
   font-weight: 900;
@@ -10985,7 +11002,11 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 }
 
 .profile-coverflow-sub {
+  position: relative;
+  z-index: 8;
+  flex: 0 0 auto;
   margin: 6px auto 0;
+  margin-bottom: clamp(28px, 5vh, 64px);
   max-width: min(42ch, calc(100% - 40px));
   padding: 0 20px;
   font-size: 13px;
@@ -11029,6 +11050,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
 
 .profile-coverflow-stage {
   position: relative;
+  z-index: 1;
   flex: 1;
   width: 100%;
   margin: 0 auto;
@@ -11038,6 +11060,7 @@ html.is-profile-scene:not(.is-profile-workspace) .site-footer {
   align-items: flex-end;
   justify-content: center;
   touch-action: pan-y;
+  padding-top: clamp(36px, 6vh, 88px);
   padding-bottom: var(--table-rest);
   box-sizing: border-box;
 }
@@ -15699,6 +15722,124 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
 
   .is-home-v2 .v2-bookcase {
     min-height: 0 !important;
-    padding-block: 2.2rem !important;
+    height: auto !important;
+    padding-block: 1.6rem 1.1rem !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Screenshot pass: mobile hero, magazine plate, cream gaps, footer, profile cards */
+@media (max-width: 980px) {
+  .landing--v2 .landing-v2-stage {
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+    max-height: none !important;
+    background: #005040 !important;
+  }
+
+  .landing--v2 .landing-v2-shell {
+    min-height: 0 !important;
+    height: auto !important;
+    align-items: flex-end !important;
+    padding-top: 78px !important;
+    padding-bottom: 0.85rem !important;
+  }
+
+  .landing--v2 .landing-v2-copy {
+    padding-block: 12px 8px !important;
+  }
+
+  .landing--v2 .landing-v2-video {
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #005040 !important;
+  }
+
+  .is-home-v2 .v2-bookcase--magazine,
+  .is-home-v2 .v2-bookcase--catalog {
+    min-height: 0 !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-block: 1.5rem 0.85rem !important;
+    overflow: hidden !important;
+  }
+
+  .is-home-v2 .v2-bookcase--magazine {
+    background: #005b48 !important;
+  }
+
+  .is-home-v2 .v2-bookcase--catalog {
+    background: #0a5540 !important;
+  }
+
+  .is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene-img {
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center 40% !important;
+  }
+
+  .is-home-v2 .v2-section-edge--top,
+  .is-home-v2 .v2-section-edge--bottom {
+    height: 36px !important;
+  }
+
+  .is-home-v2 .site-footer {
+    margin-top: 0 !important;
+    background: #0a5540 !important;
+  }
+
+  .is-home-v2 .footer-scene {
+    overflow: visible !important;
+    background: #0a5540 !important;
+  }
+
+  .is-home-v2 .footer-scene-art,
+  .is-home-v2 .footer-scene img {
+    margin-bottom: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .is-home-v2 .footer-body {
+    position: relative !important;
+    inset: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    display: block !important;
+    padding: 0.75rem 0 0.35rem !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgb(10 85 64 / 8%) 0%,
+        rgb(10 85 64 / 55%) 42%,
+        rgb(10 85 64 / 88%) 100%
+      ) !important;
+  }
+}
+
+@media (min-width: 981px) {
+  .profile-coverflow-title,
+  .profile-coverflow-sub,
+  .profile-scene-kicker {
+    position: relative;
+    z-index: 8;
+  }
+
+  .profile-coverflow-sub {
+    margin-bottom: clamp(40px, 6.5vh, 88px);
+  }
+
+  .profile-coverflow-stage {
+    padding-top: clamp(48px, 7vh, 96px);
+  }
+
+  .profile-coverflow-track {
+    height: clamp(240px, 32vh, 340px);
+  }
+
+  .coverflow-slot {
+    height: clamp(220px, 19.5vw, 286px);
   }
 }
