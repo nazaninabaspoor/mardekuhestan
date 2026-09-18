@@ -1,13 +1,19 @@
-# فقط این یک خط را در:
-# تنظیمات → «دستور پیش از شروع»
-# بگذار (اگر قبلاً gunicorn گذاشتی پاکش کن و فقط این را بگذار):
-
+# ============================================
+# Runflare — دستورات درست (مهم)
+# ============================================
+#
+# ۱) دستور اصلی / Start / Command  ← این را بگذار (ترجیحی):
+bash /app/deploy/runflare/start.sh
+#
+# ۲) دستور پیش از شروع / Pre-start  ← اختیاری (اگر ۱ را گذاشتی):
 bash /app/deploy/runflare/prestart.sh
-
-# ---------------------------------------------------------------
-# اگر جایی «دستور اصلی / Start / Command» جدا دیدی (نه پیش از شروع):
-# باید ASGI باشد تا چت پشتیبانی و /api/v1 کار کند:
-gunicorn koohestan.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 2 --timeout 120
-
-# در «تغییر اپلیکیشن» اگر فیلد نام پروژه / ماژول بود:
+#
+# ۳) فیلد ماژول اپلیکیشن اگر خالی بود بگذار:
 koohestan.asgi
+#
+# --------------------------------------------
+# اگر فقط prestart داری و Start جدا نیست، همان prestart کافی است
+# ولی فیلد ماژول را خالی نگذار — حتماً koohestan.asgi
+#
+# دستور gunicorn دستی (اگر لازم شد):
+gunicorn koohestan.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 2 --timeout 120

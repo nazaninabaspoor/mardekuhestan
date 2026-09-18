@@ -8,7 +8,9 @@ from django.conf import settings
 from django.http import FileResponse, HttpResponse, HttpResponseNotFound
 from django.views.decorators.http import require_GET
 
-# پسوندهایی که هرگز نباید با index.html جایگزین شوند (فونت/ویدیو/استاتیک)
+# زیر ASGI نباید با FileResponse همگام کند شود (کندی / قطع nginx → 502)
+_INLINE_MAX_BYTES = 4 * 1024 * 1024
+
 _ASSET_SUFFIXES = {
     ".woff",
     ".woff2",
@@ -104,12 +106,28 @@ def _landing_html() -> HttpResponse:
     )
 
 
-def _file_response(path: Path) -> FileResponse:
-    content_type = _CONTENT_TYPES.get(path.suffix.lower())
-    response = FileResponse(path.open("rb"), content_type=content_type)
+def _file_response(path: Path) -> HttpResponse:
     suffix = path.suffix.lower()
-    if suffix in {".woff", ".woff2", ".ttf", ".otf", ".js", ".css", ".mp4", ".webm"}:
+    content_type = _CONTENT_TYPES.get(suffix)
+    size = path.stat().st_size
+
+    # HTML/CSS/JS/فونت/عکس‌های کوچک را یک‌جا بخوان — زیر ASGI پایدار و سریع
+    if size <= _INLINE_MAX_BYTES and suffix not in {".mp4", ".webm", ".mov"}:
+        response: HttpResponse = HttpResponse(path.read_bytes(), content_type=content_type)
+        response["Content-Length"] = str(size)
+    else:
+        response = FileResponse(path.open("rb"), content_type=content_type)
+
+    if suffix in {".woff", ".woff2", ".ttf", ".otf", ".js", ".css"}:
         response["Cache-Control"] = "public, max-age=31536000, immutable"
+    elif suffix in {".html", ".txt"}:
+        response["Cache-Control"] = "public, max-age=60"
+    elif suffix in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico", ".avif"}:
+        response["Cache-Control"] = "public, max-age=86400"
+    elif suffix in {".mp4", ".webm", ".mov"}:
+        response["Cache-Control"] = "public, max-age=86400"
+        response["Accept-Ranges"] = "bytes"
+
     return response
 
 
