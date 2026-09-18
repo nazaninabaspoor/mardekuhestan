@@ -1138,6 +1138,8 @@ function readWatchList() {
 
 function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const { user, openLoginModal } = useAuth();
+  const { size } = useThree();
+  const mobile = size.width < 760;
   const [talk, setTalk] = useState({ open: false, slot: 0 });
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const last = useRef("");
@@ -1159,10 +1161,13 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
   const saved = Boolean(product && watched[product.id]);
   const cloudRight = talk.slot === 0;
+  const htmlPos: [number, number, number] = mobile
+    ? [0.04, MAN_HEAD_Y + 0.48, 0.18]
+    : [cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18];
 
   return (
     <Html
-      position={[cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18]}
+      position={htmlPos}
       zIndexRange={[55, 16]}
       style={{
         pointerEvents: talk.open ? "auto" : "none",
@@ -1400,13 +1405,13 @@ function FitAllColumns() {
     if (!("fov" in perspective) || !size.width || !size.height) return;
     const mobile = size.width < 760;
     if (mobile) {
-      perspective.position.set(0, 1.05, UNVEIL_CAM_Z);
-      perspective.fov = 38;
-      perspective.lookAt(0, 0.42, UNVEIL_PEDESTAL_Z);
+      perspective.position.set(0, 1.18, UNVEIL_CAM_Z);
+      perspective.fov = 34;
+      perspective.lookAt(0, 0.18, UNVEIL_PEDESTAL_Z);
     } else {
-      perspective.position.set(0, 1.36, UNVEIL_CAM_Z);
+      perspective.position.set(0, 1.82, UNVEIL_CAM_Z);
       perspective.fov = 40;
-      perspective.lookAt(0, 0.26, UNVEIL_PEDESTAL_Z);
+      perspective.lookAt(0, 0.06, UNVEIL_PEDESTAL_Z);
     }
     perspective.updateProjectionMatrix();
   }, [camera, size.height, size.width]);
@@ -1417,7 +1422,7 @@ function StageRig({ children }: { children: ReactNode }) {
   const { size } = useThree();
   const mobile = size.width < 760;
   return (
-    <group scale={mobile ? [0.78, 0.9, 0.9] : 1} position={mobile ? [0, -0.1, 0.2] : [0, 0, 0]}>
+    <group scale={mobile ? 1.08 : 1.04} position={mobile ? [0, -0.06, 0.12] : [0, -0.18, 0.08]}>
       {children}
     </group>
   );
@@ -1439,7 +1444,7 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.36, UNVEIL_CAM_Z]} fov={40} near={0.1} far={48} />
+      <PerspectiveCamera makeDefault position={[0, 1.82, UNVEIL_CAM_Z]} fov={40} near={0.1} far={48} />
       <FitAllColumns />
       <Hall />
       <StageRig>

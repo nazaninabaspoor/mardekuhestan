@@ -1902,6 +1902,53 @@
 }
 
 @media (max-width: 600px) {
+  .mk-ledger-topbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 8px 10px;
+  }
+
+  .mk-ledger-brand {
+    grid-column: 1 / 2;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .mk-ledger-titles {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .mk-ledger-titles strong {
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  .mk-ledger-titles span {
+    font-size: 10px;
+    line-height: 1.45;
+    white-space: normal;
+  }
+
+  .mk-ledger-live {
+    flex: 1 1 100%;
+    width: max-content;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .mk-ledger-close {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    flex-shrink: 0;
+    padding: 6px 10px;
+  }
+
   .mk-shenasnameh-dual-row,
   .mk-mail-row {
     grid-template-columns: 1fr;

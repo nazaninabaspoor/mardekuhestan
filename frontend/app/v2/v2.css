@@ -103,7 +103,7 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .site-canvas {
-  background: #f4f0e8 !important;
+  background: #0a5540 !important;
 }
 
 .is-home-v2 .site-canvas::before {
@@ -15834,16 +15834,37 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
       ) !important;
   }
 
+  .is-home-v2 .v2-bookcase-layout,
+  .is-home-v2 .v2-bookcase.is-spread .v2-bookcase-layout {
+    min-height: 0 !important;
+    gap: 0.9rem !important;
+  }
+
+  .is-home-v2 .footer-col--products {
+    display: none !important;
+  }
+
   .is-home-v2 .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.55rem !important;
+    align-items: start !important;
+    padding: 0 1rem 0.55rem !important;
+  }
+
+  .is-home-v2 .footer-col--pages ul {
+    display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 0.35rem 0.8rem !important;
-    align-items: end !important;
-    padding: 0 0.9rem 0.45rem !important;
+    gap: 0.2rem 0.8rem !important;
   }
 
   .is-home-v2 .footer-col--contact,
   .is-home-v2 .footer-col--actions {
     grid-column: 1 / -1 !important;
+  }
+
+  .is-home-v2 .footer-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
   }
 
   .is-home-v2 .footer-company {

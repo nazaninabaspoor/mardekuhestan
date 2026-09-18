@@ -1,5 +1,5 @@
 export const UNVEIL_SLOT_X = [-3.12, -1.56, 0, 1.56, 3.12] as const;
-export const UNVEIL_CAM_Z = 7.4;
+export const UNVEIL_CAM_Z = 6.9;
 export const UNVEIL_MAN_Z = -0.88;
 export const UNVEIL_PEDESTAL_Z = 0.92;
 

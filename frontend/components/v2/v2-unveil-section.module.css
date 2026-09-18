@@ -272,32 +272,64 @@
 
 @media (max-width: 900px) {
   .section {
-    min-height: max(640px, calc(100svh - var(--v2-header-h, 72px)));
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     height: auto;
     padding-bottom: 0;
     overflow: hidden;
+    background: #0a5540;
   }
 
-  .stage {
-    position: absolute;
-    z-index: 2;
+  .atmosphere,
+  .depth,
+  .fog {
     top: auto;
     right: 0;
     bottom: 0;
     left: 0;
-    height: 40%;
+    height: min(58vw, 360px);
+  }
+
+  .atmosphere {
+    background-position: center 72%;
+    background-size: cover;
+  }
+
+  .stage {
+    position: relative;
+    z-index: 2;
+    inset: auto;
+    width: 100%;
+    height: min(58vw, 360px);
     min-height: 0;
+    flex: 0 0 auto;
+    order: 2;
   }
 
   .copy {
-    padding-top: 4.2rem;
+    position: relative;
+    z-index: 4;
+    order: 1;
+    width: min(720px, calc(100% - 32px));
+    padding-top: 1.6rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .copy h2 {
+    font-size: clamp(1.45rem, 6.2vw, 1.9rem);
+  }
+
+  .copy span {
+    font-size: 0.92rem;
+    margin-top: 8px;
   }
 
   .slots {
     position: absolute;
     right: 6%;
     left: 6%;
-    bottom: 8%;
+    bottom: 7%;
     width: auto;
     margin: 0;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -306,5 +338,16 @@
   .slot:nth-child(4),
   .slot:nth-child(5) {
     display: none;
+  }
+
+  .thoughtWest,
+  .thoughtEast {
+    flex-direction: column;
+    transform: translate(-50%, -108%);
+  }
+
+  .thoughtCloud {
+    width: min(148px, 42vw);
+    padding: 9px 11px 8px;
   }
 }
