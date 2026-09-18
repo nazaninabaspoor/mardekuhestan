@@ -150,11 +150,15 @@ def _looks_like_asset(rel: str) -> bool:
     return suffix in _ASSET_SUFFIXES
 
 
+def _looks_like_api(rel: str) -> bool:
+    return rel == "api" or rel.startswith("api/")
+
+
 @require_GET
 def spa_serve(request, path: str = ""):
     """
     فایل‌های بیلد فرانت را سرو می‌کند.
-    برای مسیرهای HTML بدون فایل، fallback به index؛ برای assetها هرگز HTML برنگردان.
+    برای مسیرهای HTML بدون فایل، fallback به index؛ برای assetها و /api هرگز HTML برنگردان.
     """
     rel = (path or "").lstrip("/")
     hits: list[Path] = []
@@ -170,8 +174,8 @@ def spa_serve(request, path: str = ""):
         best = max(hits, key=lambda p: p.stat().st_size if p.is_file() else 0)
         return _file_response(best)
 
-    if _looks_like_asset(rel):
-        return HttpResponseNotFound("asset not found")
+    if _looks_like_asset(rel) or _looks_like_api(rel):
+        return HttpResponseNotFound("not found")
 
     for root in _candidate_roots():
         if not root.is_dir():

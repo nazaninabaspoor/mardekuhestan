@@ -26,6 +26,31 @@
   --hero-shadow-hover: 0 12px 30px rgb(0 45 36 / 10%);
 }
 
+html {
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+.site-canvas {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 /* Interactive journey on the original diorama artwork */
 .diorama-journey { position:relative; width:100%; overflow:visible; padding:36px 0 110px; background:#54764f; }
 .diorama-journey__heading { position:absolute; top:22px; right:clamp(22px,5vw,76px); z-index:20; display:flex; align-items:center; gap:18px; color:#005b48; }

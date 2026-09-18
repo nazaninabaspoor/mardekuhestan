@@ -14,7 +14,13 @@ export type AiQuota = {
 };
 
 function fastapiBase(): string {
-  const raw = process.env.NEXT_PUBLIC_FASTAPI_BASE_URL?.trim() || "http://127.0.0.1:8001";
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin.replace(/\/$/, "");
+  }
+  const raw =
+    process.env.NEXT_PUBLIC_FASTAPI_BASE_URL?.trim() ||
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
+    "";
   return raw.replace(/\/$/, "");
 }
 

@@ -342,3 +342,23 @@
     height: min(70svh, 540px);
   }
 }
+
+@media (max-width: 640px) {
+  .root {
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: max(10px, env(safe-area-inset-left));
+    align-items: stretch;
+  }
+
+  .panel {
+    width: 100%;
+    max-width: none;
+    height: min(72svh, 560px);
+    border-radius: 22px 22px 14px 14px;
+  }
+
+  .fab {
+    align-self: flex-end;
+  }
+}

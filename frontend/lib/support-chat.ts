@@ -20,9 +20,14 @@ export type SupportConversation = {
 };
 
 function fastapiBase(): string {
+  // در مرورگر همیشه همان دامنه سایت — استاتیک اکسپورت نباید به 127.0.0.1 برود
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin.replace(/\/$/, "");
+  }
   const raw =
     process.env.NEXT_PUBLIC_FASTAPI_BASE_URL?.trim() ||
-    "http://127.0.0.1:8001";
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
+    "";
   return raw.replace(/\/$/, "");
 }
 
