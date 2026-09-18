@@ -6989,7 +6989,23 @@ html.is-v2-bell-cursor textarea {
 }
 
 /* Magazine + catalog — daylight plates, brand #0a5540 (not hacker-dark) */
-.is-home-v2 .v2-bookcase--magazine,
+.is-home-v2 .v2-bookcase--magazine {
+  background: #005b48 !important;
+  color: #f4f0e8;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene {
+  background: #005b48 !important;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene-img {
+  display: none !important;
+}
+
+.is-home-v2 .v2-bookcase--magazine .v2-bookcase-scene-veil {
+  background: transparent !important;
+}
+
 .is-home-v2 .v2-bookcase--catalog {
   background: #eef5f1 !important;
   color: #0a5540;
@@ -7112,9 +7128,9 @@ html.is-v2-bell-cursor textarea {
   box-shadow: none;
 }
 
-/* Magazine chrome — cream on green plate (unchanged feel) */
+/* Magazine chrome — cream on forest green */
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-kicker {
-  color: color-mix(in srgb, #0a5540 72%, #5d686e);
+  color: rgb(244 240 232 / 78%);
   text-shadow: none;
 }
 
@@ -7122,13 +7138,13 @@ html.is-v2-bell-cursor textarea {
   background: linear-gradient(
       135deg,
       transparent 49%,
-      #0a5540 49.5% 50.5%,
+      #f4f0e8 49.5% 50.5%,
       transparent 51%
     ),
     linear-gradient(
       225deg,
       transparent 49%,
-      #0a5540 49.5% 50.5%,
+      #f4f0e8 49.5% 50.5%,
       transparent 51%
     );
   background-size: 50% 100%, 50% 100%;
@@ -7139,65 +7155,65 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-title {
-  color: #0a5540;
+  color: #f4f0e8;
   text-shadow: none;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-lead {
-  color: color-mix(in srgb, #0a5540 78%, #1d1d1b);
+  color: rgb(244 240 232 / 82%);
   text-shadow: none;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab {
-  background: rgb(10 85 64 / 8%);
-  color: #0a5540;
-  box-shadow: inset 0 0 0 1px rgb(10 85 64 / 16%);
+  background: rgb(244 240 232 / 10%);
+  color: #f4f0e8;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 18%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab:hover,
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab:focus-visible {
-  background: rgb(10 85 64 / 14%);
-  color: #0a5540;
-  box-shadow: inset 0 0 0 1px rgb(10 85 64 / 28%);
+  background: rgb(244 240 232 / 16%);
+  color: #f4f0e8;
+  box-shadow: inset 0 0 0 1px rgb(244 240 232 / 28%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-tab.is-active {
-  background: #0a5540;
-  color: #f4f0e8;
+  background: #f4f0e8;
+  color: #005b48;
   box-shadow:
-    inset 0 0 0 1px rgb(10 85 64 / 40%),
-    0 8px 18px rgb(10 85 64 / 18%);
+    inset 0 0 0 1px rgb(244 240 232 / 40%),
+    0 8px 18px rgb(0 20 16 / 18%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav {
-  background: #0a5540;
-  color: #f4f0e8;
+  background: #f4f0e8;
+  color: #005b48;
   box-shadow:
     inset 0 0 0 1px rgb(244 240 232 / 12%),
-    0 10px 22px rgb(10 85 64 / 22%);
+    0 10px 22px rgb(0 20 16 / 22%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:hover:not(:disabled),
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-nav:focus-visible:not(:disabled) {
-  background: color-mix(in srgb, #0a5540 86%, #000);
-  color: #f4f0e8;
+  background: #fff;
+  color: #005b48;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-foot {
-  color: color-mix(in srgb, #0a5540 62%, #5d686e);
+  color: rgb(244 240 232 / 72%);
   text-shadow: none;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-folio {
-  color: #0a5540;
+  color: #f4f0e8;
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-folio em {
-  color: color-mix(in srgb, #0a5540 48%, #5d686e);
+  color: rgb(244 240 232 / 62%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-progress {
-  background: rgb(10 85 64 / 14%);
+  background: rgb(244 240 232 / 18%);
 }
 
 .is-home-v2 .v2-bookcase--magazine .v2-bookcase-progress > span {
@@ -15605,5 +15621,76 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
   .diorama-journey {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Ship containment — last so later nav-pill rules cannot reopen overflow */
+@media (max-width: 980px) {
+  html,
+  body,
+  .site-canvas,
+  main,
+  .home-v2,
+  .landing--v2,
+  .landing-v2-stage,
+  .landing-v2-media {
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  .landing--v2,
+  .landing-v2-stage {
+    overflow: hidden !important;
+  }
+
+  .site-header--v2 .v2-primary-nav {
+    display: none !important;
+  }
+
+  .site-header--v2 .v2-menu-toggle {
+    display: flex !important;
+  }
+
+  .site-header--v2 .v2-menubar,
+  .site-header--v2 .v2-header-plate,
+  .site-header--v2 .v2-header-body {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .is-home-v2 .for-home--v2.kitchen-ui {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .is-home-v2 .kui-stage {
+    width: calc(100% - 1.25rem) !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .is-home-v2 .kui-plate-wrap {
+    transform: none !important;
+    max-width: 100% !important;
+  }
+
+  .is-home-v2 .kui-plate {
+    overflow: hidden !important;
+    width: min(72vw, 260px) !important;
+    max-width: 100% !important;
+  }
+
+  .is-home-v2 .kui-dock {
+    max-width: calc(100% - 16px) !important;
+    left: 8px !important;
+    right: 8px !important;
+  }
+
+  .is-home-v2 .v2-bookcase {
+    min-height: 0 !important;
+    padding-block: 2.2rem !important;
   }
 }

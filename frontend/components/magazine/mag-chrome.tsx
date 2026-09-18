@@ -4,8 +4,12 @@ import { useEffect } from "react";
 
 export function MagRouteClass() {
   useEffect(() => {
-    document.documentElement.classList.add("is-magazine-route");
-    return () => document.documentElement.classList.remove("is-magazine-route");
+    const root = document.documentElement;
+    root.classList.add("is-magazine-route");
+    root.classList.remove("is-home-v2");
+    return () => {
+      root.classList.remove("is-magazine-route");
+    };
   }, []);
   return null;
 }

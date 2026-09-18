@@ -1,7 +1,18 @@
 html.is-magazine-route,
 html.is-magazine-route body,
-html.is-magazine-route .site-canvas {
+html.is-magazine-route .site-canvas,
+html:has(.mk-mag),
+html:has(.mk-mag) body,
+html:has(.mk-mag) .site-canvas {
   background: #005B48 !important;
+}
+
+html.is-magazine-route .site-canvas::before,
+html:has(.mk-mag) .site-canvas::before,
+html:has(.mk-read) .site-canvas::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
 }
 
 .mk-mag {
@@ -49,7 +60,10 @@ html.is-magazine-route .site-canvas {
 
 html.is-magazine-route:has(.mk-read),
 html.is-magazine-route:has(.mk-read) body,
-html.is-magazine-route:has(.mk-read) .site-canvas {
+html.is-magazine-route:has(.mk-read) .site-canvas,
+html:has(.mk-read),
+html:has(.mk-read) body,
+html:has(.mk-read) .site-canvas {
   background: #F4F0E8 !important;
 }
 

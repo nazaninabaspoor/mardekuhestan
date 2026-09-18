@@ -8676,3 +8676,18 @@ body:has(.preview-shell) .site-canvas {
   background: color-mix(in srgb, var(--green) 88%, var(--white));
 }
 
+html,
+body,
+.site-canvas,
+main {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+

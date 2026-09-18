@@ -13,6 +13,40 @@ export DJANGO_WSGI_MODULE="${DJANGO_WSGI_MODULE:-koohestan.asgi}"
 export WSGI_MODULE="${WSGI_MODULE:-koohestan.asgi}"
 export APP_MODULE="${APP_MODULE:-koohestan.asgi}"
 
+# ۱) اول wrapper را بگذار تا gunicorn خالی boot نشود — کپی فرانت بعداً
+BIN="/usr/local/bin/gunicorn"
+REAL="/usr/local/bin/gunicorn.real"
+if [ -e "$BIN" ]; then
+  if [ ! -f "$REAL" ]; then
+    cp -f "$BIN" "$REAL" 2>/dev/null || mv -f "$BIN" "$REAL"
+  fi
+  cat > "$BIN" << 'WRAP'
+#!/usr/bin/env bash
+export PYTHONPATH="/app/backend/django:/app/backend/fastapi:/app:${PYTHONPATH:-}"
+export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-core.settings}"
+DEFAULT_APP="koohestan.asgi:application"
+DEFAULT_WORKER="uvicorn.workers.UvicornWorker"
+ARGS=()
+HAS_APP=0
+SKIP=0
+for a in "$@"; do
+  if [ "$SKIP" = "1" ]; then SKIP=0; continue; fi
+  case "$a" in
+    -k|--worker-class|-w|--workers|--timeout) SKIP=1; continue ;;
+    ""|":application"|".wsgi"*|".asgi"*) ARGS+=("$DEFAULT_APP"); HAS_APP=1 ;;
+    *wsgi*|*asgi*|*:application) ARGS+=("$DEFAULT_APP"); HAS_APP=1 ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+[ "$HAS_APP" = "0" ] && ARGS+=("$DEFAULT_APP")
+ARGS+=("-k" "$DEFAULT_WORKER" "-w" "2" "--timeout" "120")
+echo "[mk-gunicorn] ${ARGS[*]}" >&2
+exec /usr/local/bin/gunicorn.real "${ARGS[@]}"
+WRAP
+  chmod +x "$BIN"
+  echo "[mk-prestart] gunicorn wrapper ready"
+fi
+
 DJ="${ROOT}/backend/django"
 if [ -d "$DJ/core" ]; then
   for d in accounts common content core inventory logistics orders payments product sec support notifications; do
@@ -34,38 +68,4 @@ if [ -f "$REPO_WEB/index.html" ]; then
   fi
 fi
 
-# اگر پلتفرم هنوز gunicorn خودش را صدا زد، app خالی را نجات بده
-BIN="/usr/local/bin/gunicorn"
-REAL="/usr/local/bin/gunicorn.real"
-if [ -e "$BIN" ]; then
-  if [ ! -f "$REAL" ]; then
-    cp -f "$BIN" "$REAL" 2>/dev/null || mv -f "$BIN" "$REAL"
-  fi
-  cat > "$BIN" << 'WRAP'
-#!/usr/bin/env bash
-export PYTHONPATH="/app/backend/django:/app/backend/fastapi:/app:${PYTHONPATH:-}"
-export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-core.settings}"
-DEFAULT_APP="koohestan.asgi:application"
-DEFAULT_WORKER="uvicorn.workers.UvicornWorker"
-ARGS=()
-HAS_APP=0
-SKIP=0
-for a in "$@"; do
-  if [ "$SKIP" = "1" ]; then SKIP=0; continue; fi
-  case "$a" in
-    -k|--worker-class) SKIP=1; continue ;;
-    ""|":application"|".wsgi"*|".asgi"*) ARGS+=("$DEFAULT_APP"); HAS_APP=1 ;;
-    *wsgi*|*asgi*|*:application) ARGS+=("$DEFAULT_APP"); HAS_APP=1 ;;
-    *) ARGS+=("$a") ;;
-  esac
-done
-[ "$HAS_APP" = "0" ] && ARGS+=("$DEFAULT_APP")
-ARGS+=("-k" "$DEFAULT_WORKER")
-echo "[mk-gunicorn] ${ARGS[*]}" >&2
-exec /usr/local/bin/gunicorn.real "${ARGS[@]}"
-WRAP
-  chmod +x "$BIN"
-  echo "[mk-prestart] gunicorn wrapper ready"
-fi
-
-echo "[mk-prestart] done — ترجیحاً Start Command را بگذار: bash /app/deploy/runflare/start.sh"
+echo "[mk-prestart] done — Start Command را بگذار: bash /app/deploy/runflare/start.sh"

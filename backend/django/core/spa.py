@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import asyncio
+import re
 from pathlib import Path
 
 from django.conf import settings
-from django.http import FileResponse, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, StreamingHttpResponse
 from django.views.decorators.http import require_GET
 
-# زیر ASGI نباید با FileResponse همگام کند شود (کندی / قطع nginx → 502)
-_INLINE_MAX_BYTES = 4 * 1024 * 1024
+# زیر ASGI نباید FileResponse همگام استفاده شود (کندی / قطع nginx → 502)
+_INLINE_MAX_BYTES = 8 * 1024 * 1024
+_STREAM_CHUNK = 64 * 1024
 
 _ASSET_SUFFIXES = {
     ".woff",
@@ -59,6 +62,39 @@ _CONTENT_TYPES = {
     ".avif": "image/avif",
 }
 
+# این استایل روی HTML تزریق می‌شود تا حتی با بیلد قدیمی، موبایل و مجله درست باشند.
+_CRITICAL_CSS = """<style id="mk-ship-fix">
+html,body,.site-canvas,main,.home-v2,.landing--v2{max-width:100%!important;overflow-x:clip!important}
+.landing--v2,.landing-v2-stage,.landing-v2-media{overflow:hidden!important;max-width:100%!important}
+.landing--v2 .landing-v2-video{width:100%!important;height:100%!important;max-width:100%!important;object-fit:cover!important;inset:0!important}
+html:has(.mk-mag),html:has(.mk-mag) body,html:has(.mk-mag) .site-canvas{background:#005B48!important}
+html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{background:#F4F0E8!important}
+.site-canvas:has(.mk-mag)::before,.site-canvas:has(.mk-read)::before{display:none!important;content:none!important;background:none!important}
+.mk-mag{background:#005B48!important}
+.mk-mag:has(.mk-read){background:#F4F0E8!important;color:#1D1D1B!important}
+.v2-bookcase--magazine,.v2-bookcase--magazine .v2-bookcase-scene{background:#005B48!important}
+.v2-bookcase--magazine .v2-bookcase-scene-img{display:none!important}
+.v2-bookcase--magazine .v2-bookcase-scene-veil{background:transparent!important}
+@media (max-width:980px){
+  .site-header--v2 .v2-primary-nav{display:none!important}
+  .site-header--v2 .v2-menu-toggle{display:flex!important}
+  .site-header--v2 .v2-menubar,.site-header--v2 .v2-header-plate,.site-header--v2 .v2-header-body{max-width:100%!important;overflow:hidden!important}
+  .is-home-v2 .for-home--v2.kitchen-ui{height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important}
+  .is-home-v2 .kui-stage,.is-home-v2 .kui-hero,.is-home-v2 .kui-plate-wrap,.is-home-v2 .kui-card{max-width:100%!important}
+  .is-home-v2 .kui-plate-wrap{transform:none!important}
+  .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
+  .is-home-v2 .kui-dock{max-width:100%!important}
+  .is-home-v2 .v2-bookcase{min-height:0!important;padding-block:2.2rem!important}
+  img,video,svg,canvas{max-width:100%!important;height:auto}
+  .landing--v2 .landing-v2-video{height:100%!important}
+}
+</style>"""
+
+_PRELOAD_VIDEO_RE = re.compile(
+    rb"<link[^>]+as=[\"']video[\"'][^>]*>",
+    re.IGNORECASE,
+)
+
 
 def _candidate_roots() -> list[Path]:
     roots: list[Path] = []
@@ -106,28 +142,109 @@ def _landing_html() -> HttpResponse:
     )
 
 
-def _file_response(path: Path) -> HttpResponse:
-    suffix = path.suffix.lower()
-    content_type = _CONTENT_TYPES.get(suffix)
-    size = path.stat().st_size
+def _prepare_html(data: bytes) -> bytes:
+    data = _PRELOAD_VIDEO_RE.sub(b"", data)
+    if b"mk-ship-fix" in data:
+        return data
+    css = _CRITICAL_CSS.encode("utf-8")
+    lower = data.lower()
+    idx = lower.find(b"</head>")
+    if idx == -1:
+        return css + data
+    return data[:idx] + css + data[idx:]
 
-    # HTML/CSS/JS/فونت/عکس‌های کوچک را یک‌جا بخوان — زیر ASGI پایدار و سریع
-    if size <= _INLINE_MAX_BYTES and suffix not in {".mp4", ".webm", ".mov"}:
-        response: HttpResponse = HttpResponse(path.read_bytes(), content_type=content_type)
-        response["Content-Length"] = str(size)
-    else:
-        response = FileResponse(path.open("rb"), content_type=content_type)
 
+def _cache_headers(response: HttpResponse, suffix: str) -> None:
     if suffix in {".woff", ".woff2", ".ttf", ".otf", ".js", ".css"}:
         response["Cache-Control"] = "public, max-age=31536000, immutable"
     elif suffix in {".html", ".txt"}:
-        response["Cache-Control"] = "public, max-age=60"
+        response["Cache-Control"] = "no-cache, must-revalidate"
     elif suffix in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico", ".avif"}:
         response["Cache-Control"] = "public, max-age=86400"
     elif suffix in {".mp4", ".webm", ".mov"}:
         response["Cache-Control"] = "public, max-age=86400"
         response["Accept-Ranges"] = "bytes"
 
+
+def _parse_range(header: str, size: int) -> tuple[int, int] | None:
+    if not header.startswith("bytes="):
+        return None
+    spec = header[6:].split(",", 1)[0].strip()
+    if "-" not in spec:
+        return None
+    start_s, end_s = spec.split("-", 1)
+    try:
+        if start_s == "":
+            length = int(end_s)
+            start = max(size - length, 0)
+            end = size - 1
+        else:
+            start = int(start_s)
+            end = int(end_s) if end_s else size - 1
+    except ValueError:
+        return None
+    if start < 0 or start >= size:
+        return None
+    end = min(end, size - 1)
+    if end < start:
+        return None
+    return start, end
+
+
+async def _aiter_file(path: Path, start: int, length: int, chunk: int = _STREAM_CHUNK):
+    f = await asyncio.to_thread(path.open, "rb")
+    try:
+        if start:
+            await asyncio.to_thread(f.seek, start)
+        remaining = length
+        while remaining > 0:
+            data = await asyncio.to_thread(f.read, min(chunk, remaining))
+            if not data:
+                break
+            remaining -= len(data)
+            yield data
+    finally:
+        await asyncio.to_thread(f.close)
+
+
+def _file_response(path: Path, request) -> HttpResponse:
+    suffix = path.suffix.lower()
+    content_type = _CONTENT_TYPES.get(suffix)
+    size = path.stat().st_size
+
+    if suffix == ".html":
+        body = _prepare_html(path.read_bytes())
+        response: HttpResponse = HttpResponse(body, content_type=content_type)
+        response["Content-Length"] = str(len(body))
+        _cache_headers(response, suffix)
+        return response
+
+    if size <= _INLINE_MAX_BYTES and suffix not in {".mp4", ".webm", ".mov"}:
+        response = HttpResponse(path.read_bytes(), content_type=content_type)
+        response["Content-Length"] = str(size)
+        _cache_headers(response, suffix)
+        return response
+
+    rng = _parse_range(request.META.get("HTTP_RANGE") or "", size)
+    if rng:
+        start, end = rng
+        length = end - start + 1
+        response = StreamingHttpResponse(
+            _aiter_file(path, start, length),
+            status=206,
+            content_type=content_type,
+        )
+        response["Content-Range"] = f"bytes {start}-{end}/{size}"
+        response["Content-Length"] = str(length)
+    else:
+        response = StreamingHttpResponse(
+            _aiter_file(path, 0, size),
+            content_type=content_type,
+        )
+        response["Content-Length"] = str(size)
+
+    response["Accept-Ranges"] = "bytes"
+    _cache_headers(response, suffix)
     return response
 
 
@@ -190,9 +307,9 @@ def spa_serve(request, path: str = ""):
 
     if hits:
         best = max(hits, key=lambda p: p.stat().st_size if p.is_file() else 0)
-        return _file_response(best)
+        return _file_response(best, request)
 
-    if _looks_like_asset(rel) or _looks_like_api(rel):
+    if _looks_like_asset(rel) or _looks_like_api(rel) or rel.startswith("magazine"):
         return HttpResponseNotFound("not found")
 
     for root in _candidate_roots():
@@ -203,6 +320,6 @@ def spa_serve(request, path: str = ""):
         except OSError:
             continue
         if fallback.is_file() and fallback.stat().st_size > 4096:
-            return _file_response(fallback)
+            return _file_response(fallback, request)
 
     return _landing_html()

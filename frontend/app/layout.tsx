@@ -42,21 +42,15 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
-      className={`${mardeKuhestan.variable} is-home-v2`}
+      className={mardeKuhestan.variable}
       suppressHydrationWarning
     >
       <head>
         <link rel="preload" as="image" href="/brand/orginal-clear.png" fetchPriority="high" />
         <link rel="preload" as="image" href="/brand/perf/poster-family.jpg" />
-        <link
-          rel="preload"
-          as="video"
-          href="/videos/hero-family.mp4"
-          type="video/mp4"
-        />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var h=document.documentElement;h.classList.add("is-home-v2","is-logo-intro-done");if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}})();`,
+            __html: `(function(){try{var h=document.documentElement;var p=location.pathname||"/";h.classList.add("is-logo-intro-done");if(p.indexOf("/magazine")===0){h.classList.add("is-magazine-route");h.classList.remove("is-home-v2")}else{h.classList.add("is-home-v2");h.classList.remove("is-magazine-route")}if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}})();`,
           }}
         />
       </head>
