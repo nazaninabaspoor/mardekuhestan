@@ -1,7 +1,12 @@
 /* /v2 flush layout — imported only from app/v2/page.tsx */
 
+html.is-home-v2,
+html.is-home-v2 body,
 .is-home-v2,
-.is-home-v2 body {
+.is-home-v2 body,
+.is-home-v2 .site-canvas,
+.is-home-v2 main,
+.is-home-v2 .home-v2 {
   background: #0a5540 !important;
 }
 
@@ -15768,9 +15773,29 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
     height: auto !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    padding-block: 1.35rem 0.7rem !important;
+    padding-block: 0.85rem 0.45rem !important;
     overflow: hidden !important;
     background: #0a5540 !important;
+  }
+
+  .is-home-v2 .v2-bookcase-shell,
+  .is-home-v2 .v2-bookcase-layout,
+  .is-home-v2 .v2-bookcase-stage,
+  .is-home-v2 .v2-bookcase-layout,
+  .is-home-v2 .v2-bookcase.is-spread .v2-bookcase-layout {
+    min-height: 0 !important;
+    height: auto !important;
+    gap: 0.75rem !important;
+  }
+
+  .is-home-v2 .home-v2 > * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .v2-unveil {
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   .is-home-v2 .v2-bookcase-scene,

@@ -2,7 +2,7 @@
 
 import { Html, PerspectiveCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import {
   CanvasTexture,
   ClampToEdgeWrapping,
@@ -1162,7 +1162,7 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const saved = Boolean(product && watched[product.id]);
   const cloudRight = talk.slot === 0;
   const htmlPos: [number, number, number] = mobile
-    ? [0.04, MAN_HEAD_Y + 0.48, 0.18]
+    ? [0.04, MAN_HEAD_Y + 0.12, 0.18]
     : [cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18];
 
   return (
@@ -1405,27 +1405,19 @@ function FitAllColumns() {
     if (!("fov" in perspective) || !size.width || !size.height) return;
     const mobile = size.width < 760;
     if (mobile) {
-      perspective.position.set(0, 1.18, UNVEIL_CAM_Z);
-      perspective.fov = 34;
-      perspective.lookAt(0, 0.18, UNVEIL_PEDESTAL_Z);
+      // Phone 16:9 plate: stand in the hall, look at the wall so barrels sit on the floor.
+      perspective.position.set(0, 1.46, 7.15);
+      perspective.fov = 32;
+      perspective.lookAt(0, 1.22, UNVEIL_PEDESTAL_Z);
     } else {
-      perspective.position.set(0, 1.82, UNVEIL_CAM_Z);
-      perspective.fov = 40;
-      perspective.lookAt(0, 0.06, UNVEIL_PEDESTAL_Z);
+      // Desktop full hall: same idea, columns on the reflective floor not in the windows.
+      perspective.position.set(0, 1.48, UNVEIL_CAM_Z);
+      perspective.fov = 34;
+      perspective.lookAt(0, 1.28, UNVEIL_PEDESTAL_Z);
     }
     perspective.updateProjectionMatrix();
   }, [camera, size.height, size.width]);
   return null;
-}
-
-function StageRig({ children }: { children: ReactNode }) {
-  const { size } = useThree();
-  const mobile = size.width < 760;
-  return (
-    <group scale={mobile ? 1.08 : 1.04} position={mobile ? [0, -0.06, 0.12] : [0, -0.18, 0.08]}>
-      {children}
-    </group>
-  );
 }
 
 function Hall() {
@@ -1444,10 +1436,9 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.82, UNVEIL_CAM_Z]} fov={40} near={0.1} far={48} />
+      <PerspectiveCamera makeDefault position={[0, 1.48, UNVEIL_CAM_Z]} fov={34} near={0.1} far={48} />
       <FitAllColumns />
       <Hall />
-      <StageRig>
       <MountainMan man={man} cloth={cloth} active={active} />
       {UNVEIL_SLOT_X.map((x, index) => (
         <Pedestal key={`p-${x}`} x={x} index={index} man={man} factoryMap={factoryMap} />
@@ -1467,7 +1458,6 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
       {UNVEIL_SLOT_X.map((x, index) => (
         <Cloth key={`c-${x}`} x={x} index={index} cloth={cloth} />
       ))}
-      </StageRig>
     </>
   );
 }
@@ -1493,7 +1483,7 @@ export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { acti
         stencil: false,
         depth: true,
       }}
-      style={{ pointerEvents: "auto" }}
+      style={{ pointerEvents: "auto", position: "absolute", inset: 0, width: "100%", height: "100%" }}
       onCreated={({ gl }) => {
         gl.setClearColor("#063a2c", 0);
         gl.toneMappingExposure = 1.05;

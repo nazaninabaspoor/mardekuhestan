@@ -77,29 +77,27 @@ export function V2UnveilSection() {
     <section
       ref={rootRef}
       id="product-unveil"
-      className={`${styles.section}${unveiled ? ` ${styles.unveiled}` : ""}`}
+      className={`v2-unveil ${styles.section}${unveiled ? ` ${styles.unveiled}` : ""}`}
       aria-label="نمای تازه روی سفره"
     >
       <span className="v2-section-edge v2-section-edge--top" aria-hidden="true" />
-      <div className={styles.atmosphere} aria-hidden="true" />
-      <div className={styles.depth} aria-hidden="true" />
-      <div className={styles.fog} aria-hidden="true" />
-      <div className={styles.stage}>
-        <V2UnveilCanvas cloth={cloth} man={man} active={active} />
-      </div>
-
       <div className={styles.copy}>
         <h2>روی میز خانه</h2>
         <span>نمایش تازهٔ محصولاتی که به‌زودی روی سفره می‌آیند</span>
       </div>
-
-      <ul className={styles.slots} aria-hidden={unveiled ? undefined : true}>
-        {UNVEIL_FUTURE_PRODUCTS.map((product, index) => (
-          <li key={product.id} className={styles.slot}>
-            <UnveilProductSlot index={index} />
-          </li>
-        ))}
-      </ul>
+      <div className={styles.stage}>
+        <div className={styles.atmosphere} aria-hidden="true" />
+        <div className={styles.depth} aria-hidden="true" />
+        <div className={styles.fog} aria-hidden="true" />
+        <V2UnveilCanvas cloth={cloth} man={man} active={active} />
+        <ul className={styles.slots} aria-hidden={unveiled ? undefined : true}>
+          {UNVEIL_FUTURE_PRODUCTS.map((product, index) => (
+            <li key={product.id} className={styles.slot}>
+              <UnveilProductSlot index={index} />
+            </li>
+          ))}
+        </ul>
+      </div>
       <span className="v2-section-edge v2-section-edge--bottom" aria-hidden="true" />
     </section>
   );

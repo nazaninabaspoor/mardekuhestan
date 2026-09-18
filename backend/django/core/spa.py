@@ -72,7 +72,8 @@ html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{backg
 .site-canvas:has(.mk-mag)::before,.site-canvas:has(.mk-read)::before{display:none!important;content:none!important;background:none!important}
 .mk-mag{background:#005B48!important}
 .mk-mag:has(.mk-read){background:#F4F0E8!important;color:#1D1D1B!important}
-.is-home-v2,.is-home-v2 body,.is-home-v2 .site-canvas,.is-home-v2 .home-v2{background:#0a5540!important}
+html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .site-canvas,.is-home-v2 .home-v2,html.is-home-v2 main{background:#0a5540!important}
+.is-home-v2 .home-v2 > *{margin-top:0!important;margin-bottom:0!important}
 .v2-bookcase,.v2-bookcase-scene{background:#0a5540!important}
 .v2-bookcase--magazine .v2-bookcase-scene-img,.v2-bookcase--catalog .v2-bookcase-scene-img{display:block!important;object-fit:cover!important}
 .v2-bookcase-scene-veil{background:linear-gradient(180deg,rgb(10 85 64 / 28%) 0%,rgb(10 85 64 / 6%) 22%,transparent 48%,rgb(10 85 64 / 10%) 78%,rgb(10 85 64 / 22%) 100%)!important}
@@ -85,8 +86,9 @@ html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{backg
   .is-home-v2 .for-home--v2.kitchen-ui{height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important}
   .is-home-v2 .kui-plate-wrap{transform:none!important}
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
-  .is-home-v2 .v2-bookcase{min-height:0!important;height:auto!important;padding-block:1.35rem .7rem!important;margin:0!important;overflow:hidden!important;background:#0a5540!important}
-  .is-home-v2 .v2-bookcase-layout{min-height:0!important}
+  .v2-unveil{min-height:0!important;height:auto!important}
+  .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow:hidden!important;background:#0a5540!important}
+  .is-home-v2 .v2-bookcase-layout,.is-home-v2 .v2-bookcase-shell,.is-home-v2 .v2-bookcase-stage{min-height:0!important;height:auto!important}
   .is-home-v2 .v2-section-edge--top,.is-home-v2 .v2-section-edge--bottom,.is-home-v2 .site-footer .v2-section-edge{display:none!important;height:0!important}
   img,video,svg{max-width:100%!important}
   .landing--v2,.is-home-v2 .site-canvas > main .landing--v2{margin-top:0!important}

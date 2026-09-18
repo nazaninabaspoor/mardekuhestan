@@ -23,7 +23,7 @@
   background:
     linear-gradient(180deg, #0a5540 0%, rgb(10 85 64 / 94%) 1.5%, rgb(8 71 53 / 42%) 9%, rgb(6 58 44 / 13%) 18%, transparent 25%),
     linear-gradient(rgb(3 37 28 / 18%), rgb(2 27 21 / 24%)),
-    url("/brand/v2/unveil-exhibition-empty.png") center center / cover no-repeat;
+    url("/brand/v2/unveil-exhibition-empty.png") center 52% / cover no-repeat;
 }
 
 .depth {
@@ -54,6 +54,7 @@
   position: absolute;
   z-index: 2;
   inset: 0;
+  overflow: hidden;
 }
 
 .stage canvas {
@@ -274,70 +275,68 @@
   .section {
     display: flex;
     flex-direction: column;
-    min-height: 0;
-    height: auto;
-    padding-bottom: 0;
+    min-height: 0 !important;
+    height: auto !important;
     overflow: hidden;
     background: #0a5540;
   }
 
-  .atmosphere,
-  .depth,
-  .fog {
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: min(58vw, 360px);
+  .copy {
+    position: relative;
+    z-index: 4;
+    flex: 0 0 auto;
+    width: min(720px, calc(100% - 28px));
+    padding-top: 0.85rem;
+    padding-bottom: 0.35rem;
   }
 
-  .atmosphere {
-    background-position: center 72%;
-    background-size: cover;
+  .copy h2 {
+    font-size: clamp(1.4rem, 6vw, 1.85rem);
+  }
+
+  .copy span {
+    font-size: 0.9rem;
+    margin-top: 8px;
   }
 
   .stage {
     position: relative;
     z-index: 2;
     inset: auto;
-    width: 100%;
-    height: min(58vw, 360px);
-    min-height: 0;
     flex: 0 0 auto;
-    order: 2;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
-  .copy {
-    position: relative;
-    z-index: 4;
-    order: 1;
-    width: min(720px, calc(100% - 32px));
-    padding-top: 1.6rem;
-    padding-bottom: 0.35rem;
+  .atmosphere,
+  .depth,
+  .fog {
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    aspect-ratio: auto;
   }
 
-  .copy h2 {
-    font-size: clamp(1.45rem, 6.2vw, 1.9rem);
-  }
-
-  .copy span {
-    font-size: 0.92rem;
-    margin-top: 8px;
+  .atmosphere {
+    background-size: cover;
+    background-position: center 58%;
   }
 
   .slots {
     position: absolute;
-    right: 6%;
-    left: 6%;
-    bottom: 7%;
+    z-index: 5;
+    right: 4%;
+    left: 4%;
+    bottom: 6%;
     width: auto;
     margin: 0;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
   }
 
-  .slot:nth-child(4),
-  .slot:nth-child(5) {
-    display: none;
+  .slot {
+    min-height: 72px;
   }
 
   .thoughtWest,
