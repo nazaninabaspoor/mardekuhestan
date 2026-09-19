@@ -81,11 +81,11 @@ export function V2UnveilSection() {
       aria-label="نمای تازه روی سفره"
     >
       <span className="v2-section-edge v2-section-edge--top" aria-hidden="true" />
-      <div className={styles.copy}>
+      <div className={`v2-unveil-copy ${styles.copy}`}>
         <h2>روی میز خانه</h2>
         <span>نمایش تازهٔ محصولاتی که به‌زودی روی سفره می‌آیند</span>
       </div>
-      <div className={styles.stage}>
+      <div className={`v2-unveil-stage ${styles.stage}`}>
         <div className={styles.atmosphere} aria-hidden="true" />
         <div className={styles.depth} aria-hidden="true" />
         <div className={styles.fog} aria-hidden="true" />

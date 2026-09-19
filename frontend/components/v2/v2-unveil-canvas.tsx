@@ -1405,15 +1405,15 @@ function FitAllColumns() {
     if (!("fov" in perspective) || !size.width || !size.height) return;
     const mobile = size.width < 760;
     if (mobile) {
-      // Phone 16:9 plate: stand in the hall, look at the wall so barrels sit on the floor.
-      perspective.position.set(0, 1.46, 7.15);
-      perspective.fov = 32;
-      perspective.lookAt(0, 1.22, UNVEIL_PEDESTAL_Z);
+      // Phone plate: look down so barrels sit on the glossy floor, not the windows.
+      perspective.position.set(0, 2.08, 7.45);
+      perspective.fov = 30;
+      perspective.lookAt(0, 0.74, UNVEIL_PEDESTAL_Z);
     } else {
-      // Desktop full hall: same idea, columns on the reflective floor not in the windows.
-      perspective.position.set(0, 1.48, UNVEIL_CAM_Z);
-      perspective.fov = 34;
-      perspective.lookAt(0, 1.28, UNVEIL_PEDESTAL_Z);
+      // Desktop full hall: columns on the reflective floor, inside the frame.
+      perspective.position.set(0, 1.92, 7.05);
+      perspective.fov = 32;
+      perspective.lookAt(0, 0.82, UNVEIL_PEDESTAL_Z);
     }
     perspective.updateProjectionMatrix();
   }, [camera, size.height, size.width]);
@@ -1483,7 +1483,7 @@ export function V2UnveilCanvas({ cloth, man, active = true }: SceneRefs & { acti
         stencil: false,
         depth: true,
       }}
-      style={{ pointerEvents: "auto", position: "absolute", inset: 0, width: "100%", height: "100%" }}
+      style={{ pointerEvents: "auto", position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 2 }}
       onCreated={({ gl }) => {
         gl.setClearColor("#063a2c", 0);
         gl.toneMappingExposure = 1.05;

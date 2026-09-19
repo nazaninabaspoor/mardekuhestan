@@ -17,18 +17,18 @@
 
 .atmosphere {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, #0a5540 0%, rgb(10 85 64 / 94%) 1.5%, rgb(8 71 53 / 42%) 9%, rgb(6 58 44 / 13%) 18%, transparent 25%),
-    linear-gradient(rgb(3 37 28 / 18%), rgb(2 27 21 / 24%)),
+    linear-gradient(180deg, rgb(10 85 64 / 38%) 0%, rgb(10 85 64 / 8%) 16%, transparent 28%),
+    linear-gradient(rgb(3 37 28 / 10%), rgb(2 27 21 / 16%)),
     url("/brand/v2/unveil-exhibition-empty.png") center 52% / cover no-repeat;
 }
 
 .depth {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   inset: 0;
   pointer-events: none;
   background:
@@ -38,7 +38,7 @@
 
 .fog {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   right: 19%;
   top: 26%;
   width: 38%;
@@ -59,6 +59,9 @@
 
 .stage canvas {
   display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   width: 100% !important;
   height: 100% !important;
 }
@@ -273,40 +276,48 @@
 
 @media (max-width: 900px) {
   .section {
-    display: flex;
-    flex-direction: column;
+    display: block;
     min-height: 0 !important;
     height: auto !important;
     overflow: hidden;
     background: #0a5540;
   }
 
+  .section :global(.v2-section-edge) {
+    display: none;
+  }
+
   .copy {
-    position: relative;
+    position: absolute;
     z-index: 4;
-    flex: 0 0 auto;
+    top: 0;
+    right: 0;
+    left: 0;
     width: min(720px, calc(100% - 28px));
-    padding-top: 0.85rem;
-    padding-bottom: 0.35rem;
+    margin: 0 auto;
+    padding-top: clamp(0.7rem, 2.8vw, 1.15rem);
+    padding-bottom: 0;
   }
 
   .copy h2 {
     font-size: clamp(1.4rem, 6vw, 1.85rem);
+    text-shadow: 0 2px 18px rgb(0 20 14 / 45%);
   }
 
   .copy span {
     font-size: 0.9rem;
     margin-top: 8px;
+    text-shadow: 0 2px 14px rgb(0 20 14 / 40%);
   }
 
   .stage {
     position: relative;
     z-index: 2;
     inset: auto;
-    flex: 0 0 auto;
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
   }
 
   .atmosphere,

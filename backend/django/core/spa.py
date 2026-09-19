@@ -82,6 +82,7 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
 .v2-bookcase-scene--magazine .v2-bookcase-scene-img{object-position:16% 48%!important}
 .v2-bookcase-scene--catalog .v2-bookcase-scene-img{object-position:18% 58%!important}
 .v2-bookcase-scene-veil{background-color:transparent!important;background-image:linear-gradient(180deg,rgb(10 85 64 / 16%) 0%,transparent 26%,transparent 72%,rgb(10 85 64 / 14%) 100%)!important}
+.v2-unveil canvas{position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important}
 .profile-coverflow-title,.profile-coverflow-sub,.profile-scene-kicker{position:relative;z-index:8}
 .profile-coverflow-sub{margin-bottom:clamp(28px,5vh,64px)}
 .profile-coverflow-stage{padding-top:clamp(36px,6vh,88px)}
@@ -91,7 +92,11 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .for-home--v2.kitchen-ui{height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important}
   .is-home-v2 .kui-plate-wrap{transform:none!important}
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
-  .v2-unveil{min-height:0!important;height:auto!important}
+  .v2-unveil{min-height:0!important;height:auto!important;overflow:hidden!important;background:#0a5540!important}
+  .v2-unveil .v2-section-edge{display:none!important}
+  .v2-unveil-copy{position:absolute!important;top:0!important;right:0!important;left:0!important;z-index:4!important;width:min(720px,calc(100% - 28px))!important;margin:0 auto!important;padding:.75rem 0 0!important}
+  .v2-unveil-stage{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;aspect-ratio:16/10!important;overflow:hidden!important}
+  .v2-unveil canvas{position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important}
   .is-home-v2 .home-v2 > div,.is-home-v2 .v2-home-lazy,.is-home-v2 .v2-home-lazy.is-ready{min-height:0!important;height:auto!important;background:transparent!important}
   .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow-x:clip!important;overflow-y:visible!important;background:#0a5540!important}
   .is-home-v2 .v2-bookcase-layout,.is-home-v2 .v2-bookcase-shell,.is-home-v2 .v2-bookcase-stage{min-height:0!important;height:auto!important}
