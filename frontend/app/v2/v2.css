@@ -15822,9 +15822,19 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
     background-color: transparent !important;
   }
 
-  .is-home-v2 .v2-bookcase-scene,
-  .is-home-v2 .v2-bookcase-scene-veil {
+  .is-home-v2 .v2-bookcase-scene {
     background-color: #0a5540 !important;
+  }
+
+  .is-home-v2 .v2-bookcase-scene-veil {
+    background-color: transparent !important;
+    background-image: linear-gradient(
+      180deg,
+      rgb(10 85 64 / 12%) 0%,
+      transparent 28%,
+      transparent 70%,
+      rgb(10 85 64 / 16%) 100%
+    ) !important;
   }
 
   .is-home-v2 .v2-bookcase-scene--magazine {
@@ -15836,8 +15846,8 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
 
   .is-home-v2 .v2-bookcase-scene--catalog {
     background-image: url("/brand/v2/bookcase-morning-work-daylight.png") !important;
-    background-size: cover !important;
-    background-position: 14% 64% !important;
+    background-size: 185% 185% !important;
+    background-position: 8% 38% !important;
     background-repeat: no-repeat !important;
   }
 
@@ -15853,7 +15863,14 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
   }
 
   .is-home-v2 .v2-bookcase-scene--catalog .v2-bookcase-scene-img {
-    object-position: 14% 64% !important;
+    width: 185% !important;
+    height: 185% !important;
+    max-width: none !important;
+    max-height: none !important;
+    left: -6% !important;
+    top: -14% !important;
+    object-fit: cover !important;
+    object-position: 8% 38% !important;
   }
 
   .is-home-v2 .v2-section-edge {
