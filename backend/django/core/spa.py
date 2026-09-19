@@ -115,10 +115,10 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .landing-v2-playlist-track{justify-content:center!important;width:100%!important;max-width:100%!important}
   .is-home-v2 .site-footer{position:relative!important;overflow:hidden!important;margin-top:0!important;background:#0a5540!important}
   .is-home-v2 .footer-scene-art,.is-home-v2 .footer-scene img{margin-bottom:0!important;width:100%!important;height:min(78svh,640px)!important;object-fit:cover!important;object-position:76% 58%!important}
-  .is-home-v2 .footer-body{position:absolute!important;inset:0!important;top:0!important;bottom:0!important;height:auto!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:14% 0 0!important;background:linear-gradient(180deg,transparent 0%,rgb(10 85 64 / 10%) 22%,rgb(10 85 64 / 48%) 58%,rgb(8 50 40 / 88%) 100%)!important}
-  .is-home-v2 .footer-grid{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;gap:.5rem!important;padding:0 1rem .7rem!important;text-align:right!important;direction:rtl!important}
-  .is-home-v2 .site-footer .footer-brand,.is-home-v2 .site-footer .footer-brand-copy,.is-home-v2 .footer-company{direction:rtl!important;text-align:right!important;width:100%!important;align-items:stretch!important;margin-inline:0!important}
-  .is-home-v2 .footer-col--contact{margin-top:auto!important}
+  .is-home-v2 .footer-body{position:absolute!important;inset:0!important;top:0!important;bottom:0!important;height:100%!important;min-height:100%!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:14% 0 0!important;background:linear-gradient(180deg,transparent 0%,rgb(10 85 64 / 10%) 22%,rgb(10 85 64 / 48%) 58%,rgb(8 50 40 / 88%) 100%)!important}
+  .is-home-v2 .footer-grid{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;gap:.45rem!important;padding:0 1rem .45rem!important;text-align:right!important;direction:rtl!important;min-height:0!important}
+  .is-home-v2 .site-footer .footer-brand,.is-home-v2 .site-footer .footer-brand-copy,.is-home-v2 .footer-company,.is-home-v2 .footer-col--pages{direction:rtl!important;text-align:right!important;width:100%!important;align-items:stretch!important;margin-inline:0!important;flex:0 0 auto!important}
+  .is-home-v2 .footer-col--contact{margin-top:auto!important;padding-bottom:.35rem!important}
   .is-home-v2 .footer-col--products,.is-home-v2 .footer-col--actions,.is-home-v2 .footer-blurb,.is-home-v2 .footer-kicker,.is-home-v2 .footer-hours,.is-home-v2 .site-footer .footer-brand-seal{display:none!important}
   .is-home-v2 .footer-col--pages ul{display:flex!important;flex-wrap:wrap!important;gap:.2rem .9rem!important;justify-content:flex-start!important}
   .mk-ledger-topbar{display:grid!important;grid-template-columns:1fr auto!important;align-items:start!important;gap:8px 10px!important}

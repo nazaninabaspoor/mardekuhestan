@@ -15932,7 +15932,8 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
     right: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
-    height: auto !important;
+    height: 100% !important;
+    min-height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
@@ -16006,6 +16007,7 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
 
   .is-home-v2 .footer-col--contact {
     margin-top: auto !important;
+    padding-bottom: 0.35rem !important;
   }
 
   .is-home-v2 .footer-col--contact address {
