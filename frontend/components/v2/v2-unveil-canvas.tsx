@@ -11,12 +11,9 @@ import {
   PlaneGeometry,
   RepeatWrapping,
   SRGBColorSpace,
-  Vector3,
-  type Camera,
   type Group,
   type Mesh,
   type MeshBasicMaterial,
-  type Object3D,
   type Texture,
 } from "three";
 
@@ -1139,19 +1136,6 @@ function readWatchList() {
   }
 }
 
-const TALK_PROJ = new Vector3();
-
-function unveilTalkPosition(el: Object3D, camera: Camera, size: { width: number; height: number }) {
-  TALK_PROJ.setFromMatrixPosition(el.matrixWorld).project(camera);
-  const x = TALK_PROJ.x * size.width * 0.5 + size.width * 0.5;
-  const y = -(TALK_PROJ.y * size.height * 0.5) + size.height * 0.5;
-  if (size.width >= 900) return [x, y, 0];
-  const pad = Math.min(84, size.width * 0.22);
-  // Keep the cloud under the title + subtitle, still above the hall.
-  const underCopy = Math.round(size.height * 0.33);
-  return [Math.min(size.width - pad, Math.max(pad, x)), underCopy, 0];
-}
-
 function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const { user, openLoginModal } = useAuth();
   const { size } = useThree();
@@ -1177,14 +1161,17 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
   const saved = Boolean(product && watched[product.id]);
   const cloudRight = talk.slot === 0;
-  const htmlPos: [number, number, number] = mobile
-    ? [0.04, MAN_HEAD_Y + 0.12, 0.18]
-    : [cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18];
+  const htmlPos: [number, number, number] = [
+    cloudRight ? TALK_FLIP_X : -TALK_GAP_X,
+    MAN_HEAD_Y,
+    0.18,
+  ];
+
+  if (mobile) return null;
 
   return (
     <Html
       position={htmlPos}
-      calculatePosition={unveilTalkPosition}
       zIndexRange={[55, 16]}
       style={{
         pointerEvents: talk.open ? "auto" : "none",

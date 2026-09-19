@@ -83,6 +83,7 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
 .v2-bookcase-scene--catalog .v2-bookcase-scene-img{object-position:18% 58%!important}
 .v2-bookcase-scene-veil{background-color:transparent!important;background-image:linear-gradient(180deg,rgb(10 85 64 / 16%) 0%,transparent 26%,transparent 72%,rgb(10 85 64 / 14%) 100%)!important}
 .v2-unveil canvas{position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important}
+.v2-unveil-talk-mobile{display:none!important}
 .profile-coverflow-title,.profile-coverflow-sub,.profile-scene-kicker{position:relative;z-index:8}
 .profile-coverflow-sub{margin-bottom:clamp(28px,5vh,64px)}
 .profile-coverflow-stage{padding-top:clamp(36px,6vh,88px)}
@@ -94,7 +95,7 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .kui-plate{overflow:hidden!important;width:min(72vw,260px)!important;max-width:100%!important}
   .v2-unveil{min-height:0!important;height:auto!important;overflow:hidden!important;background:#0a5540!important}
   .v2-unveil .v2-section-edge{display:none!important}
-  .v2-unveil-copy{position:absolute!important;top:0!important;right:0!important;left:0!important;z-index:4!important;width:min(720px,calc(100% - 28px))!important;margin:0 auto!important;padding:.75rem 0 0!important}
+  .v2-unveil-copy{position:absolute!important;top:0!important;right:0!important;left:0!important;z-index:7!important;width:min(720px,calc(100% - 28px))!important;margin:0 auto!important;padding:.75rem 0 0!important}
   .v2-unveil-stage{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;aspect-ratio:16/10!important;overflow:hidden!important}
   .v2-unveil canvas{position:absolute!important;inset:0!important;z-index:3!important;width:100%!important;height:100%!important}
   .is-home-v2 .home-v2 > div,.is-home-v2 .v2-home-lazy,.is-home-v2 .v2-home-lazy.is-ready{min-height:0!important;height:auto!important;background:transparent!important}
@@ -128,6 +129,9 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .footer-col--pages ul{display:flex!important;flex-wrap:wrap!important;gap:.2rem .9rem!important;justify-content:flex-start!important}
   .mk-ledger-topbar{display:grid!important;grid-template-columns:1fr auto!important;align-items:start!important;gap:8px 10px!important}
   .mk-ledger-titles strong,.mk-ledger-titles span{white-space:normal!important}
+}
+@media (max-width:900px){
+  .v2-unveil-talk-mobile{display:block!important;position:absolute!important;z-index:6!important;top:5.15rem!important;right:8px!important;left:8px!important;height:78px!important;pointer-events:none!important}
 }
 </style>"""
 

@@ -42,6 +42,12 @@ export const UNVEIL_FUTURE_PRODUCTS = [
   },
 ] as const;
 
+export const UNVEIL_WATCH_KEY = "mk-unveil-watch";
+
+export function isUnveilTalking(state: UnveilManState) {
+  return !state.walking && state.hold > 0.15 && state.hold < 4.35;
+}
+
 export type UnveilManState = {
   x: number;
   originX: number;

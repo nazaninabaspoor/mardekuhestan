@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { V2UnveilCanvas } from "./v2-unveil-canvas";
 import { UNVEIL_FUTURE_PRODUCTS, manSlotX, type UnveilManState } from "./v2-unveil-shared";
 import { UnveilProductSlot } from "./v2-unveil-products";
+import { UnveilMobileTalk } from "./v2-unveil-thought";
 import styles from "./v2-unveil-section.module.css";
 
 const INITIAL_MAN: UnveilManState = {
@@ -90,6 +91,7 @@ export function V2UnveilSection() {
         <div className={styles.depth} aria-hidden="true" />
         <div className={styles.fog} aria-hidden="true" />
         <V2UnveilCanvas cloth={cloth} man={man} active={active} />
+        <UnveilMobileTalk man={man} />
         <ul className={styles.slots} aria-hidden={unveiled ? undefined : true}>
           {UNVEIL_FUTURE_PRODUCTS.map((product, index) => (
             <li key={product.id} className={styles.slot}>

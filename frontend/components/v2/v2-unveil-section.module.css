@@ -115,6 +115,10 @@
   min-height: clamp(120px, 14vw, 168px);
 }
 
+.mobileTalk {
+  display: none;
+}
+
 .thought {
   display: flex;
   align-items: center;
@@ -289,7 +293,7 @@
 
   .copy {
     position: absolute;
-    z-index: 4;
+    z-index: 7;
     top: 0;
     right: 0;
     left: 0;
@@ -350,15 +354,60 @@
     min-height: 72px;
   }
 
+  .thought,
   .thoughtWest,
   .thoughtEast {
-    flex-direction: column;
-    align-items: center;
-    transform: translate(-50%, 0);
+    display: none !important;
   }
 
-  .thoughtCloud {
-    width: min(148px, 42vw);
-    padding: 9px 11px 8px;
+  .mobileTalk {
+    display: block;
+    position: absolute;
+    z-index: 6;
+    top: 5.15rem;
+    right: 8px;
+    left: 8px;
+    height: 78px;
+    pointer-events: none;
+  }
+
+  .mobileTalk[data-open="false"] {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .mobileTalkBubble {
+    position: absolute;
+    top: 0;
+    left: clamp(58px, calc(10% + (var(--slot, 0) * 20%)), calc(100% - 58px));
+    width: min(108px, 28vw);
+    padding: 7px 8px 6px;
+    transform: translateX(-50%);
+    border: 1.5px solid #d4a359;
+    border-radius: 22px;
+    background: #f4f0e8;
+    box-shadow: 0 8px 16px rgb(0 18 12 / 22%);
+    text-align: center;
+    pointer-events: auto;
+  }
+
+  .mobileTalkBubble p {
+    margin: 0;
+    color: #1d1d1b;
+    font-size: 10.5px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .mobileTalkBubble .thoughtCta {
+    margin-top: 6px;
+    padding: 4px 10px 5px;
+    font-size: 10px;
+  }
+
+  .mobileTalkBubble .thoughtSaved {
+    margin-top: 6px;
+    padding: 3px 8px;
+    font-size: 10px;
   }
 }
