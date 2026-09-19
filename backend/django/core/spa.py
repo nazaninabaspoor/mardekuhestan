@@ -113,13 +113,11 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   img,video,svg{max-width:100%!important}
   .v2-bookcase-scene-img{max-width:none!important;max-height:none!important}
   .landing--v2,.is-home-v2 .site-canvas > main .landing--v2{margin-top:0!important}
-  .landing--v2 .landing-v2-stage{min-height:0!important;height:auto!important;aspect-ratio:16/9!important;overflow:hidden!important}
+  .landing--v2 .landing-v2-stage{min-height:min(68svh,560px)!important;height:min(68svh,560px)!important;aspect-ratio:auto!important}
   .landing--v2 .landing-v2-shell{min-height:0!important;padding-top:0!important;padding-bottom:0!important}
-  .landing--v2 .landing-v2-dock{bottom:8px!important;top:auto!important;left:10px!important;right:10px!important}
-  .landing--v2 .landing-v2-video{object-fit:contain!important;object-position:center center!important;height:100%!important;width:100%!important}
-  .landing--v2 .landing-v2-playlist{transform:none!important;left:0!important;right:0!important;bottom:8px!important;padding:0 10px!important;overflow:hidden!important}
-  .landing-v2-playlist-track{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;justify-content:stretch!important;gap:6px!important;width:100%!important;max-width:100%!important;overflow:hidden!important}
-  .landing-v2-preview,.landing-v2-preview.is-active{width:auto!important;min-width:0!important;flex:none!important}
+  .landing--v2 .landing-v2-dock{bottom:14px!important;top:auto!important;left:12px!important;right:12px!important}
+  .landing--v2 .landing-v2-video{object-fit:cover!important;object-position:center 42%!important;height:100%!important}
+  .landing-v2-playlist-track{justify-content:center!important;width:100%!important;max-width:100%!important}
   .is-home-v2 .site-footer{position:relative!important;overflow:hidden!important;margin-top:0!important;background:#0a5540!important}
   .is-home-v2 .footer-scene-art,.is-home-v2 .footer-scene img{margin-bottom:0!important;width:100%!important;height:min(78svh,640px)!important;object-fit:cover!important;object-position:76% 58%!important}
   .is-home-v2 .footer-body{position:absolute!important;inset:0!important;top:0!important;bottom:0!important;height:100%!important;min-height:100%!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:14% 0 0!important;background:linear-gradient(180deg,transparent 0%,rgb(10 85 64 / 10%) 22%,rgb(10 85 64 / 48%) 58%,rgb(8 50 40 / 88%) 100%)!important}
