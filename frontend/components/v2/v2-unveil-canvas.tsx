@@ -1403,18 +1403,21 @@ function FitAllColumns() {
   useLayoutEffect(() => {
     const perspective = camera as import("three").PerspectiveCamera;
     if (!("fov" in perspective) || !size.width || !size.height) return;
-    const mobile = size.width < 760;
-    if (mobile) {
-      // Phone plate: look down so barrels sit on the glossy floor, not the windows.
-      perspective.position.set(0, 2.08, 7.45);
-      perspective.fov = 30;
-      perspective.lookAt(0, 0.74, UNVEIL_PEDESTAL_Z);
-    } else {
-      // Desktop full hall: columns on the reflective floor, inside the frame.
-      perspective.position.set(0, 1.92, 7.05);
-      perspective.fov = 32;
-      perspective.lookAt(0, 0.82, UNVEIL_PEDESTAL_Z);
-    }
+    const mobile = size.width < 900;
+    const aspect = size.width / Math.max(1, size.height);
+    const camZ = mobile ? 10.6 : UNVEIL_CAM_Z;
+    const dist = Math.max(0.5, camZ - UNVEIL_PEDESTAL_Z);
+    const halfSpan = Math.abs(UNVEIL_SLOT_X[0]) + 0.78;
+    const occupy = mobile ? 0.6 : 0.64;
+    const hFov = 2 * Math.atan(halfSpan / occupy / dist);
+    const vFov = 2 * Math.atan(Math.tan(hFov / 2) / aspect);
+    perspective.fov = Math.min(mobile ? 34 : 36, Math.max(22, (vFov * 180) / Math.PI));
+    const vHalf = Math.tan((perspective.fov * Math.PI) / 360) * dist;
+    // Pedestal bases sit near the bottom of the section, not mid-canvas.
+    const lookY = vHalf * (mobile ? 0.86 : 0.8);
+    const camY = lookY + (mobile ? 0.58 : 0.9);
+    perspective.position.set(0, camY, camZ);
+    perspective.lookAt(0, lookY, UNVEIL_PEDESTAL_Z);
     perspective.updateProjectionMatrix();
   }, [camera, size.height, size.width]);
   return null;
@@ -1436,7 +1439,7 @@ function World({ cloth, man, active }: SceneRefs & { active: boolean }) {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 1.48, UNVEIL_CAM_Z]} fov={34} near={0.1} far={48} />
+      <PerspectiveCamera makeDefault position={[0, 2.5, UNVEIL_CAM_Z]} fov={28} near={0.1} far={48} />
       <FitAllColumns />
       <Hall />
       <MountainMan man={man} cloth={cloth} active={active} />
