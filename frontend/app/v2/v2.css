@@ -6963,17 +6963,32 @@ html.is-v2-bell-cursor textarea {
 }
 
 .is-home-v2 .v2-bookcase-scene--magazine {
-  background-image: url("/brand/v2/bookcase-morning-read-daylight.png");
-  background-position: center 42%;
+  background-image: url("/brand/v2/bookcase-morning-read-daylight.png") !important;
+  background-position: 16% 48% !important;
 }
 
 .is-home-v2 .v2-bookcase-scene--catalog {
-  background-image: url("/brand/v2/bookcase-morning-work-daylight.png");
-  background-position: center 38%;
+  background-image: url("/brand/v2/bookcase-morning-work-daylight.png") !important;
+  background-position: 18% 58% !important;
 }
 
 .is-home-v2 .v2-bookcase-scene-img {
-  display: none;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+}
+
+.is-home-v2 .v2-bookcase-scene--magazine .v2-bookcase-scene-img {
+  object-position: 16% 48% !important;
+}
+
+.is-home-v2 .v2-bookcase-scene--catalog .v2-bookcase-scene-img {
+  object-position: 18% 58% !important;
 }
 
 .is-home-v2 .v2-bookcase-scene-veil {
@@ -8879,10 +8894,7 @@ html.is-v2-bell-cursor textarea {
     padding-top: clamp(1.25rem, 2.5vh, 2rem) !important;
   }
 
-  .is-home-v2 .v2-bookcase-scene-img {
-    object-position: 8% 70%;
-  }
-
+  .is-home-v2 .v2-bookcase--soon .v2-bookcase-scene-img,
   .is-home-v2 .v2-bookcase-scene--soon .v2-bookcase-scene-img {
     object-position: 44% 50%;
   }
@@ -15817,16 +15829,31 @@ body:has(.product-page-main) .site-header--v2 .v2-header-body::after {
 
   .is-home-v2 .v2-bookcase-scene--magazine {
     background-image: url("/brand/v2/bookcase-morning-read-daylight.png") !important;
-    background-size: cover !important;
-    background-position: center 42% !important;
+    background-size: 210% 210% !important;
+    background-position: 6% 42% !important;
     background-repeat: no-repeat !important;
   }
 
   .is-home-v2 .v2-bookcase-scene--catalog {
     background-image: url("/brand/v2/bookcase-morning-work-daylight.png") !important;
     background-size: cover !important;
-    background-position: center 38% !important;
+    background-position: 14% 64% !important;
     background-repeat: no-repeat !important;
+  }
+
+  .is-home-v2 .v2-bookcase-scene--magazine .v2-bookcase-scene-img {
+    width: 210% !important;
+    height: 210% !important;
+    max-width: none !important;
+    max-height: none !important;
+    left: -8% !important;
+    top: -28% !important;
+    object-fit: cover !important;
+    object-position: 6% 42% !important;
+  }
+
+  .is-home-v2 .v2-bookcase-scene--catalog .v2-bookcase-scene-img {
+    object-position: 14% 64% !important;
   }
 
   .is-home-v2 .v2-section-edge {

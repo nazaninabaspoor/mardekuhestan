@@ -74,8 +74,13 @@ html:has(.mk-read),html:has(.mk-read) body,html:has(.mk-read) .site-canvas{backg
 .mk-mag:has(.mk-read){background:#F4F0E8!important;color:#1D1D1B!important}
 html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .site-canvas,.is-home-v2 .home-v2,html.is-home-v2 main{background:#0a5540!important}
 .is-home-v2 .home-v2 > *{margin-top:0!important;margin-bottom:0!important}
-.v2-bookcase,.v2-bookcase-scene{background:#0a5540!important}
-.v2-bookcase--magazine .v2-bookcase-scene-img,.v2-bookcase--catalog .v2-bookcase-scene-img{display:block!important;object-fit:cover!important}
+.v2-bookcase{background-color:#0a5540!important}
+.v2-bookcase-scene{background-color:#0a5540!important}
+.v2-bookcase-scene--magazine{background-image:url(/brand/v2/bookcase-morning-read-daylight.png)!important;background-size:cover!important;background-position:16% 48%!important;background-repeat:no-repeat!important}
+.v2-bookcase-scene--catalog{background-image:url(/brand/v2/bookcase-morning-work-daylight.png)!important;background-size:cover!important;background-position:18% 58%!important;background-repeat:no-repeat!important}
+.v2-bookcase-scene-img{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important}
+.v2-bookcase-scene--magazine .v2-bookcase-scene-img{object-position:16% 48%!important}
+.v2-bookcase-scene--catalog .v2-bookcase-scene-img{object-position:18% 58%!important}
 .v2-bookcase-scene-veil{background:linear-gradient(180deg,rgb(10 85 64 / 28%) 0%,rgb(10 85 64 / 6%) 22%,transparent 48%,rgb(10 85 64 / 10%) 78%,rgb(10 85 64 / 22%) 100%)!important}
 .profile-coverflow-title,.profile-coverflow-sub,.profile-scene-kicker{position:relative;z-index:8}
 .profile-coverflow-sub{margin-bottom:clamp(28px,5vh,64px)}
@@ -90,12 +95,15 @@ html.is-home-v2,html.is-home-v2 body,.is-home-v2,.is-home-v2 body,.is-home-v2 .s
   .is-home-v2 .home-v2 > div,.is-home-v2 .v2-home-lazy,.is-home-v2 .v2-home-lazy.is-ready{min-height:0!important;height:auto!important;background:transparent!important}
   .is-home-v2 .v2-bookcase,.is-home-v2 .v2-bookcase--magazine,.is-home-v2 .v2-bookcase--catalog{min-height:0!important;height:auto!important;padding-block:.85rem .45rem!important;margin:0!important;overflow-x:clip!important;overflow-y:visible!important;background:#0a5540!important}
   .is-home-v2 .v2-bookcase-layout,.is-home-v2 .v2-bookcase-shell,.is-home-v2 .v2-bookcase-stage{min-height:0!important;height:auto!important}
-  .is-home-v2 .v2-bookcase-scene--magazine{background-image:url(/brand/v2/bookcase-morning-read-daylight.png)!important;background-size:cover!important;background-position:center 42%!important;background-repeat:no-repeat!important}
-  .is-home-v2 .v2-bookcase-scene--catalog{background-image:url(/brand/v2/bookcase-morning-work-daylight.png)!important;background-size:cover!important;background-position:center 38%!important;background-repeat:no-repeat!important}
+  .is-home-v2 .v2-bookcase-scene--magazine{background-image:url(/brand/v2/bookcase-morning-read-daylight.png)!important;background-size:210% 210%!important;background-position:6% 42%!important;background-repeat:no-repeat!important}
+  .is-home-v2 .v2-bookcase-scene--catalog{background-image:url(/brand/v2/bookcase-morning-work-daylight.png)!important;background-size:cover!important;background-position:14% 64%!important;background-repeat:no-repeat!important}
+  .is-home-v2 .v2-bookcase-scene--magazine .v2-bookcase-scene-img{width:210%!important;height:210%!important;max-width:none!important;max-height:none!important;left:-8%!important;top:-28%!important;object-fit:cover!important;object-position:6% 42%!important}
+  .is-home-v2 .v2-bookcase-scene--catalog .v2-bookcase-scene-img{object-position:14% 64%!important}
   .is-home-v2 .v2-section-edge{display:block!important;pointer-events:none!important}
   .is-home-v2 .v2-section-edge--top{height:96px!important;top:0!important;background:linear-gradient(to bottom,#0a5540 0%,rgb(10 85 64 / 78%) 28%,rgb(10 85 64 / 28%) 62%,transparent 100%)!important}
   .is-home-v2 .v2-section-edge--bottom{height:88px!important;bottom:0!important;background:linear-gradient(to bottom,transparent 0%,rgb(10 85 64 / 28%) 38%,rgb(10 85 64 / 78%) 72%,#0a5540 100%)!important}
   img,video,svg{max-width:100%!important}
+  .v2-bookcase-scene-img{max-width:none!important;max-height:none!important}
   .landing--v2,.is-home-v2 .site-canvas > main .landing--v2{margin-top:0!important}
   .landing--v2 .landing-v2-stage{min-height:min(68svh,560px)!important;height:min(68svh,560px)!important;aspect-ratio:auto!important}
   .landing--v2 .landing-v2-shell{min-height:0!important;padding-top:0!important;padding-bottom:0!important}
