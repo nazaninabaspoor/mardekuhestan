@@ -1139,7 +1139,7 @@ function readWatchList() {
 function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
   const { user, openLoginModal } = useAuth();
   const { size } = useThree();
-  const mobile = size.width < 760;
+  const mobile = size.width < 900;
   const [talk, setTalk] = useState({ open: false, slot: 0 });
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const last = useRef("");
@@ -1160,10 +1160,12 @@ function PeakTalk({ man }: { man: MutableRefObject<UnveilManState> }) {
 
   const product = UNVEIL_FUTURE_PRODUCTS[talk.slot];
   const saved = Boolean(product && watched[product.id]);
-  const cloudRight = talk.slot === 0;
-  const htmlPos: [number, number, number] = mobile
-    ? [0.04, MAN_HEAD_Y + 0.12, 0.18]
-    : [cloudRight ? TALK_FLIP_X : -TALK_GAP_X, MAN_HEAD_Y, 0.18];
+  const cloudRight = talk.slot === 0 || (mobile && talk.slot === 1);
+  const htmlPos: [number, number, number] = [
+    cloudRight ? (mobile ? 0.7 : TALK_FLIP_X) : -TALK_GAP_X * (mobile ? 0.72 : 1),
+    mobile ? MAN_HEAD_Y - 0.1 : MAN_HEAD_Y,
+    0.18,
+  ];
 
   return (
     <Html

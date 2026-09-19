@@ -350,14 +350,18 @@
     min-height: 72px;
   }
 
-  .thoughtWest,
+  .thoughtWest {
+    flex-direction: row;
+    transform: translate(-100%, -48%);
+  }
+
   .thoughtEast {
-    flex-direction: column;
-    transform: translate(-50%, -108%);
+    flex-direction: row-reverse;
+    transform: translate(0, -48%);
   }
 
   .thoughtCloud {
-    width: min(148px, 42vw);
-    padding: 9px 11px 8px;
+    width: min(132px, 36vw);
+    padding: 8px 10px 7px;
   }
 }
